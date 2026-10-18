@@ -90,12 +90,74 @@ PACK_V_MAX = 44.0
 CELL_R1_OHM_PLACEHOLDER = 0.015
 CELL_C1_F_PLACEHOLDER = 2000.0
 
+# Ageing and temperature, Sandia SAND2008-5583 Table 2. Resistance grows 1.1-2.3x as fast
+# as capacity fades. LFP cells, used as a proxy for the NMC 18650s in an ORv3 BBU.
+BAT_R_GROWTH_PER_YR = 0.04
+BAT_FADE_PER_YR = 0.025  # G: the source row for this was garbled, see Parameter_Table.md
+BAT_R0_UNIT_SPREAD = 0.06
+BAT_CAPACITY_UNIT_SPREAD = 0.015
+
+_CAPACITY_VS_TEMP = ((-40.0, 0.03), (-30.0, 0.48), (-20.0, 0.65), (0.0, 0.74), (25.0, 1.00), (35.0, 1.06))
+
+
+def capacity_derate(temp_c: float) -> float:
+    """Capacity relative to 25 C, linearly interpolated from the Sandia table."""
+    pts = _CAPACITY_VS_TEMP
+    if temp_c <= pts[0][0]:
+        return pts[0][1]
+    if temp_c >= pts[-1][0]:
+        return pts[-1][1]
+    for (t0, f0), (t1, f1) in zip(pts, pts[1:]):
+        if t0 <= temp_c <= t1:
+            return f0 + (f1 - f0) * (temp_c - t0) / (t1 - t0)
+    return 1.0
+
 # --- Cooling ------------------------------------------------------------------
 AFFINITY_EXPONENT = 2.0  # centrifugal fan/pump load torque ~ omega^2
 MOTOR_LOCKED_ROTOR_X = 6.0
-COOLING_RESTART_S = 120.0  # exceeds the window, so a cooling trip is terminal within a run
+
+# Inertia constants per motor class, NERC Dynamic Load Modeling Table 5.1. These are
+# 2-8x lower than the 0.8 s placeholder previously used, so kinetic-buffering
+# ride-through is correspondingly shorter.
+MOTOR_H_COMPRESSOR_S = 0.10
+MOTOR_H_FAN_S = 0.50
+MOTOR_H_PUMP_S = 0.15
+
+# Staged undervoltage trip, NERC Table 5.1. Trips are partial, not all-or-nothing, and
+# fans/pumps reconnect while compressors stay off for the rest of the run.
+MOTOR_TRIP_STAGE1_V_PU = 0.70
+MOTOR_TRIP_STAGE1_DELAY_S = 0.05
+MOTOR_TRIP_STAGE1_FRACTION = 0.30
+
+MOTOR_TRIP_STAGE2_V_PU = 0.60
+MOTOR_TRIP_STAGE2_DELAY_S = 0.02
+MOTOR_TRIP_STAGE2_FRACTION_COMPRESSOR = 0.70
+MOTOR_TRIP_STAGE2_FRACTION_FAN = 0.50
+MOTOR_TRIP_STAGE2_FRACTION_PUMP = 0.50
+
+MOTOR_RECONNECT_V_PU = 0.50
+MOTOR_RECONNECT_DELAY_S = 0.25
+MOTOR_RECONNECTS = {"compressor": False, "fan": True, "pump": True}
+
+# Trane RTAC rapid restart: stop-to-start 120 s (adjustable 30-120 s). Exceeds the window,
+# so a chiller that fully stops does not return within a run.
+COOLING_RESTART_S = 120.0
+
+# --- AI / server load ---------------------------------------------------------
+# Measured ramp rate for a synchronised AI block, NERC large-loads whitepaper Figs 2.2-2.3
+# (1.9 pu/s sustained ~250 ms for a ~0.475 pu change). The swing is periodic at 0.2-3 Hz,
+# not a one-time step, so it is modelled as a slew-limited square wave.
+AI_SWING_SLEW_PU_S = 1.9
+AI_SWING_FREQ_MIN_HZ = 0.2
+AI_SWING_FREQ_MAX_HZ = 3.0
 
 # --- Protection ---------------------------------------------------------------
+# Legacy cumulative-sag scheme observed in a real event: three disturbances inside one
+# minute transfers to backup and stays off until manual reset. NOGRR 282 2.14(6) bans
+# exactly this, so it is the non-compliant reference design.
+LEGACY_COUNT_N = 3
+LEGACY_COUNT_WINDOW_S = 60.0
+
 BREAKER_INTERRUPT_S = 0.042
 STS_TRANSFER_S = 0.004
 RELAY_PICKUP_MAX_S = 1.5 / NOMINAL_FREQ_HZ

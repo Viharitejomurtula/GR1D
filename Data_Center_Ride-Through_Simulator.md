@@ -159,27 +159,44 @@ The load-torque term is the centrifugal affinity law (fans and pumps).
 
 **Ride-through comes from motor inertia, not DC capacitance.** ABB ACS880-class drives implement power-loss ride-through (param 30.31) as *kinetic buffering*: the drive briefly regenerates off the motor's own rotating inertia to hold the DC bus up. So the inertia constant H is the parameter that matters; a VFD DC-link capacitance value is not needed. UV trip ≈ 65–75% of nominal DC bus.
 
-> ### ⚠️ Any cooling trip is an automatic fail
+> ### 🔄 Retracted: cooling trips are partial, not automatically fatal
 >
-> Cooling is 0.30 × IT load, so total = 1.30. Lose cooling → 1.0/1.30 = **77%** of pre-fault.
-> Even with the 1.15× restart surge → 88%. Both are under the 90% recovery bar, and
-> `cooling_restart_s` is 120 s, far beyond the window — so it never comes back.
+> An earlier revision concluded any cooling trip forces a fail (losing all 0.30 of cooling
+> leaves 77% of load, under the 90% bar). **That assumed all-or-nothing loss and was wrong.**
 >
-> **This makes `cooling_trip_v_pu` (0.70, range 0.50–0.85) the single most decisive parameter
-> in the model.** Be aware the failure map may end up being a picture of that one threshold.
-> Worth testing a design where cooling is on ride-through-enabled VFDs (3–5 s) as the fix.
+> NERC Dynamic Load Modeling Table 5.1 gives a *staged, partial* trip:
+>
+> | Stage | Condition | Compressors | Fans | Pumps |
+> | --- | --- | --- | --- | --- |
+> | 1 | V < 0.70 pu for 0.05 s | 30% trip | 30% | 30% |
+> | 2 | V < 0.60 pu for 0.02 s | **70%** trip | 50% | 50% |
+> | Reconnect | V > 0.5 pu after 0.25 s | **stays off** | reconnects | reconnects |
+>
+> Redoing the arithmetic: a stage-1 trip loses 0.3 × 0.30 = 0.09 → **93% remaining, which
+> passes.** Stage 2 drops further, but fans and pumps come back inside 0.25 s. Only
+> compressors stay off.
+>
+> **So the outcome hinges on the compressor/fan/pump split of cooling load — which we don't
+> have.** That split is now the single most consequential unknown in the model.
 
 ### 7. Servers and AI load
 
 Server power follows a workload profile: steady utilization, a synchronized swing, and a surge if jobs restart after losing power.
 
-$$P_{server}(t) = \underbrace{w \cdot P_{rated}}_{\text{baseline}} \;+\; \underbrace{\pm s \cdot P_{rated} \cdot \tfrac{1}{2}\left(1 + \tanh\tfrac{t - t_{sw}}{\tau_r}\right)}_{\text{one synchronized step}} \;+\; \underbrace{(k-1)\,P_{rated}\,e^{-(t - t_{rec})/\tau_s}}_{\text{restart surge, conditional}}$$
+> **🔄 Revised:** an earlier draft modelled the swing as a single smoothed step that persists
+> for the window, because no duration data existed. Measured data (NERC large-loads whitepaper;
+> arXiv 2508.14318) shows it is **periodic at 0.2–3 Hz with a 1.9 pu/s ramp rate**. This also
+> dissolves the `swing_duration` gap — periodic behaviour has a period, not a duration.
 
-- `w` = workload, `s` = swing_size_frac, `k` = restart_surge_x, `τ_s` = restart_surge_s
-- `t_sw` ~ Uniform(0, window); sign of the swing drawn at random
-- `τ_r` ≈ 0.02–0.05 s — a smoothed step, not a discontinuity (the DC-link equations are stiff; a true step destabilizes the solver)
-- Swing **persists** for the rest of the window once triggered (no duration value exists in the literature at this timescale; tagged `G`)
-- The surge term is gated on an *event*, not a time: it fires only if the busbar actually fell **below 46 V** (the ORv3 IT-gear tolerance floor), at the moment power is restored
+The swing is a **slew-rate-limited square wave**:
+
+$$\text{target}(t) = \tfrac{s}{2} P_{rated}\,\text{sgn}\!\left(\sin(2\pi f t + \phi)\right), \qquad \left|\tfrac{dP_{sw}}{dt}\right| \le 1.9\,P_{rated}\;[\text{pu/s}]$$
+
+$$P_{server}(t) = \underbrace{w P_{rated}}_{\text{baseline}} + \underbrace{P_{sw}(t)}_{\text{synchronized swing}} + \underbrace{(k-1)P_{rated}e^{-(t - t_{rec})/\tau_s}}_{\text{restart surge, conditional}}$$
+
+- `w` = workload, `s` = swing_size_frac, `f` = swing_freq_hz (0.2–3), `k` = restart_surge_x
+- The slew limit makes the shape emergent rather than assumed: near-square at 0.2 Hz, and at 3 Hz the edge fills most of the half-period so the wave never reaches full amplitude (0.32 of a commanded 0.50 pu). No discontinuity, which also suits the stiff DC-link equations.
+- The surge term is gated on an *event*, not a time: it fires only if the busbar actually fell **below 46 V** (the ORv3 IT-gear floor), at the moment power is restored
 
 ### 8. Controllers and protection (logic, not physics)
 

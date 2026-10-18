@@ -34,8 +34,10 @@ class Scenario:
     battery_soc0: float
     workload: float
     swing_size_frac: float
-    swing_sign: float
-    swing_time_s: float
+    # The swing is a periodic 0.2-3 Hz oscillation (NERC/arXiv), not a one-time step, so it
+    # is parameterised by frequency and phase rather than by an event time and direction.
+    swing_freq_hz: float
+    swing_phase: float
     restart_surge_x: float
     restart_surge_s: float
 
@@ -44,9 +46,13 @@ class Scenario:
     shelves_per_rack: int
     bbu_modules_per_rack: int
     cooling_share_25c: float
+    # Only compressors stay off after a NERC stage-2 trip; fans and pumps reconnect. So
+    # this split decides how much load is permanently lost, which makes it the single most
+    # consequential unknown in the model (see Parameter_Table.md open item 3).
+    cooling_compressor_frac: float
+    cooling_fan_frac: float
     z_total_pct: float
     x_over_r: float
-    motor_inertia_h_s: float
 
     # --- Settings ---
     transfer_threshold_pu: float
@@ -119,17 +125,19 @@ def sample(rng: np.random.Generator | None = None, *, dip_start_s: float = 1.0) 
         battery_soc0=float(rng.uniform(0.80, 1.00)),
         workload=float(rng.uniform(0.50, 1.00)),
         swing_size_frac=float(rng.uniform(0.0, 0.5)),
-        swing_sign=float(rng.choice([-1.0, 1.0])),
-        swing_time_s=float(rng.uniform(0.0, C.WINDOW_S)),
+        swing_freq_hz=float(rng.uniform(C.AI_SWING_FREQ_MIN_HZ, C.AI_SWING_FREQ_MAX_HZ)),
+        swing_phase=float(rng.uniform(0.0, 2 * np.pi)),
         restart_surge_x=float(rng.uniform(1.0, 1.3)),
         restart_surge_s=float(rng.uniform(0.1, 2.0)),
         supply_voltage_v=float(rng.choice(SUPPLY_VOLTAGES)),
         shelves_per_rack=int(rng.integers(1, C.MAX_SHELVES_PER_RACK + 1)),
         bbu_modules_per_rack=int(rng.integers(C.BBU_MODULES_PER_SHELF, 3 * C.BBU_MODULES_PER_SHELF + 1)),
         cooling_share_25c=float(rng.uniform(0.20, 0.35)),
+        # Unsourced split; sampled wide until the compressor/fan/pump breakdown is found.
+        cooling_compressor_frac=float(rng.uniform(0.2, 0.6)),
+        cooling_fan_frac=float(rng.uniform(0.2, 0.5)),
         z_total_pct=float(rng.uniform(15.0, 23.0)),  # substation + distribution + PDU
         x_over_r=float(rng.uniform(5.0, 20.0)),
-        motor_inertia_h_s=float(rng.uniform(0.2, 2.5)),
         transfer_threshold_pu=float(rng.uniform(0.75, 0.90)),
         handback_delay_s=float(rng.uniform(0.2, 10.0)),
         ramp_back_s=float(rng.uniform(0.1, 1.0)),
@@ -163,17 +171,18 @@ _BASE = dict(
     battery_soc0=0.95,
     workload=0.85,
     swing_size_frac=0.2,
-    swing_sign=1.0,
-    swing_time_s=5.0,
+    swing_freq_hz=1.0,
+    swing_phase=0.0,
     restart_surge_x=1.15,
     restart_surge_s=0.5,
     supply_voltage_v=277.0,
     shelves_per_rack=6,
     bbu_modules_per_rack=12,
     cooling_share_25c=0.30,
+    cooling_compressor_frac=0.4,
+    cooling_fan_frac=0.35,
     z_total_pct=19.75,
     x_over_r=10.0,
-    motor_inertia_h_s=0.8,
     ramp_back_s=0.3,
     cooling_trip_v_pu=0.70,
     vfd_dc_uv_trip_pu=0.70,
