@@ -16,11 +16,10 @@ POST_EVENT_SETTLE_S = 14.0   # window = last clear + this, so late PSU restarts 
 OUTPUT_STEP_S = 2e-3     # result sampling; resolves 20 ms trip delays even in 100 s windows
 
 # --- Scope --------------------------------------------------------------------
-# Retained voltage (pu) the simulator is trusted for. Deeper sags hit the open voltage-collapse / invalid-root problem
-# (validation/CROSSCHECK.md), so results outside this band are not reported. 0.70-0.90 is the Eaton/EPRI bucket holding
-# 69% of all sags (scenario.sample_dip_depth), so in-scope results are conditional on that 69%.
-VALID_DIP_DEPTH_PU = (0.70, 0.90)
-IN_SCOPE_SAG_SHARE = 0.69
+# Retained voltage (pu) the simulator is trusted for. Widened from 0.70-0.90 to the full range once deep collapses were graded as
+# failures instead of being left unresolved (9090960), so every sag is now in scope.
+VALID_DIP_DEPTH_PU = (0.0, 1.0)
+IN_SCOPE_SAG_SHARE = 1.0
 
 # Window is 15 s rather than the originally scoped 6-8 s because PSU turn-on after a
 # BBU discharge can take up to 11.5 s; a shorter window truncates the restart outcome.

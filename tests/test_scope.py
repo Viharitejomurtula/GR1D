@@ -8,7 +8,14 @@ from sim import constants as C
 from sim import scenario as S
 from sim.scenario import GRID_FRIENDLY
 
-LO, HI = C.VALID_DIP_DEPTH_PU
+# The production band is now the full 0-1 pu range, which leaves nothing to exclude. The scope mechanism is tested against a
+# narrow band instead, so it keeps working if the band is narrowed again.
+LO, HI = 0.70, 0.90
+
+
+@pytest.fixture(autouse=True)
+def _narrow_band(monkeypatch):
+    monkeypatch.setattr(C, "VALID_DIP_DEPTH_PU", (LO, HI))
 
 
 def test_sample_many_in_scope_by_default():

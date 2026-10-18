@@ -16,6 +16,12 @@ type Run = {
   peak_current_pu?: number; min_power?: number; recovery_margin_s?: number; floor_violation_s?: number; trips?: string[]
   t?: number[]; v?: number[]; i?: number[]; p?: number[]; bbu?: number[]; srv?: number[]; psu?: number[]
 }
+type Outcome = {
+  depth: number; pass: number; fail: number; fail_by_mode: Record<string, number>
+  mw_dropped: { share_edges: number[]; counts: number[]; median_mw: number; p95_mw: number; mean_mw: number }
+  outside_training: number; ranked_on: string; top_factors: { label: string; share: number; signed_mean: number }[]
+}
+type Outcomes = { n_events: number; site_mw: number; surrogate: { name?: string; trained_rows?: number }; depths: Outcome[] }
 type Sweep = {
   design: string; simulator_commit: string; dip: { start_s: number; duration_s: number }
   valid_dip_depth_pu: [number, number]; current_cap_pu: number; runs: Run[]
@@ -27,6 +33,7 @@ const SLOW = 0.15, SLOW_A = 4, FAST = 1.5
 const PRE_A = -1.2 // chart starts this many animation seconds before the dip arrives
 const label = 'mono text-[11.5px] font-medium tracking-[0.14em] uppercase'
 const clamp01 = (x: number) => Math.max(0, Math.min(1, x))
+const pct = (x: number, d = 1) => `${(x * 100).toFixed(d)}%`
 
 const MODE_TEXT: Record<string, string> = {
   passed: 'Stays connected, keeps current under the cap and has power back within 2.0 s.',
@@ -54,6 +61,7 @@ function at(r: Run, key: 'v' | 'i' | 'p' | 'bbu', t: number): number {
 
 export default function Results() {
   const [sweep, setSweep] = useState<Sweep | null>(null)
+  const [outcomes, setOutcomes] = useState<Outcomes | null>(null)
   const [loadError, setLoadError] = useState(false)
   const [mw, setMw] = useState(800)
   const [depth, setDepth] = useState(0.6)
@@ -64,11 +72,12 @@ export default function Results() {
   useEffect(() => {
     fetch('/data/depth_sweep.json').then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
       .then(setSweep).catch((err) => { console.warn('depth sweep failed to load:', err); setLoadError(true) })
+    fetch('/data/depth_outcomes.json').then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+      .then(setOutcomes).catch((err) => console.warn('depth outcomes failed to load:', err))
     fetch('/data/grid.json').then((r) => r.json()).then((g) => g?.dc?.mw && setMw(g.dc.mw)).catch(() => {})
   }, [])
 
   const runFor = (d: number) => sweep?.runs.reduce((a, b) => (Math.abs(b.depth - d) < Math.abs(a.depth - d) ? b : a))
-  const selected = runFor(depth)
   const run = played !== null ? runFor(played) : undefined
   // Runs with no valid operating point sit on a collapsed solution: their traces are not physical, so they are not replayed.
   const usable = !!run && run.ok && !!run.t && run.numerics_ok !== false
@@ -114,8 +123,12 @@ export default function Results() {
   const verdictShown = played !== null && (invalid ? a >= 0 : usable && a >= SLOW_A * 0.75)
   const pending = played !== null && clock.active && !verdictShown
 
+  const outcome = played !== null && outcomes
+    ? outcomes.depths.reduce((x, y) => (Math.abs(y.depth - played) < Math.abs(x.depth - played) ? y : x)) : undefined
+
   return (
-    <div className="relative h-full min-h-[640px]">
+    <div>
+    <div className="relative h-[calc(100vh-3rem)] min-h-[640px]">
       <GridDemo embedded trigger={trigger} hold={hold} drive={drive}
         onClock={(secs, active) => setClock((c) => (c.a === secs && c.active === active ? c : { a: secs, active }))} />
 
@@ -140,11 +153,6 @@ export default function Results() {
           <div className="mono mt-1 flex justify-between text-[10.5px] text-[#8d8670]">
             <span>0.00 · total collapse</span><span>1.00 · no dip</span>
           </div>
-          {sweep && selected && !selected.in_scope && (
-            <p className="mono mt-2 text-[11px] leading-snug text-[#ff8a63]">
-              Outside {sweep.valid_dip_depth_pu[0].toFixed(2)}–{sweep.valid_dip_depth_pu[1].toFixed(2)} pu, the range the simulator is validated for. Treat as indicative.
-            </p>
-          )}
           <button onClick={simulate} disabled={!sweep || pending}
             className={`mono mt-5 rounded-full px-5 py-2 text-[12.5px] font-medium tracking-[0.12em] uppercase transition ${!sweep || pending ? 'cursor-default bg-[#2b2720] text-[#6f6958]' : 'cursor-pointer bg-[#d9b24c] text-[#14120e] hover:bg-[#f0c85a]'}`}>
             {pending ? 'Simulating…' : played === null ? '▸ Simulate the fault' : '▸ Simulate again'}
@@ -166,7 +174,85 @@ export default function Results() {
       )}
 
       {usable && <Timeline run={run!} a={a} aEnd={aEnd} simT={simT} cap={cap} />}
+      {outcome && verdictShown && (
+        <p className="mono pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 text-[12px] tracking-[0.12em] text-[#f0c85a] uppercase">↓ Odds across {outcomes!.n_events.toLocaleString()} realistic conditions</p>
+      )}
     </div>
+    {outcome && outcomes && <Distribution o={outcome} all={outcomes} />}
+    </div>
+  )
+}
+
+const MODE_NAME: Record<string, string> = {
+  'exceeded 125% current cap': 'Current cap exceeded', 'exceeded current cap': 'Current cap exceeded', 'below power floor': 'Below the power floor',
+  'cooling tripped': 'Cooling tripped', 'PSU shutdown and restart delay': 'Power supplies restarted too late',
+  'storage hand-back too slow': 'Battery hand-back too slow', 'disconnected inside envelope': 'Disconnected too early',
+  'missed 2.0 s recovery': 'Missed the 2.0 s recovery', 'voltage collapse': 'Voltage collapse',
+}
+
+// The same dip, hitting the site under thousands of realistic conditions drawn from the Bayesian network (weather, load, fault
+// type, reclosing, equipment state), each predicted by the neural surrogate. scripts/export_depth_outcomes.py.
+function Distribution({ o, all }: { o: Outcome; all: Outcomes }) {
+  const modes = Object.entries(o.fail_by_mode).filter(([, v]) => v >= 0.005).sort((x, y) => y[1] - x[1])
+  const h = o.mw_dropped, top = Math.max(...h.counts, 1), total = h.counts.reduce((s, c) => s + c, 0)
+  return (
+    <section className="mx-auto max-w-[1180px] px-10 pt-20 pb-32">
+      <p className={`${label} text-[#d9b24c]`}>A {o.depth.toFixed(2)} pu dip · {all.n_events.toLocaleString()} realistic conditions · neural surrogate {all.surrogate.name ?? ''}</p>
+      <h2 className="display mt-3 max-w-[860px] text-[40px] leading-[1.06] font-semibold tracking-[-0.035em] text-[#f6f1e2]">
+        The product rides through {pct(o.pass)} of the time and fails {pct(o.fail)}.
+      </h2>
+      <p className="mt-4 max-w-[700px] text-[16px] leading-[1.6] text-[#c4bca7]">
+        The map above is one simulated run. Here the same dip hits the site under conditions drawn from the Bayesian network: weather, site
+        load, workload swings, fault type, reclosing and equipment state.
+      </p>
+
+      <div className="mt-10 flex h-12 w-full overflow-hidden rounded">
+        <div className="flex items-center justify-start bg-[#5dbb7a] px-4 text-[14px] font-semibold text-[#07070a]" style={{ width: `${o.pass * 100}%` }}>{o.pass >= 0.08 && `Works ${pct(o.pass)}`}</div>
+        <div className="flex flex-1 items-center justify-end bg-[#ff6a55] px-4 text-[14px] font-semibold text-[#07070a]">{o.fail >= 0.08 && `Fails ${pct(o.fail)}`}</div>
+      </div>
+      {modes.length > 0 && (
+        <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1">
+          {modes.map(([m, v]) => <span key={m} className="mono text-[12px] text-[#c4bca7]">{MODE_NAME[m] ?? m} <span className="text-[#ff8a63]">{pct(v)}</span></span>)}
+        </div>
+      )}
+
+      <div className="mt-14 grid gap-14 md:grid-cols-[1.4fr_1fr]">
+        <div>
+          <p className={`${label} text-[#a8a089]`}>Load dropped from the grid</p>
+          <p className="mt-2 text-[15px] text-[#d3ccb8]">
+            Median <span className="text-[#f6f1e2]">{Math.round(h.median_mw)} MW</span>, 1 in 20 events above <span className="text-[#f6f1e2]">{Math.round(h.p95_mw)} MW</span>
+            <span className="text-[#8d8670]"> · of the {all.site_mw} MW site</span>
+          </p>
+          <svg viewBox="0 0 600 190" className="mt-5 w-full">
+            {h.counts.map((c, k) => {
+              const bw = 600 / h.counts.length, bh = (c / top) * 150
+              return <rect key={k} x={k * bw + 1} y={160 - bh} width={bw - 2} height={bh} fill="#d9b24c" fillOpacity={0.85}><title>{`${Math.round(h.share_edges[k] * all.site_mw)}–${Math.round(h.share_edges[k + 1] * all.site_mw)} MW: ${pct(c / total)}`}</title></rect>
+            })}
+            <line x1={0} x2={600} y1={160} y2={160} stroke="#4a4332" />
+            {[0, 0.25, 0.5, 0.75, 1].map((f) => <text key={f} x={Math.min(588, Math.max(12, f * 600))} y={180} textAnchor="middle" className="mono" fontSize={11} fill="#8d8670">{Math.round(f * all.site_mw)} MW</text>)}
+          </svg>
+          <p className="mono mt-1 text-[11px] text-[#8d8670]">Share of events by MW off the grid at the lowest point. Includes normal AI load swings, so it is not zero without a dip.</p>
+        </div>
+        <div>
+          <p className={`${label} text-[#a8a089]`}>Highest-impact factors · Shapley</p>
+          <p className="mt-2 text-[14px] text-[#8d8670]">Ranked on {o.ranked_on === 'p_fail' ? 'the chance of failing' : 'load dropped (the chance of failing barely moves at this depth)'}.</p>
+          <ol className="mt-5 space-y-5">
+            {o.top_factors.map((f, k) => (
+              <li key={f.label}>
+                <div className="flex items-baseline justify-between gap-4">
+                  <span className="display text-[19px] font-semibold tracking-[-0.02em] text-[#f6f1e2]">{k + 1}. {f.label}</span>
+                  <span className="mono text-[13px] text-[#d9b24c]">{pct(f.share, 0)}</span>
+                </div>
+                <div className="mt-2 h-[6px] bg-[#1a1813]"><div className="h-full bg-[#d9b24c]" style={{ width: `${(f.share / o.top_factors[0].share) * 100}%` }} /></div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+      {o.outside_training > 0.05 && (
+        <p className="mono mt-10 text-[11.5px] text-[#ff8a63]">{pct(o.outside_training, 0)} of these conditions are outside the surrogate's training data; treat them as approximate.</p>
+      )}
+    </section>
   )
 }
 
