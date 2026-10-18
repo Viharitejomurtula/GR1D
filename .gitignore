@@ -11,3 +11,4 @@ build/
 *.o
 data/runs*.csv
 frontend/public/data/surrogate.json
+frontend/public/data/grid.json
