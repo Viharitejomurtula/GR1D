@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
 html, body, #root { height: 100%; margin: 0; background: #07070a; overflow: hidden; overscroll-behavior: none; }
-body { font-family: "Geist", ui-sans-serif, system-ui, sans-serif; color: #e8e2d2; -webkit-font-smoothing: antialiased; }
-.mono { font-family: "Geist Mono", ui-monospace, monospace; }
+body { font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif; color: #f1ecdc; -webkit-font-smoothing: antialiased; }
+.mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+.display { font-family: "Space Grotesk", "IBM Plex Sans", sans-serif; }

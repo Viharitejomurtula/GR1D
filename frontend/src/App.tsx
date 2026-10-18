@@ -13,13 +13,13 @@ export default function App() {
 
   return (
     <div className="flex h-full flex-col bg-[#07070a]">
-      <nav className="flex h-11 shrink-0 items-center gap-8 border-b border-[#1f1d17] bg-[#07070a] px-6">
-        <span className="mono mr-2 text-[12px] tracking-[0.2em] text-[#d9b24c]">GR1D</span>
+      <nav className="flex h-12 shrink-0 items-center gap-9 bg-[#07070a] px-10">
+        <span className="mono mr-2 text-[12.5px] font-semibold tracking-[0.2em] text-[#d9b24c]">GR1D</span>
         {TABS.map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`h-full cursor-pointer border-b text-[13px] transition ${tab === t ? 'border-[#d9b24c] text-[#e8e2d2]' : 'border-transparent text-[#7c7666] hover:text-[#b8b19d]'}`}
+            className={`h-full display cursor-pointer border-b text-[14px] font-medium tracking-[-0.005em] transition ${tab === t ? 'border-[#d9b24c] text-[#f1ecdc]' : 'border-transparent text-[#948d78] hover:text-[#d3ccb8]'}`}
           >
             {t}
           </button>

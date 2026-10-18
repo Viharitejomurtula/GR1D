@@ -16,9 +16,10 @@ type Line = Feature<LineString, Props>
 interface Grid { lines: FeatureCollection<LineString, Props>; substations: Substation[]; dc: { p: [number, number]; mw: number } }
 
 const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json'
-const INITIAL_VIEW_STATE: MapViewState = { longitude: -98.12, latitude: 29.42, zoom: 9.0, pitch: 12, bearing: 0, maxZoom: 14, maxPitch: 80 }
+const INITIAL_VIEW_STATE: MapViewState = { longitude: -98.05, latitude: 29.3, zoom: 8.9, pitch: 12, bearing: 0, maxZoom: 14, maxPitch: 80 }
 
 // scroll-zoom is off so the mouse wheel scrolls the page down to "Why it matters"
+const FONT = '"IBM Plex Mono", monospace'
 const CONTROLLER = { scrollZoom: false }
 const view = new MapView({ id: 'map', controller: CONTROLLER })
 const collision = new CollisionFilterExtension()
@@ -86,12 +87,27 @@ function buildComets(lines: Line[], pick: (p: Props) => number, minMw = 4): Come
   return out
 }
 
+const DC_HW = 0.2 // half-width and half-height of the campus, in degrees
+const DC_HH = 0.125
+// three by two server halls with an aisle between them; heights vary a little so it reads as buildings
+function dcHalls(p: number[]) {
+  const out: { polygon: number[][]; h: number }[] = []
+  const w = (2 * DC_HW) / 3, h = (2 * DC_HH) / 2
+  for (let c = 0; c < 3; c++) for (let r = 0; r < 2; r++) {
+    const cx = p[0] - DC_HW + w * (c + 0.5), cy = p[1] - DC_HH + h * (r + 0.5)
+    out.push({ polygon: box(cx, cy, w * 0.4, h * 0.38), h: [9000, 13000, 8000, 11000, 14000, 9500][c * 2 + r] })
+  }
+  return out
+}
+
 const box = (x: number, y: number, hw: number, hh: number) => [[x - hw, y - hh], [x + hw, y - hh], [x + hw, y + hh], [x - hw, y + hh]]
 
 export default function GridDemo({ onFinished, onNext }: { onFinished?: () => void; onNext?: () => void }) {
   const [grid, setGrid] = useState<Grid>()
   const [now, setNow] = useState(0)
   const [startedAt, setStartedAt] = useState<number | null>(null)
+  const [fk, setFk] = useState(0) // bumps once Plex Mono has loaded, so deck's text atlas is rebuilt with it
+  useEffect(() => { document.fonts.load('500 14px "IBM Plex Mono"').then(() => setFk(1)).catch(() => {}) }, [])
   useEffect(() => { fetch('/data/grid.json').then((r) => r.json()).then(setGrid) }, [])
   useEffect(() => {
     let raf = 0
@@ -103,7 +119,7 @@ export default function GridDemo({ onFinished, onNext }: { onFinished?: () => vo
   const lines = (grid?.lines.features ?? []) as Line[]
   const labels = useMemo(() => calculateLabels(lines.filter((f) => !f.properties.synthetic), 6), [grid]) // eslint-disable-line react-hooks/exhaustive-deps
   const dc = grid?.dc
-  const battery = useMemo<[number, number] | undefined>(() => (dc ? [dc.p[0], dc.p[1] - 0.24] : undefined), [dc])
+  const battery = useMemo<[number, number] | undefined>(() => (dc ? [dc.p[0], dc.p[1] - 0.31] : undefined), [dc])
   const cometsNormal = useMemo(() => buildComets(lines, (p) => p.mw), [grid]) // eslint-disable-line react-hooks/exhaustive-deps
   const cometsPost = useMemo(() => buildComets(lines, (p) => p.mw_off), [grid]) // eslint-disable-line react-hooks/exhaustive-deps
   const cometsBattery = useMemo(() => {
@@ -200,11 +216,11 @@ export default function GridDemo({ onFinished, onNext }: { onFinished?: () => vo
       stroked: true, getLineColor: [20, 14, 4, 255], getLineWidth: 1, lineWidthUnits: 'pixels',
     }),
     new TextLayer<Label, CollisionFilterExtensionProps>({
-      id: 'labels', data: labels, extensions: [collision], billboard: false, background: true,
+      id: `labels${fk}`, data: labels, extensions: [collision], billboard: false, background: true,
       parameters: { cullMode: 'none', depthCompare: 'always' },
       getPosition: (d) => d.position as never, getText: (d) => d.text, getAngle: (d) => d.angle,
       getSize: (d) => (d.priority >= 150 ? 13 : 11), getColor: [30, 20, 4], getBackgroundColor: [255, 232, 170],
-      getBorderColor: [255, 170, 40], getBorderWidth: 1, backgroundPadding: [4, 1], characterSet: 'auto', fontFamily: 'monospace',
+      getBorderColor: [255, 170, 40], getBorderWidth: 1, backgroundPadding: [4, 1], characterSet: 'auto', fontFamily: FONT,
       collisionEnabled: true, getCollisionPriority: (d) => d.priority, collisionTestProps: { sizeScale: 10 },
     }),
     // the blackout: nothing flows inside, so the grid goes dark there
@@ -230,29 +246,41 @@ export default function GridDemo({ onFinished, onNext }: { onFinished?: () => vo
       getLineColor: (d) => [...RED, 255 * (1 - d.age / 3.4)] as never, parameters: { depthCompare: 'always' },
       updateTriggers: { getRadius: dropAge, getLineWidth: dropAge, getLineColor: dropAge },
     }),
-    // the data center: a black monolith; edges go cyan while it runs on battery
+    // the data center: a campus of server halls on a pad, lit gold (cyan while it runs on battery)
+    new ScatterplotLayer({
+      id: 'dc-glow', data: dc ? [0, 1] : [], getPosition: () => dc!.p as never, radiusUnits: 'meters',
+      getRadius: (i: number) => 24000 + i * 14000, getFillColor: (i: number) => (onBattery ? [...CYAN, 38 - i * 16] : [...GOLD, 46 - i * 20]) as never,
+      parameters: ADD, updateTriggers: { getFillColor: onBattery },
+    }),
     new PolygonLayer<{ polygon: number[][] }>({
-      id: 'datacenter', data: dc ? [{ polygon: box(dc.p[0], dc.p[1], 0.13, 0.085) }] : [], getPolygon: (d) => d.polygon as never,
-      extruded: true, wireframe: true, getElevation: 9000, getFillColor: [4, 4, 6, 255], lineWidthMinPixels: 2.5,
-      getLineColor: (onBattery ? CYAN : GOLD).concat(255) as never, updateTriggers: { getLineColor: onBattery },
-      material: { ambient: 0.15, diffuse: 0.25, shininess: 60, specularColor: [255, 200, 90] },
+      id: 'dc-pad', data: dc ? [{ polygon: box(dc.p[0], dc.p[1], DC_HW * 1.1, DC_HH * 1.16) }] : [], getPolygon: (d) => d.polygon as never,
+      filled: true, stroked: true, getFillColor: [46, 42, 34, 255], getLineColor: (onBattery ? CYAN : GOLD).concat(255) as never,
+      getLineWidth: 2.5, lineWidthUnits: 'pixels', updateTriggers: { getLineColor: onBattery },
+    }),
+    new PolygonLayer<{ polygon: number[][]; h: number }>({
+      id: 'datacenter', data: dc ? dcHalls(dc.p) : [], getPolygon: (d) => d.polygon as never, getElevation: (d) => d.h,
+      extruded: true, wireframe: true, getFillColor: (onBattery ? [52, 98, 118, 255] : [112, 100, 76, 255]) as never,
+      getLineColor: (onBattery ? CYAN : GOLD).concat(255) as never, lineWidthMinPixels: 1.5,
+      updateTriggers: { getFillColor: onBattery, getLineColor: onBattery },
+      material: { ambient: 0.55, diffuse: 0.75, shininess: 24, specularColor: [255, 225, 150] },
     }),
     new PolygonLayer<{ polygon: number[][] }>({
       id: 'battery-block', data: battery ? [{ polygon: box(battery[0], battery[1], 0.05, 0.03) }] : [], getPolygon: (d) => d.polygon as never,
-      extruded: true, wireframe: true, getElevation: 4000, getFillColor: [4, 4, 6, 255], lineWidthMinPixels: 2,
-      getLineColor: (s > 0.05 ? [...CYAN, 150 + 105 * s] : [90, 120, 135, 200]) as never, updateTriggers: { getLineColor: s },
+      extruded: true, wireframe: true, getElevation: 6000, getFillColor: (s > 0.5 ? [52, 98, 118, 255] : [70, 80, 90, 255]) as never, lineWidthMinPixels: 2,
+      material: { ambient: 0.55, diffuse: 0.75, shininess: 24, specularColor: [200, 230, 255] },
+      getLineColor: (s > 0.05 ? [...CYAN, 150 + 105 * s] : [130, 160, 175, 220]) as never, updateTriggers: { getLineColor: s, getFillColor: s > 0.5 },
     }),
     new TextLayer<{ p: number[]; t: string; c: RGB; size: number }>({
-      id: 'dc-label', data: dc ? [{ p: dc.p, t: dcText, c: onBattery ? CYAN : [255, 232, 170], size: 18 }] : [],
-      getPosition: (d) => [d.p[0], d.p[1] - 0.15, 0] as never, getText: (d) => d.t, getSize: (d) => d.size, getColor: (d) => d.c as never,
+      id: `dc-label${fk}`, data: dc ? [{ p: dc.p, t: dcText, c: onBattery ? CYAN : [255, 232, 170], size: 18 }] : [],
+      getPosition: (d) => [d.p[0], d.p[1] - 0.2, 0] as never, getText: (d) => d.t, getSize: (d) => d.size, getColor: (d) => d.c as never,
       getPixelOffset: [0, 0], background: true, getBackgroundColor: [4, 4, 6, 235], getBorderColor: onBattery ? (CYAN as never) : ([255, 200, 74] as never),
-      getBorderWidth: 1.5, backgroundPadding: [8, 4], lineHeight: 1.25, characterSet: 'auto', fontFamily: 'monospace', parameters: { depthCompare: 'always' },
+      getBorderWidth: 1.5, backgroundPadding: [8, 4], lineHeight: 1.25, characterSet: 'auto', fontFamily: FONT, parameters: { depthCompare: 'always' },
       updateTriggers: { getText: dcText, getColor: onBattery, getBorderColor: onBattery },
     }),
     new TextLayer<{ p: number[] }>({
-      id: 'battery-label', data: battery ? [{ p: battery }] : [], getPosition: (d) => [d.p[0], d.p[1], 9000] as never,
+      id: `battery-label${fk}`, data: battery ? [{ p: battery }] : [], getPosition: (d) => [d.p[0], d.p[1], 9000] as never,
       getText: () => 'ON-SITE BATTERY + GENERATION', getSize: 13, getColor: s > 0.05 ? (CYAN as never) : ([150, 160, 168] as never),
-      getPixelOffset: [0, 30], characterSet: 'auto', fontFamily: 'monospace', parameters: { depthCompare: 'always' },
+      getPixelOffset: [0, 30], characterSet: 'auto', fontFamily: FONT, parameters: { depthCompare: 'always' },
       updateTriggers: { getColor: s > 0.05 },
     }),
     // the fault, and the voltage dip travelling out from it
@@ -271,9 +299,9 @@ export default function GridDemo({ onFinished, onNext }: { onFinished?: () => vo
       getFillColor: [255, 90, 60, 255], parameters: { depthCompare: 'always' },
     }),
     new TextLayer({
-      id: 'fault-label', data: faultOn ? [0] : [], getPosition: () => faultPt as never, getText: () => 'GRID FAULT', getSize: 16,
+      id: `fault-label${fk}`, data: faultOn ? [0] : [], getPosition: () => faultPt as never, getText: () => 'GRID FAULT', getSize: 16,
       getColor: [255, 120, 90], getPixelOffset: [0, -30], background: true, getBackgroundColor: [4, 4, 6, 235], backgroundPadding: [6, 3],
-      characterSet: 'auto', fontFamily: 'monospace', parameters: { depthCompare: 'always' },
+      characterSet: 'auto', fontFamily: FONT, parameters: { depthCompare: 'always' },
     }),
   ]
 
@@ -289,40 +317,51 @@ export default function GridDemo({ onFinished, onNext }: { onFinished?: () => vo
         <Map reuseMaps mapStyle={MAP_STYLE} />
       </DeckGL>
 
-      <header style={{ position: 'absolute', top: 20, left: 20, width: 'min(440px, calc(100% - 40px))' }}
-        className="border border-[#26231b] bg-[#08080ad9] p-5 backdrop-blur-md">
-        <p className="mono text-[10.5px] tracking-[0.14em] text-[#d9b24c] uppercase">July 2026 · Northern Virginia</p>
-        <h1 className="mt-2.5 text-[19px] leading-[1.3] font-medium tracking-[-0.012em] text-[#ece6d6]">
+      {/* soft fades so type can sit directly on the map, with no boxes */}
+      <div className="pointer-events-none absolute inset-0"
+        style={{ background: 'radial-gradient(ellipse 900px 600px at 0% 0%, rgba(7,7,10,0.97) 0%, rgba(7,7,10,0.9) 45%, rgba(7,7,10,0.5) 72%, transparent 100%), radial-gradient(ellipse 420px 260px at 100% 0%, rgba(7,7,10,0.85), transparent 100%)' }} />
+
+      <header className="pointer-events-none absolute top-8 left-10 max-w-[520px] [text-shadow:0_0_14px_rgba(7,7,10,0.95),0_0_3px_rgba(7,7,10,0.9)]">
+        <p className="mono text-[11.5px] font-medium tracking-[0.14em] text-[#d9b24c] uppercase">July 2026 · Northern Virginia</p>
+        <h1 className="display mt-3 text-[38px] leading-[1.05] font-semibold tracking-[-0.035em] text-[#f6f1e2] [text-wrap:balance]">
           Nearly 3,800 MW of data center demand shifted to on-site generation at once.
         </h1>
-        <p className="mt-2.5 text-[13px] leading-[1.6] text-[#a29b86]">
+        <p className="mt-4 max-w-[470px] text-[15.5px] leading-[1.55] text-[#d3ccb8]">
           A mechanical failure on a 230 kV line set it off, about 2.5 times the 2024 event. On August 11, PJM said it is considering
           ride-through, backup generation behavior and reconnection requirements for data centers.
         </p>
-        <p className="mono mt-3 border-t border-[#1f1d17] pt-2.5 text-[10px] leading-[1.55] text-[#6b6555]">
+        <p className="mono mt-4 max-w-[470px] text-[10.5px] leading-[1.6] text-[#8d8670]">
           Secondhand: Data Center Dispatch, citing Utility Dive. No dip depth or grid impact given; primary source unchecked.
           The replay is illustrative: a Texas grid and an 800 MW site.
         </p>
       </header>
 
-      <div style={{ position: 'absolute', left: 20, bottom: 20, pointerEvents: 'none' }}
-        className={`mono text-[11px] tracking-[0.12em] ${strained ? 'text-[#ff6a55]' : 'text-[#8a8472]'}`}>
-        <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full align-middle" style={{ background: strained ? '#ff4a3a' : '#d9b24c' }} />
-        {status}
-        {strained && <div className="mt-1 text-[10.5px] tracking-[0.08em] text-[#a8584c]">Nothing flows inside the red ring</div>}
+      {/* live counters, beside the graphic */}
+      <div className="pointer-events-none absolute top-8 right-10 text-right">
+        <p className="mono text-[11px] tracking-[0.14em] text-[#a8a089] uppercase">Draw from the grid</p>
+        <p className="display text-[64px] leading-[0.95] font-semibold tracking-[-0.04em]" style={{ color: onBattery ? '#ff6a55' : '#f6f1e2' }}>
+          {Math.round((dc?.mw ?? 800) * (1 - s))}<span className="ml-1.5 text-[22px] font-medium tracking-normal text-[#a8a089]">MW</span>
+        </p>
+        <p className="mono mt-2 text-[11px] tracking-[0.14em] uppercase" style={{ color: strained ? '#ff6a55' : '#a8a089' }}>
+          Grid · {strained ? 'strained' : active && e < tHit ? 'fault' : 'normal'}
+        </p>
       </div>
 
-      <div style={{ position: 'absolute', left: '50%', bottom: 20, transform: 'translateX(-50%)' }} className="flex items-center gap-3">
+      <div className="pointer-events-none absolute bottom-6 left-10 mono max-w-[300px] text-[11.5px] leading-snug font-medium tracking-[0.1em]" style={{ color: strained ? '#ff6a55' : '#a8a089' }}>
+        <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full align-middle" style={{ background: strained ? '#ff4a3a' : '#d9b24c' }} />
+        {status}
+      </div>
+
+      <div style={{ position: 'absolute', left: '50%', bottom: 22, transform: 'translateX(-50%)' }} className="flex items-baseline gap-9">
         <button
           onClick={() => { if (!active) setStartedAt(performance.now() / 1000) }}
           disabled={active}
-          className={`mono border px-5 py-2.5 text-[11px] tracking-[0.14em] uppercase backdrop-blur-md transition ${
-            active ? 'cursor-default border-[#26231b] bg-[#08080acc] text-[#6b6555]' : 'cursor-pointer border-[#d9b24c] bg-[#08080acc] text-[#e8d9ac] hover:bg-[#d9b24c] hover:text-[#120d02]'}`}>
-          {active ? 'Fault in progress' : ran.current ? 'Replay grid fault' : 'Trigger grid fault'}
+          className={`mono text-[13px] font-medium tracking-[0.12em] uppercase underline-offset-[7px] transition ${
+            active ? 'cursor-default text-[#6f6958]' : 'cursor-pointer text-[#f0c85a] hover:text-white hover:underline'}`}>
+          {active ? 'Fault in progress' : ran.current ? '▸ Replay grid fault' : '▸ Trigger a grid fault'}
         </button>
         {(ran.current || strained) && (
-          <button onClick={onNext}
-            className="mono cursor-pointer border border-[#3a362a] bg-[#08080acc] px-5 py-2.5 text-[11px] tracking-[0.14em] text-[#a29b86] uppercase backdrop-blur-md transition hover:border-[#6b6555] hover:text-[#e8e2d2]">
+          <button onClick={onNext} className="mono cursor-pointer text-[13px] font-medium tracking-[0.12em] text-[#bdb5a0] uppercase underline-offset-[7px] transition hover:text-white hover:underline">
             Why it matters ↓
           </button>
         )}
