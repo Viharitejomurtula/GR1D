@@ -32,7 +32,11 @@ Mapping: S = C_x, Sigma_D = U_x, and each factor's noise term is an extra indepe
 Limits of this backing:
 - The GUM and its supplement are about measurement uncertainty. Here the same mathematics is used for variation
   across a fleet of equipment. The formula is the same, the interpretation is not.
-- Strictly this is a linear propagation model, not a Bayesian network. It has no inference over structure.
+- The covariance formula is a linear propagation model. Since 2026-10-18 the same model also runs as a Bayesian
+  network (`ridethrough/network/`): `graph.py` assembles roots.yaml, master.csv, edges.csv, tables.csv and the S
+  matrix into one DAG (28 nodes, 22 edges); `sampler.py` draws every node given its parents and conditions on
+  evidence by rejection (`query`). Five edges.csv links have no number behind them and are structure only
+  (`graph.unquantified_edges`). There is still no learning of structure or parameters from data.
 - The standards back the arithmetic only. They say nothing about whether the S entries are right.
 - No published paper or standard was found that applies this to data-center ride-through.
 
@@ -126,4 +130,5 @@ soc_estimate_error, converter_overload_s, relay_accuracy_pct, compressor_trip_pc
 | Effect of that fit on the correlations | `ridethrough/responses/apply_to_implied.py` -> `network/responses/storage_resistance_correlation_comparison.csv` |
 | Workload swings | `ridethrough/responses/workload_swings.py` -> `network/responses/workload_*.csv` |
 | Method documents | `drivers_raw/method_backing/jcgm100`, `jcgm102` |
+| Bayesian network (graph, sampling, conditioning) | `ridethrough/network/graph.py`, `sampler.py`; tests `tests/test_network.py` |
 | Tests | `tests/test_responses.py` |
