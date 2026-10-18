@@ -168,11 +168,13 @@ def sample_faulted_phase_frac(rng: np.random.Generator, fault_mix: str = "genera
 def sample_cooling_split(rng: np.random.Generator) -> tuple[float, float]:
     """(compressor, fan) shares of cooling power; pump is the remainder 1 - compressor - fan.
 
-    Compressor and pump are uniform within C.COOLING_COMPRESSOR_FRAC_RANGE and
+    Compressor and pump are drawn uniform within C.COOLING_COMPRESSOR_FRAC_RANGE and
     C.COOLING_PUMP_FRAC_RANGE; fan = 1 - compressor - pump, and the pair is redrawn until fan
     lies in C.COOLING_FAN_FRAC_RANGE. So the three shares always sum to 1 and each stays in
-    its sourced range (LBNL, IBM 2010, arXiv 1804.00703; see constants.py). The uniform
-    shape is an assumption.
+    its sourced range (LBNL, IBM 2010, arXiv 1804.00703; see constants.py).
+    The result is uniform over the feasible (compressor, pump) region, so the marginals
+    are NOT uniform: the compressor share is thinner near 0.46, and compressor and fan are
+    strongly anti-correlated. Uniform over the feasible region is an assumption.
     """
     fan_lo, fan_hi = C.COOLING_FAN_FRAC_RANGE
     while True:
@@ -191,14 +193,15 @@ def sample_battery_temp(rng: np.random.Generator, hall_stress: str | None = None
 
     Default: uniform over the ASHRAE recommended range C.HALL_TEMP_RECOMMENDED_C (18-27).
     hall_stress "A1" or "A2" returns the allowable upper limit for that class (32.0 or
-    35.0) without a draw. No source gives the spread of hall temperatures across sites, so
-    the uniform shape is an assumption.
+    35.0). The uniform draw is made either way, so a stressed batch uses the same random
+    stream as an unstressed one with the same seed and differs only in battery_temp_c.
+    No source gives the spread of hall temperatures across sites, so the uniform shape is
+    an assumption.
     """
-    if hall_stress is None:
-        return float(rng.uniform(*C.HALL_TEMP_RECOMMENDED_C))
-    if hall_stress not in C.HALL_TEMP_ALLOWABLE_MAX_C:
+    if hall_stress is not None and hall_stress not in C.HALL_TEMP_ALLOWABLE_MAX_C:
         raise ValueError(f"hall_stress must be one of {HALL_STRESS}, got {hall_stress!r}")
-    return C.HALL_TEMP_ALLOWABLE_MAX_C[hall_stress]
+    temp = float(rng.uniform(*C.HALL_TEMP_RECOMMENDED_C))
+    return temp if hall_stress is None else C.HALL_TEMP_ALLOWABLE_MAX_C[hall_stress]
 
 
 @lru_cache(maxsize=1)

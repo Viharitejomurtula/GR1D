@@ -102,6 +102,22 @@ def test_battery_temp(draws):
         scenario.sample(rng, hall_stress="A3")
 
 
+@pytest.mark.parametrize("option", [
+    {"hall_stress": "A1"}, {"hall_stress": "A2"}, {"fault_mix": "loss_events"}, {"bbu_module_out": True},
+], ids=["hall_A1", "hall_A2", "loss_events", "module_out"])
+def test_options_change_only_their_field(option):
+    """With the same seed, each option changes only the field it targets, so stressed and
+    unstressed batches can be compared scenario by scenario."""
+    target = {"hall_stress": "battery_temp_c", "fault_mix": "faulted_phase_frac",
+              "bbu_module_out": "bbu_modules_per_rack"}[next(iter(option))]
+    base = scenario.sample_many(200, seed=SEED)
+    varied = scenario.sample_many(200, seed=SEED, **option)
+    for a, b in zip(base, varied):
+        for f in scenario.FIELD_ORDER:
+            if f != target:
+                assert getattr(a, f) == getattr(b, f), f
+
+
 def test_outdoor_temp_matches_dfw(draws):
     """Share of outdoor_temp_c >= 35 degC is 0.051 +/- 0.01 and < 0 degC is 0.024 +/- 0.01."""
     t = draws["outdoor_temp_c"]
