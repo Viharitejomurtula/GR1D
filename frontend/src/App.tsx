@@ -2,11 +2,13 @@ import { useRef, useState } from 'react'
 import GridDemo from './GridDemo'
 import { Deliverables, OurSolution, WhyItMattersBrief } from './Pages'
 import Results from './Results'
+import Validation from './Validation'
 
 const TABS = ['The Problem', 'Our Solution', 'Deliverables', 'Results'] as const
 
 export default function App() {
   const [tab, setTab] = useState<(typeof TABS)[number]>('The Problem')
+  const [validation, setValidation] = useState(false)
   const scroller = useRef<HTMLDivElement>(null)
   const why = useRef<HTMLDivElement>(null)
   const toWhy = () => scroller.current?.scrollTo({ top: why.current?.offsetTop ?? 0, behavior: 'smooth' })
@@ -19,7 +21,7 @@ export default function App() {
         {TABS.map((t) => (
           <button
             key={t}
-            onClick={() => setTab(t)}
+            onClick={() => { setTab(t); setValidation(false) }}
             className={`h-full display cursor-pointer border-b text-[14px] font-medium tracking-[-0.005em] transition ${tab === t ? 'border-[#d9b24c] text-[#f1ecdc]' : 'border-transparent text-[#948d78] hover:text-[#d3ccb8]'}`}
           >
             {t}
@@ -28,7 +30,7 @@ export default function App() {
       </nav>
       <div className="relative min-h-0 flex-1">
         {tab === 'The Problem' ? (
-          <div ref={scroller} className="h-full overflow-y-auto">
+          <div key="problem" ref={scroller} className="h-full overflow-y-auto">
             <div className="relative h-full min-h-[560px]">
               <GridDemo onFinished={toWhy} onNext={toWhy} />
             </div>
@@ -37,7 +39,7 @@ export default function App() {
             </div>
           </div>
         ) : (
-          <div className="h-full overflow-y-auto">{tab === 'Our Solution' ? <OurSolution /> : tab === 'Deliverables' ? <Deliverables /> : <Results />}</div>
+          <div key={tab + validation} className="h-full overflow-y-auto">{tab === 'Our Solution' ? (validation ? <Validation onBack={() => setValidation(false)} /> : <OurSolution onValidation={() => setValidation(true)} />) : tab === 'Deliverables' ? <Deliverables /> : <Results />}</div>
         )}
       </div>
     </div>

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import sampleRuns from './data/sample.json'
 import eventRuns from './data/events.json'
 import { simulate } from './simulate'
+import Demo from './Demo'
 
 // ILLUSTRATIVE VALUES: the pipeline does not produce these outputs yet. Every number on this tab comes from the
 // placeholder dataset below, so the header, map, report card and scenario estimate agree with each other.
@@ -725,13 +726,6 @@ export default function Results() {
   return (
     <div className="mx-auto max-w-[1180px] px-10 pt-16 pb-40">
       <style>{`.disp { font-family: "Space Grotesk", sans-serif; }`}</style>
-      <ScenarioPanel
-        values={values} lastRun={lastRun}
-        onChange={(k, v) => setValues((s) => ({ ...s, [k]: v }))}
-        onRun={() => { void run(values) }}
-        onReset={() => { setValues(PRESET); setLastRun(PRESET); setSimulated(null) }}
-      />
-
       <div className="flex flex-col gap-10 pt-24 md:flex-row md:items-end md:justify-between">
         <div className="max-w-[720px]">
           <p className={`${label} text-[#d9b24c]`}>Results · Reference campus · {SAMPLE.length.toLocaleString()} sampled runs</p>
@@ -752,12 +746,35 @@ export default function Results() {
         </div>
       </div>
 
-      <Section n="01" kicker="Failure map" title="Pick two factors to see where the design breaks."
+      <Demo runs={SAMPLE} modes={MODES} order={MODE_KEYS} />
+
+      <Section n="04" kicker="Report card" title="Five ways this design fails."
+        lede="Ranked by how often each one happens across the simulated runs, with a 95% band. Naming the smallest fix needs a search over the design space, which is not built yet.">
+        <ReportCard />
+      </Section>
+
+      <Section n="05" kicker="Legacy vs product · Texas events" title="Legacy equipment fails all three real dips. The product passes all three."
+        lede="Three recorded ERCOT voltage events replayed against the same reference campus, once with legacy double-conversion UPS and once with the product.">
+        <Comparison />
+      </Section>
+
+      <div className="pt-36">
+        <p className={`${label} text-[#d9b24c]`}>Explore it yourself</p>
+        <h2 className="display mt-3 text-[44px] leading-[1.05] font-semibold tracking-[-0.035em] text-[#f6f1e2]">Set your own dip and run the simulator.</h2>
+      </div>
+      <ScenarioPanel
+        values={values} lastRun={lastRun}
+        onChange={(k, v) => setValues((s) => ({ ...s, [k]: v }))}
+        onRun={() => { void run(values) }}
+        onReset={() => { setValues(PRESET); setLastRun(PRESET); setSimulated(null) }}
+      />
+
+      <Section n="06" kicker="Failure map" title="Pick two factors to see where the design breaks."
         lede="Each dot is one run. Green passed the ERCOT rule; the other colors mark how it failed. The map opens on the pair that separates the most failures, and the ring marks your scenario.">
         <FailureMap you={lastRun} />
       </Section>
 
-      <Section n="02" kicker="Your scenario, second by second"
+      <Section n="07" kicker="Your scenario, second by second"
         title={tr.passed
           ? `A ${VARS.depth.fmt(lastRun.depth)} dip at ${VARS.temp.fmt(lastRun.temp)}. Power is back ${Math.abs(late).toFixed(2)} s before the deadline.`
           : `A ${VARS.depth.fmt(lastRun.depth)} dip at ${VARS.temp.fmt(lastRun.temp)}. Power comes back ${late.toFixed(2)} s too late.`}
@@ -765,15 +782,6 @@ export default function Results() {
         <Replay s={lastRun} tr={tr} />
       </Section>
 
-      <Section n="03" kicker="Report card" title="Five ways this design fails."
-        lede="Ranked by how often each one happens across the simulated runs, with a 95% band. Naming the smallest fix needs a search over the design space, which is not built yet.">
-        <ReportCard />
-      </Section>
-
-      <Section n="04" kicker="Legacy vs product · Texas events" title="Legacy equipment fails all three real dips. The product passes all three."
-        lede="Three recorded ERCOT voltage events replayed against the same reference campus, once with legacy double-conversion UPS and once with the product.">
-        <Comparison />
-      </Section>
     </div>
   )
 }

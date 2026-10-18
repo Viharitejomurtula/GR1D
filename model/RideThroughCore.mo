@@ -440,8 +440,13 @@ model RideThroughCore
                     min_off_s = 0.0, kinetic = vfd_kinetic, c_uf_per_kw = vfd_c_uf_per_kw, v_ll_v = cooling_ll_v);
 
   constant Real SENSE_TAU_S = 0.001 "Protection sensing lag";
-  // Fraction of |Z| that becomes real voltage drop: R/|Z|*cos(phi) + X/|Z|*sin(phi); 0.523 at X/R = 10, pf = 0.9.
-  final parameter Real Z_EFF_FACTOR = (load_pf + x_over_r * sqrt(1.0 - load_pf * load_pf)) / sqrt(1.0 + x_over_r * x_over_r);
+  // Transformer chain as a complex impedance Z = R + jX on the facility base, and the load's reactive-to-real ratio at pf = load_pf.
+  // The source is tap-set so rated load (1 pu real power) sees 1.0 pu: Vs0 = 1 + Z * conj(S_rated), and a dip scales it.
+  final parameter Real z_mag_pu = z_total_pu * chain_loading_frac;
+  final parameter Real z_r_pu = z_mag_pu / sqrt(1.0 + x_over_r * x_over_r);
+  final parameter Real z_x_pu = x_over_r * z_r_pu;
+  final parameter Real load_tan_phi = sqrt(1.0 - load_pf * load_pf) / load_pf;
+  final parameter Real vs0_sq = (1.0 + z_r_pu + z_x_pu * load_tan_phi) ^ 2 + (z_x_pu - z_r_pu * load_tan_phi) ^ 2;
   constant Real OVERSHOOT_PEAK_X = 4.0 "Overshoot peaks this many recovery time constants after clearing";
 
   // ===================== Variables =====================
@@ -502,9 +507,11 @@ model RideThroughCore
   // collapsed-voltage branch, which looks plausible but inverts the physics entirely.
   Real v_sdp_pu(start = 1.0) "Voltage at the Service Delivery Point";
   Real v_psu_in_v "PSU input voltage";
-  Real z_drop_pu "Chain impedance on the facility base, real part";
-  Real v_disc "Discriminant of the voltage quadratic; negative = no operating point";
-  Real v_branch_margin "Voltage above the quadratic's midpoint; negative = on the collapsed root";
+  Real p_pu "Real power drawn from the grid, per unit of rated";
+  Real q_pu "Reactive power drawn from the grid, per unit of rated";
+  Real b_pu "Linear coefficient of the |V|^2 quadratic";
+  Real v_disc "Discriminant of the |V|^2 quadratic; negative = no operating point";
+  Real v_branch_margin "|V|^2 above the quadratic's midpoint; negative = on the collapsed root";
   // Protection senses a filtered voltage, not an instantaneous one. This is required by
   // NOGRR 282 2.14(5) ("filtered quantities or time delays to prevent misoperation") and is
   // also what breaks the grid-side algebraic loop: a when-equation cannot sit inside a
@@ -598,25 +605,22 @@ equation
     elseif k_cleared >= 1 then v_recovering
     else 1.0;
 
-  // Voltage drop across the transformer chain, referenced to the rated operating point.
+  // Voltage at the service delivery point: an exact constant-power solve, not a scalar approximation.
   //
-  // Two corrections over a naive v = v_src - Z*i*v_src:
-  //  1. Drop is taken against (i - 1), not i. Real facilities tap-regulate so that nominal
-  //     voltage appears at the PSU at rated load; the impedance governs the *change* when
-  //     current departs from rated, which is what a dip causes.
-  //  2. Z_EFF_FACTOR converts |Z| into an actual voltage drop. The chain is mostly reactive
-  //     (X/R ~ 10) against a ~0.9 pf load, so drop ~ I*(R*cos(phi) + X*sin(phi)) is roughly
-  //     half of I*|Z|. Without this the model showed a 25% drop at idle.
-  //
-  // Note the summed transformer percentages are each on their own MVA base; converting them
-  // to a common facility base is still open (Parameter_Table.md, open item 8).
-  v_sdp_pu = v_source_pu - z_drop_pu * (i_grid_pu - 1.0) * v_source_pu;
-  z_drop_pu = Z_EFF_FACTOR * z_total_pu * chain_loading_frac;
-  // Constant-power load behind a series impedance: v^2 - vs(1+k)v + k vs p = 0 has two roots (k = z_drop_pu, p = grid power in
-  // per unit). Only the larger is physical. These two signals let the runner reject a run whose solver sat on the collapsed
-  // root or lost the real solution altogether (no operating point: voltage collapse), instead of grading it as if valid.
-  v_disc = v_source_pu * v_source_pu * (1.0 + z_drop_pu) ^ 2 - 4.0 * z_drop_pu * v_source_pu * (p_grid_w / p_total_rated_w);
-  v_branch_margin = v_sdp_pu - 0.5 * v_source_pu * (1.0 + z_drop_pu);
+  // The load (p, q = p*tan(phi)) sits behind the complex chain impedance Z, fed by a tap-set source whose magnitude is
+  // v_source_pu * sqrt(vs0_sq) (so rated load sees 1.0 pu). From S = V * conj((Vs - V)/Z), x = |V|^2 satisfies
+  //   x^2 - b*x + |Z|^2 (p^2 + q^2) = 0,   b = |Vs|^2 - 2 (R p + X q),
+  // and only the larger root is physical. This replaces v = vs - Z_eff*(i-1)*vs, which kept only the in-phase part of the
+  // drop and read 0.04 pu too high on average (up to 0.165 pu) across 0.5-0.7 pu dips, and returned a voltage where the
+  // real network has none (validation/crosscheck/network_check.py: DPsim and an independent complex solve agree to 1e-9).
+  // Where no operating point exists the discriminant is negative; v_sdp_pu then sits at the nose of the curve and the runner
+  // marks the run invalid via v_disc, instead of grading it.
+  v_disc = b_pu ^ 2 - 4.0 * z_mag_pu ^ 2 * (p_pu ^ 2 + q_pu ^ 2);
+  b_pu = v_source_pu ^ 2 * vs0_sq - 2.0 * (z_r_pu * p_pu + z_x_pu * q_pu);
+  p_pu = p_grid_w / p_total_rated_w;
+  q_pu = p_pu * load_tan_phi;
+  v_sdp_pu = sqrt(max(0.5 * (b_pu + sqrt(max(v_disc, 0.0))), 0.0));
+  v_branch_margin = v_sdp_pu ^ 2 - 0.5 * b_pu;
   v_psu_in_v = supply_voltage_v * max(v_sdp_pu, 0.0);
   der(v_sense_pu) = (v_sdp_pu - v_sense_pu) / SENSE_TAU_S;
 

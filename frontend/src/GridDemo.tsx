@@ -44,14 +44,14 @@ const HOLD = 10
 const DEAD_R = 34000 // metres: radius of the zone that goes without current
 const clamp01 = (x: number) => Math.max(0, Math.min(1, x))
 
-function eventState(e: number, tHit: number) {
-  if (e < 0) return { s: 0, r: 0, dropAge: -1, end: tHit + HOLD + 2.4 }
+function eventState(e: number, tHit: number, hold = HOLD) {
+  if (e < 0) return { s: 0, r: 0, dropAge: -1, end: tHit + hold + 2.4 }
   // s: share of the data center's load that has left the grid. r: grid strain.
-  const back = e - (tHit + HOLD)
+  const back = e - (tHit + hold)
   const s = clamp01((e - tHit) / 0.3) * (1 - clamp01(back / 1.8))
   const pulse = e > tHit && back < 0 ? 0.9 + 0.1 * Math.sin(e * 5) : 1
   const r = clamp01((e - tHit) / 1.0) * (1 - clamp01(back / 2.2)) * pulse
-  return { s, r, dropAge: e - tHit, end: tHit + HOLD + 2.4 }
+  return { s, r, dropAge: e - tHit, end: tHit + hold + 2.4 }
 }
 
 // ---- current: comets that travel along each line in the direction of its power flow ----
@@ -102,7 +102,16 @@ function dcHalls(p: number[]) {
 
 const box = (x: number, y: number, hw: number, hh: number) => [[x - hw, y - hh], [x + hw, y - hh], [x + hw, y + hh], [x - hw, y + hh]]
 
-export default function GridDemo({ onFinished, onNext }: { onFinished?: () => void; onNext?: () => void }) {
+type DemoProps = {
+  onFinished?: () => void; onNext?: () => void
+  // embedded in another page: no header, counters or buttons; the event is started by changing `trigger`
+  embedded?: boolean; trigger?: number
+  rideThrough?: boolean // the site rides through the dip instead of dropping off the grid
+  hold?: number; zoom?: number
+  onClock?: (secondsSinceDipArrived: number, active: boolean) => void
+}
+
+export default function GridDemo({ onFinished, onNext, embedded, trigger, rideThrough, hold = HOLD, zoom, onClock }: DemoProps) {
   const [grid, setGrid] = useState<Grid>()
   const [now, setNow] = useState(0)
   const [startedAt, setStartedAt] = useState<number | null>(null)
@@ -144,13 +153,16 @@ export default function GridDemo({ onFinished, onNext }: { onFinished?: () => vo
   const faultPt = fault?.pt
   const tHit = fault ? fault.km / WAVE_KM_S : 2
 
+  useEffect(() => { if (trigger) setStartedAt(performance.now() / 1000) }, [trigger])
   const fixed = new URLSearchParams(location.search).get('t') // ?t=8 freezes the replay 8 s after the press
-  const { end } = eventState(0, tHit)
+  const { end } = eventState(0, tHit, hold)
   const e = fixed !== null ? Number(fixed) : startedAt === null ? -1 : now - startedAt
   const active = e >= 0 && e < end
-  const { s, r, dropAge } = eventState(active ? e : -1, tHit)
+  useEffect(() => { onClock?.(e - tHit, active) }, [now]) // eslint-disable-line react-hooks/exhaustive-deps
+  const ev = eventState(active ? e : -1, tHit, hold)
+  const s = rideThrough ? 0 : ev.s, r = rideThrough ? 0 : ev.r, dropAge = rideThrough ? -1 : ev.dropAge
   // the recession: after the drop, a dark zone spreads out from the data center. Nothing flows inside it.
-  const back = e - (tHit + HOLD)
+  const back = e - (tHit + hold)
   const sFlow = clamp01((dropAge - 0.4) / 1.4) * (1 - clamp01(back / 1.8))
   const deadR = active && dropAge > 0 ? DEAD_R * (1 - Math.pow(1 - clamp01(dropAge / 2.4), 3)) * (1 - clamp01(back / 1.8)) : 0
   const cometTime = now % PERIOD
@@ -185,7 +197,7 @@ export default function GridDemo({ onFinished, onNext }: { onFinished?: () => vo
   const pulse = (e * 2.2) % 1
   const waveR = e * WAVE_KM_S * 1000 // metres: the dip travelling out from the fault
 
-  const dcText = onBattery ? 'DATA CENTER\n0 MW FROM GRID  ·  ON BATTERY' : s > 0 ? 'DATA CENTER\nRECONNECTING' : `DATA CENTER\n${dc?.mw} MW`
+  const dcText = rideThrough && active && e > tHit ? `DATA CENTER\nRIDING THROUGH  ·  ${dc?.mw} MW` : onBattery ? 'DATA CENTER\n0 MW FROM GRID  ·  ON BATTERY' : s > 0 ? 'DATA CENTER\nRECONNECTING' : `DATA CENTER\n${dc?.mw} MW`
 
   const layers = [
     // the wires, dim; the current is what glows
@@ -308,35 +320,35 @@ export default function GridDemo({ onFinished, onNext }: { onFinished?: () => vo
   const strained = s > 0.5
   const status = !active ? 'NORMAL OPERATION'
     : e < tHit ? 'GRID FAULT  ·  DIP TRAVELLING TO THE DATA CENTER'
+    : rideThrough ? 'DATA CENTER RIDES THROUGH THE DIP'
     : strained ? 'NO CURRENT REACHES THE DATA CENTER  ·  GRID STRAINED'
-    : e < tHit + HOLD ? 'DATA CENTER LEAVING THE GRID' : 'DATA CENTER RECONNECTING'
+    : e < tHit + hold ? 'DATA CENTER LEAVING THE GRID' : 'DATA CENTER RECONNECTING'
 
   return (
     <div style={{ position: 'absolute', inset: 0 }}>
-      <DeckGL views={view} initialViewState={INITIAL_VIEW_STATE} controller={CONTROLLER} layers={layers} style={{ position: 'absolute', inset: '0' }}>
+      <DeckGL views={view} initialViewState={zoom ? { ...INITIAL_VIEW_STATE, zoom } : INITIAL_VIEW_STATE} controller={CONTROLLER} layers={layers} style={{ position: 'absolute', inset: '0' }}>
         <Map reuseMaps mapStyle={MAP_STYLE} />
       </DeckGL>
 
+      {!embedded && (<>
       {/* soft fades so type can sit directly on the map, with no boxes */}
       <div className="pointer-events-none absolute inset-0"
         style={{ background: 'radial-gradient(ellipse 900px 600px at 0% 0%, rgba(7,7,10,0.97) 0%, rgba(7,7,10,0.9) 45%, rgba(7,7,10,0.5) 72%, transparent 100%), radial-gradient(ellipse 420px 260px at 100% 0%, rgba(7,7,10,0.85), transparent 100%)' }} />
 
       <header className="pointer-events-none absolute top-8 left-10 max-w-[520px] [text-shadow:0_0_14px_rgba(7,7,10,0.95),0_0_3px_rgba(7,7,10,0.9)]">
-        <p className="mono text-[11.5px] font-medium tracking-[0.14em] text-[#d9b24c] uppercase">July 2026 · Northern Virginia</p>
+        <p className="mono text-[11.5px] font-medium tracking-[0.14em] text-[#d9b24c] uppercase">December 2022 · West Texas</p>
         <h1 className="display mt-3 text-[38px] leading-[1.05] font-semibold tracking-[-0.035em] text-[#f6f1e2] [text-wrap:balance]">
-          Nearly 3,800 MW of data center demand shifted to on-site generation at once.
+          About 1,560 MW of large load dropped off the Texas grid at once.
         </h1>
         <p className="mt-4 max-w-[470px] text-[15.5px] leading-[1.55] text-[#d3ccb8]">
-          A mechanical failure on a 230 kV line set it off, about 2.5 times the 2024 event. On August 11, PJM said it is considering
-          ride-through, backup generation behavior and reconnection requirements for data centers.
-        </p>
-        <p className="mono mt-4 max-w-[470px] text-[10.5px] leading-[1.6] text-[#8d8670]">
-          Secondhand: Data Center Dispatch, citing Utility Dive. No dip depth or grid impact given; primary source unchecked.
-          The replay is illustrative: a Texas grid and an 800 MW site.
+          A single grid fault was enough to trip hundreds of large loads together. Data centers could now do the same, at much larger scale.
         </p>
       </header>
 
+      </>)}
+
       {/* live counters, beside the graphic */}
+      {!embedded && (
       <div className="pointer-events-none absolute top-8 right-10 text-right">
         <p className="mono text-[11px] tracking-[0.14em] text-[#a8a089] uppercase">Draw from the grid</p>
         <p className="display text-[64px] leading-[0.95] font-semibold tracking-[-0.04em]" style={{ color: onBattery ? '#ff6a55' : '#f6f1e2' }}>
@@ -346,12 +358,14 @@ export default function GridDemo({ onFinished, onNext }: { onFinished?: () => vo
           Grid · {strained ? 'strained' : active && e < tHit ? 'fault' : 'normal'}
         </p>
       </div>
+      )}
 
       <div className="pointer-events-none absolute bottom-6 left-10 mono max-w-[300px] text-[11.5px] leading-snug font-medium tracking-[0.1em]" style={{ color: strained ? '#ff6a55' : '#a8a089' }}>
         <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full align-middle" style={{ background: strained ? '#ff4a3a' : '#d9b24c' }} />
         {status}
       </div>
 
+      {!embedded && (
       <div style={{ position: 'absolute', left: '50%', bottom: 22, transform: 'translateX(-50%)' }} className="flex items-baseline gap-9">
         <button
           onClick={() => { if (!active) setStartedAt(performance.now() / 1000) }}
@@ -366,6 +380,7 @@ export default function GridDemo({ onFinished, onNext }: { onFinished?: () => vo
           </button>
         )}
       </div>
+      )}
     </div>
   )
 }
