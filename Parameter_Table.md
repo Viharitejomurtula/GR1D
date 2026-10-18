@@ -297,6 +297,14 @@ tuning knob — but a fitted number cannot also be a validation.
 |---|---|---|---|---|
 | Facility A | 0.46 | 45.6% vs real 46% | **1.48 vs 1.60 pu** (−7.5%) | does not recover ✓ matches ~2 h |
 | Facility B | 0.30 | 25.2% vs real 24% | **1.33 vs 1.50 pu** (−11%) | — |
+| Shallow dip, 0.844 pu | **none — predicted** | **22.0% vs real 19%**, using facility B's inferred 0.30 | — | — |
+
+The 0.844 pu case is a genuine out-of-sample prediction: nothing was refitted, the legacy share
+came from facility B, and it sits in a different envelope tier (0.80-0.90 pu, the 2.0 s band)
+than either calibration case. Caveat: the result hinges on the legacy relay pickup sitting at
+0.85 pu, just above the 0.844 dip. At a 0.80 pu setting nothing trips and the model predicts
+near-zero loss. Phase fraction makes no difference here, so the loss is relay-driven rather
+than PSU-driven at this depth.
 
 **Systematic finding:** peak current under-predicts in *both* cases, same direction, similar
 magnitude. That is a consistent model bias rather than scatter — the model is conservative on
