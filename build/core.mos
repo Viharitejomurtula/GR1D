@@ -1,2 +1,0 @@
-loadFile("/work/model/RideThroughCore.mo"); getErrorString();
-checkModel(RideThroughCore); getErrorString();

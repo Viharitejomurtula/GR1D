@@ -1,3 +1,0 @@
-loadFile("/work/model/RideThroughCore.mo"); getErrorString();
-buildModel(RideThroughCore, startTime=0, stopTime=15.0, numberOfIntervals=4000, method="dassl", tolerance=1e-6, outputFormat="csv");
-getErrorString();
