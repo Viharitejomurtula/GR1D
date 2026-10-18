@@ -106,10 +106,15 @@ soc_estimate_error, converter_overload_s, relay_accuracy_pct, compressor_trip_pc
 
 ## 6. Known issues
 
-- `tests/test_implied.py::test_written_nominal_correlation_matches` fails for 3 of 5 groups (differences up to 7.7e-5
-  against a 1e-5 tolerance) with the pinned library versions and with numpy 2.4.6. Cause not found.
-- The `implied_*.csv` files in `network/drivers/` were produced before the `osc_amp` and resistance changes and were
-  not regenerated. Nominal-case correlations are unchanged by them.
+- Fixed 2026-10-18: `tests/test_implied.py::test_written_nominal_correlation_matches` failed for 3 of 5 groups on
+  some machines. Cause: `sample.py` drew the copula with numpy's `multivariate_normal` default (`method="svd"`), whose
+  factorization depends on the LAPACK library (Apple Accelerate vs OpenBLAS), so the same seed gave different draws.
+  It now uses `method="cholesky"` (unique factor, same draws everywhere).
+- Fixed 2026-10-18: the `implied_*` files in `network/drivers/` were regenerated with the fitted resistance slope, the
+  NLR `osc_amp` range and the Cholesky sampler. Nominal-case correlations moved by less than 1e-3; upper-attenuation
+  resistance correlations moved by up to 0.38 (e.g. resistance-capacity -0.77 -> -0.98).
+- The fitted resistance slope (-0.0201 pu/degC) rests on two temperatures (10 and 25 C); its 95% range over SOC steps
+  is -0.028 to -0.010.
 - The age links rest on one paper's model, not on measured aging data.
 
 ## 7. Where things are

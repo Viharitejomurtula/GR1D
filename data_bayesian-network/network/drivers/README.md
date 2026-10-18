@@ -69,7 +69,7 @@ Models 1-3, ERCOT cross-check, 2026 holdout and caveats. Produced by `fit.build_
 fig_holdout_2026.png**: figures in the report (load vs temperature with both curves, load by hour,
 temperature by month x hour, residual distributions, 2026 holdout). Produced by `fit.make_figures`.
 
-### Part B: implied factor covariance (produced 2026-10-17 by `python -m ridethrough.drivers.implied`)
+### Part B: implied factor covariance (produced 2026-10-17, regenerated 2026-10-18 by `python -m ridethrough.drivers.implied`)
 
 Factors (rows and columns below) are the 14 rows of S in `../s_matrix/s_matrix_long.csv`. A case
 is one combination of attenuation (nominal | upper), coupling (0 | 0.5 | 1), noise_mult (1 | 5 | 10),
@@ -98,7 +98,7 @@ unit conversion). Produced by `implied.run_cases`, `implied.driver_terms` and
 `implied.pair_assumptions`.
 
 **implied_mc_check.csv**: case x group x pairs whose Monte Carlo correlation (100,000 samples from
-`sample.sample_drivers`, with S's curves) differs from the linear result by more than 0.1 (585 rows).
+`sample.sample_drivers`, with S's curves) differs from the linear result by more than 0.1 (261 rows).
 Columns: case, group, factor_i, factor_j, linear, monte_carlo, difference (monte_carlo - linear).
 Produced by `implied.monte_carlo_check`.
 

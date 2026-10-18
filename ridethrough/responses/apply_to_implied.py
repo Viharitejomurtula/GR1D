@@ -25,6 +25,10 @@ from ridethrough.responses import battery_resistance as br
 FACTOR = "storage_resistance_pu"
 CASE = dict(implied.NOMINAL_CASE, attenuation="upper")
 GROUPS = ("overall", "DJF", "JJA")
+# The slope S held before the data fit: P3 two-point average, (5 - 1) / (-20 - 25) = -0.0889 pu/degC
+# ("about 5 times higher at -20 C than at room temperature", P3-Cell_behavior_at_low_temperatures.pdf p. 2).
+# Set explicitly so the "original" variants stay the P3 baseline now that s_matrix_long.csv holds the fitted slope.
+P3_SLOPE = -0.0889
 
 
 def variant_inputs(base: dict, slope: float | None, noise_rel: float | None) -> dict:
@@ -66,10 +70,10 @@ def main() -> None:
     slopes = {"Sandia 1 Hz": f.loc[0, "local_slope_near25_pu_per_C"], "Panasonic 1 Hz": f.loc[1, "local_slope_near25_pu_per_C"],
               "Panasonic 10 mHz": f.loc[2, "local_slope_near25_pu_per_C"]}
     sd_rep = float(np.median(sp.loc[0, ["LCO", "LFP", "NCA"]].astype(float)))      # NMC excluded: one outlier cell
-    variants = {"original (P3 slope, 0.72% noise)": (None, None)}
+    variants = {"original (P3 slope, 0.72% noise)": (P3_SLOPE, None)}
     for k, v in slopes.items():
         variants[f"slope {k} ({v:.4f}), noise {sd_rep:.3f}"] = (v, sd_rep)
-    variants[f"original slope, noise {sd_rep:.3f}"] = (None, sd_rep)
+    variants[f"original slope, noise {sd_rep:.3f}"] = (P3_SLOPE, sd_rep)
     out = []
     for name, (sl, nz) in variants.items():
         c = correlations(variant_inputs(base, sl, nz), fitted); c.insert(0, "variant", name); out.append(c)
