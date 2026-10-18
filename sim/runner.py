@@ -125,6 +125,7 @@ def _overrides(sc: Scenario) -> str:
         parts.append(f"{param}={int(getattr(sc, field))}")
     parts.append(f"z_total_pu={sc.z_total_pct / 100.0}")
     parts.append(f"vfd_kinetic={'true' if sc.vfd_kinetic else 'false'}")
+    parts.append(f"psu_ilim_x={float(sc.psu_ilim_x)}")
     parts.append(f"psu_cap_datasheet={'true' if sc.psu_cap_datasheet else 'false'}")
     parts.append(f"ramp_on_grid_only={'true' if sc.ramp_on_grid_only else 'false'}")
     for name, arr in sc.group_arrays().items():

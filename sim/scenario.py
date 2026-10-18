@@ -90,6 +90,7 @@ class Scenario:
                                          # reproduced -- inferred from the validation data, so NOT independent evidence; see validation/psu_delay_sweep.py)
     legacy_open_delay_s: float = 0.05   # breaker/contactor opening time after the relay operates (G: 2-5 cycles)
     ramp_on_grid_only: bool = field(default=True, metadata={"vector": False})   # False = old behaviour (servers' demand fell with the ramp gate)
+    psu_ilim_x: float = field(default=0.0, metadata={"vector": False})   # PSU input-current limit, x the 180 V full-power current (17.3 A); 0 = none. UNSOURCED (AE datasheet silent)
     psu_cap_datasheet: bool = field(default=True, metadata={"vector": False})   # False reproduces the old per-unit scaling (ablation only)
 
     # --- Facility heterogeneity: the IT side is n_groups parallel RackGroups (model/RideThroughCore.mo). n_groups = 1 is the old single

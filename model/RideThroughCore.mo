@@ -135,6 +135,7 @@ model RackGroup
   parameter Real restart_surge_x = 1.15;
   parameter Real restart_surge_s = 0.5;
   parameter Boolean psu_cap_datasheet = true;
+  parameter Real psu_ilim_x = 0.0 "PSU input-current limit as a multiple of the current needed for full power at 180 V (17.3 A); 0 = no limit";
   parameter Boolean ramp_on_grid_only = true "The post-restart ramp shapes what the PSUs draw from the grid, not what the servers consume (false = old behaviour)";
   final parameter Real n_psu = p_it_w / PSU_RATED_W;
   final parameter Real e_holdup_max_j = max(n_psu * PSU_HOLDUP_J * holdup_scale, 1.0e-9);
@@ -237,7 +238,8 @@ equation
   // server load comes off the battery and the PSUs stop pulling it from the grid.
   p_psu_w = (if bbu_active and soc > 0 then 0.0
              else min(p_server_w, psu_online_frac * n_psu * PSU_RATED_W *
-                      (if psu_cap_datasheet then 1.0 else max(v_sdp_pu, 0.0))))
+                      min((if psu_cap_datasheet then 1.0 else max(v_sdp_pu, 0.0)),
+                          (if psu_ilim_x > 0 then psu_ilim_x * supply_voltage_v * max(v_sdp_pu, 0.0) / 180.0 else 1.0e9))))
             * (if ramp_on_grid_only then ramp_gate else 1.0);
 
   der(e_holdup_j) =
@@ -315,6 +317,7 @@ model RideThroughCore
   // loading and overstates the voltage drop. Installed capacity is not public: G, 0.5-1.0.
   parameter Real chain_loading_frac = 0.75 "Facility load / installed transformer capacity";
   parameter Boolean ramp_on_grid_only = true "Ramp-back shapes the PSUs' grid draw, not the servers' consumption (false = old behaviour, kept for ablation)";
+  parameter Real psu_ilim_x = 0.0 "PSU input-current limit, multiple of the full-power-at-180-V current (0 = no limit)";
   parameter Boolean psu_cap_datasheet = true "PSU delivers rated power until lockout (false = old per-unit-voltage scaling, kept for ablation)";
 
   parameter Real cooling_share_25c = 0.30;
@@ -477,7 +480,7 @@ model RideThroughCore
     each supply_voltage_v = supply_voltage_v, each faulted_phase_frac = faulted_phase_frac, each trip_spread_frac = psu_trip_spread_frac,
     each psu_uv_delay_s = psu_uv_delay_s, each psu_restart_delay_s = psu_restart_delay_s, each handback_delay_s = handback_delay_s,
     each ramp_back_s = ramp_back_s, each restart_surge_x = restart_surge_x, each restart_surge_s = restart_surge_s,
-    each psu_cap_datasheet = psu_cap_datasheet, each ramp_on_grid_only = ramp_on_grid_only);
+    each psu_cap_datasheet = psu_cap_datasheet, each psu_ilim_x = psu_ilim_x, each ramp_on_grid_only = ramp_on_grid_only);
   // Facility aggregates (names kept so the runner, grader and tests are unchanged). Fractions are weighted by IT rating.
   Real p_server_w "Server/IT demand";
   Real p_psu_w "Power the PSUs deliver to the busbars";
