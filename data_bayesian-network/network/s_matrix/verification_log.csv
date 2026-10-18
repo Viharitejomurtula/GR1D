@@ -1,0 +1,13 @@
+source,values_checked,result,how
+SMA SCS UP-XT datasheet,3850/3504/3273 A; 4000/3640/3400 kVA; outdoor use; no overload rating,confirmed,re-opened this session
+Sandia SAND2008-5583,capacity 10.41/9.81/7.26/6.34/4.67/0.27 Ah at 35/25/0/-20/-30/-40 C; 1C; no resistance-vs-temperature data,confirmed; -20 and -30 C points added,re-opened this session
+"Sui et al. 2021 (Energies 14, 1732)",EOL 20% fade / 100% resistance; Table 7 285.5/400.5 months; Table 8 232/179 months; 23.8 y and 14.9 y statements,confirmed; text inconsistency noted,opened twice this session
+TDK B41694/B41794,"tolerance -10/+30%; life > 200,000 h at 40 C; dC/C <= 30%; ESR <= 3x",confirmed; tolerance sign garbled in extraction,opened this session
+ASHRAE TC9.9 reference card (5th ed.),recommended 18-27 C (A1-A4); allowable A1 15-32 ... A4 5-45,confirmed,opened this session
+SEL-751A data sheet,accuracy specified at 20 C; operating -40 to +85 C,confirmed,opened this session
+Rumpf et al. 2017,"0.28% capacity, 0.72% impedance, 1100 LFP cells",confirmed (abstract only),opened this session
+P3 low-temperature whitepaper,about 5x resistance at -20 C,confirmed,earlier session
+Advanced Energy ORv3 PSU,20 ms at 100%; table to 150%,confirmed,earlier session
+Microsoft ASPLOS 2024,37.5% / 9%,confirmed,earlier session
+arXiv 2508.14318,0.2-3 Hz,confirmed,earlier session
+DFW temperature percentiles,"p5 3.3 C, p95 35.0 C",computed,dfw_hourly_temp_clean.csv

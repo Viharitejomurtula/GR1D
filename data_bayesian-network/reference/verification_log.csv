@@ -1,0 +1,57 @@
+file,item,result,detail,source_url
+master,dip_depth_pct,confirmed,confirmed (retained values on slides 8-9); depth is a conversion,https://www.ercot.com/files/docs/2024/11/19/ERCOT%20Large%20Load%20Events_OWG_21Nov2024.pdf
+master,dip_duration_ms,confirmed,"confirmed (cycles on slides 4, 5, 8, 9); mean is a tally",https://www.ercot.com/files/docs/2024/11/19/ERCOT%20Large%20Load%20Events_OWG_21Nov2024.pdf
+master,n_dips,confirmed,partly confirmed (NERC Table 1); typical is an assumption,https://www.nerc.com/globalassets/our-work/reports/event-reports/incident_review_large_load_loss.pdf
+master,dip_gap_s,confirmed,confirmed (NERC Table 1 start times); median is a calculation,https://www.nerc.com/globalassets/our-work/reports/event-reports/incident_review_large_load_loss.pdf
+master,load_fraction,confirmed,"confirmed (ERCOT 49.8% p. 9, LBNL 50% p. 6, ASPLOS 97% / 79%, Riello 25% at or below 20%)",https://www.ercot.com/files/docs/2025/04/08/ERCOT-2025-Long-Term-Load-Forecast-Report.pdf
+master,osc_amp,confirmed,confirmed (Table 4: 37.5% and 9%),https://www.microsoft.com/en-us/research/wp-content/uploads/2024/03/GPU_Power_ASPLOS_24.pdf
+master,osc_freq_hz,confirmed,confirmed (Sec. III-A '0.2-3 Hz'; Fig. 1 caption DGX-H100),https://arxiv.org/pdf/2508.14318
+master,outdoor_temp_c,confirmed,"confirmed (monthly table, 66.6 F, 20.2 days, records)",https://www.weather.gov/fwd/dfw_normals
+master,soc_estimate_error,confirmed,"confirmed (+/-15%, >40% outliers, 100+ sites, ACCURE; +/-2% target)",https://www.modernpowersystems.com/analysis/energy-storage/soc-errors-in-lfp-batteries-the-1-million-per-gwh-challenge-for-bess/
+master,usable_energy_factor,confirmed,n/a (derived),https://cdn.shopify.com/s/files/1/0763/0562/9462/files/EVE_3.2V_314Ah_LiFePO4_Lithium_Battery_Cell.pdf
+master,capacity_age_factor,confirmed,"confirmed (EVE Table 3, Sec. 3; Sandia 10-15%; P3 80%)",https://cdn.shopify.com/s/files/1/0763/0562/9462/files/EVE_3.2V_314Ah_LiFePO4_Lithium_Battery_Cell.pdf
+master,storage_resistance_pu,corrected,confirmed with correction (5x yes; chemistry not named in P3),https://www.p3-group.com/wp-content/uploads/2024/04/P3-Cell_behavior_at_low_temperatures.pdf
+master,converter_current_limit_pu,confirmed,confirmed (110% / 200% for 200 ms at 25 C; 800 kW spec),https://cdn.blueally.com/smartpowerworks/datasheets/critical-power/liebert-exls1_01.pdf
+master,converter_overload_s,confirmed,"confirmed (125% 10 min, 150% 60 s, 25 C)",https://cdn.blueally.com/smartpowerworks/datasheets/critical-power/liebert-exls1_01.pdf
+master,dclink_capacitance_factor,confirmed,"confirmed (change within +/-30%, ESR up to 3x)",https://www.mouser.co.uk/datasheet/2/136/B41694__B41794-45962.pdf
+master,relay_accuracy_pct,confirmed,"confirmed (+/-1% of reading, +/-2% with card; <1.5 cycles; no 27/59 delay)",https://selinc.com/api/download/2822
+master,psu_holdup_ms,confirmed,"confirmed (ORv3 20 ms; Bel 10 ms at 70% load, 11 ms at 60%)",https://www.advancedenergy.com/getmedia/b530c4fb-6ef2-4d50-8296-24a02c9501fd/ENG-50V-3kW-OPEN-RACK-V3-PSU-235-01-04-27-22.pdf
+master,compressor_trip_pct,confirmed,confirmed (Trane 10% below nominal; VFD 70-75% DC bus); VFD source is weak,https://support.trane.com/hc/en-us/articles/18402676383885-Under-Voltage-Diagnostic
+master,compressor_restart_s,confirmed,"confirmed (RTAC 120 s, 30-120, 5 min, 15-30 s; CGAM 10 s, 360 s)",https://support.trane.com/hc/en-us/articles/19411961163021-Data-Centers-Rapid-Restart
+master,units_offline,confirmed,confirmed (redundancy definitions); counts are assumptions,https://product-help.schneider-electric.com/EcoStruxure/Power-Monitoring-Expert-2023/content/4_configuring/tools/ups_power_config_utility/ups_system_redundancy_types.htm
+master,converter_loading,confirmed,"confirmed (Seika 30-80%, 2N 50%, N+1 66%; Riello sample)",https://www.seika.com/cms_source/data/en/product/files/high-efficiency-ups-systems-for-a-power-hungry-world.pdf
+master,equipment_age_years,confirmed,confirmed (DCD figures); range is an assumption,https://www.datacenterdynamics.com/en/opinions/how-much-capacity-is-in-aging-data-centers/
+simulator_validation,ERCOT crypto facility A (138 kV lightning LLG fault),confirmed,confirmed (NERC crypto report p. 5),https://www.nerc.com/globalassets/our-work/reports/event-reports/incident_review_considering_voltage-sensitive_crypto_load_reductions.pdf
+simulator_validation,ERCOT crypto facility B (same event),confirmed,confirmed (NERC crypto report p. 5),https://www.nerc.com/globalassets/our-work/reports/event-reports/incident_review_considering_voltage-sensitive_crypto_load_reductions.pdf
+simulator_validation,Equation for a constant-power load,confirmed,confirmed (NERC crypto report p. 5),https://www.ercot.com/files/docs/2026/03/02/04_LEL-RT-Requirements_SPWG_Feb2026.pdf
+simulator_validation,Data center load ramp-down (field),confirmed,"confirmed (text of p. 20: 450 to 40 MW within 36 s, then about 7 MW for 4 h)",https://www.nerc.com/globalassets/who-we-are/standing-committees/rstc/whitepaper-characteristics-and-risks-of-emerging-large-loads.pdf
+simulator_validation,Crypto mine ramp-down and oscillation (field),confirmed,confirmed (298 MW in 25 s; about 25 MW peak-to-peak),https://www.nerc.com/globalassets/who-we-are/standing-committees/rstc/whitepaper-characteristics-and-risks-of-emerging-large-loads.pdf
+simulator_validation,AI training fast ramp (recorded),confirmed,confirmed (1.9 pu/s for about 250 ms; pu base not stated),https://www.nerc.com/globalassets/who-we-are/standing-committees/rstc/whitepaper-characteristics-and-risks-of-emerging-large-loads.pdf
+simulator_validation,ERCOT large flexible load ramps (fleet),confirmed,confirmed (slide 29: 8 days with at least 300 MW in 15 min),https://www.nerc.com/globalassets/who-we-are/standing-committees/rstc/lmwg/lmwg_meeting_presentations_september_17_2024.pdf
+simulator_validation,ERCOT large flexible load ramps vs regulation (fleet),confirmed,"confirmed (slide 20: 255 intervals, 969 more above 50%)",https://www.nerc.com/globalassets/who-we-are/standing-committees/rstc/lmwg/lmwg_meeting_presentations_september_17_2024.pdf
+simulator_validation,Training power spectrum (measured),confirmed,confirmed (Sec. III-A 0.2-3 Hz),https://arxiv.org/pdf/2508.14318
+simulator_validation,Data center cluster oscillation (field),corrected,confirmed with a correction (14.6-14.8 Hz; owner blamed the UPS input stage; the paper names Dominion but not the state),https://sites.ecse.rpi.edu/~vanfrl/documents/publications/pre-prints/20250218_CMLV_DataCenter.pdf
+simulator_validation,Ultracapacitor ESR vs temperature,unverified,not re-opened,https://cap-xx.com/wp-content/uploads/2020/03/CAP-XX-GY3000F-Datasheet-v1-2.pdf
+simulator_validation,Ultracapacitor ESR vs temperature,unverified,not re-opened,https://cap-xx.com/wp-content/uploads/2020/03/CAP-XX-GY3000F-Datasheet-v1-2.pdf
+simulator_validation,Ultracapacitor capacitance vs temperature,unverified,not re-opened,https://cap-xx.com/wp-content/uploads/2020/03/CAP-XX-GY3000F-Datasheet-v1-2.pdf
+simulator_validation,Ultracapacitor aging,unverified,not re-opened,https://cap-xx.com/wp-content/uploads/2020/03/CAP-XX-GY3000F-Datasheet-v1-2.pdf
+simulator_validation,LFP cycling,confirmed,confirmed (Sandia: 0.0036 to 0.0042 ohm; 10-15% loss),https://www.thierry-lequeu.fr/data/SAND2008-5583.pdf
+simulator_validation,Lab NMC cell cold discharge,unverified,not re-opened,https://ecec.me.psu.edu/Pubs/047304JES%202013.pdf
+simulator_validation,NMC pouch cell voltage-model error,unverified,not re-opened,https://arxiv.org/pdf/2203.08515
+simulator_validation,SMA SCS 3450 UP-XT thermal derating,confirmed,confirmed (4000/3640/3400 kVA; 3850/3504/3273 A),https://files.sma.de/downloads/SCS-UP-XT-DS-en-23.pdf
+simulator_validation,SMA SCS 3950 UP-XT thermal derating,confirmed,confirmed (4600/4186/3910 kVA),https://files.sma.de/downloads/SCS-UP-XT-DS-en-23.pdf
+simulator_validation,Vertiv EXL S1 fault clearing,confirmed,confirmed (applies only when bypass is unavailable),https://www.vertiv.com/490f18/globalassets/products/critical-power/uninterruptible-power-supplies-ups/liebert-exl-s1-480v-ce/vertiv-liebert-exl-s1-800kw-technical-specifications.pdf
+simulator_validation,Vertiv EXL S1 operating temperature,confirmed,confirmed (0-40 C without derating),https://www.vertiv.com/490f18/globalassets/products/critical-power/uninterruptible-power-supplies-ups/liebert-exl-s1-480v-ce/vertiv-liebert-exl-s1-800kw-technical-specifications.pdf
+simulator_validation,Capacitor life vs temperature (OS-CON not electrolytic),unverified,not re-opened,https://www.vishay.com/docs/90017/reliabilityoscon.pdf
+simulator_validation,Vertiv EXL S1 overload capability curve (25 C),confirmed,confirmed (all four ratings at 25 C),https://cdn.blueally.com/smartpowerworks/datasheets/critical-power/liebert-exls1_01.pdf
+simulator_validation,Trane RTAC chiller power-up after power loss,confirmed,confirmed (15-30 s checks; 1-2 min; 2-5 min),https://support.trane.com/hc/en-us/articles/19411961163021-Data-Centers-Rapid-Restart
+simulator_validation,Trane RTAC anti-recycle,confirmed,confirmed (5 min start-to-start; 120 s stop-to-start),https://support.trane.com/hc/en-us/articles/19411961163021-Data-Centers-Rapid-Restart
+simulator_validation,Trane CGAM anti-recycle,confirmed,"confirmed (10 s, 360 s, 2 min on-time, bucket 720)",https://support.trane.com/hc/en-us/articles/23462286425613-Anti-Recycle-Timers-CGAM
+simulator_validation,Chiller VSD coast-through (patent example),unverified,not re-opened,https://patents.google.com/patent/US7332885B2/en
+simulator_validation,Generic VFD sag response,confirmed,confirmed content; source is unsigned and cites no standards,https://industrialmonitordirect.com/blogs/knowledgebase/vfd-supply-voltage-sag-response-ride-through-vs-trip
+simulator_validation,Constant-power load current at 0.667 pu,confirmed,confirmed,https://www.ercot.com/files/docs/2026/08/14/AIONTRACKS_LLWG_2026-08-21_FINAL_v3.pdf
+simulator_validation,Recovery to 90% of load after a sag,confirmed,confirmed,https://www.ercot.com/files/docs/2026/08/14/AIONTRACKS_LLWG_2026-08-21_FINAL_v3.pdf
+simulator_validation,Overcurrent breaker trips in a 50 ms dip,confirmed,confirmed,https://www.ercot.com/files/docs/2026/08/14/AIONTRACKS_LLWG_2026-08-21_FINAL_v3.pdf
+simulator_validation,Counting scheme transfers to backup,corrected,confirmed with correction,https://nerc.com/pa/rrm/ea/Documents/Incident_Review_Large_Load_Loss.pdf
+simulator_validation,Load that did not return after the Eastern event,confirmed,confirmed,https://nerc.com/pa/rrm/ea/Documents/Incident_Review_Large_Load_Loss.pdf
+simulator_validation,UPS size classes,confirmed,confirmed,https://nerc.com/pa/rrm/ea/Documents/Incident_Review_Large_Load_Loss.pdf
