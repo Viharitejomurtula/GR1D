@@ -1,0 +1,74 @@
+[
+ {
+  "ilim_x": 0.0,
+  "facility_A": {
+   "peak": 1.54,
+   "loss": 0.46,
+   "mode": "PSU shutdown and restart delay",
+   "ok": true
+  },
+  "facility_B": {
+   "peak": 1.42,
+   "loss": 0.245,
+   "mode": "storage hand-back too slow",
+   "ok": true
+  },
+  "bench_invalid": 17,
+  "bench_median_s": 0.38443576594570894,
+  "bench_worst_s": 1.3460118021280132
+ },
+ {
+  "ilim_x": 1.0,
+  "facility_A": {
+   "peak": 1.54,
+   "loss": 0.46,
+   "mode": "PSU shutdown and restart delay",
+   "ok": true
+  },
+  "facility_B": {
+   "peak": 1.42,
+   "loss": 0.245,
+   "mode": "storage hand-back too slow",
+   "ok": true
+  },
+  "bench_invalid": 14,
+  "bench_median_s": 0.3841849986464675,
+  "bench_worst_s": 1.3460118021280132
+ },
+ {
+  "ilim_x": 1.5,
+  "facility_A": {
+   "peak": 1.54,
+   "loss": 0.46,
+   "mode": "PSU shutdown and restart delay",
+   "ok": true
+  },
+  "facility_B": {
+   "peak": 1.42,
+   "loss": 0.245,
+   "mode": "storage hand-back too slow",
+   "ok": true
+  },
+  "bench_invalid": 15,
+  "bench_median_s": 0.38435048663342486,
+  "bench_worst_s": 1.3460118021280132
+ },
+ {
+  "ilim_x": 2.0,
+  "facility_A": {
+   "peak": 1.54,
+   "loss": 0.46,
+   "mode": "PSU shutdown and restart delay",
+   "ok": true
+  },
+  "facility_B": {
+   "peak": 1.42,
+   "loss": 0.245,
+   "mode": "storage hand-back too slow",
+   "ok": true
+  },
+  "bench_invalid": 14,
+  "bench_median_s": 0.3841849986464675,
+  "bench_worst_s": 1.3460118021280132
+ }
+]

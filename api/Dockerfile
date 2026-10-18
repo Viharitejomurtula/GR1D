@@ -16,6 +16,8 @@ COPY api/ /app/api/
 # The surrogate for POST /predict: numpy-only evaluator plus the exported weights (no PyTorch needed).
 COPY surrogate/__init__.py surrogate/web.py /app/surrogate/
 COPY frontend/public/data/surrogate.json /app/frontend/public/data/surrogate.json
+# Saved pipeline reports for GET /pipeline (generate first: python -m ridethrough.pipeline.run).
+COPY reports/pipeline/ /app/reports/pipeline/
 
 # Compile once, into the image.
 RUN mkdir -p /app/build && cd /app/build && \

@@ -14,6 +14,7 @@ browser). It is an estimate with uncertainty, not a simulation; /simulate stays 
 from __future__ import annotations
 
 import dataclasses
+import json
 import os
 import pathlib
 import sys
@@ -186,6 +187,21 @@ def predict(req: PredictRequest) -> PredictResponse:
         model={**spec["provenance"], "test_accuracy": spec["metrics"]["test"].get("passed_accuracy"),
                "test_auc": spec["metrics"]["test"].get("passed_auc")},
     )
+
+
+PIPELINE_DIR = pathlib.Path(os.environ.get("PIPELINE_DIR", pathlib.Path(__file__).resolve().parent.parent / "reports" / "pipeline"))
+
+
+@app.get("/pipeline")
+def pipeline(design: str = "grid_friendly") -> dict:
+    """The saved product-performance report (python -m ridethrough.pipeline.run): the outcome distribution for one grid
+    event hitting one site and the ranked failure drivers. Read from disk, not computed here (the image has no PyTorch)."""
+    if design not in PRESETS:
+        raise HTTPException(400, f"design must be one of {list(PRESETS)}")
+    path = PIPELINE_DIR / f"pipeline_{design}.json"
+    if not path.exists():
+        raise HTTPException(404, f"no pipeline report at {path}; run python -m ridethrough.pipeline.run --design {design}")
+    return json.loads(path.read_text())
 
 
 @app.get("/schema")

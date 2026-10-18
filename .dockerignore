@@ -7,5 +7,6 @@
 !surrogate/__init__.py
 !surrogate/web.py
 !frontend/public/data/surrogate.json
+!reports/pipeline/
 **/__pycache__
 **/*.pyc

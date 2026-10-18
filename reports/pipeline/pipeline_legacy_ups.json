@@ -1,0 +1,4670 @@
+{
+ "design": "legacy_ups",
+ "n_events": 100000,
+ "seed": 0,
+ "unit": "one grid event hitting one site",
+ "headline_output": "floor_violation_s",
+ "saturated": true,
+ "outputs": [
+  "p_fail",
+  "mode:PSU shutdown and restart delay",
+  "mode:below power floor",
+  "mode:cooling tripped",
+  "mode:exceeded 125% current cap",
+  "mode:missed 2.0 s recovery",
+  "mode:storage hand-back too slow",
+  "min_power",
+  "peak_current_pu",
+  "floor_violation_s",
+  "recovery_margin_s"
+ ],
+ "performance": {
+  "n_events": 100000,
+  "fail_probability": {
+   "mean": 0.994853138923645,
+   "mc_95ci": [
+    0.9947375655174255,
+    0.9949641227722168
+   ],
+   "by_ensemble_member": [
+    0.9902788996696472,
+    0.9957743883132935,
+    0.9959524869918823,
+    0.9971425533294678,
+    0.9951176643371582
+   ],
+   "mean_per_event_member_spread": 0.003041311400011182,
+   "share_events_fail_prob_above_0.9": 0.98863,
+   "share_events_fail_prob_below_0.1": 0.0
+  },
+  "failure_mode_share": {
+   "PSU shutdown and restart delay": 0.001695787999778986,
+   "below power floor": 0.1707126498222351,
+   "cooling tripped": 0.28767699003219604,
+   "exceeded 125% current cap": 0.5156214237213135,
+   "missed 2.0 s recovery": 3.0966591566539137e-06,
+   "storage hand-back too slow": 0.018620304763317108
+  },
+  "continuous": {
+   "min_power": {
+    "mean": 0.22299371659755707,
+    "quantiles": {
+     "0.05": 0.08154889196157455,
+     "0.25": 0.17041558027267456,
+     "0.5": 0.23248861730098724,
+     "0.75": 0.2752121686935425,
+     "0.95": 0.34299787878990173
+    },
+    "hist_counts": [
+     3,
+     51,
+     217,
+     609,
+     1267,
+     1727,
+     2244,
+     3088,
+     4511,
+     6258,
+     7748,
+     8726,
+     8489,
+     9555,
+     12609,
+     13749,
+     8687,
+     3928,
+     2078,
+     1397,
+     968,
+     726,
+     473,
+     355,
+     248,
+     143,
+     91,
+     28,
+     23,
+     4
+    ],
+    "hist_edges": [
+     -0.059383176267147064,
+     -0.03786243870854378,
+     -0.01634170114994049,
+     0.0051790401339530945,
+     0.026699773967266083,
+     0.04822050780057907,
+     0.06974125653505325,
+     0.09126199036836624,
+     0.11278272420167923,
+     0.13430345058441162,
+     0.1558241844177246,
+     0.17734494805335999,
+     0.19886568188667297,
+     0.22038641571998596,
+     0.24190714955329895,
+     0.26342788338661194,
+     0.2849486172199249,
+     0.3064693510532379,
+     0.3279900848865509,
+     0.3495108187198639,
+     0.3710315525531769,
+     0.39255231618881226,
+     0.41407305002212524,
+     0.43559378385543823,
+     0.4571145474910736,
+     0.4786352813243866,
+     0.500156044960022,
+     0.521676778793335,
+     0.543197512626648,
+     0.5647182464599609,
+     0.5862389802932739
+    ]
+   },
+   "peak_current_pu": {
+    "mean": 1.9866769313812256,
+    "quantiles": {
+     "0.05": 1.2539266347885132,
+     "0.25": 1.3667712211608887,
+     "0.5": 1.4621050357818604,
+     "0.75": 1.7336559295654297,
+     "0.95": 5.224745750427246
+    },
+    "hist_counts": [
+     14962,
+     52557,
+     8429,
+     2925,
+     2090,
+     1714,
+     1386,
+     1210,
+     1263,
+     1112,
+     1123,
+     1024,
+     1043,
+     1069,
+     908,
+     867,
+     818,
+     782,
+     750,
+     694,
+     644,
+     636,
+     584,
+     411,
+     331,
+     274,
+     207,
+     111,
+     66,
+     10
+    ],
+    "hist_edges": [
+     1.0847537517547607,
+     1.3195377588272095,
+     1.5543217658996582,
+     1.7891056537628174,
+     2.0238897800445557,
+     2.258673667907715,
+     2.493457794189453,
+     2.7282416820526123,
+     2.9630255699157715,
+     3.1978096961975098,
+     3.432593584060669,
+     3.6673777103424072,
+     3.9021615982055664,
+     4.136945724487305,
+     4.371729850769043,
+     4.606513977050781,
+     4.841297626495361,
+     5.076081275939941,
+     5.31086540222168,
+     5.545649528503418,
+     5.780433654785156,
+     6.0152177810668945,
+     6.250001907348633,
+     6.484786033630371,
+     6.719569206237793,
+     6.954353332519531,
+     7.1891374588012695,
+     7.423921585083008,
+     7.658705711364746,
+     7.893489837646484,
+     8.128273963928223
+    ]
+   },
+   "floor_violation_s": {
+    "mean": 0.28881314396858215,
+    "quantiles": {
+     "0.05": 0.04791412129998207,
+     "0.25": 0.08093051612377167,
+     "0.5": 0.1547381579875946,
+     "0.75": 0.41180193424224854,
+     "0.95": 0.9244416952133179
+    },
+    "hist_counts": [
+     27289,
+     23180,
+     10577,
+     6720,
+     5002,
+     4179,
+     3941,
+     3682,
+     3156,
+     2543,
+     2032,
+     1758,
+     1432,
+     1200,
+     876,
+     642,
+     430,
+     322,
+     278,
+     228,
+     174,
+     132,
+     104,
+     56,
+     29,
+     17,
+     8,
+     5,
+     2,
+     6
+    ],
+    "hist_edges": [
+     0.012718039564788342,
+     0.0849272608757019,
+     0.1571364849805832,
+     0.22934570908546448,
+     0.30155494809150696,
+     0.37376418709754944,
+     0.44597339630126953,
+     0.5181825757026672,
+     0.5903918147087097,
+     0.6626010537147522,
+     0.7348102927207947,
+     0.8070194721221924,
+     0.8792287111282349,
+     0.9514379501342773,
+     1.0236471891403198,
+     1.0958564281463623,
+     1.1680656671524048,
+     1.2402749061584473,
+     1.3124841451644897,
+     1.3846933841705322,
+     1.4569026231765747,
+     1.5291117429733276,
+     1.6013209819793701,
+     1.6735302209854126,
+     1.745739459991455,
+     1.8179486989974976,
+     1.89015793800354,
+     1.9623671770095825,
+     2.034576177597046,
+     2.106785535812378,
+     2.178994655609131
+    ]
+   },
+   "recovery_margin_s": {
+    "mean": -0.10284408181905746,
+    "quantiles": {
+     "0.05": -5.345615863800049,
+     "0.25": -0.6452584862709045,
+     "0.5": 1.0638484954833984,
+     "0.75": 1.3710706233978271,
+     "0.95": 1.5470378398895264
+    },
+    "hist_counts": [
+     1,
+     4,
+     3,
+     26,
+     27,
+     53,
+     85,
+     114,
+     149,
+     179,
+     226,
+     296,
+     380,
+     415,
+     551,
+     792,
+     1005,
+     1324,
+     1596,
+     1999,
+     2352,
+     2646,
+     2770,
+     2872,
+     3204,
+     3866,
+     5221,
+     10170,
+     38037,
+     19637
+    ],
+    "hist_edges": [
+     -15.7045316696167,
+     -15.114380836486816,
+     -14.524229049682617,
+     -13.934078216552734,
+     -13.343927383422852,
+     -12.753776550292969,
+     -12.163625717163086,
+     -11.573473930358887,
+     -10.983323097229004,
+     -10.393172264099121,
+     -9.803020477294922,
+     -9.212869644165039,
+     -8.622718811035156,
+     -8.032567977905273,
+     -7.442416191101074,
+     -6.852265357971191,
+     -6.262114524841309,
+     -5.671963691711426,
+     -5.081812858581543,
+     -4.491661071777344,
+     -3.901510238647461,
+     -3.311359405517578,
+     -2.721207618713379,
+     -2.131056785583496,
+     -1.5409059524536133,
+     -0.9507551193237305,
+     -0.36060428619384766,
+     0.22954750061035156,
+     0.8196992874145508,
+     1.4098501205444336,
+     2.0
+    ]
+   }
+  },
+  "share_inputs_outside_training": 1.0
+ },
+ "rankings": {
+  "A": {
+   "group": "A",
+   "events": 2000,
+   "walks": 24,
+   "by_output": {
+    "p_fail": [
+     {
+      "rank": 1,
+      "block": "dip_depth",
+      "label": "Sag depth",
+      "group": "A",
+      "importance": 0.008872578882922727,
+      "importance_90ci": [
+       0.008038641068090987,
+       0.009847817319010676
+      ],
+      "share": 0.466853122061009,
+      "signed_mean": -0.00031882249688108756,
+      "rank_90ci": [
+       1,
+       1
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "workload_type",
+      "label": "Workload type (power-swing size and rate)",
+      "group": "A",
+      "importance": 0.002894873414188623,
+      "importance_90ci": [
+       0.0025619946954150937,
+       0.0032454105210180033
+      ],
+      "share": 0.15232106800274264,
+      "signed_mean": 7.674201081196486e-06,
+      "rank_90ci": [
+       2,
+       2
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 3,
+      "block": "site_load",
+      "label": "Site load level",
+      "group": "A",
+      "importance": 0.0024874056751529347,
+      "importance_90ci": [
+       0.0021480507928257203,
+       0.0028498096284766965
+      ],
+      "share": 0.13088112493567255,
+      "signed_mean": -0.0005396326581637064,
+      "rank_90ci": [
+       3,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.86
+     },
+     {
+      "rank": 4,
+      "block": "reclose",
+      "label": "Reclosing (second dip and gap)",
+      "group": "A",
+      "importance": 0.002296859350055461,
+      "importance_90ci": [
+       0.002046036882884802,
+       0.0025707457715024563
+      ],
+      "share": 0.12085504932193801,
+      "signed_mean": 0.00035149928306539856,
+      "rank_90ci": [
+       3,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.14
+     },
+     {
+      "rank": 5,
+      "block": "fault_type",
+      "label": "Fault type (phases involved)",
+      "group": "A",
+      "importance": 0.001011336253335078,
+      "importance_90ci": [
+       0.0008451326057314874,
+       0.0011778523777301127
+      ],
+      "share": 0.05321400841323765,
+      "signed_mean": 0.00016470125938455264,
+      "rank_90ci": [
+       5,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 6,
+      "block": "weather",
+      "label": "Season and outdoor temperature",
+      "group": "A",
+      "importance": 0.0007972568608820436,
+      "importance_90ci": [
+       0.0007087273469815653,
+       0.0008949792833998795
+      ],
+      "share": 0.04194968109032288,
+      "signed_mean": 7.937320197621981e-05,
+      "rank_90ci": [
+       6,
+       6
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 7,
+      "block": "protection",
+      "label": "Protection clearing (normal / breaker problem)",
+      "group": "A",
+      "importance": 0.0006447651721537108,
+      "importance_90ci": [
+       0.0005251601250221335,
+       0.000760804940573871
+      ],
+      "share": 0.03392594617507729,
+      "signed_mean": 2.419403071204825e-05,
+      "rank_90ci": [
+       7,
+       7
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ],
+    "mode:PSU shutdown and restart delay": [
+     {
+      "rank": 1,
+      "block": "dip_depth",
+      "label": "Sag depth",
+      "group": "A",
+      "importance": 0.003013979116250175,
+      "importance_90ci": [
+       0.0027093036501523392,
+       0.0033719397112502458
+      ],
+      "share": 0.342788897634864,
+      "signed_mean": -0.0002961694697000735,
+      "rank_90ci": [
+       1,
+       2
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "fault_type",
+      "label": "Fault type (phases involved)",
+      "group": "A",
+      "importance": 0.002751163568642937,
+      "importance_90ci": [
+       0.0024147723691904472,
+       0.003095391873553609
+      ],
+      "share": 0.3128980960165457,
+      "signed_mean": -0.00021351681891353637,
+      "rank_90ci": [
+       1,
+       2
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 3,
+      "block": "site_load",
+      "label": "Site load level",
+      "group": "A",
+      "importance": 0.0012659342747996475,
+      "importance_90ci": [
+       0.0010771741176934515,
+       0.0014463381079253496
+      ],
+      "share": 0.14397850741469514,
+      "signed_mean": -0.00015528500201399456,
+      "rank_90ci": [
+       3,
+       3
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 4,
+      "block": "reclose",
+      "label": "Reclosing (second dip and gap)",
+      "group": "A",
+      "importance": 0.0007577201663483788,
+      "importance_90ci": [
+       0.0006412695203051304,
+       0.0008675588976514528
+      ],
+      "share": 0.08617779039604567,
+      "signed_mean": 7.930457746632073e-05,
+      "rank_90ci": [
+       4,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 5,
+      "block": "weather",
+      "label": "Season and outdoor temperature",
+      "group": "A",
+      "importance": 0.0005121058017424086,
+      "importance_90ci": [
+       0.00043877590267608755,
+       0.0005767763313638855
+      ],
+      "share": 0.05824333098568405,
+      "signed_mean": -8.004483086547036e-06,
+      "rank_90ci": [
+       5,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 6,
+      "block": "workload_type",
+      "label": "Workload type (power-swing size and rate)",
+      "group": "A",
+      "importance": 0.0002917800273422367,
+      "importance_90ci": [
+       0.000247127426043528,
+       0.00034858854265905706
+      ],
+      "share": 0.03318501889586873,
+      "signed_mean": -3.2326535484189456e-05,
+      "rank_90ci": [
+       6,
+       6
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 7,
+      "block": "protection",
+      "label": "Protection clearing (normal / breaker problem)",
+      "group": "A",
+      "importance": 0.00019983960626896057,
+      "importance_90ci": [
+       0.0001510279917895105,
+       0.0002557883749554544
+      ],
+      "share": 0.022728358656296736,
+      "signed_mean": 8.431338963771329e-05,
+      "rank_90ci": [
+       7,
+       7
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ],
+    "mode:below power floor": [
+     {
+      "rank": 1,
+      "block": "dip_depth",
+      "label": "Sag depth",
+      "group": "A",
+      "importance": 0.13838155115858525,
+      "importance_90ci": [
+       0.13372572453061246,
+       0.14284892696640153
+      ],
+      "share": 0.4561240028272093,
+      "signed_mean": -0.0020607902841787477,
+      "rank_90ci": [
+       1,
+       1
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "site_load",
+      "label": "Site load level",
+      "group": "A",
+      "importance": 0.05456901248652899,
+      "importance_90ci": [
+       0.0500862000013466,
+       0.05858865147310935
+      ],
+      "share": 0.1798667249882129,
+      "signed_mean": 0.006264843047201058,
+      "rank_90ci": [
+       2,
+       3
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 3,
+      "block": "workload_type",
+      "label": "Workload type (power-swing size and rate)",
+      "group": "A",
+      "importance": 0.05090327075279112,
+      "importance_90ci": [
+       0.04883195924823447,
+       0.053008034450498544
+      ],
+      "share": 0.16778395254546782,
+      "signed_mean": 0.0006583322084124423,
+      "rank_90ci": [
+       2,
+       3
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 4,
+      "block": "weather",
+      "label": "Season and outdoor temperature",
+      "group": "A",
+      "importance": 0.03003199973215964,
+      "importance_90ci": [
+       0.02885538662972943,
+       0.031236803815118255
+      ],
+      "share": 0.09898946655858816,
+      "signed_mean": 0.0003302448288790263,
+      "rank_90ci": [
+       4,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 5,
+      "block": "reclose",
+      "label": "Reclosing (second dip and gap)",
+      "group": "A",
+      "importance": 0.019579528280542668,
+      "importance_90ci": [
+       0.018614398597280122,
+       0.02051685402303974
+      ],
+      "share": 0.06453673006277473,
+      "signed_mean": 1.0938804785729561e-05,
+      "rank_90ci": [
+       5,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 6,
+      "block": "fault_type",
+      "label": "Fault type (phases involved)",
+      "group": "A",
+      "importance": 0.006220381940175839,
+      "importance_90ci": [
+       0.005802291156663376,
+       0.006639163221478943
+      ],
+      "share": 0.020503206431149047,
+      "signed_mean": 0.00021127759642617438,
+      "rank_90ci": [
+       6,
+       6
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 7,
+      "block": "protection",
+      "label": "Protection clearing (normal / breaker problem)",
+      "group": "A",
+      "importance": 0.003700068061740429,
+      "importance_90ci": [
+       0.0033208726286554292,
+       0.004126909034879345
+      ],
+      "share": 0.012195916586598063,
+      "signed_mean": 0.0003086154522724078,
+      "rank_90ci": [
+       7,
+       7
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ],
+    "mode:cooling tripped": [
+     {
+      "rank": 1,
+      "block": "dip_depth",
+      "label": "Sag depth",
+      "group": "A",
+      "importance": 0.3899580372880232,
+      "importance_90ci": [
+       0.3723074455153478,
+       0.40907081190967476
+      ],
+      "share": 0.9535347066954759,
+      "signed_mean": 0.00838392915955136,
+      "rank_90ci": [
+       1,
+       1
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "fault_type",
+      "label": "Fault type (phases involved)",
+      "group": "A",
+      "importance": 0.0067894302137583035,
+      "importance_90ci": [
+       0.005776763705319076,
+       0.008031421168877917
+      ],
+      "share": 0.016601676920236827,
+      "signed_mean": -0.00018962279715760473,
+      "rank_90ci": [
+       2,
+       2
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 3,
+      "block": "site_load",
+      "label": "Site load level",
+      "group": "A",
+      "importance": 0.003401951051328362,
+      "importance_90ci": [
+       0.0030284127195014466,
+       0.0038282027450424754
+      ],
+      "share": 0.008318531964311907,
+      "signed_mean": 4.030859347477056e-05,
+      "rank_90ci": [
+       3,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.74
+     },
+     {
+      "rank": 4,
+      "block": "workload_type",
+      "label": "Workload type (power-swing size and rate)",
+      "group": "A",
+      "importance": 0.0032441167222182128,
+      "importance_90ci": [
+       0.0027716797409363322,
+       0.003736237887383454
+      ],
+      "share": 0.007932591692991474,
+      "signed_mean": 0.0007651331413882422,
+      "rank_90ci": [
+       3,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.26
+     },
+     {
+      "rank": 5,
+      "block": "reclose",
+      "label": "Reclosing (second dip and gap)",
+      "group": "A",
+      "importance": 0.002209235458658625,
+      "importance_90ci": [
+       0.0019256280017818691,
+       0.00253727286487391
+      ],
+      "share": 0.005402075309804101,
+      "signed_mean": -0.00017490687132459706,
+      "rank_90ci": [
+       5,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 6,
+      "block": "weather",
+      "label": "Season and outdoor temperature",
+      "group": "A",
+      "importance": 0.0019102123102040683,
+      "importance_90ci": [
+       0.0017351116667312684,
+       0.0021297411588248835
+      ],
+      "share": 0.004670896765210655,
+      "signed_mean": -9.298375173419052e-05,
+      "rank_90ci": [
+       6,
+       6
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 7,
+      "block": "protection",
+      "label": "Protection clearing (normal / breaker problem)",
+      "group": "A",
+      "importance": 0.0014475241610929024,
+      "importance_90ci": [
+       0.0011594902852050818,
+       0.0017445014526490561
+      ],
+      "share": 0.003539520651969205,
+      "signed_mean": -0.0004637794763722797,
+      "rank_90ci": [
+       7,
+       7
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ],
+    "mode:exceeded 125% current cap": [
+     {
+      "rank": 1,
+      "block": "dip_depth",
+      "label": "Sag depth",
+      "group": "A",
+      "importance": 0.3149159905317957,
+      "importance_90ci": [
+       0.3028764244599719,
+       0.32809017564459675
+      ],
+      "share": 0.6278732611983483,
+      "signed_mean": -0.005732348126499735,
+      "rank_90ci": [
+       1,
+       1
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "site_load",
+      "label": "Site load level",
+      "group": "A",
+      "importance": 0.06367208441406372,
+      "importance_90ci": [
+       0.05847483141861088,
+       0.06859201840187629
+      ],
+      "share": 0.12694814010823724,
+      "signed_mean": -0.007506034092705096,
+      "rank_90ci": [
+       2,
+       2
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 3,
+      "block": "workload_type",
+      "label": "Workload type (power-swing size and rate)",
+      "group": "A",
+      "importance": 0.05372733554752551,
+      "importance_90ci": [
+       0.05152401625341723,
+       0.056550549710819936
+      ],
+      "share": 0.1071204968942878,
+      "signed_mean": -0.001118267210617129,
+      "rank_90ci": [
+       3,
+       3
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 4,
+      "block": "weather",
+      "label": "Season and outdoor temperature",
+      "group": "A",
+      "importance": 0.028732064336169035,
+      "importance_90ci": [
+       0.02756068585853748,
+       0.030092842187595087
+      ],
+      "share": 0.05728542048705456,
+      "signed_mean": -8.70364006871871e-05,
+      "rank_90ci": [
+       4,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 5,
+      "block": "reclose",
+      "label": "Reclosing (second dip and gap)",
+      "group": "A",
+      "importance": 0.021596715619934686,
+      "importance_90ci": [
+       0.020525726804287908,
+       0.022792355362537955
+      ],
+      "share": 0.04305910361859699,
+      "signed_mean": 0.000429075352795697,
+      "rank_90ci": [
+       5,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 6,
+      "block": "fault_type",
+      "label": "Fault type (phases involved)",
+      "group": "A",
+      "importance": 0.01459918815692715,
+      "importance_90ci": [
+       0.013161161963334788,
+       0.015988333165744113
+      ],
+      "share": 0.02910757203360449,
+      "signed_mean": 0.00034179835425317176,
+      "rank_90ci": [
+       6,
+       6
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 7,
+      "block": "protection",
+      "label": "Protection clearing (normal / breaker problem)",
+      "group": "A",
+      "importance": 0.004316426521696112,
+      "importance_90ci": [
+       0.003886433476561381,
+       0.004735820967728956
+      ],
+      "share": 0.00860600565987057,
+      "signed_mean": 0.00026623149809771007,
+      "rank_90ci": [
+       7,
+       7
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ],
+    "mode:missed 2.0 s recovery": [
+     {
+      "rank": 1,
+      "block": "dip_depth",
+      "label": "Sag depth",
+      "group": "A",
+      "importance": 3.5769201039830984e-06,
+      "importance_90ci": [
+       3.356726475697935e-06,
+       3.822103776806691e-06
+      ],
+      "share": 0.38988060513828837,
+      "signed_mean": 5.3257208370235234e-08,
+      "rank_90ci": [
+       1,
+       1
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "fault_type",
+      "label": "Fault type (phases involved)",
+      "group": "A",
+      "importance": 1.28688260711109e-06,
+      "importance_90ci": [
+       1.123080314503967e-06,
+       1.4621511034717911e-06
+      ],
+      "share": 0.14026887797793003,
+      "signed_mean": -1.5628923131264192e-07,
+      "rank_90ci": [
+       2,
+       3
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 3,
+      "block": "reclose",
+      "label": "Reclosing (second dip and gap)",
+      "group": "A",
+      "importance": 1.2099120866875625e-06,
+      "importance_90ci": [
+       1.1119290611373955e-06,
+       1.3172340040857983e-06
+      ],
+      "share": 0.13187917057375376,
+      "signed_mean": -1.1853685427249427e-07,
+      "rank_90ci": [
+       2,
+       3
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.995
+     },
+     {
+      "rank": 4,
+      "block": "workload_type",
+      "label": "Workload type (power-swing size and rate)",
+      "group": "A",
+      "importance": 9.983515497041857e-07,
+      "importance_90ci": [
+       9.011323733561623e-07,
+       1.1087468033228908e-06
+      ],
+      "share": 0.1088192900663277,
+      "signed_mean": 1.9965567439942096e-08,
+      "rank_90ci": [
+       4,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.005
+     },
+     {
+      "rank": 5,
+      "block": "site_load",
+      "label": "Site load level",
+      "group": "A",
+      "importance": 9.54454633843627e-07,
+      "importance_90ci": [
+       8.660681067552406e-07,
+       1.0550805670897283e-06
+      ],
+      "share": 0.10403457147550398,
+      "signed_mean": -7.960296594000731e-08,
+      "rank_90ci": [
+       4,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 6,
+      "block": "weather",
+      "label": "Season and outdoor temperature",
+      "group": "A",
+      "importance": 7.317029304167032e-07,
+      "importance_90ci": [
+       6.771846313301994e-07,
+       7.785160956375587e-07
+      ],
+      "share": 0.07975486535879056,
+      "signed_mean": 2.2400196611759397e-08,
+      "rank_90ci": [
+       6,
+       6
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 7,
+      "block": "protection",
+      "label": "Protection clearing (normal / breaker problem)",
+      "group": "A",
+      "importance": 4.161747550311852e-07,
+      "importance_90ci": [
+       3.692560650226335e-07,
+       4.7478675296940316e-07
+      ],
+      "share": 0.04536261940940577,
+      "signed_mean": 2.5643648117952503e-08,
+      "rank_90ci": [
+       7,
+       7
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ],
+    "mode:storage hand-back too slow": [
+     {
+      "rank": 1,
+      "block": "dip_depth",
+      "label": "Sag depth",
+      "group": "A",
+      "importance": 0.02104509171560154,
+      "importance_90ci": [
+       0.020176041406935886,
+       0.02192642262592878
+      ],
+      "share": 0.4637622557303071,
+      "signed_mean": -0.0006236789419017537,
+      "rank_90ci": [
+       1,
+       1
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "site_load",
+      "label": "Site load level",
+      "group": "A",
+      "importance": 0.010977837000231735,
+      "importance_90ci": [
+       0.010445403441791854,
+       0.011625712404147094
+      ],
+      "share": 0.2419141963868403,
+      "signed_mean": 0.0007483797198089187,
+      "rank_90ci": [
+       2,
+       2
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 3,
+      "block": "workload_type",
+      "label": "Workload type (power-swing size and rate)",
+      "group": "A",
+      "importance": 0.003794851115435806,
+      "importance_90ci": [
+       0.0036208313053382114,
+       0.003955438319150565
+      ],
+      "share": 0.08362561385990505,
+      "signed_mean": -0.0002676445114088513,
+      "rank_90ci": [
+       3,
+       3
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.98
+     },
+     {
+      "rank": 4,
+      "block": "weather",
+      "label": "Season and outdoor temperature",
+      "group": "A",
+      "importance": 0.003530813163893087,
+      "importance_90ci": [
+       0.0033448519858835647,
+       0.0037387620256197607
+      ],
+      "share": 0.07780711529213291,
+      "signed_mean": -5.2599667387221126e-05,
+      "rank_90ci": [
+       4,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.02
+     },
+     {
+      "rank": 5,
+      "block": "fault_type",
+      "label": "Fault type (phases involved)",
+      "group": "A",
+      "importance": 0.0026800072129314124,
+      "importance_90ci": [
+       0.0024723897346143196,
+       0.0028766849154646394
+      ],
+      "share": 0.059058245373250884,
+      "signed_mean": 2.3705339818453336e-05,
+      "rank_90ci": [
+       5,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 6,
+      "block": "reclose",
+      "label": "Reclosing (second dip and gap)",
+      "group": "A",
+      "importance": 0.0019031971687568678,
+      "importance_90ci": [
+       0.0017929591254275895,
+       0.0020391537837563816
+      ],
+      "share": 0.041939993610381386,
+      "signed_mean": 4.072055980943876e-06,
+      "rank_90ci": [
+       6,
+       6
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 7,
+      "block": "protection",
+      "label": "Protection clearing (normal / breaker problem)",
+      "group": "A",
+      "importance": 0.001447255048321362,
+      "importance_90ci": [
+       0.0012829289507207476,
+       0.0016020196514814377
+      ],
+      "share": 0.03189257974718238,
+      "signed_mean": -0.00017997455849425614,
+      "rank_90ci": [
+       7,
+       7
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ],
+    "min_power": [
+     {
+      "rank": 1,
+      "block": "weather",
+      "label": "Season and outdoor temperature",
+      "group": "A",
+      "importance": 0.05973077383892096,
+      "importance_90ci": [
+       0.0582630040707168,
+       0.06135130320743946
+      ],
+      "share": 0.3599728526390878,
+      "signed_mean": 0.0010961524429100485,
+      "rank_90ci": [
+       1,
+       1
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "dip_depth",
+      "label": "Sag depth",
+      "group": "A",
+      "importance": 0.05183837447802096,
+      "importance_90ci": [
+       0.0497609965855942,
+       0.053830223120820114
+      ],
+      "share": 0.3124086017594376,
+      "signed_mean": -0.0008205388032013918,
+      "rank_90ci": [
+       2,
+       2
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 3,
+      "block": "site_load",
+      "label": "Site load level",
+      "group": "A",
+      "importance": 0.021063510108052123,
+      "importance_90ci": [
+       0.020212841262700437,
+       0.02196778589940134
+      ],
+      "share": 0.12694112821366316,
+      "signed_mean": 0.0007546146510703693,
+      "rank_90ci": [
+       3,
+       3
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 4,
+      "block": "fault_type",
+      "label": "Fault type (phases involved)",
+      "group": "A",
+      "importance": 0.011594093101031239,
+      "importance_90ci": [
+       0.0108668864734403,
+       0.01228925266645917
+      ],
+      "share": 0.06987283939425316,
+      "signed_mean": -0.0014596159198457222,
+      "rank_90ci": [
+       4,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 5,
+      "block": "workload_type",
+      "label": "Workload type (power-swing size and rate)",
+      "group": "A",
+      "importance": 0.011455834484235941,
+      "importance_90ci": [
+       0.011016142647862097,
+       0.011896060816668497
+      ],
+      "share": 0.06903961147016911,
+      "signed_mean": -7.238807154620497e-05,
+      "rank_90ci": [
+       4,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 6,
+      "block": "reclose",
+      "label": "Reclosing (second dip and gap)",
+      "group": "A",
+      "importance": 0.007889899803786335,
+      "importance_90ci": [
+       0.007489880233367876,
+       0.008314949021250743
+      ],
+      "share": 0.047549187075069936,
+      "signed_mean": -0.00031004917438743484,
+      "rank_90ci": [
+       6,
+       6
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 7,
+      "block": "protection",
+      "label": "Protection clearing (normal / breaker problem)",
+      "group": "A",
+      "importance": 0.0023588431764960667,
+      "importance_90ci": [
+       0.002154184557364562,
+       0.0025648899312941376
+      ],
+      "share": 0.014215779448319229,
+      "signed_mean": 7.55078533510035e-05,
+      "rank_90ci": [
+       7,
+       7
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ],
+    "peak_current_pu": [
+     {
+      "rank": 1,
+      "block": "dip_depth",
+      "label": "Sag depth",
+      "group": "A",
+      "importance": 0.9740697229454902,
+      "importance_90ci": [
+       0.933477538902809,
+       1.0301699366449077
+      ],
+      "share": 0.7051162253931696,
+      "signed_mean": -0.005260359495878214,
+      "rank_90ci": [
+       1,
+       1
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "fault_type",
+      "label": "Fault type (phases involved)",
+      "group": "A",
+      "importance": 0.11283816555390769,
+      "importance_90ci": [
+       0.10291829536358511,
+       0.12229288898594676
+      ],
+      "share": 0.08168205981710144,
+      "signed_mean": -0.016578191863993803,
+      "rank_90ci": [
+       2,
+       4
+      ],
+      "rank_resolved": false,
+      "p_top3": 0.905
+     },
+     {
+      "rank": 3,
+      "block": "workload_type",
+      "label": "Workload type (power-swing size and rate)",
+      "group": "A",
+      "importance": 0.10788018301626058,
+      "importance_90ci": [
+       0.10128459941074235,
+       0.11382940358469891
+      ],
+      "share": 0.0780930416491416,
+      "signed_mean": 0.0007918808609247226,
+      "rank_90ci": [
+       2,
+       4
+      ],
+      "rank_resolved": false,
+      "p_top3": 0.65
+     },
+     {
+      "rank": 4,
+      "block": "site_load",
+      "label": "Site load level",
+      "group": "A",
+      "importance": 0.10684897364179302,
+      "importance_90ci": [
+       0.0973274510564904,
+       0.1145434211625408
+      ],
+      "share": 0.0773465627836289,
+      "signed_mean": -0.007582675099372864,
+      "rank_90ci": [
+       2,
+       4
+      ],
+      "rank_resolved": false,
+      "p_top3": 0.445
+     },
+     {
+      "rank": 5,
+      "block": "weather",
+      "label": "Season and outdoor temperature",
+      "group": "A",
+      "importance": 0.04082537517696623,
+      "importance_90ci": [
+       0.038389513714114795,
+       0.04335839332491157
+      ],
+      "share": 0.029552950642993507,
+      "signed_mean": 0.0013179467295606933,
+      "rank_90ci": [
+       5,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 6,
+      "block": "reclose",
+      "label": "Reclosing (second dip and gap)",
+      "group": "A",
+      "importance": 0.02102235447615387,
+      "importance_90ci": [
+       0.019890181527907648,
+       0.022360920277982945
+      ],
+      "share": 0.01521780514055906,
+      "signed_mean": 0.0003657076035936674,
+      "rank_90ci": [
+       6,
+       6
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 7,
+      "block": "protection",
+      "label": "Protection clearing (normal / breaker problem)",
+      "group": "A",
+      "importance": 0.017946665662030348,
+      "importance_90ci": [
+       0.015772475991770608,
+       0.020635466954857153
+      ],
+      "share": 0.012991354573405835,
+      "signed_mean": 0.0003023813143372538,
+      "rank_90ci": [
+       7,
+       7
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ],
+    "floor_violation_s": [
+     {
+      "rank": 1,
+      "block": "dip_depth",
+      "label": "Sag depth",
+      "group": "A",
+      "importance": 0.2573583899175283,
+      "importance_90ci": [
+       0.247852922440862,
+       0.26631922263925495
+      ],
+      "share": 0.5908538933446722,
+      "signed_mean": 0.005651790868646154,
+      "rank_90ci": [
+       1,
+       1
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "reclose",
+      "label": "Reclosing (second dip and gap)",
+      "group": "A",
+      "importance": 0.07863035388585804,
+      "importance_90ci": [
+       0.07471907281906262,
+       0.08259012762711493
+      ],
+      "share": 0.18052277504306977,
+      "signed_mean": 0.003750686237045254,
+      "rank_90ci": [
+       2,
+       2
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 3,
+      "block": "fault_type",
+      "label": "Fault type (phases involved)",
+      "group": "A",
+      "importance": 0.03979020955460146,
+      "importance_90ci": [
+       0.036605308372395465,
+       0.04275389033382528
+      ],
+      "share": 0.09135198677560347,
+      "signed_mean": 0.00556963192531839,
+      "rank_90ci": [
+       3,
+       3
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 4,
+      "block": "protection",
+      "label": "Protection clearing (normal / breaker problem)",
+      "group": "A",
+      "importance": 0.030837113013685,
+      "importance_90ci": [
+       0.028877331695856923,
+       0.033169469534118666
+      ],
+      "share": 0.07079710239671688,
+      "signed_mean": -0.0026794000629258036,
+      "rank_90ci": [
+       4,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 5,
+      "block": "weather",
+      "label": "Season and outdoor temperature",
+      "group": "A",
+      "importance": 0.014396854109130785,
+      "importance_90ci": [
+       0.013854961874506737,
+       0.015020582600512221
+      ],
+      "share": 0.0330528851420818,
+      "signed_mean": -0.0005690083853745211,
+      "rank_90ci": [
+       5,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 6,
+      "block": "site_load",
+      "label": "Site load level",
+      "group": "A",
+      "importance": 0.008170455455469594,
+      "importance_90ci": [
+       0.007697450800016915,
+       0.008574362959980507
+      ],
+      "share": 0.018758065038448662,
+      "signed_mean": -0.0005714510645872604,
+      "rank_90ci": [
+       6,
+       6
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 7,
+      "block": "workload_type",
+      "label": "Workload type (power-swing size and rate)",
+      "group": "A",
+      "importance": 0.006386894170078432,
+      "importance_90ci": [
+       0.006090449405465436,
+       0.006684682317737812
+      ],
+      "share": 0.014663292259407346,
+      "signed_mean": -0.00013235540482370805,
+      "rank_90ci": [
+       7,
+       7
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ],
+    "recovery_margin_s": [
+     {
+      "rank": 1,
+      "block": "dip_depth",
+      "label": "Sag depth",
+      "group": "A",
+      "importance": 1.9540336145494739,
+      "importance_90ci": [
+       1.856672238218046,
+       2.025650432464805
+      ],
+      "share": 0.5692354893140212,
+      "signed_mean": -0.022431536499410862,
+      "rank_90ci": [
+       1,
+       1
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "site_load",
+      "label": "Site load level",
+      "group": "A",
+      "importance": 0.6306871789679469,
+      "importance_90ci": [
+       0.5886340763483525,
+       0.6682173969573497
+      ],
+      "share": 0.1837274048157421,
+      "signed_mean": 0.013522158378308337,
+      "rank_90ci": [
+       2,
+       2
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 3,
+      "block": "workload_type",
+      "label": "Workload type (power-swing size and rate)",
+      "group": "A",
+      "importance": 0.31058771488405157,
+      "importance_90ci": [
+       0.28914257066488536,
+       0.32866646278522066
+      ],
+      "share": 0.09047825407942617,
+      "signed_mean": 0.003755272440350381,
+      "rank_90ci": [
+       3,
+       3
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 4,
+      "block": "fault_type",
+      "label": "Fault type (phases involved)",
+      "group": "A",
+      "importance": 0.20371239788500461,
+      "importance_90ci": [
+       0.18684309922509887,
+       0.2195378608776024
+      ],
+      "share": 0.05934407966473967,
+      "signed_mean": -0.025348865304646705,
+      "rank_90ci": [
+       4,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 5,
+      "block": "weather",
+      "label": "Season and outdoor temperature",
+      "group": "A",
+      "importance": 0.15960057321945567,
+      "importance_90ci": [
+       0.15110010642336816,
+       0.16761215408986826
+      ],
+      "share": 0.0464937295422739,
+      "signed_mean": -0.006284816728458584,
+      "rank_90ci": [
+       5,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 6,
+      "block": "reclose",
+      "label": "Reclosing (second dip and gap)",
+      "group": "A",
+      "importance": 0.10390495905170496,
+      "importance_90ci": [
+       0.0977226110852762,
+       0.10939016946036521
+      ],
+      "share": 0.030268870385624112,
+      "signed_mean": -0.001152691133446449,
+      "rank_90ci": [
+       6,
+       6
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 7,
+      "block": "protection",
+      "label": "Protection clearing (normal / breaker problem)",
+      "group": "A",
+      "importance": 0.07020685237658708,
+      "importance_90ci": [
+       0.06356732923751553,
+       0.07654706722039402
+      ],
+      "share": 0.02045217219817277,
+      "signed_mean": 0.0019018171560698342,
+      "rank_90ci": [
+       7,
+       7
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ]
+   },
+   "interactions": {
+    "p_fail": [
+     {
+      "blocks": [
+       "dip_depth",
+       "workload_type"
+      ],
+      "importance": 0.004978640470653772,
+      "signed_mean": -0.0005477589438669384
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "reclose"
+      ],
+      "importance": 0.004161910619586706,
+      "signed_mean": -0.00023900697124190629
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "site_load"
+      ],
+      "importance": 0.003986780531704426,
+      "signed_mean": -6.6518782659841236e-06
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "weather"
+      ],
+      "importance": 0.0018681151559576392,
+      "signed_mean": 7.738560088910162e-05
+     },
+     {
+      "blocks": [
+       "fault_type",
+       "dip_depth"
+      ],
+      "importance": 0.0017910299357026815,
+      "signed_mean": -1.0442584425618406e-05
+     }
+    ],
+    "mode:PSU shutdown and restart delay": [
+     {
+      "blocks": [
+       "fault_type",
+       "dip_depth"
+      ],
+      "importance": 0.004517215769737959,
+      "signed_mean": 0.0005249680252745748
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "site_load"
+      ],
+      "importance": 0.0019046077504754066,
+      "signed_mean": -2.8007745640934445e-05
+     },
+     {
+      "blocks": [
+       "fault_type",
+       "site_load"
+      ],
+      "importance": 0.0018043126910924911,
+      "signed_mean": -0.0001375671854475513
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "reclose"
+      ],
+      "importance": 0.0012722311075776815,
+      "signed_mean": -9.486688941251487e-05
+     },
+     {
+      "blocks": [
+       "fault_type",
+       "reclose"
+      ],
+      "importance": 0.0012080431915819645,
+      "signed_mean": -0.00015488294593524188
+     }
+    ],
+    "mode:below power floor": [
+     {
+      "blocks": [
+       "dip_depth",
+       "workload_type"
+      ],
+      "importance": 0.06493549048900604,
+      "signed_mean": 0.002494458807632327
+     },
+     {
+      "blocks": [
+       "workload_type",
+       "site_load"
+      ],
+      "importance": 0.03895140066742897,
+      "signed_mean": -0.0025469365064054728
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "site_load"
+      ],
+      "importance": 0.03858690708875656,
+      "signed_mean": 0.004396575968712568
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "weather"
+      ],
+      "importance": 0.028713783249258995,
+      "signed_mean": 0.0005458937957882881
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "reclose"
+      ],
+      "importance": 0.017949707806110382,
+      "signed_mean": 0.0002160500007448718
+     }
+    ],
+    "mode:cooling tripped": [
+     {
+      "blocks": [
+       "fault_type",
+       "dip_depth"
+      ],
+      "importance": 0.010303664952516556,
+      "signed_mean": 0.0011482806876301765
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "workload_type"
+      ],
+      "importance": 0.006213003303855658,
+      "signed_mean": 0.00016420535393990576
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "site_load"
+      ],
+      "importance": 0.0062020462937653065,
+      "signed_mean": -0.000971738831140101
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "reclose"
+      ],
+      "importance": 0.004278242122381926,
+      "signed_mean": -0.0008404945256188512
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "weather"
+      ],
+      "importance": 0.0035155639052391052,
+      "signed_mean": -2.6434809115016833e-06
+     }
+    ],
+    "mode:exceeded 125% current cap": [
+     {
+      "blocks": [
+       "dip_depth",
+       "workload_type"
+      ],
+      "importance": 0.06788923591375351,
+      "signed_mean": -0.002963177626952529
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "site_load"
+      ],
+      "importance": 0.042966000735759735,
+      "signed_mean": -0.003966255579143763
+     },
+     {
+      "blocks": [
+       "workload_type",
+       "site_load"
+      ],
+      "importance": 0.04028473049402237,
+      "signed_mean": 0.002041405299678445
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "weather"
+      ],
+      "importance": 0.030409755185246468,
+      "signed_mean": -0.00039586503407917917
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "reclose"
+      ],
+      "importance": 0.022869762033224106,
+      "signed_mean": 0.0005744408117607236
+     }
+    ],
+    "mode:missed 2.0 s recovery": [
+     {
+      "blocks": [
+       "dip_depth",
+       "workload_type"
+      ],
+      "importance": 1.7309855593339307e-06,
+      "signed_mean": 1.6644078471017565e-07
+     },
+     {
+      "blocks": [
+       "fault_type",
+       "dip_depth"
+      ],
+      "importance": 1.6950492636169656e-06,
+      "signed_mean": -2.4238426021838677e-07
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "site_load"
+      ],
+      "importance": 1.6238597027040669e-06,
+      "signed_mean": -1.3265129439332668e-07
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "reclose"
+      ],
+      "importance": 1.5328608924392029e-06,
+      "signed_mean": -2.508016727631457e-08
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "weather"
+      ],
+      "importance": 1.1485658433230128e-06,
+      "signed_mean": -6.675362129726636e-08
+     }
+    ],
+    "mode:storage hand-back too slow": [
+     {
+      "blocks": [
+       "dip_depth",
+       "site_load"
+      ],
+      "importance": 0.011522416956722736,
+      "signed_mean": 0.0005705788498744369
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "workload_type"
+      ],
+      "importance": 0.006034958176314831,
+      "signed_mean": -0.00026823501684702933
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "weather"
+      ],
+      "importance": 0.004985765554010868,
+      "signed_mean": -0.00015109838568605483
+     },
+     {
+      "blocks": [
+       "fault_type",
+       "dip_depth"
+      ],
+      "importance": 0.004073749762028456,
+      "signed_mean": 0.0003778335521928966
+     },
+     {
+      "blocks": [
+       "workload_type",
+       "site_load"
+      ],
+      "importance": 0.0038741929456591606,
+      "signed_mean": 0.0002677282318472862
+     }
+    ],
+    "min_power": [
+     {
+      "blocks": [
+       "fault_type",
+       "dip_depth"
+      ],
+      "importance": 0.01773775927722454,
+      "signed_mean": 0.0002972441434394568
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "weather"
+      ],
+      "importance": 0.012449310161173344,
+      "signed_mean": 0.00035208254121243954
+     },
+     {
+      "blocks": [
+       "workload_type",
+       "site_load"
+      ],
+      "importance": 0.01018364354968071,
+      "signed_mean": -0.0007758999709039927
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "reclose"
+      ],
+      "importance": 0.009752385318279266,
+      "signed_mean": -0.0003947920922655612
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "site_load"
+      ],
+      "importance": 0.008755138143897057,
+      "signed_mean": -1.0689437658584211e-05
+     }
+    ],
+    "peak_current_pu": [
+     {
+      "blocks": [
+       "fault_type",
+       "dip_depth"
+      ],
+      "importance": 0.17489100992679596,
+      "signed_mean": 0.00815084483474493
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "workload_type"
+      ],
+      "importance": 0.17207637429237366,
+      "signed_mean": 0.001539872377179563
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "site_load"
+      ],
+      "importance": 0.1234387680888176,
+      "signed_mean": 0.010795919224619865
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "weather"
+      ],
+      "importance": 0.06283728778362274,
+      "signed_mean": 0.003833037568256259
+     },
+     {
+      "blocks": [
+       "workload_type",
+       "site_load"
+      ],
+      "importance": 0.037379153072834015,
+      "signed_mean": 0.003614267101511359
+     }
+    ],
+    "floor_violation_s": [
+     {
+      "blocks": [
+       "dip_depth",
+       "reclose"
+      ],
+      "importance": 0.06341283023357391,
+      "signed_mean": 0.00047955854097381234
+     },
+     {
+      "blocks": [
+       "fault_type",
+       "dip_depth"
+      ],
+      "importance": 0.05256279557943344,
+      "signed_mean": -0.0009060162701644003
+     },
+     {
+      "blocks": [
+       "protection",
+       "dip_depth"
+      ],
+      "importance": 0.016240449622273445,
+      "signed_mean": 0.0009787920862436295
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "weather"
+      ],
+      "importance": 0.016155380755662918,
+      "signed_mean": 0.00036846965667791665
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "site_load"
+      ],
+      "importance": 0.011697618290781975,
+      "signed_mean": -0.00013479137851390988
+     }
+    ],
+    "recovery_margin_s": [
+     {
+      "blocks": [
+       "dip_depth",
+       "site_load"
+      ],
+      "importance": 0.8828927874565125,
+      "signed_mean": -0.027708757668733597
+     },
+     {
+      "blocks": [
+       "dip_depth",
+       "workload_type"
+      ],
+      "importance": 0.4597492814064026,
+      "signed_mean": -0.0073324041441082954
+     },
+     {
+      "blocks": [
+       "fault_type",
+       "dip_depth"
+      ],
+      "importance": 0.3448406755924225,
+      "signed_mean": 0.016693715006113052
+     },
+     {
+      "blocks": [
+       "workload_type",
+       "site_load"
+      ],
+      "importance": 0.3272382616996765,
+      "signed_mean": -0.01993456669151783
+     },
+     {
+      "blocks": [
+       "fault_type",
+       "site_load"
+      ],
+      "importance": 0.25691643357276917,
+      "signed_mean": 0.017787184566259384
+     }
+    ]
+   }
+  },
+  "B": {
+   "group": "B",
+   "events": 2000,
+   "walks": 24,
+   "by_output": {
+    "p_fail": [
+     {
+      "rank": 1,
+      "block": "cooling_makeup",
+      "label": "Cooling plant makeup (compressor vs fan share)",
+      "group": "B",
+      "importance": 0.000750463272134462,
+      "importance_90ci": [
+       0.0006314278695111488,
+       0.0008743199090162914
+      ],
+      "share": 0.2694420558625291,
+      "signed_mean": 0.0002133198454976082,
+      "rank_90ci": [
+       1,
+       2
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "battery_soc",
+      "label": "Battery state of charge",
+      "group": "B",
+      "importance": 0.0007226124517619604,
+      "importance_90ci": [
+       0.0006179802300408493,
+       0.0008439019044240289
+      ],
+      "share": 0.2594426560554186,
+      "signed_mean": 7.03904591500759e-05,
+      "rank_90ci": [
+       1,
+       2
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 3,
+      "block": "battery_age",
+      "label": "Equipment age",
+      "group": "B",
+      "importance": 0.0005546278618276136,
+      "importance_90ci": [
+       0.00046843353118747495,
+       0.000657342679736515
+      ],
+      "share": 0.19913042633576805,
+      "signed_mean": -4.383596157034237e-05,
+      "rank_90ci": [
+       3,
+       3
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 4,
+      "block": "battery_temp",
+      "label": "Battery hall temperature",
+      "group": "B",
+      "importance": 0.00040384379650155647,
+      "importance_90ci": [
+       0.00033931674206008546,
+       0.00046781234163790976
+      ],
+      "share": 0.14499377493481394,
+      "signed_mean": 8.292810246348381e-05,
+      "rank_90ci": [
+       4,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 5,
+      "block": "compressor_restart",
+      "label": "Compressor restart time",
+      "group": "B",
+      "importance": 0.0003537018237014615,
+      "importance_90ci": [
+       0.0002966488967339203,
+       0.0004330609642590084
+      ],
+      "share": 0.12699108681147042,
+      "signed_mean": -9.98496140042942e-06,
+      "rank_90ci": [
+       4,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ],
+    "mode:PSU shutdown and restart delay": [
+     {
+      "rank": 1,
+      "block": "cooling_makeup",
+      "label": "Cooling plant makeup (compressor vs fan share)",
+      "group": "B",
+      "importance": 0.00034233386794070645,
+      "importance_90ci": [
+       0.0002542836463208654,
+       0.0004203849831151111
+      ],
+      "share": 0.3534460251696206,
+      "signed_mean": 6.608489445694685e-06,
+      "rank_90ci": [
+       1,
+       2
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "battery_temp",
+      "label": "Battery hall temperature",
+      "group": "B",
+      "importance": 0.0002738441374720853,
+      "importance_90ci": [
+       0.0001960847802863579,
+       0.00036541744023442106
+      ],
+      "share": 0.28273311807488455,
+      "signed_mean": -0.00010128510170445209,
+      "rank_90ci": [
+       1,
+       2
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 3,
+      "block": "battery_soc",
+      "label": "Battery state of charge",
+      "group": "B",
+      "importance": 0.00016649476371842096,
+      "importance_90ci": [
+       0.00012374058248447434,
+       0.00021428488377845504
+      ],
+      "share": 0.17189918368819868,
+      "signed_mean": 2.0100914642024676e-05,
+      "rank_90ci": [
+       3,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.81
+     },
+     {
+      "rank": 4,
+      "block": "battery_age",
+      "label": "Equipment age",
+      "group": "B",
+      "importance": 0.00014283165902868034,
+      "importance_90ci": [
+       0.00010240609293145758,
+       0.00019533933375324278
+      ],
+      "share": 0.14746797462883082,
+      "signed_mean": -6.902631149676049e-06,
+      "rank_90ci": [
+       3,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.19
+     },
+     {
+      "rank": 5,
+      "block": "compressor_restart",
+      "label": "Compressor restart time",
+      "group": "B",
+      "importance": 4.3056097528346526e-05,
+      "importance_90ci": [
+       2.501298670163574e-05,
+       6.510188405983802e-05
+      ],
+      "share": 0.04445369843846541,
+      "signed_mean": -5.221880643641432e-06,
+      "rank_90ci": [
+       5,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ],
+    "mode:below power floor": [
+     {
+      "rank": 1,
+      "block": "battery_age",
+      "label": "Equipment age",
+      "group": "B",
+      "importance": 0.009762285413263194,
+      "importance_90ci": [
+       0.009348847668999937,
+       0.010324818628962515
+      ],
+      "share": 0.3447867377116665,
+      "signed_mean": 0.0003174557223214025,
+      "rank_90ci": [
+       1,
+       1
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "battery_soc",
+      "label": "Battery state of charge",
+      "group": "B",
+      "importance": 0.006348866493177172,
+      "importance_90ci": [
+       0.006036206337599815,
+       0.00675219815798189
+      ],
+      "share": 0.2242307895828828,
+      "signed_mean": -0.0002641341454007176,
+      "rank_90ci": [
+       2,
+       3
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 3,
+      "block": "cooling_makeup",
+      "label": "Cooling plant makeup (compressor vs fan share)",
+      "group": "B",
+      "importance": 0.006094739700109849,
+      "importance_90ci": [
+       0.005757819507895209,
+       0.006420579611597698
+      ],
+      "share": 0.21525547855297084,
+      "signed_mean": 0.00041816212184743527,
+      "rank_90ci": [
+       2,
+       3
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 4,
+      "block": "battery_temp",
+      "label": "Battery hall temperature",
+      "group": "B",
+      "importance": 0.004249325505815443,
+      "importance_90ci": [
+       0.00401373181845065,
+       0.004474543413763643
+      ],
+      "share": 0.150078697415931,
+      "signed_mean": 3.681107110055419e-05,
+      "rank_90ci": [
+       4,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 5,
+      "block": "compressor_restart",
+      "label": "Compressor restart time",
+      "group": "B",
+      "importance": 0.0018587646783929644,
+      "importance_90ci": [
+       0.001751643764779718,
+       0.00196895634634518
+      ],
+      "share": 0.06564829673654891,
+      "signed_mean": 0.00014106479877967117,
+      "rank_90ci": [
+       5,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ],
+    "mode:cooling tripped": [
+     {
+      "rank": 1,
+      "block": "cooling_makeup",
+      "label": "Cooling plant makeup (compressor vs fan share)",
+      "group": "B",
+      "importance": 0.0017878762526349497,
+      "importance_90ci": [
+       0.0013902827013357656,
+       0.002251666115542642
+      ],
+      "share": 0.3054607424750804,
+      "signed_mean": 0.00023458535525839696,
+      "rank_90ci": [
+       1,
+       2
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "battery_temp",
+      "label": "Battery hall temperature",
+      "group": "B",
+      "importance": 0.0014003051009128476,
+      "importance_90ci": [
+       0.0011554796548711747,
+       0.0016491731557795365
+      ],
+      "share": 0.23924375928484176,
+      "signed_mean": -3.207199303935384e-05,
+      "rank_90ci": [
+       1,
+       3
+      ],
+      "rank_resolved": false,
+      "p_top3": 0.965
+     },
+     {
+      "rank": 3,
+      "block": "battery_age",
+      "label": "Equipment age",
+      "group": "B",
+      "importance": 0.0012657430019849297,
+      "importance_90ci": [
+       0.0010023334364575374,
+       0.0015118331717698518
+      ],
+      "share": 0.21625366777993515,
+      "signed_mean": -0.0001623990907845572,
+      "rank_90ci": [
+       2,
+       4
+      ],
+      "rank_resolved": false,
+      "p_top3": 0.635
+     },
+     {
+      "rank": 4,
+      "block": "battery_soc",
+      "label": "Battery state of charge",
+      "group": "B",
+      "importance": 0.0011839595068318357,
+      "importance_90ci": [
+       0.0009739180351036359,
+       0.0014090222710273124
+      ],
+      "share": 0.2022808622712465,
+      "signed_mean": -0.00015802649312544482,
+      "rank_90ci": [
+       3,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.4
+     },
+     {
+      "rank": 5,
+      "block": "compressor_restart",
+      "label": "Compressor restart time",
+      "group": "B",
+      "importance": 0.00021516369506683125,
+      "importance_90ci": [
+       0.00016211370214522515,
+       0.0002691848203679007
+      ],
+      "share": 0.03676096818889606,
+      "signed_mean": 2.0614463261554958e-05,
+      "rank_90ci": [
+       5,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ],
+    "mode:exceeded 125% current cap": [
+     {
+      "rank": 1,
+      "block": "battery_age",
+      "label": "Equipment age",
+      "group": "B",
+      "importance": 0.0107245228022176,
+      "importance_90ci": [
+       0.01019151201908678,
+       0.011318058791848119
+      ],
+      "share": 0.3182628555027191,
+      "signed_mean": -0.00021469315773049418,
+      "rank_90ci": [
+       1,
+       1
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "cooling_makeup",
+      "label": "Cooling plant makeup (compressor vs fan share)",
+      "group": "B",
+      "importance": 0.008025597087172634,
+      "importance_90ci": [
+       0.007515578991283846,
+       0.00844430132415943
+      ],
+      "share": 0.23816905359646434,
+      "signed_mean": -0.00045138654082541057,
+      "rank_90ci": [
+       2,
+       2
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 3,
+      "block": "battery_soc",
+      "label": "Battery state of charge",
+      "group": "B",
+      "importance": 0.007329191790170494,
+      "importance_90ci": [
+       0.006922534578029267,
+       0.007664689856714523
+      ],
+      "share": 0.21750240553215233,
+      "signed_mean": 0.0004061204092155133,
+      "rank_90ci": [
+       3,
+       3
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 4,
+      "block": "battery_temp",
+      "label": "Battery hall temperature",
+      "group": "B",
+      "importance": 0.005291175754766319,
+      "importance_90ci": [
+       0.004989684426874776,
+       0.005583235236134482
+      ],
+      "share": 0.15702187740516269,
+      "signed_mean": 0.0001480037991427518,
+      "rank_90ci": [
+       4,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 5,
+      "block": "compressor_restart",
+      "label": "Compressor restart time",
+      "group": "B",
+      "importance": 0.0023265733969705395,
+      "importance_90ci": [
+       0.0021987232053443237,
+       0.0024463259969783875
+      ],
+      "share": 0.06904380796350153,
+      "signed_mean": -0.00014691158940934195,
+      "rank_90ci": [
+       5,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ],
+    "mode:missed 2.0 s recovery": [
+     {
+      "rank": 1,
+      "block": "battery_age",
+      "label": "Equipment age",
+      "group": "B",
+      "importance": 4.142260493641806e-07,
+      "importance_90ci": [
+       3.60674753410438e-07,
+       4.771243050728917e-07
+      ],
+      "share": 0.29394645487772286,
+      "signed_mean": -2.2288476871187148e-08,
+      "rank_90ci": [
+       1,
+       2
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "cooling_makeup",
+      "label": "Cooling plant makeup (compressor vs fan share)",
+      "group": "B",
+      "importance": 4.020548659329977e-07,
+      "importance_90ci": [
+       3.60416077782681e-07,
+       4.472303572377496e-07
+      ],
+      "share": 0.2853094407962708,
+      "signed_mean": -1.4444351206881894e-08,
+      "rank_90ci": [
+       1,
+       2
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 3,
+      "block": "battery_soc",
+      "label": "Battery state of charge",
+      "group": "B",
+      "importance": 2.61738607654002e-07,
+      "importance_90ci": [
+       2.2856775612180678e-07,
+       3.0163721232643516e-07
+      ],
+      "share": 0.18573707747887983,
+      "signed_mean": -2.2033659890279585e-08,
+      "rank_90ci": [
+       3,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.895
+     },
+     {
+      "rank": 4,
+      "block": "battery_temp",
+      "label": "Battery hall temperature",
+      "group": "B",
+      "importance": 2.347224837948788e-07,
+      "importance_90ci": [
+       2.1682491707970498e-07,
+       2.5783990753427457e-07
+      ],
+      "share": 0.16656567615074927,
+      "signed_mean": -1.1798046854485936e-08,
+      "rank_90ci": [
+       3,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.105
+     },
+     {
+      "rank": 5,
+      "block": "compressor_restart",
+      "label": "Compressor restart time",
+      "group": "B",
+      "importance": 9.644678424137492e-08,
+      "importance_90ci": [
+       8.150394764084359e-08,
+       1.1268801120392954e-07
+      ],
+      "share": 0.06844135069637731,
+      "signed_mean": 1.4524438354703362e-08,
+      "rank_90ci": [
+       5,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ],
+    "mode:storage hand-back too slow": [
+     {
+      "rank": 1,
+      "block": "battery_age",
+      "label": "Equipment age",
+      "group": "B",
+      "importance": 0.001035532047534076,
+      "importance_90ci": [
+       0.0009311853495372089,
+       0.0011310958456412796
+      ],
+      "share": 0.2841242481696701,
+      "signed_mean": 2.3373768120071256e-05,
+      "rank_90ci": [
+       1,
+       1
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "battery_soc",
+      "label": "Battery state of charge",
+      "group": "B",
+      "importance": 0.00082126143506691,
+      "importance_90ci": [
+       0.0007682857239383221,
+       0.0008736952430242898
+      ],
+      "share": 0.22533371936173865,
+      "signed_mean": 8.384653842722397e-05,
+      "rank_90ci": [
+       2,
+       4
+      ],
+      "rank_resolved": false,
+      "p_top3": 0.86
+     },
+     {
+      "rank": 3,
+      "block": "battery_temp",
+      "label": "Battery hall temperature",
+      "group": "B",
+      "importance": 0.0008018206528319957,
+      "importance_90ci": [
+       0.000711767081209245,
+       0.0008914278891823218
+      ],
+      "share": 0.21999965205838604,
+      "signed_mean": 2.943933412444247e-05,
+      "rank_90ci": [
+       2,
+       4
+      ],
+      "rank_resolved": false,
+      "p_top3": 0.58
+     },
+     {
+      "rank": 4,
+      "block": "cooling_makeup",
+      "label": "Cooling plant makeup (compressor vs fan share)",
+      "group": "B",
+      "importance": 0.0007931742143283324,
+      "importance_90ci": [
+       0.0007237453048966998,
+       0.0008604298124280449
+      ],
+      "share": 0.21762728430303874,
+      "signed_mean": 3.246052870627145e-05,
+      "rank_90ci": [
+       2,
+       4
+      ],
+      "rank_resolved": false,
+      "p_top3": 0.56
+     },
+     {
+      "rank": 5,
+      "block": "compressor_restart",
+      "label": "Compressor restart time",
+      "group": "B",
+      "importance": 0.00019285674549183334,
+      "importance_90ci": [
+       0.0001715200665159473,
+       0.0002150814510548859
+      ],
+      "share": 0.052915096107166514,
+      "signed_mean": -1.8012826208637492e-05,
+      "rank_90ci": [
+       5,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ],
+    "min_power": [
+     {
+      "rank": 1,
+      "block": "battery_age",
+      "label": "Equipment age",
+      "group": "B",
+      "importance": 0.004110829484357965,
+      "importance_90ci": [
+       0.003992252728534133,
+       0.004257061870746837
+      ],
+      "share": 0.34765017982864527,
+      "signed_mean": -3.91808298494046e-05,
+      "rank_90ci": [
+       1,
+       1
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "cooling_makeup",
+      "label": "Cooling plant makeup (compressor vs fan share)",
+      "group": "B",
+      "importance": 0.003770044049254161,
+      "importance_90ci": [
+       0.0036092041912894244,
+       0.003919818916889736
+      ],
+      "share": 0.31883017689550874,
+      "signed_mean": -2.7959210122692918e-05,
+      "rank_90ci": [
+       2,
+       2
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 3,
+      "block": "battery_soc",
+      "label": "Battery state of charge",
+      "group": "B",
+      "importance": 0.002033825320573668,
+      "importance_90ci": [
+       0.0019271222340319538,
+       0.0021282522159994815
+      ],
+      "share": 0.17199928654980864,
+      "signed_mean": -1.0102636766532683e-05,
+      "rank_90ci": [
+       3,
+       3
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 4,
+      "block": "battery_temp",
+      "label": "Battery hall temperature",
+      "group": "B",
+      "importance": 0.0011624934228002552,
+      "importance_90ci": [
+       0.0011097464340913891,
+       0.0012179907307603862
+      ],
+      "share": 0.09831131381730016,
+      "signed_mean": 2.7200878605678257e-05,
+      "rank_90ci": [
+       4,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 5,
+      "block": "compressor_restart",
+      "label": "Compressor restart time",
+      "group": "B",
+      "importance": 0.000747422588405849,
+      "importance_90ci": [
+       0.0007004066999959227,
+       0.0007948218524069176
+      ],
+      "share": 0.06320904290873726,
+      "signed_mean": -7.821132322593864e-05,
+      "rank_90ci": [
+       5,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ],
+    "peak_current_pu": [
+     {
+      "rank": 1,
+      "block": "battery_age",
+      "label": "Equipment age",
+      "group": "B",
+      "importance": 0.03066439298043648,
+      "importance_90ci": [
+       0.028244709917406286,
+       0.03326812336333088
+      ],
+      "share": 0.35382956186842085,
+      "signed_mean": -0.0012302924667795504,
+      "rank_90ci": [
+       1,
+       1
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "cooling_makeup",
+      "label": "Cooling plant makeup (compressor vs fan share)",
+      "group": "B",
+      "importance": 0.022566633741060948,
+      "importance_90ci": [
+       0.02106719462337593,
+       0.024868848677476196
+      ],
+      "share": 0.2603913318792545,
+      "signed_mean": -0.0021466028590997064,
+      "rank_90ci": [
+       2,
+       2
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 3,
+      "block": "battery_soc",
+      "label": "Battery state of charge",
+      "group": "B",
+      "importance": 0.01881038567920527,
+      "importance_90ci": [
+       0.01740145338562628,
+       0.020514178882663475
+      ],
+      "share": 0.2170488268818971,
+      "signed_mean": 0.0006549931069215139,
+      "rank_90ci": [
+       3,
+       3
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 4,
+      "block": "battery_temp",
+      "label": "Battery hall temperature",
+      "group": "B",
+      "importance": 0.007819526458779976,
+      "importance_90ci": [
+       0.007122062035774207,
+       0.008674772653107855
+      ],
+      "share": 0.09022776425718963,
+      "signed_mean": -2.3516893386840905e-05,
+      "rank_90ci": [
+       4,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 5,
+      "block": "compressor_restart",
+      "label": "Compressor restart time",
+      "group": "B",
+      "importance": 0.006803365893661985,
+      "importance_90ci": [
+       0.0062221303996940385,
+       0.00748568520235519
+      ],
+      "share": 0.07850251511323779,
+      "signed_mean": 5.278596033652616e-05,
+      "rank_90ci": [
+       5,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ],
+    "floor_violation_s": [
+     {
+      "rank": 1,
+      "block": "battery_age",
+      "label": "Equipment age",
+      "group": "B",
+      "importance": 0.010248395761824203,
+      "importance_90ci": [
+       0.009681449125101787,
+       0.01067587006674924
+      ],
+      "share": 0.36668012782768133,
+      "signed_mean": -0.0003798498278871799,
+      "rank_90ci": [
+       1,
+       1
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "cooling_makeup",
+      "label": "Cooling plant makeup (compressor vs fan share)",
+      "group": "B",
+      "importance": 0.006982410017866651,
+      "importance_90ci": [
+       0.0066790454327342215,
+       0.007309612926419742
+      ],
+      "share": 0.24982553927453852,
+      "signed_mean": 0.00012002152057054148,
+      "rank_90ci": [
+       2,
+       3
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 3,
+      "block": "battery_soc",
+      "label": "Battery state of charge",
+      "group": "B",
+      "importance": 0.006725168846858046,
+      "importance_90ci": [
+       0.00643735116928777,
+       0.007036311435167838
+      ],
+      "share": 0.2406216377410571,
+      "signed_mean": 0.00021576798179497324,
+      "rank_90ci": [
+       2,
+       3
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 4,
+      "block": "battery_temp",
+      "label": "Battery hall temperature",
+      "group": "B",
+      "importance": 0.0028254923746765894,
+      "importance_90ci": [
+       0.0026151609486706247,
+       0.003002568272087958
+      ],
+      "share": 0.10109405698225442,
+      "signed_mean": -3.232266784956056e-05,
+      "rank_90ci": [
+       4,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     },
+     {
+      "rank": 5,
+      "block": "compressor_restart",
+      "label": "Compressor restart time",
+      "group": "B",
+      "importance": 0.001167677182122135,
+      "importance_90ci": [
+       0.0010994271804733815,
+       0.0012509544533444562
+      ],
+      "share": 0.041778638174468634,
+      "signed_mean": -1.9960428937338287e-05,
+      "rank_90ci": [
+       5,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ],
+    "recovery_margin_s": [
+     {
+      "rank": 1,
+      "block": "cooling_makeup",
+      "label": "Cooling plant makeup (compressor vs fan share)",
+      "group": "B",
+      "importance": 0.07204484507772337,
+      "importance_90ci": [
+       0.06631428131006935,
+       0.07629389042728583
+      ],
+      "share": 0.324729385352694,
+      "signed_mean": 0.0013939502384261381,
+      "rank_90ci": [
+       1,
+       1
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 2,
+      "block": "battery_age",
+      "label": "Equipment age",
+      "group": "B",
+      "importance": 0.06431483970780391,
+      "importance_90ci": [
+       0.05908444632889975,
+       0.06896473406349551
+      ],
+      "share": 0.2898877545623306,
+      "signed_mean": 0.0005365646258384604,
+      "rank_90ci": [
+       2,
+       2
+      ],
+      "rank_resolved": true,
+      "p_top3": 1.0
+     },
+     {
+      "rank": 3,
+      "block": "battery_soc",
+      "label": "Battery state of charge",
+      "group": "B",
+      "importance": 0.03608854705448422,
+      "importance_90ci": [
+       0.032756660348644585,
+       0.038893767913677345
+      ],
+      "share": 0.1626627372247347,
+      "signed_mean": -0.0015583486298564818,
+      "rank_90ci": [
+       3,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.81
+     },
+     {
+      "rank": 4,
+      "block": "battery_temp",
+      "label": "Battery hall temperature",
+      "group": "B",
+      "importance": 0.033672784719257214,
+      "importance_90ci": [
+       0.03172918974853432,
+       0.03600196801854179
+      ],
+      "share": 0.15177411615226027,
+      "signed_mean": -0.0007021541890086755,
+      "rank_90ci": [
+       3,
+       4
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.19
+     },
+     {
+      "rank": 5,
+      "block": "compressor_restart",
+      "label": "Compressor restart time",
+      "group": "B",
+      "importance": 0.01574016486560989,
+      "importance_90ci": [
+       0.014625747050584574,
+       0.017152514147677423
+      ],
+      "share": 0.07094600670798039,
+      "signed_mean": 6.054761962514033e-05,
+      "rank_90ci": [
+       5,
+       5
+      ],
+      "rank_resolved": true,
+      "p_top3": 0.0
+     }
+    ]
+   },
+   "interactions": {
+    "p_fail": [
+     {
+      "blocks": [
+       "battery_soc",
+       "cooling_makeup"
+      ],
+      "importance": 0.00021857500541955233,
+      "signed_mean": 2.9490589440683834e-05
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "cooling_makeup"
+      ],
+      "importance": 0.00015491801605094224,
+      "signed_mean": 2.95972222374985e-05
+     },
+     {
+      "blocks": [
+       "battery_temp",
+       "cooling_makeup"
+      ],
+      "importance": 9.753936319611967e-05,
+      "signed_mean": -3.9003489291644655e-06
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "battery_soc"
+      ],
+      "importance": 9.07632420421578e-05,
+      "signed_mean": -7.842749255360104e-06
+     },
+     {
+      "blocks": [
+       "battery_soc",
+       "compressor_restart"
+      ],
+      "importance": 8.069127943599597e-05,
+      "signed_mean": 1.2978315453437972e-06
+     }
+    ],
+    "mode:PSU shutdown and restart delay": [
+     {
+      "blocks": [
+       "battery_temp",
+       "cooling_makeup"
+      ],
+      "importance": 7.165361603256315e-05,
+      "signed_mean": 1.9577890270738862e-05
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "battery_temp"
+      ],
+      "importance": 5.6317352573387325e-05,
+      "signed_mean": 8.116639946820214e-06
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "cooling_makeup"
+      ],
+      "importance": 4.9758553359424695e-05,
+      "signed_mean": -1.4033494153409265e-05
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "battery_soc"
+      ],
+      "importance": 4.788779187947512e-05,
+      "signed_mean": -1.3624882740259636e-05
+     },
+     {
+      "blocks": [
+       "battery_soc",
+       "cooling_makeup"
+      ],
+      "importance": 3.921189272659831e-05,
+      "signed_mean": -1.8743173768598353e-06
+     }
+    ],
+    "mode:below power floor": [
+     {
+      "blocks": [
+       "battery_soc",
+       "cooling_makeup"
+      ],
+      "importance": 0.0011299733305349946,
+      "signed_mean": -1.2131407856941223e-05
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "cooling_makeup"
+      ],
+      "importance": 0.001075443346053362,
+      "signed_mean": 2.0801218852284364e-05
+     },
+     {
+      "blocks": [
+       "battery_temp",
+       "cooling_makeup"
+      ],
+      "importance": 0.0008534931112080812,
+      "signed_mean": -1.588027225807309e-05
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "battery_soc"
+      ],
+      "importance": 0.0008223364129662514,
+      "signed_mean": 3.696773092087824e-07
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "battery_temp"
+      ],
+      "importance": 0.0006493446417152882,
+      "signed_mean": 3.342054696986452e-05
+     }
+    ],
+    "mode:cooling tripped": [
+     {
+      "blocks": [
+       "battery_age",
+       "cooling_makeup"
+      ],
+      "importance": 0.00045678962487727404,
+      "signed_mean": -7.27808364899829e-05
+     },
+     {
+      "blocks": [
+       "battery_temp",
+       "cooling_makeup"
+      ],
+      "importance": 0.00031008111545816064,
+      "signed_mean": 2.1384390493039973e-05
+     },
+     {
+      "blocks": [
+       "battery_soc",
+       "cooling_makeup"
+      ],
+      "importance": 0.0002785674878396094,
+      "signed_mean": -2.819943256326951e-05
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "battery_temp"
+      ],
+      "importance": 0.0002660172467585653,
+      "signed_mean": -3.291522079962306e-05
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "battery_soc"
+      ],
+      "importance": 0.00020648246572818607,
+      "signed_mean": 2.8812103209929774e-06
+     }
+    ],
+    "mode:exceeded 125% current cap": [
+     {
+      "blocks": [
+       "battery_age",
+       "cooling_makeup"
+      ],
+      "importance": 0.0014494839124381542,
+      "signed_mean": 8.99329170351848e-05
+     },
+     {
+      "blocks": [
+       "battery_soc",
+       "cooling_makeup"
+      ],
+      "importance": 0.0013913462171331048,
+      "signed_mean": 7.455404556822032e-05
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "battery_soc"
+      ],
+      "importance": 0.001086001400835812,
+      "signed_mean": 5.986768883303739e-06
+     },
+     {
+      "blocks": [
+       "battery_temp",
+       "cooling_makeup"
+      ],
+      "importance": 0.0009706949349492788,
+      "signed_mean": -2.7581025278777815e-05
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "battery_temp"
+      ],
+      "importance": 0.0008915243088267744,
+      "signed_mean": -2.0585101083270274e-05
+     }
+    ],
+    "mode:missed 2.0 s recovery": [
+     {
+      "blocks": [
+       "battery_age",
+       "cooling_makeup"
+      ],
+      "importance": 1.079941043258259e-07,
+      "signed_mean": -1.6490600884822015e-08
+     },
+     {
+      "blocks": [
+       "battery_soc",
+       "cooling_makeup"
+      ],
+      "importance": 7.224144127349064e-08,
+      "signed_mean": -2.0799376443392248e-08
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "battery_soc"
+      ],
+      "importance": 6.915803396623232e-08,
+      "signed_mean": 6.554552900439603e-09
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "battery_temp"
+      ],
+      "importance": 4.743274573115741e-08,
+      "signed_mean": 6.311843936401829e-09
+     },
+     {
+      "blocks": [
+       "battery_temp",
+       "cooling_makeup"
+      ],
+      "importance": 4.36935287950746e-08,
+      "signed_mean": 1.4892549415890244e-09
+     }
+    ],
+    "mode:storage hand-back too slow": [
+     {
+      "blocks": [
+       "battery_age",
+       "cooling_makeup"
+      ],
+      "importance": 0.0002552047371864319,
+      "signed_mean": 5.064081506134244e-06
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "battery_soc"
+      ],
+      "importance": 0.00021514475520234555,
+      "signed_mean": -4.042418368044309e-06
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "battery_temp"
+      ],
+      "importance": 0.00013617383956443518,
+      "signed_mean": 1.5454170352313668e-05
+     },
+     {
+      "blocks": [
+       "battery_soc",
+       "cooling_makeup"
+      ],
+      "importance": 0.00012525070633273572,
+      "signed_mean": 8.30702504117653e-07
+     },
+     {
+      "blocks": [
+       "battery_temp",
+       "cooling_makeup"
+      ],
+      "importance": 0.00010428661335026845,
+      "signed_mean": 2.166721912999492e-08
+     }
+    ],
+    "min_power": [
+     {
+      "blocks": [
+       "battery_age",
+       "cooling_makeup"
+      ],
+      "importance": 0.00044612903730012476,
+      "signed_mean": -6.434751867345767e-06
+     },
+     {
+      "blocks": [
+       "battery_temp",
+       "cooling_makeup"
+      ],
+      "importance": 0.000403117184760049,
+      "signed_mean": 6.407783530448796e-06
+     },
+     {
+      "blocks": [
+       "battery_soc",
+       "cooling_makeup"
+      ],
+      "importance": 0.00039496857789345086,
+      "signed_mean": 3.534607685651281e-06
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "battery_temp"
+      ],
+      "importance": 0.00038834678707644343,
+      "signed_mean": 1.6166977729881182e-06
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "battery_soc"
+      ],
+      "importance": 0.0002875173813663423,
+      "signed_mean": 6.298520929703955e-06
+     }
+    ],
+    "peak_current_pu": [
+     {
+      "blocks": [
+       "battery_temp",
+       "cooling_makeup"
+      ],
+      "importance": 0.0029244497418403625,
+      "signed_mean": 2.374702671659179e-05
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "battery_temp"
+      ],
+      "importance": 0.0026705830823630095,
+      "signed_mean": -5.704039358533919e-05
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "cooling_makeup"
+      ],
+      "importance": 0.002354379277676344,
+      "signed_mean": -0.0001690542121650651
+     },
+     {
+      "blocks": [
+       "battery_soc",
+       "cooling_makeup"
+      ],
+      "importance": 0.0018674528691917658,
+      "signed_mean": -1.5827119568712078e-05
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "battery_soc"
+      ],
+      "importance": 0.0016630323370918632,
+      "signed_mean": -4.704236926045269e-05
+     }
+    ],
+    "floor_violation_s": [
+     {
+      "blocks": [
+       "battery_age",
+       "battery_temp"
+      ],
+      "importance": 0.0023387507535517216,
+      "signed_mean": -1.1505510883580428e-05
+     },
+     {
+      "blocks": [
+       "battery_soc",
+       "cooling_makeup"
+      ],
+      "importance": 0.000878672581166029,
+      "signed_mean": -3.5905782169720624e-06
+     },
+     {
+      "blocks": [
+       "battery_temp",
+       "cooling_makeup"
+      ],
+      "importance": 0.000664525490719825,
+      "signed_mean": 2.366025000810623e-05
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "cooling_makeup"
+      ],
+      "importance": 0.0006515209097415209,
+      "signed_mean": 2.999363641720265e-05
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "battery_soc"
+      ],
+      "importance": 0.000467789446702227,
+      "signed_mean": -2.36494088312611e-05
+     }
+    ],
+    "recovery_margin_s": [
+     {
+      "blocks": [
+       "battery_age",
+       "cooling_makeup"
+      ],
+      "importance": 0.01064153853803873,
+      "signed_mean": 3.291109169367701e-05
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "battery_temp"
+      ],
+      "importance": 0.009766563773155212,
+      "signed_mean": 0.00016235026123467833
+     },
+     {
+      "blocks": [
+       "battery_age",
+       "battery_soc"
+      ],
+      "importance": 0.007247009314596653,
+      "signed_mean": 0.0001679497945588082
+     },
+     {
+      "blocks": [
+       "battery_soc",
+       "cooling_makeup"
+      ],
+      "importance": 0.006714812945574522,
+      "signed_mean": -0.00024836385273374617
+     },
+     {
+      "blocks": [
+       "battery_temp",
+       "cooling_makeup"
+      ],
+      "importance": 0.006670748814940453,
+      "signed_mean": -2.6087522201123647e-05
+     }
+    ]
+   }
+  }
+ },
+ "group_split": [
+  {
+   "output": "p_fail",
+   "A_conditions": 0.008621829077601433,
+   "B_site_state": 0.001388735517859459,
+   "A_share": 0.8612730076694021
+  },
+  {
+   "output": "mode:PSU shutdown and restart delay",
+   "A_conditions": 0.0033506202273846236,
+   "B_site_state": 0.0005878045227260772,
+   "A_share": 0.8507513638010845
+  },
+  {
+   "output": "mode:below power floor",
+   "A_conditions": 0.1920970104560743,
+   "B_site_state": 0.013556130051388003,
+   "A_share": 0.934082552700448
+  },
+  {
+   "output": "mode:cooling tripped",
+   "A_conditions": 0.41416368519482516,
+   "B_site_state": 0.0034790641556814304,
+   "A_share": 0.9916697604325901
+  },
+  {
+   "output": "mode:exceeded 125% current cap",
+   "A_conditions": 0.3884563004589436,
+   "B_site_state": 0.016037076712952056,
+   "A_share": 0.9603526840783431
+  },
+  {
+   "output": "mode:missed 2.0 s recovery",
+   "A_conditions": 4.474000866506289e-06,
+   "B_site_state": 6.776640659094841e-07,
+   "A_share": 0.8684572706494508
+  },
+  {
+   "output": "mode:storage hand-back too slow",
+   "A_conditions": 0.02352007654376166,
+   "B_site_state": 0.0018442832960601264,
+   "A_share": 0.9272883956974691
+  },
+  {
+   "output": "min_power",
+   "A_conditions": 0.08716251258272678,
+   "B_site_state": 0.005590052476036362,
+   "A_share": 0.9397315592027584
+  },
+  {
+   "output": "peak_current_pu",
+   "A_conditions": 1.0783642036020755,
+   "B_site_state": 0.043604815542697906,
+   "A_share": 0.9611354549023682
+  },
+  {
+   "output": "floor_violation_s",
+   "A_conditions": 0.28949468390550465,
+   "B_site_state": 0.014622323472984136,
+   "A_share": 0.9519187578523488
+  },
+  {
+   "output": "recovery_margin_s",
+   "A_conditions": 2.263727976752445,
+   "B_site_state": 0.11409793883259409,
+   "A_share": 0.9520158569705379
+  }
+ ],
+ "lifts": {
+  "fault_type": {
+   "key": "fault_type",
+   "numeric": false,
+   "levels": [
+    {
+     "level": "3LG",
+     "share_of_events": 0.03667,
+     "p_fail": 0.9974578022956848,
+     "lift": 1.0026181936264038,
+     "mean_min_power": 0.19555072486400604,
+     "mean_floor_violation_s": 0.3819583058357239,
+     "mean_peak_current_pu": 1.8215893507003784
+    },
+    {
+     "level": "LL",
+     "share_of_events": 0.07672,
+     "p_fail": 0.996706485748291,
+     "lift": 1.00186288356781,
+     "mean_min_power": 0.2081737518310547,
+     "mean_floor_violation_s": 0.3634403645992279,
+     "mean_peak_current_pu": 1.8020600080490112
+    },
+    {
+     "level": "LLG",
+     "share_of_events": 0.18271,
+     "p_fail": 0.9962577223777771,
+     "lift": 1.00141179561615,
+     "mean_min_power": 0.2118614763021469,
+     "mean_floor_violation_s": 0.35071849822998047,
+     "mean_peak_current_pu": 1.777748942375183
+    },
+    {
+     "level": "SLG",
+     "share_of_events": 0.7039,
+     "p_fail": 0.9941509962081909,
+     "lift": 0.9992942214012146,
+     "mean_min_power": 0.22892819344997406,
+     "mean_floor_violation_s": 0.25975820422172546,
+     "mean_peak_current_pu": 2.0696299076080322
+    }
+   ]
+  },
+  "protection": {
+   "key": "protection_failure",
+   "numeric": false,
+   "levels": [
+    {
+     "level": "breaker_failure",
+     "share_of_events": 0.04885,
+     "p_fail": 0.9977129101753235,
+     "lift": 1.0028746128082275,
+     "mean_min_power": 0.21401077508926392,
+     "mean_floor_violation_s": 0.428953617811203,
+     "mean_peak_current_pu": 1.9353893995285034
+    },
+    {
+     "level": "breaker_misoperation",
+     "share_of_events": 0.04952,
+     "p_fail": 0.9977967143058777,
+     "lift": 1.0029587745666504,
+     "mean_min_power": 0.21472646296024323,
+     "mean_floor_violation_s": 0.4253464639186859,
+     "mean_peak_current_pu": 1.9275643825531006
+    },
+    {
+     "level": "normal",
+     "share_of_events": 0.90163,
+     "p_fail": 0.9945366382598877,
+     "lift": 0.9996818900108337,
+     "mean_min_power": 0.22393444180488586,
+     "mean_floor_violation_s": 0.2737215757369995,
+     "mean_peak_current_pu": 1.9927021265029907
+    }
+   ]
+  },
+  "dip_depth": {
+   "key": "dip_depth_pu",
+   "numeric": true,
+   "levels": [
+    {
+     "level": "-0.000998 to 0.459",
+     "share_of_events": 0.2,
+     "p_fail": 0.9998840093612671,
+     "lift": 1.0050568580627441,
+     "mean_min_power": 0.13744349777698517,
+     "mean_floor_violation_s": 0.7226359248161316,
+     "mean_peak_current_pu": 4.1187286376953125
+    },
+    {
+     "level": "0.459 to 0.727",
+     "share_of_events": 0.2,
+     "p_fail": 0.9998722672462463,
+     "lift": 1.0050450563430786,
+     "mean_min_power": 0.20940305292606354,
+     "mean_floor_violation_s": 0.33860862255096436,
+     "mean_peak_current_pu": 1.6601332426071167
+    },
+    {
+     "level": "0.727 to 0.784",
+     "share_of_events": 0.2,
+     "p_fail": 0.9997872114181519,
+     "lift": 1.0049595832824707,
+     "mean_min_power": 0.25814753770828247,
+     "mean_floor_violation_s": 0.17370176315307617,
+     "mean_peak_current_pu": 1.450298547744751
+    },
+    {
+     "level": "0.784 to 0.842",
+     "share_of_events": 0.2,
+     "p_fail": 0.9988747835159302,
+     "lift": 1.0040425062179565,
+     "mean_min_power": 0.2560010254383087,
+     "mean_floor_violation_s": 0.12659642100334167,
+     "mean_peak_current_pu": 1.3783005475997925
+    },
+    {
+     "level": "0.842 to 0.9",
+     "share_of_events": 0.2,
+     "p_fail": 0.9758477807044983,
+     "lift": 0.9808962941169739,
+     "mean_min_power": 0.2539733946323395,
+     "mean_floor_violation_s": 0.0825229361653328,
+     "mean_peak_current_pu": 1.325922966003418
+    }
+   ]
+  },
+  "reclose": {
+   "key": "n_dips",
+   "numeric": false,
+   "levels": [
+    {
+     "level": "1.0",
+     "share_of_events": 0.72534,
+     "p_fail": 0.9936404824256897,
+     "lift": 0.9987810850143433,
+     "mean_min_power": 0.22742469608783722,
+     "mean_floor_violation_s": 0.23578891158103943,
+     "mean_peak_current_pu": 1.9807238578796387
+    },
+    {
+     "level": "2.0",
+     "share_of_events": 0.23937,
+     "p_fail": 0.9980605244636536,
+     "lift": 1.0032240152359009,
+     "mean_min_power": 0.2111225575208664,
+     "mean_floor_violation_s": 0.42982718348503113,
+     "mean_peak_current_pu": 2.006887435913086
+    },
+    {
+     "level": "3.0",
+     "share_of_events": 0.03396,
+     "p_fail": 0.9980117082595825,
+     "lift": 1.003174901008606,
+     "mean_min_power": 0.21225425601005554,
+     "mean_floor_violation_s": 0.42370426654815674,
+     "mean_peak_current_pu": 1.9750542640686035
+    },
+    {
+     "level": "4.0",
+     "share_of_events": 0.00132,
+     "p_fail": 0.9983474016189575,
+     "lift": 1.0035123825073242,
+     "mean_min_power": 0.21766717731952667,
+     "mean_floor_violation_s": 0.38060492277145386,
+     "mean_peak_current_pu": 1.8949368000030518
+    },
+    {
+     "level": "5.0",
+     "share_of_events": 1e-05,
+     "p_fail": 0.9999983906745911,
+     "lift": 1.0051718950271606,
+     "mean_min_power": 0.15661443769931793,
+     "mean_floor_violation_s": 0.6882982850074768,
+     "mean_peak_current_pu": 1.5747371912002563
+    }
+   ]
+  },
+  "weather": {
+   "key": "outdoor_temp_c",
+   "numeric": true,
+   "levels": [
+    {
+     "level": "-18.3 to 11.7",
+     "share_of_events": 0.2,
+     "p_fail": 0.9956932663917542,
+     "lift": 1.0008444786071777,
+     "mean_min_power": 0.14772291481494904,
+     "mean_floor_violation_s": 0.30650943517684937,
+     "mean_peak_current_pu": 1.9659998416900635
+    },
+    {
+     "level": "11.7 to 18.6",
+     "share_of_events": 0.2,
+     "p_fail": 0.9964908361434937,
+     "lift": 1.0016461610794067,
+     "mean_min_power": 0.2005620300769806,
+     "mean_floor_violation_s": 0.2967606782913208,
+     "mean_peak_current_pu": 2.0580692291259766
+    },
+    {
+     "level": "18.6 to 24",
+     "share_of_events": 0.2,
+     "p_fail": 0.9960591793060303,
+     "lift": 1.001212239265442,
+     "mean_min_power": 0.22881288826465607,
+     "mean_floor_violation_s": 0.2898923456668854,
+     "mean_peak_current_pu": 2.0662779808044434
+    },
+    {
+     "level": "24 to 28.9",
+     "share_of_events": 0.2,
+     "p_fail": 0.9952361583709717,
+     "lift": 1.000385046005249,
+     "mean_min_power": 0.24490268528461456,
+     "mean_floor_violation_s": 0.28167954087257385,
+     "mean_peak_current_pu": 2.0264627933502197
+    },
+    {
+     "level": "28.9 to 42.8",
+     "share_of_events": 0.2,
+     "p_fail": 0.9907865524291992,
+     "lift": 0.9959123730659485,
+     "mean_min_power": 0.29296791553497314,
+     "mean_floor_violation_s": 0.26922371983528137,
+     "mean_peak_current_pu": 1.816574215888977
+    }
+   ]
+  },
+  "workload_type": {
+   "key": "workload_type",
+   "numeric": false,
+   "levels": [
+    {
+     "level": "inference",
+     "share_of_events": 0.33056,
+     "p_fail": 0.9912522435188293,
+     "lift": 0.9963804483413696,
+     "mean_min_power": 0.21309074759483337,
+     "mean_floor_violation_s": 0.29136115312576294,
+     "mean_peak_current_pu": 2.050568103790283
+    },
+    {
+     "level": "mixed",
+     "share_of_events": 0.33706,
+     "p_fail": 0.9960103034973145,
+     "lift": 1.001163125038147,
+     "mean_min_power": 0.22209306061267853,
+     "mean_floor_violation_s": 0.29016736149787903,
+     "mean_peak_current_pu": 1.995378017425537
+    },
+    {
+     "level": "training",
+     "share_of_events": 0.33238,
+     "p_fail": 0.9972609877586365,
+     "lift": 1.0024203062057495,
+     "mean_min_power": 0.23375572264194489,
+     "mean_floor_violation_s": 0.2849057614803314,
+     "mean_peak_current_pu": 1.9143115282058716
+    }
+   ]
+  },
+  "site_load": {
+   "key": "load_fraction",
+   "numeric": true,
+   "levels": [
+    {
+     "level": "0.204 to 0.39",
+     "share_of_events": 0.2,
+     "p_fail": 0.9965402483940125,
+     "lift": 1.0016958713531494,
+     "mean_min_power": 0.21221792697906494,
+     "mean_floor_violation_s": 0.2952668368816376,
+     "mean_peak_current_pu": 2.0559120178222656
+    },
+    {
+     "level": "0.39 to 0.437",
+     "share_of_events": 0.2,
+     "p_fail": 0.9961324334144592,
+     "lift": 1.0012859106063843,
+     "mean_min_power": 0.20698091387748718,
+     "mean_floor_violation_s": 0.29265204071998596,
+     "mean_peak_current_pu": 2.059626579284668
+    },
+    {
+     "level": "0.437 to 0.496",
+     "share_of_events": 0.2,
+     "p_fail": 0.9958832263946533,
+     "lift": 1.001035451889038,
+     "mean_min_power": 0.207398921251297,
+     "mean_floor_violation_s": 0.2948267161846161,
+     "mean_peak_current_pu": 2.054176092147827
+    },
+    {
+     "level": "0.496 to 0.606",
+     "share_of_events": 0.2,
+     "p_fail": 0.9953896403312683,
+     "lift": 1.0005393028259277,
+     "mean_min_power": 0.2121853083372116,
+     "mean_floor_violation_s": 0.2909129858016968,
+     "mean_peak_current_pu": 1.9995044469833374
+    },
+    {
+     "level": "0.606 to 0.97",
+     "share_of_events": 0.2,
+     "p_fail": 0.9903203248977661,
+     "lift": 0.9954437613487244,
+     "mean_min_power": 0.27618539333343506,
+     "mean_floor_violation_s": 0.2704070806503296,
+     "mean_peak_current_pu": 1.7641644477844238
+    }
+   ]
+  },
+  "battery_age": {
+   "key": "equipment_age_years",
+   "numeric": true,
+   "levels": [
+    {
+     "level": "-0.000654 to 3.02",
+     "share_of_events": 0.2,
+     "p_fail": 0.9953761696815491,
+     "lift": 1.000525712966919,
+     "mean_min_power": 0.21860399842262268,
+     "mean_floor_violation_s": 0.30174607038497925,
+     "mean_peak_current_pu": 2.025444984436035
+    },
+    {
+     "level": "3.02 to 5.99",
+     "share_of_events": 0.2,
+     "p_fail": 0.9951534867286682,
+     "lift": 1.0003019571304321,
+     "mean_min_power": 0.2211453914642334,
+     "mean_floor_violation_s": 0.2957111597061157,
+     "mean_peak_current_pu": 2.0079047679901123
+    },
+    {
+     "level": "5.99 to 9.03",
+     "share_of_events": 0.2,
+     "p_fail": 0.9947673678398132,
+     "lift": 0.9999138116836548,
+     "mean_min_power": 0.22344784438610077,
+     "mean_floor_violation_s": 0.2890062630176544,
+     "mean_peak_current_pu": 2.0029749870300293
+    },
+    {
+     "level": "9.03 to 12",
+     "share_of_events": 0.2,
+     "p_fail": 0.9945828318595886,
+     "lift": 0.9997283220291138,
+     "mean_min_power": 0.2243988811969757,
+     "mean_floor_violation_s": 0.2854045331478119,
+     "mean_peak_current_pu": 1.9735639095306396
+    },
+    {
+     "level": "12 to 14",
+     "share_of_events": 0.2,
+     "p_fail": 0.9943863153457642,
+     "lift": 0.9995307326316833,
+     "mean_min_power": 0.22737231850624084,
+     "mean_floor_violation_s": 0.2721976339817047,
+     "mean_peak_current_pu": 1.9234956502914429
+    }
+   ]
+  },
+  "battery_temp": {
+   "key": "battery_temp_c",
+   "numeric": true,
+   "levels": [
+    {
+     "level": "18 to 19.8",
+     "share_of_events": 0.2,
+     "p_fail": 0.9954397678375244,
+     "lift": 1.0005896091461182,
+     "mean_min_power": 0.22308242321014404,
+     "mean_floor_violation_s": 0.2840907573699951,
+     "mean_peak_current_pu": 1.966278314590454
+    },
+    {
+     "level": "19.8 to 21.6",
+     "share_of_events": 0.2,
+     "p_fail": 0.9952940344810486,
+     "lift": 1.0004432201385498,
+     "mean_min_power": 0.2232457548379898,
+     "mean_floor_violation_s": 0.29015782475471497,
+     "mean_peak_current_pu": 1.9871695041656494
+    },
+    {
+     "level": "21.6 to 23.4",
+     "share_of_events": 0.2,
+     "p_fail": 0.9946367144584656,
+     "lift": 0.9997824430465698,
+     "mean_min_power": 0.22337988018989563,
+     "mean_floor_violation_s": 0.28628912568092346,
+     "mean_peak_current_pu": 1.991361141204834
+    },
+    {
+     "level": "23.4 to 25.2",
+     "share_of_events": 0.2,
+     "p_fail": 0.9944382905960083,
+     "lift": 0.9995830059051514,
+     "mean_min_power": 0.2229022979736328,
+     "mean_floor_violation_s": 0.28957003355026245,
+     "mean_peak_current_pu": 1.9896280765533447
+    },
+    {
+     "level": "25.2 to 27",
+     "share_of_events": 0.2,
+     "p_fail": 0.9944572448730469,
+     "lift": 0.9996020793914795,
+     "mean_min_power": 0.2223581224679947,
+     "mean_floor_violation_s": 0.2939579486846924,
+     "mean_peak_current_pu": 1.9989464282989502
+    }
+   ]
+  },
+  "battery_soc": {
+   "key": "battery_soc0",
+   "numeric": true,
+   "levels": [
+    {
+     "level": "0.799 to 0.84",
+     "share_of_events": 0.2,
+     "p_fail": 0.9957222938537598,
+     "lift": 1.0008736848831177,
+     "mean_min_power": 0.22445006668567657,
+     "mean_floor_violation_s": 0.2967725694179535,
+     "mean_peak_current_pu": 2.0051681995391846
+    },
+    {
+     "level": "0.84 to 0.88",
+     "share_of_events": 0.2,
+     "p_fail": 0.9952341914176941,
+     "lift": 1.0003830194473267,
+     "mean_min_power": 0.22371461987495422,
+     "mean_floor_violation_s": 0.29234084486961365,
+     "mean_peak_current_pu": 2.0050292015075684
+    },
+    {
+     "level": "0.88 to 0.92",
+     "share_of_events": 0.2,
+     "p_fail": 0.9949496388435364,
+     "lift": 1.0000970363616943,
+     "mean_min_power": 0.22242537140846252,
+     "mean_floor_violation_s": 0.2910579442977905,
+     "mean_peak_current_pu": 2.000093936920166
+    },
+    {
+     "level": "0.92 to 0.96",
+     "share_of_events": 0.2,
+     "p_fail": 0.994424045085907,
+     "lift": 0.9995687007904053,
+     "mean_min_power": 0.22280555963516235,
+     "mean_floor_violation_s": 0.2841590940952301,
+     "mean_peak_current_pu": 1.9676408767700195
+    },
+    {
+     "level": "0.96 to 1",
+     "share_of_events": 0.2,
+     "p_fail": 0.9939358234405518,
+     "lift": 0.9990779161453247,
+     "mean_min_power": 0.2215728461742401,
+     "mean_floor_violation_s": 0.279735267162323,
+     "mean_peak_current_pu": 1.9554519653320312
+    }
+   ]
+  },
+  "compressor_restart": {
+   "key": "compressor_restart_s",
+   "numeric": true,
+   "levels": [
+    {
+     "level": "100 to 104",
+     "share_of_events": 0.4,
+     "p_fail": 0.9952886700630188,
+     "lift": 1.0004377365112305,
+     "mean_min_power": 0.222976416349411,
+     "mean_floor_violation_s": 0.2911134660243988,
+     "mean_peak_current_pu": 1.986804723739624
+    },
+    {
+     "level": "104 to 134",
+     "share_of_events": 0.2,
+     "p_fail": 0.9950122833251953,
+     "lift": 1.0001599788665771,
+     "mean_min_power": 0.22324399650096893,
+     "mean_floor_violation_s": 0.2857068181037903,
+     "mean_peak_current_pu": 1.977368950843811
+    },
+    {
+     "level": "134 to 169",
+     "share_of_events": 0.2,
+     "p_fail": 0.9946634769439697,
+     "lift": 0.9998093843460083,
+     "mean_min_power": 0.2226712852716446,
+     "mean_floor_violation_s": 0.2899957001209259,
+     "mean_peak_current_pu": 1.9897074699401855
+    },
+    {
+     "level": "169 to 360",
+     "share_of_events": 0.2,
+     "p_fail": 0.9940127730369568,
+     "lift": 0.9991552829742432,
+     "mean_min_power": 0.22310033440589905,
+     "mean_floor_violation_s": 0.2861361503601074,
+     "mean_peak_current_pu": 1.992698073387146
+    }
+   ]
+  },
+  "cooling_makeup": {
+   "key": "cooling_compressor_frac",
+   "numeric": true,
+   "levels": [
+    {
+     "level": "0.459 to 0.518",
+     "share_of_events": 0.2,
+     "p_fail": 0.9949429631233215,
+     "lift": 1.00009024143219,
+     "mean_min_power": 0.223244771361351,
+     "mean_floor_violation_s": 0.2778657376766205,
+     "mean_peak_current_pu": 1.9591779708862305
+    },
+    {
+     "level": "0.518 to 0.547",
+     "share_of_events": 0.2,
+     "p_fail": 0.9948851466178894,
+     "lift": 1.0000321865081787,
+     "mean_min_power": 0.22380149364471436,
+     "mean_floor_violation_s": 0.28407856822013855,
+     "mean_peak_current_pu": 1.9852615594863892
+    },
+    {
+     "level": "0.547 to 0.574",
+     "share_of_events": 0.2,
+     "p_fail": 0.9947232604026794,
+     "lift": 0.9998694658279419,
+     "mean_min_power": 0.22314853966236115,
+     "mean_floor_violation_s": 0.28986695408821106,
+     "mean_peak_current_pu": 1.995982050895691
+    },
+    {
+     "level": "0.574 to 0.602",
+     "share_of_events": 0.2,
+     "p_fail": 0.994821310043335,
+     "lift": 0.9999679923057556,
+     "mean_min_power": 0.22186201810836792,
+     "mean_floor_violation_s": 0.29662948846817017,
+     "mean_peak_current_pu": 2.0068421363830566
+    },
+    {
+     "level": "0.602 to 0.64",
+     "share_of_events": 0.2,
+     "p_fail": 0.9948930740356445,
+     "lift": 1.0000401735305786,
+     "mean_min_power": 0.22291167080402374,
+     "mean_floor_violation_s": 0.29562491178512573,
+     "mean_peak_current_pu": 1.986120343208313
+    }
+   ]
+  }
+ },
+ "change_points": {
+  "dip_depth": {
+   "p_fail": {
+    "at": 0.885,
+    "step": -0.028224587440490723,
+    "step_over_std": -1.3538570404052734
+   },
+   "min_power": {
+    "at": 0.569,
+    "step": 0.0424671471118927,
+    "step_over_std": 0.5296662449836731
+   },
+   "floor_violation_s": {
+    "at": 0.569,
+    "step": -0.1609521508216858,
+    "step_over_std": -0.5415884256362915
+   },
+   "peak_current_pu": {
+    "at": 0.233,
+    "step": -1.0937161445617676,
+    "step_over_std": -0.8655171394348145
+   }
+  },
+  "weather": {
+   "p_fail": {
+    "at": 34.517,
+    "step": -0.004482269287109375,
+    "step_over_std": -0.21500232815742493
+   },
+   "min_power": {
+    "at": 34.517,
+    "step": 0.05631813406944275,
+    "step_over_std": 0.7024210095405579
+   },
+   "floor_violation_s": {
+    "at": 34.517,
+    "step": -0.026919782161712646,
+    "step_over_std": -0.0905824601650238
+   },
+   "peak_current_pu": {
+    "at": 34.517,
+    "step": -0.21849966049194336,
+    "step_over_std": -0.172910675406456
+   }
+  },
+  "site_load": {
+   "p_fail": {
+    "at": 0.776,
+    "step": -0.00495070219039917,
+    "step_over_std": -0.2374717891216278
+   },
+   "min_power": {
+    "at": 0.776,
+    "step": 0.06412726640701294,
+    "step_over_std": 0.7998194098472595
+   },
+   "floor_violation_s": {
+    "at": 0.776,
+    "step": -0.02328529953956604,
+    "step_over_std": -0.07835277915000916
+   },
+   "peak_current_pu": {
+    "at": 0.776,
+    "step": -0.22030997276306152,
+    "step_over_std": -0.1743432730436325
+   }
+  },
+  "battery_age": {
+   "p_fail": {
+    "at": 2.29,
+    "step": -0.00055694580078125,
+    "step_over_std": -0.02671518363058567
+   },
+   "min_power": {
+    "at": 3.776,
+    "step": 0.0026051998138427734,
+    "step_over_std": 0.03249303251504898
+   },
+   "floor_violation_s": {
+    "at": 5.992,
+    "step": -0.00948643684387207,
+    "step_over_std": -0.03192094340920448
+   },
+   "peak_current_pu": {
+    "at": 7.512,
+    "step": 0.07032990455627441,
+    "step_over_std": 0.05565588176250458
+   }
+  },
+  "battery_temp": {
+   "p_fail": {
+    "at": 21.166,
+    "step": -0.0008205175399780273,
+    "step_over_std": -0.03935800492763519
+   },
+   "min_power": {
+    "at": 23.404,
+    "step": -0.0018699169158935547,
+    "step_over_std": -0.02332230843603611
+   },
+   "floor_violation_s": {
+    "at": 24.763,
+    "step": -0.011545062065124512,
+    "step_over_std": -0.038848016411066055
+   },
+   "peak_current_pu": {
+    "at": 25.655,
+    "step": 0.03873801231384277,
+    "step_over_std": 0.030655497685074806
+   }
+  },
+  "battery_soc": {
+   "p_fail": {
+    "at": 0.94,
+    "step": -0.0009177327156066895,
+    "step_over_std": -0.044021155685186386
+   },
+   "min_power": {
+    "at": 0.87,
+    "step": -0.0026095956563949585,
+    "step_over_std": -0.03254786133766174
+   },
+   "floor_violation_s": {
+    "at": 0.82,
+    "step": 0.011120051145553589,
+    "step_over_std": 0.03741789609193802
+   },
+   "peak_current_pu": {
+    "at": 0.85,
+    "step": -0.056101322174072266,
+    "step_over_std": -0.04439603164792061
+   }
+  },
+  "compressor_restart": {
+   "p_fail": {
+    "at": 180.008,
+    "step": -0.0009192824363708496,
+    "step_over_std": -0.044095490127801895
+   },
+   "min_power": {
+    "at": 158.719,
+    "step": 0.0019988566637039185,
+    "step_over_std": 0.024930493906140327
+   },
+   "floor_violation_s": {
+    "at": 104.373,
+    "step": -0.008025377988815308,
+    "step_over_std": -0.02700462006032467
+   },
+   "peak_current_pu": {
+    "at": 149.952,
+    "step": -0.05179870128631592,
+    "step_over_std": -0.04099113121628761
+   }
+  },
+  "cooling_makeup": {
+   "p_fail": {
+    "at": 0.574,
+    "step": 0.0012159943580627441,
+    "step_over_std": 0.05832795798778534
+   },
+   "min_power": {
+    "at": 0.588,
+    "step": 0.0039734989404678345,
+    "step_over_std": 0.04955897480249405
+   },
+   "floor_violation_s": {
+    "at": 0.574,
+    "step": 0.013931632041931152,
+    "step_over_std": 0.046878594905138016
+   },
+   "peak_current_pu": {
+    "at": 0.588,
+    "step": -0.051047325134277344,
+    "step_over_std": -0.04039652645587921
+   }
+  }
+ },
+ "surrogate_check": null,
+ "caveats": [
+  "100% of events have an input outside the surrogate's training range.",
+  "Failure rate is 99.5%: P(fail) cannot be ranked meaningfully, so the headline ranking uses floor_violation_s.",
+  "Verdicts come from the neural surrogate, not the simulator; see 'surrogate_check' for how well it agrees on these events.",
+  "The simulator is cross-checked with known gaps, not validated (validation/SCOPE.md).",
+  "Design and settings are held at the chosen preset; this describes that product, not the range of possible designs.",
+  "Network inputs marked assumed or placeholder (uniform season, workload type, grid strength, breaker misoperation rates) are not varied here.",
+  "Driver blocks are swapped as wholes: dependence between blocks (e.g. site load and temperature) is not preserved in the Shapley step.",
+  "Site load level is mapped onto the simulator's 'workload' by a rescale (joint.py); they are different quantities."
+ ],
+ "settings": {
+  "shapley_events": 2000,
+  "shapley_walks": 24
+ },
+ "runtime_s": 34.6
+}
