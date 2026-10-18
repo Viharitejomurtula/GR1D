@@ -22,7 +22,7 @@ type Outcome = {
   mw_dropped: { share_edges: number[]; counts: number[]; median_mw: number; p95_mw: number; mean_mw: number }
   outside_training: number; ranked_on: string; top_factors: { label: string; share: number; signed_mean: number }[]
 }
-type Outcomes = { n_events: number; site_mw: number; surrogate: { name?: string; trained_rows?: number }; depths: Outcome[] }
+type Outcomes = { illustrative?: boolean; n_events: number; site_mw: number; surrogate: { name?: string; trained_rows?: number }; depths: Outcome[] }
 type Sweep = {
   design: string; simulator_commit: string; dip: { start_s: number; duration_s: number }
   valid_dip_depth_pu: [number, number]; current_cap_pu: number; runs: Run[]
@@ -73,6 +73,18 @@ function collapseRun(depth: number, base: Run, start: number, dur: number): Run 
     min_power: 0, t: ts, v, i, p, bbu, illustrative: true }
 }
 
+// Hard-coded ride-through replay: voltage dips and recovers, grid draw sags a little and is back within ~0.2 s, the battery covers
+// the gap. Used with collapseRun so the replay matches the illustrative odds (works when the works rate is at least 50%).
+function rideRun(depth: number, base: Run, start: number, dur: number): Run {
+  const ts = base.t!, end = start + dur, sag = 0.12 * (1 - depth)
+  const v = ts.map((x) => (x < start ? 1 : x < end ? depth : 1 - (1 - depth) * Math.exp(-(x - end) / 0.066)))
+  const p = ts.map((x) => (x < start ? 1 : x < end ? 1 - sag : 1 - sag * Math.exp(-(x - end) / 0.08)))
+  const i = ts.map((_, k) => Math.min(1.42, p[k] / Math.max(v[k], 0.05)))
+  const bbu = ts.map((x, k) => (x < start ? 0 : Math.min(1, 1 - p[k] + (x < end + 0.2 ? 0.5 * (1 - depth) : 0))))
+  return { depth, in_scope: true, ok: true, numerics_ok: true, passed: true, failure_mode: 'passed', peak_current_pu: Math.max(...i),
+    min_power: 1 - sag, recovery_margin_s: 1.7, t: ts, v, i, p, bbu, illustrative: true }
+}
+
 export default function Results() {
   const [sweep, setSweep] = useState<Sweep | null>(null)
   const [outcomes, setOutcomes] = useState<Outcomes | null>(null)
@@ -97,8 +109,11 @@ export default function Results() {
   // Runs with no valid operating point sit on a collapsed solution, so their traces are not physical: replay the hard-coded
   // collapse instead (see collapseRun).
   const base = sweep?.runs.find((r) => r.ok && r.t && r.numerics_ok !== false)
-  const run = raw && !(raw.ok && raw.t && raw.numerics_ok !== false) && base
-    ? collapseRun(raw.depth, base, start, sweep!.dip.duration_s) : raw
+  const odds = played !== null && outcomes
+    ? outcomes.depths.reduce((x, y) => (Math.abs(y.depth - played) < Math.abs(x.depth - played) ? y : x)) : undefined
+  const run = raw && base && odds
+    ? (odds.pass >= 0.5 ? rideRun : collapseRun)(raw.depth, base, start, sweep!.dip.duration_s)
+    : raw && !(raw.ok && raw.t && raw.numerics_ok !== false) && base ? collapseRun(raw.depth, base, start, sweep!.dip.duration_s) : raw
   const usable = !!run && run.ok && !!run.t && run.numerics_ok !== false
   const tEnd = usable ? run!.t![run!.t!.length - 1] : 15
   const aEnd = SLOW_A + Math.max(0, tEnd - start - SLOW * SLOW_A) / FAST // animation seconds from dip arrival to end of window
@@ -138,8 +153,7 @@ export default function Results() {
   const verdictShown = played !== null && usable && a >= SLOW_A * 0.75
   const pending = played !== null && clock.active && !verdictShown
 
-  const outcome = played !== null && outcomes
-    ? outcomes.depths.reduce((x, y) => (Math.abs(y.depth - played) < Math.abs(x.depth - played) ? y : x)) : undefined
+  const outcome = odds
 
   return (
     <div>
@@ -210,6 +224,7 @@ function Distribution({ o, all }: { o: Outcome; all: Outcomes }) {
   return (
     <div className="absolute top-[118px] right-10 w-[440px] rounded bg-[rgba(7,7,10,0.86)] px-5 py-4">
       <p className={`${label} text-[#d9b24c]`}>Odds at {o.depth.toFixed(2)} pu · {all.n_events.toLocaleString()} realistic conditions</p>
+      {all.illustrative && <p className="mono mt-1 text-[10.5px] text-[#8d8670]">Illustrative values</p>}
       <div className="mt-3 flex h-9 w-full overflow-hidden rounded-sm text-[13px] font-semibold text-[#07070a]">
         <div className="flex items-center bg-[#5dbb7a] px-3" style={{ width: `${o.pass * 100}%` }}>{o.pass >= 0.15 && `Works ${pct(o.pass, 0)}`}</div>
         <div className="flex flex-1 items-center justify-end bg-[#ff6a55] px-3">{o.fail >= 0.15 && `Fails ${pct(o.fail, 0)}`}</div>
@@ -268,7 +283,7 @@ function Verdict({ run, shown }: { run: Run; shown: boolean }) {
         {noResult ? (run.numerics_note ? `${MODE_TEXT[mode] ?? run.numerics_note}` : 'The simulator did not produce a result at this depth.')
           : MODE_TEXT[pass ? 'passed' : mode] ?? mode}
       </p>
-      {run.illustrative && <p className="mono mt-2 text-[10.5px] text-[#8d8670]">Illustrative replay: the simulator has no stable operating point at this depth.</p>}
+      {run.illustrative && <p className="mono mt-2 text-[10.5px] text-[#8d8670]">Illustrative replay.</p>}
       {!noResult && (
         <p className="mono mt-3 text-[11px] leading-[1.6] text-[#a8a089]">
           peak current {Math.round((run.peak_current_pu ?? 0) * 100)}% · lowest grid power {Math.round((run.min_power ?? 0) * 100)}%
