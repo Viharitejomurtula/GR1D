@@ -1,6 +1,6 @@
 # Implied factor covariance (Part B)
 
-Produced by `ridethrough/drivers/implied.py` on 2026-10-17. Cov(X) = S Sigma_D S^T + diag(noise^2), linearized at each driver's typical value.
+Produced by `ridethrough/drivers/implied.py` on 2026-10-18. Cov(X) = S Sigma_D S^T + diag(noise^2), linearized at each driver's typical value.
 
 Nominal case: attenuation nominal; coupling 1, grid-like (upper bound for a data center); noise multiplier 1; PSU mapping k 1; age sd 4.33 years (uniform 0-15); DC-link capacitors per bank n = 1.
 
@@ -39,7 +39,7 @@ Non-zero cells and their sources:
 
 Cells that are non-zero only in the upper-attenuation case:
 
-- storage_resistance_pu x outdoor_temp_c: -0.0252 (as in S)
+- storage_resistance_pu x outdoor_temp_c: -0.0057 (as in S)
 - usable_energy_factor x outdoor_temp_c: 0.0017 (as in S)
 - converter_current_limit_pu x outdoor_temp_c: -0.0093 (multiplier x typical 1.55)
 
@@ -58,7 +58,7 @@ Cells that are non-zero only in the upper-attenuation case:
 | psu_holdup_ms | 1.667 | assumed | master.csv (high - low) / 6 |
 | compressor_trip_pct | 3.333 | assumed | master.csv (high - low) / 6 |
 | compressor_restart_s | 58.33 | assumed | master.csv (high - low) / 6 |
-| osc_amp | 0.0475 | assumed | master.csv (high - low) / 6 |
+| osc_amp | 0.04617 | assumed | master.csv (high - low) / 6 |
 | osc_freq_hz | 0.4667 | assumed | master.csv (high - low) / 6 |
 | converter_loading | 0.1683 | assumed | master.csv (high - low) / 6 |
 
@@ -71,13 +71,13 @@ Only pairs that share a driver are listed; every other pair has exactly zero imp
 | factor pair | correlation (age sd 4.33) | correlation (age sd 2.5) | drivers | depends on |
 |---|---|---|---|---|
 | storage_resistance_pu - capacity_age_factor | -0.997 | -0.992 | equipment_age_years | noise = new-cell spread only (aging spread not found); correlation overstated |
-| psu_holdup_ms - converter_loading | -0.501 | -0.522 | load_fraction | assumed noise;PSU mapping k |
+| psu_holdup_ms - converter_loading | -0.502 | -0.522 | load_fraction | assumed noise;PSU mapping k |
 | storage_resistance_pu - usable_energy_factor | -0.474 | -0.297 | equipment_age_years | assumed noise |
 | capacity_age_factor - usable_energy_factor | 0.473 | 0.295 | equipment_age_years | assumed noise |
 | storage_resistance_pu - dclink_capacitance_factor | -0.445 | -0.275 | equipment_age_years | bound slope |
 | capacity_age_factor - dclink_capacitance_factor | 0.444 | 0.274 | equipment_age_years | bound slope |
-| storage_resistance_pu - psu_holdup_ms | -0.338 | -0.203 | equipment_age_years | assumed noise;bound slope |
-| capacity_age_factor - psu_holdup_ms | 0.337 | 0.202 | equipment_age_years | assumed noise;bound slope |
+| storage_resistance_pu - psu_holdup_ms | -0.337 | -0.202 | equipment_age_years | assumed noise;bound slope |
+| capacity_age_factor - psu_holdup_ms | 0.337 | 0.201 | equipment_age_years | assumed noise;bound slope |
 | usable_energy_factor - dclink_capacitance_factor | 0.211 | 0.082 | equipment_age_years | assumed noise;bound slope |
 | usable_energy_factor - psu_holdup_ms | 0.160 | 0.060 | equipment_age_years | assumed noise;bound slope |
 
@@ -87,41 +87,41 @@ Each column changes one setting from the nominal case; min and max are over all 
 
 | factor pair | nominal | min | max | attenuation (nom / upper) | coupling (0 / 0.5 / 1) | noise multiplier (1 / 5 / 10) | PSU k (0.5 / 1) | age sd (4.33 / 2.5) | DC-link n (1 / 4 / 16) |
 |---|---|---|---|---|---|---|---|---|---|
-| storage_resistance_pu - capacity_age_factor | -0.997 | -0.997 | -0.450 | -0.997 / -0.766 | -0.997 / -0.997 / -0.997 | -0.997 / -0.939 / -0.797 | -0.997 / -0.997 | -0.997 / -0.992 | -0.997 / -0.997 / -0.997 |
-| psu_holdup_ms - converter_loading | -0.501 | -0.590 | -0.023 | -0.501 / -0.567 | -0.044 / -0.227 / -0.501 | -0.501 / -0.501 / -0.501 | -0.348 / -0.501 | -0.501 / -0.522 | -0.501 / -0.501 / -0.501 |
-| storage_resistance_pu - usable_energy_factor | -0.474 | -0.608 | -0.260 | -0.474 / -0.608 | -0.474 / -0.474 / -0.474 | -0.474 / -0.468 / -0.452 | -0.474 / -0.474 | -0.474 / -0.297 | -0.474 / -0.474 / -0.474 |
+| storage_resistance_pu - capacity_age_factor | -0.997 | -0.997 | -0.579 | -0.997 / -0.981 | -0.997 / -0.997 / -0.997 | -0.997 / -0.939 / -0.797 | -0.997 / -0.997 | -0.997 / -0.992 | -0.997 / -0.997 / -0.997 |
+| psu_holdup_ms - converter_loading | -0.502 | -0.591 | -0.023 | -0.502 / -0.568 | -0.044 / -0.228 / -0.502 | -0.502 / -0.502 / -0.502 | -0.348 / -0.502 | -0.502 / -0.522 | -0.502 / -0.502 / -0.502 |
+| storage_resistance_pu - usable_energy_factor | -0.474 | -0.663 | -0.260 | -0.474 / -0.663 | -0.474 / -0.474 / -0.474 | -0.474 / -0.468 / -0.452 | -0.474 / -0.474 | -0.474 / -0.297 | -0.474 / -0.474 / -0.474 |
 | capacity_age_factor - usable_energy_factor | 0.473 | 0.197 | 0.641 | 0.473 / 0.641 | 0.473 / 0.473 / 0.473 | 0.473 / 0.451 / 0.397 | 0.473 / 0.473 | 0.473 / 0.295 | 0.473 / 0.473 / 0.473 |
-| storage_resistance_pu - dclink_capacitance_factor | -0.445 | -0.893 | -0.016 | -0.445 / -0.341 | -0.445 / -0.445 / -0.445 | -0.445 / -0.098 / -0.047 | -0.445 / -0.445 | -0.445 / -0.275 | -0.445 / -0.705 / -0.893 |
+| storage_resistance_pu - dclink_capacitance_factor | -0.445 | -0.893 | -0.025 | -0.445 / -0.437 | -0.445 / -0.445 / -0.445 | -0.445 / -0.098 / -0.047 | -0.445 / -0.445 | -0.445 / -0.275 | -0.445 / -0.705 / -0.893 |
 | capacity_age_factor - dclink_capacitance_factor | 0.444 | 0.019 | 0.893 | 0.444 / 0.445 | 0.444 / 0.444 / 0.444 | 0.444 / 0.094 / 0.042 | 0.444 / 0.444 | 0.444 / 0.274 | 0.444 / 0.703 / 0.891 |
-| storage_resistance_pu - psu_holdup_ms | -0.338 | -0.559 | 0.217 | -0.338 / -0.010 | -0.543 / -0.459 / -0.338 | -0.338 / -0.333 / -0.322 | -0.469 / -0.338 | -0.338 / -0.203 | -0.338 / -0.338 / -0.338 |
-| capacity_age_factor - psu_holdup_ms | 0.337 | 0.134 | 0.558 | 0.337 / 0.337 | 0.542 / 0.459 / 0.337 | 0.337 / 0.321 / 0.283 | 0.468 / 0.337 | 0.337 / 0.202 | 0.337 / 0.337 / 0.337 |
+| storage_resistance_pu - psu_holdup_ms | -0.337 | -0.559 | -0.062 | -0.337 / -0.259 | -0.543 / -0.459 / -0.337 | -0.337 / -0.333 / -0.321 | -0.469 / -0.337 | -0.337 / -0.202 | -0.337 / -0.337 / -0.337 |
+| capacity_age_factor - psu_holdup_ms | 0.337 | 0.134 | 0.558 | 0.337 / 0.337 | 0.542 / 0.459 / 0.337 | 0.337 / 0.321 / 0.282 | 0.468 / 0.337 | 0.337 / 0.201 | 0.337 / 0.337 / 0.337 |
 | usable_energy_factor - dclink_capacitance_factor | 0.211 | 0.009 | 0.573 | 0.211 / 0.285 | 0.211 / 0.211 / 0.211 | 0.211 / 0.047 / 0.024 | 0.211 / 0.211 | 0.211 / 0.082 | 0.211 / 0.334 / 0.424 |
-| usable_energy_factor - psu_holdup_ms | 0.160 | 0.003 | 0.358 | 0.160 / 0.146 | 0.258 / 0.218 / 0.160 | 0.160 / 0.160 / 0.160 | 0.222 / 0.160 | 0.160 / 0.060 | 0.160 / 0.160 / 0.160 |
+| usable_energy_factor - psu_holdup_ms | 0.160 | 0.002 | 0.358 | 0.160 / 0.146 | 0.258 / 0.218 / 0.160 | 0.160 / 0.160 / 0.160 | 0.222 / 0.160 | 0.160 / 0.060 | 0.160 / 0.160 / 0.160 |
 
 ## By season (nominal case)
 
 | factor pair | overall | DJF | MAM | JJA | SON |
 |---|---|---|---|---|---|
 | storage_resistance_pu - capacity_age_factor | -0.997 | -0.997 | -0.997 | -0.997 | -0.997 |
-| psu_holdup_ms - converter_loading | -0.501 | -0.367 | -0.283 | -0.510 | -0.427 |
+| psu_holdup_ms - converter_loading | -0.502 | -0.367 | -0.283 | -0.510 | -0.427 |
 | storage_resistance_pu - usable_energy_factor | -0.474 | -0.474 | -0.474 | -0.474 | -0.474 |
 | capacity_age_factor - usable_energy_factor | 0.473 | 0.473 | 0.473 | 0.473 | 0.473 |
 | storage_resistance_pu - dclink_capacitance_factor | -0.445 | -0.445 | -0.445 | -0.445 | -0.445 |
 | capacity_age_factor - dclink_capacitance_factor | 0.444 | 0.444 | 0.444 | 0.444 | 0.444 |
-| storage_resistance_pu - psu_holdup_ms | -0.338 | -0.397 | -0.434 | -0.334 | -0.370 |
-| capacity_age_factor - psu_holdup_ms | 0.337 | 0.397 | 0.434 | 0.333 | 0.370 |
+| storage_resistance_pu - psu_holdup_ms | -0.337 | -0.397 | -0.435 | -0.334 | -0.371 |
+| capacity_age_factor - psu_holdup_ms | 0.337 | 0.396 | 0.434 | 0.333 | 0.370 |
 | usable_energy_factor - dclink_capacitance_factor | 0.211 | 0.211 | 0.211 | 0.211 | 0.211 |
-| usable_energy_factor - psu_holdup_ms | 0.160 | 0.189 | 0.206 | 0.158 | 0.176 |
+| usable_energy_factor - psu_holdup_ms | 0.160 | 0.188 | 0.206 | 0.158 | 0.176 |
 
 ## Monte Carlo check
 
-100000 samples per case and group from `sample_drivers`; age ~ uniform centered on 7.5 years with the case's age sd (4.33 gives 0-15); S's curves for curve rows; clipped load_fraction. Pairs whose Monte Carlo correlation differs from the linear result by more than 0.1: 585 of 98280 case x group x pair combinations (full list: `implied_mc_check.csv`).
+100000 samples per case and group from `sample_drivers`; age ~ uniform centered on 7.5 years with the case's age sd (4.33 gives 0-15); S's curves for curve rows; clipped load_fraction. Pairs whose Monte Carlo correlation differs from the linear result by more than 0.1: 261 of 98280 case x group x pair combinations (full list: `implied_mc_check.csv`).
 
 | factor pair | flagged combinations | difference range |
 |---|---|---|
-| storage_resistance_pu - converter_current_limit_pu | 432 | -0.317 to -0.146 |
-| converter_current_limit_pu - psu_holdup_ms | 81 | -0.119 to +0.227 |
-| converter_current_limit_pu - converter_loading | 72 | -0.183 to -0.107 |
+| storage_resistance_pu - converter_current_limit_pu | 108 | -0.121 to -0.100 |
+| converter_current_limit_pu - psu_holdup_ms | 81 | -0.120 to +0.228 |
+| converter_current_limit_pu - converter_loading | 72 | -0.184 to -0.107 |
 
 Reasons the two differ: curve rows are non-linear (the converter derates only above 25 degC, and the usable-energy curve is steeper in a conditioned room than S's 25-35 degC slope); load_fraction is clipped to [0.2, 0.97] in the Monte Carlo; the linear model uses slopes at the typical value only.
 
@@ -131,21 +131,21 @@ Estimated from `sample_drivers` (1000000 draws, fixed seed per group). At coupli
 
 | group | coupling | Var(temp_c) | Var(load_index) | Cov(temp_c, load_index) | fit Cov (coupling 1) |
 |---|---|---|---|---|---|
-| overall | 0 | 92.617 | 0.0031 | +0.001 |  |
-| overall | 0.5 | 92.617 | 0.0206 | +0.630 |  |
-| overall | 1 | 92.617 | 0.0730 | +1.258 | 1.255 |
-| DJF | 0 | 56.051 | 0.0035 | +0.000 |  |
-| DJF | 0.5 | 56.051 | 0.0130 | -0.541 |  |
-| DJF | 1 | 56.051 | 0.0413 | -1.081 | -1.099 |
-| MAM | 0 | 39.564 | 0.0027 | -0.000 |  |
-| MAM | 0.5 | 39.564 | 0.0090 | +0.321 |  |
-| MAM | 1 | 39.564 | 0.0279 | +0.642 | 0.630 |
-| JJA | 0 | 19.312 | 0.0031 | -0.000 |  |
-| JJA | 0.5 | 19.312 | 0.0212 | +0.559 |  |
-| JJA | 1 | 19.312 | 0.0757 | +1.119 | 1.126 |
-| SON | 0 | 56.193 | 0.0033 | +0.000 |  |
-| SON | 0.5 | 56.193 | 0.0159 | +0.600 |  |
-| SON | 1 | 56.193 | 0.0537 | +1.201 | 1.208 |
+| overall | 0 | 92.783 | 0.0031 | +0.001 |  |
+| overall | 0.5 | 92.783 | 0.0206 | +0.631 |  |
+| overall | 1 | 92.783 | 0.0731 | +1.261 | 1.255 |
+| DJF | 0 | 56.044 | 0.0035 | +0.000 |  |
+| DJF | 0.5 | 56.044 | 0.0130 | -0.542 |  |
+| DJF | 1 | 56.044 | 0.0414 | -1.085 | -1.099 |
+| MAM | 0 | 39.415 | 0.0027 | +0.000 |  |
+| MAM | 0.5 | 39.415 | 0.0090 | +0.321 |  |
+| MAM | 1 | 39.415 | 0.0279 | +0.642 | 0.630 |
+| JJA | 0 | 19.266 | 0.0031 | +0.000 |  |
+| JJA | 0.5 | 19.266 | 0.0212 | +0.559 |  |
+| JJA | 1 | 19.266 | 0.0757 | +1.117 | 1.126 |
+| SON | 0 | 56.156 | 0.0033 | -0.001 |  |
+| SON | 0.5 | 56.156 | 0.0159 | +0.600 |  |
+| SON | 1 | 56.156 | 0.0536 | +1.201 | 1.208 |
 
 ## Assumptions in this step
 

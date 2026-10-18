@@ -106,7 +106,11 @@ def sample_drivers(n: int, seed: int, coupling: float = 1.0, season: str | None 
         sel = cell == c
         if not sel.any():
             continue
-        z = rng.multivariate_normal(np.zeros(3), np.array(cop["cells"][c]["corr"]), size=int(sel.sum()))
+        # method="cholesky": the Cholesky factor is unique, so the same seed gives the same draws on
+        # every machine. numpy's default ("svd") depends on the LAPACK library (Accelerate, OpenBLAS),
+        # which changed the implied correlations by up to ~5e-4 between machines.
+        z = rng.multivariate_normal(np.zeros(3), np.array(cop["cells"][c]["corr"]), size=int(sel.sum()),
+                                    method="cholesky")
         e = rng.standard_normal(int(sel.sum()))
         z[:, 2] = coupling * z[:, 2] + np.sqrt(1.0 - coupling ** 2) * e
         u = stats.norm.cdf(z)

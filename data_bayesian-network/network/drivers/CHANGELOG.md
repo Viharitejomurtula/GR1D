@@ -26,3 +26,6 @@ implied factor covariance (Part B). One row per approved change. Times are local
 | 2026-10-17 21:43 | data_bayesian-network/network/drivers/ (14 files) | run implied.py | Part B outputs: 10 nominal-case matrices, implied_all_cases.csv.gz, implied_summary.csv, implied_mc_check.csv, implied_report.md |
 | 2026-10-17 21:43 | data_bayesian-network/network/drivers/README.md | edit | catalog entries for the 14 Part B outputs |
 | 2026-10-17 21:46 | tests/ | run pytest | final check of Part A and Part B: 20 passed (no files written) |
+| 2026-10-18 00:25 | ridethrough/drivers/sample.py | edit | copula draws use multivariate_normal(method="cholesky") so the same seed gives the same draws on every machine (the SVD default depends on the LAPACK library; it caused test_written_nominal_correlation_matches to fail elsewhere) |
+| 2026-10-18 00:25 | data_bayesian-network/network/drivers/ (14 files) | run implied.py | Part B regenerated: fitted storage-resistance slope and NLR osc_amp range from PR #3, Cholesky sampler. Nominal correlations moved < 6e-4; Monte Carlo flags 585 -> 261 |
+| 2026-10-18 00:25 | data_bayesian-network/network/drivers/README.md | edit | Part B regeneration date; implied_mc_check.csv row count 261 |

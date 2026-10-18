@@ -375,31 +375,21 @@ def _parse_attenuation(value) -> float:
         return float(m.group()) if m else 0.0
 
 
-def monte_carlo_corr(inp: dict, s: pd.DataFrame, case: dict, group: str, noise_sd: pd.Series,
-                     n: int = MC_N, seed: int = MC_SEED, fitted: dict | None = None) -> pd.DataFrame:
-    """Monte Carlo correlation of the factors for one case and group.
+def factor_values(inp: dict, s: pd.DataFrame, case: dict, drv: dict, noise_sd: pd.Series,
+                  rng: np.random.Generator) -> np.ndarray:
+    """Factor values for given driver draws: typical + response + noise (the Monte Carlo model).
 
-    Drivers: sample.sample_drivers (season = group unless overall, the case's coupling);
-        load_fraction = sample.to_load_fraction(load_index) (clipped); age ~ uniform centered on the
-        typical age with the case's age_sd (half-width age_sd x sqrt(3); 4.33 gives 0-15 years).
-    Factors: typical + response + noise. Linear rows use the case's S slope times (driver - typical).
-        Curve rows with a non-zero slope use S's curve (x_points, y_points) at the component
-        temperature (see _component_temp), minus its value at the typical outdoor temperature;
-        multiplier curves are scaled by the factor's typical value. PSU hold-up uses its linear
-        slope (the 20/L equation is outside its sourced range here).
-    Output: factors x factors correlation DataFrame.
+    Inputs: inp (load_inputs output); s (build_s output for the case); case (its attenuation is
+        used); drv, {driver: array of n values} for every name in DRIVERS; noise_sd (build_noise sd,
+        factor units); rng, drawn once per factor in s.index order for the noise.
+    Output: n x len(s.index) array in factor units. Linear rows use the S slope times
+        (driver - typical). Curve rows with a non-zero slope use S's curve (x_points, y_points) at
+        the component temperature (see _component_temp), minus its value at the typical outdoor
+        temperature; multiplier curves are scaled by the factor's typical value. PSU hold-up uses
+        its linear slope (the 20/L equation is outside its sourced range here). Not clipped.
     """
     master, s_long = inp["master"], inp["s_long"]
-    rng = np.random.default_rng(seed + 1)
-    d = sample.sample_drivers(n, seed, coupling=case["coupling"],
-                              season=None if group == "overall" else group, fitted=fitted)
-    drv = {"outdoor_temp_c": d["temp_c"].to_numpy(),
-           "load_fraction": sample.to_load_fraction(d["load_index"].to_numpy(),
-                                                    float(master.loc["load_fraction", "typical"]),
-                                                    float(master.loc["load_fraction", "low"]),
-                                                    float(master.loc["load_fraction", "high"])),
-           "equipment_age_years": float(master.loc["equipment_age_years", "typical"])
-                                  + case["age_sd"] * np.sqrt(3.0) * rng.uniform(-1.0, 1.0, n)}
+    n = len(next(iter(drv.values())))
     typ = {k: float(master.loc[k, "typical"]) for k in DRIVERS}
     curves = s_long[s_long["response_type"] == "curve"].set_index(["factor", "driver"])
     x = np.empty((n, len(s.index)))
@@ -423,6 +413,35 @@ def monte_carlo_corr(inp: dict, s: pd.DataFrame, case: dict, group: str, noise_s
             else:
                 val += slope * (drv[dname] - typ[dname])
         x[:, fi] = val + rng.standard_normal(n) * float(noise_sd[f])
+    return x
+
+
+def monte_carlo_corr(inp: dict, s: pd.DataFrame, case: dict, group: str, noise_sd: pd.Series,
+                     n: int = MC_N, seed: int = MC_SEED, fitted: dict | None = None) -> pd.DataFrame:
+    """Monte Carlo correlation of the factors for one case and group.
+
+    Drivers: sample.sample_drivers (season = group unless overall, the case's coupling);
+        load_fraction = sample.to_load_fraction(load_index) (clipped); age ~ uniform centered on the
+        typical age with the case's age_sd (half-width age_sd x sqrt(3); 4.33 gives 0-15 years).
+    Factors: typical + response + noise. Linear rows use the case's S slope times (driver - typical).
+        Curve rows with a non-zero slope use S's curve (x_points, y_points) at the component
+        temperature (see _component_temp), minus its value at the typical outdoor temperature;
+        multiplier curves are scaled by the factor's typical value. PSU hold-up uses its linear
+        slope (the 20/L equation is outside its sourced range here).
+    Output: factors x factors correlation DataFrame.
+    """
+    master = inp["master"]
+    rng = np.random.default_rng(seed + 1)
+    d = sample.sample_drivers(n, seed, coupling=case["coupling"],
+                              season=None if group == "overall" else group, fitted=fitted)
+    drv = {"outdoor_temp_c": d["temp_c"].to_numpy(),
+           "load_fraction": sample.to_load_fraction(d["load_index"].to_numpy(),
+                                                    float(master.loc["load_fraction", "typical"]),
+                                                    float(master.loc["load_fraction", "low"]),
+                                                    float(master.loc["load_fraction", "high"])),
+           "equipment_age_years": float(master.loc["equipment_age_years", "typical"])
+                                  + case["age_sd"] * np.sqrt(3.0) * rng.uniform(-1.0, 1.0, n)}
+    x = factor_values(inp, s, case, drv, noise_sd, rng)
     return pd.DataFrame(np.corrcoef(x, rowvar=False), index=s.index, columns=s.index)
 
 
