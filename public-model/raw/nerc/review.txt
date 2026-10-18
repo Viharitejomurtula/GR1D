@@ -1,0 +1,281 @@
+ 
+ 
+RELIABILITY | RESILIENCE | SECURITY 
+ 
+ 
+Incident Review 
+Considering Simultaneous Voltage-Sensitive Load Reductions 
+ 
+Primary Takeaways 
+Operators and planners of the Bulk Electric System (BES) should be aware of the risks and challenges 
+associated with voltage-sensitive large loads that are rapidly being connected to the power system. 
+Specifically, when considering data centers and cryptocurrency mining facilities, entities should be aware 
+of the potential for large amounts of voltage-sensitive load loss during normally cleared faults on the BES. 
+Voltage-sensitive data center-type loads have increased on the system and are predicted to continue 
+growing rapidly. The 2024 NERC Long-Term Reliability Assessment (LTRA) documents and discusses this 
+potential growth of data center-type loads. This vignette highlights this load-loss potential based on analysis 
+of a recent event in the Eastern Interconnection and offers some considerations for BES operators, 
+planners, and regulators concerning identifying and mitigating the potential reliability effects and risks 
+presented by these large voltage-sensitive load losses for future operations.  
+ 
+Summary of Incident 
+A 230 kV transmission line fault led to customer-initiated simultaneous loss of approximately 1,500 MW of 
+voltage-sensitive load that was not anticipated by the BES operators. The electric grid has not historically 
+experienced simultaneous load losses of this magnitude in response to a fault on the system, which has 
+historically been planned for large generation losses but not for such significant simultaneous load losses. 
+Simultaneous large load losses have two effects on the electric system: First, frequency rises on the system 
+as a result of the imbalance between load and generation; second, voltage rises rapidly because less power 
+is flowing through the system. In this incident, the frequency did not rise to a level high enough to cause 
+concern. The voltage also did not rise to levels that posed a reliability risk, but operators did have to take 
+action to reduce the voltage to within normal operating levels. However, as the potential for this type of 
+load loss increases, the risk for frequency and voltage issues also increases. Operators and planners should 
+be aware of this reliability risk and ensure that these load losses do not reach intolerable levels. 
+ 
+Incident Details  
+At approximately 7:00 p.m. Eastern on July 10, 2024, a lightning arrestor failed on a 230 kV transmission 
+line in the Eastern Interconnection, resulting in a permanent fault that eventually “locked out” the 
+transmission line. The auto-reclosing control on the transmission line was configured for three auto-reclose 
+attempts staggered at each end of the line. This configuration resulted in 6 successive system faults in an 
+82-second period. The protection system detected these faults and cleared them properly. The shortest 
+fault duration was the initial fault at 42 milliseconds, and the longest fault duration was 66 milliseconds. 
+The voltage magnitudes during the fault ranged from .25 to .40 per unit in the load-loss area. 
+ 
+
+ 
+Incident Review – Considering Simultaneous Voltage-Sensitive Load Reductions 
+2 
+ 
+Figure 1: Faulted Phase Voltage 
+ 
+Table 1: Voltage Depression Times and Durations 
+ 
+Voltage Depression Time 
+(hh:mm:ss.msec) 
+Voltage Depression 
+Duration (milliseconds) 
+Voltage Depression 1 
+Initial Fault (arrestor 
+failure) 
+19:00:23.351 
+42 
+Voltage Depression 2 
+Instantaneous and 
+simultaneous 
+automatic reclose at 
+both terminals 
+19:00:23.883 
+66 
+Voltage Depression 3 
+2nd Automatic reclose 
+at terminal A 
+19:00:39.211 
+58 
+Voltage Depression 4 
+2nd automatic reclose 
+at terminal B 
+19:00:44.630 
+50 
+Voltage Depression 5 
+3rd automatic reclose 
+at terminal A 
+19:01:39.600 
+66 
+Voltage Depression 6 
+3rd automatic reclose 
+at terminal B 
+19:01:45.016 
+59 
+ 
+Coincident with this six-fault disturbance, the same local area saw an approximate 1,500 MW of load 
+reduction. None of this load was disconnected from the system by utility equipment; rather, the load was 
+disconnected on the customer side by customer protection and controls. It was determined that the 1,500 
+                         
+                      
+       
+              
+              
+                 
+                     
+                    
+                         
+                     
+                        
+                    
+                         
+                      
+                        
+                    
+                         
+                     
+                        
+                    
+                        
+                     
+                        
+                    
+
+ 
+Incident Review – Considering Simultaneous Voltage-Sensitive Load Reductions 
+3 
+MW of load reduction was exclusively data center-type load. The area where the disturbance occurred has 
+a high concentration of data center loads. 
+ 
+ 
+Figure 2: System Load Chart 
+ 
+Frequency and voltage rose due to the load loss. Frequency rose to a high of 60.047 Hz and settled back to 
+60.0 Hz in approximately 4 minutes. At the highest level, voltage rose to 1.07 per unit. Operators removed 
+shunt capacitor banks in the local area to return voltages to normal operating values. 
+ 
+ 
+Figure 3: Frequency at Time of Load Loss 
+ 
+
+ 
+Incident Review – Considering Simultaneous Voltage-Sensitive Load Reductions 
+4 
+ 
+Figure 4: 230 kV Voltages 
+ 
+Load Details 
+Discussions were held with data center owners to understand the specific cause of their load reductions. It 
+was determined that the data centers transferred their loads to their backup power systems in response to 
+the disturbance. Data center loads are sensitive to voltage disturbances. The data center protections and 
+controls are designed to avoid equipment outages for voltage disturbances. In addition to the computer 
+equipment at these facilities, cooling equipment is also critical to the operation of the data center and 
+sensitive to voltage disturbances. To ride through voltage disturbances on the electric grid, data centers 
+employ uninterruptible power supply (UPS) systems that will instantaneously take over providing power to 
+the data center equipment when a grid disturbance occurs. The differing types and designs of these UPS 
+systems cause differences in the characteristics of the data center responses to a voltage disturbance. A 
+centralized design uses UPS systems at the load-center level that are typically in the range of 2–5 MWs. The 
+UPS uses power electronics to switch the load to a battery bank connected to the UPS. These battery banks 
+are not designed to supply the load for long periods of time but rather to power the load for the short time 
+periods of disturbances or—in the case of a complete electric grid outage—long enough to start a backup 
+generator that will then provide power to the UPS. The decentralized UPS design uses many smaller UPSs 
+at the rack level. These rack-mounted UPSs are typically in the range of 3–4 kW. The decentralized UPS 
+systems operate similarly to the centralized UPS systems, just on a smaller scale. Another type of UPS is a 
+dynamic/diesel rotary uninterruptible power supply (DRUPS). These systems use a flywheel to provide 
+uninterruptible power and a clutch system to quickly start and connect a diesel engine upon a disturbance 
+on the electric grid.  
+ 
+ 
+ 
+
+ 
+Incident Review – Considering Simultaneous Voltage-Sensitive Load Reductions 
+5 
+ 
+Figure 5: Static Centralized UPS 
+[Source: Schneider Electric White Paper 92] 
+ 
+ 
+Figure 6: DRUPS 
+[Source: Schneider Electric White Paper 92] 
+
+ 
+Incident Review – Considering Simultaneous Voltage-Sensitive Load Reductions 
+6 
+ 
+Figure 7: Typical Centralized UPS Power Distribution 
+[Source: Uptime Institute Journal] 
+ 
+The load characteristics of these types of UPS systems differ in response to a transient disturbance on the 
+electric grid. For the static centralized and decentralized UPS systems that utilize batteries, the load will be 
+taken over by the battery when the transient voltage disturbance occurs. Since it is a transient disturbance, 
+such as a temporary fault on the electric grid, the grid voltage will typically return to normal in milliseconds. 
+Once the grid voltage returns to normal, the load will then be transferred back to the grid. A typical load 
+characteristic for these types of static UPS systems, as seen by the grid, is shown in Figure 8. Upon detecting 
+the transient voltage disturbance, the DRUPS system will immediately transfer the load to the flywheel/ac 
+generator and start the engine that will act as the prime mover for the generator before the flywheel 
+exhausts its kinetic energy. This system will not quickly transfer the load back to the grid after the transient 
+disturbance has cleared and the grid voltage returns to normal. Typically, transferring the load back to the 
+grid from the DRUPS system must be done manually. A typical load characteristic for a DRUPS system, as 
+seen by the grid, is shown in Figure 9. As can be seen in these figures, the typical static UPS system load 
+characteristic, as seen by the grid, is a short-duration loss of load that returns quickly after the transient 
+disturbance clears. The typical DRUPS system load characteristic, as seen by the grid, is a loss of load that 
+does not return quickly after the transient disturbance clears. 
+ 
+
+ 
+Incident Review – Considering Simultaneous Voltage-Sensitive Load Reductions 
+7 
+ 
+Figure 8: Static UPS Load Characteristic 
+ 
+ 
+Figure 9: DRUPS Load Characteristic 
+ 
+Discussions with the data center owners also identified another protection/control scheme that impacts 
+the response of data center load to voltage disturbances on the grid. The scheme detects and counts voltage 
+disturbances on the grid. If a certain number of voltage disturbances are seen within a certain time, the 
+data center will transfer its load to the backup system, and it will remain there until it is manually 
+reconnected to the grid. The typical number of voltage disturbances that trigger this scheme is three, and 
+a typical time is one minute. As such, three voltage disturbances within one minute will result in data 
+centers using this protection/control scheme transferring their load off the grid and staying off until they 
+manually transfer back. This scheme can be deployed on both centralized and decentralized UPS designs. A 
+load characteristic for this type of data center control scheme can be seen in Figure 10. 
+ 
+
+ 
+Incident Review – Considering Simultaneous Voltage-Sensitive Load Reductions 
+8 
+ 
+Figure 10: Voltage Disturbance Counting Scheme Load Characteristic 
+ 
+While these three load characteristics were predominant in this event, many load characteristic variations 
+exist. These characteristics are determined by the numerous vendor-supplied equipment controls within 
+the data center, including the vendor-specific UPS controls. Additionally, controls under the purview of data 
+center owner/operators, such as a certain number of disturbances within a certain period of time, also 
+determine the characteristic response to system disturbances. 
+ 
+Most of the sustained load reduction occurred simultaneously with the third voltage depression, which 
+coincided with the third automatic reclosing attempt. At that time, approximately 1,260 MW of load 
+dropped off the electric grid and did not return for hours. Most of the load loss in this event can be 
+attributed to the interaction between the automatic reclosing sequence on the faulted transmission line 
+and the data center’s protection/control scheme that counts the number of voltage disturbances within a 
+specified period of time. 
+ 
+While this incident did not present any significant issues with the reconnection of the large loads, the 
+potential exists for issues in future incidents if the load is not reconnected in a controlled manner. 
+Significant amounts of load being reconnected to the system present challenges to Balancing Authorities 
+(BA) and Transmission Operators (TOP). Ramp rates for load connection are just as critical to system 
+operations as generation ramping. Voltage management and maintaining balance between load and 
+generation are considerations that need to be given for load reconnection ramp rates. 
+ 
+This incident has highlighted potential reliability risks to the BES with respect to the voltage ride-through 
+characteristics of large data center loads. Similar incidents have occurred in other Interconnections with 
+cryptocurrency mining loads as well as oil/gas loads. While these loads are different than the data center 
+loads in this incident, they present the same challenges to the operators and planners of the BES. 
+Understanding the changing dynamic nature of load is critical to the future operation of the BES. 
+ 
+Future Considerations 
+While this disturbance did not cause significant operating issues with the grid at this location and at this 
+time, as data center loads continue to grow rapidly, the risk could quickly increase. Actions that TOPs and 
+Transmission Planners (TP) should start taking to avoid significant issues in the future are listed below: 
+• Require dynamic response models of large loads in their facility interconnection requirements 
+
+ 
+Incident Review – Considering Simultaneous Voltage-Sensitive Load Reductions 
+9 
+• Perform studies to determine the potential magnitude of load loss for system disturbances (faults) 
+▪ Study the impact that these large load losses would have on the system 
+• Take into consideration the potential for voltage-sensitive load loss when configuring automatic 
+reclosing schemes 
+• Actively monitor to detect load losses coincident with system faults 
+• TOPs: Ensure that operating agreements with large loads include ramp rates when 
+connecting/reconnecting large loads to the system 
+• Critical questions that must be resolved: 
+▪ Should large loads be a NERC registered entity? 
+▪ Should NERC Reliability Standard modifications be developed for large load interconnection 
+requirements? 
+▪ What studies should TOPs perform to “consider” the impacts of large load operation? 
+▪ What is the definition of a large load? 
+ 
+Transmission Owners (TO), TOPs, TPs, and large-load owners will have to work collaboratively to identify 
+and mitigate reliability risks posed by large load losses during system faults. The NERC Large Load Task Force 
+(LLTF) is one group where this type of collaboration can take place. 
+ 
+For more information, please contact: 
+NERC – Event Analysis 
+ 
+Date of Publication: January 8, 2025 

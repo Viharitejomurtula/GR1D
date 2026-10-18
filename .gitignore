@@ -12,3 +12,6 @@ build/
 data/runs*.csv
 frontend/public/data/surrogate.json
 frontend/public/data/grid.json
+
+# downloaded datasets (see data_bayesian-network/network/responses/sources.csv)
+data_bayesian-network/drivers_raw/

@@ -1,0 +1,305 @@
+Page 1 • Document number: 1009361.10
+®
+BCAP0650 P270
+BCAP1200 P270
+BCAP1500 P270
+BCAP2000 P270
+BCAP3000 P270
+DATASHEET
+MC POWER SERIES 650 F - 3,000 F ULTRACAPACITORS
+PRODUCT SPECIFICATIONS
+CAPACITANCE
+BCAP0650
+BCAP1200
+BCAP1500
+BCAP2000
+BCAP3000
+Nominal capacitance
+650 F
+1,200 F
+1,500 F
+2,000 F
+3,000 F
+Tolerance capacitance
++20% / -0%
+VOLTAGE
+Rated voltage
+2.7 V
+Surge voltage
+2.8 V
+Maximum operating voltage
+N/A
+Isolation voltage
+N/A
+RESISTANCE
+ESR, DC
+0.8 mΩ
+0.58 mΩ
+0.47 mΩ
+0.35 mΩ
+0.29 mΩ
+Resistance tolerance
+Max.
+Thermal resistance (Rth)
+6.5°C/W
+5.3°C/W
+4.5°C/W
+3.8°C/W
+3.2°C/W
+TEMPERATURE
+Operating temperature range
+-40°C to +65°C
+Max. ambient operating temp.
+Storage temperature range
+-40°C to +70°C
+Temperature characteristics1
+Capacitance change
+± 5% at 25°C
+Internal resistance change
+150% at 25°C
+POWER
+Pd
+5,400 W/kg
+5,000 W/kg
+5,800 W/kg
+6,200 W/kg
+5,400 W/kg
+Pmax
+15,100 W/kg
+13,800 W/kg
+16,200 W/kg
+17,500 W/kg
+13,800 W/kg
+ENERGY
+Emax
+3.29 Wh/kg
+4.05 Wh/kg
+4.75 Wh/kg
+5.06 Wh/kg
+5.52 Wh/kg
+LIFESPAN
+Endurance2
+Capacitance change
+20%
+Internal resistance change
+60%
+Life test3
+Capacitance change
+30%
+Internal resistance
+150%
+CYCLES
+Capacitance change4
+30%
+Internal resistance4
+150%
+
+Page 2 • Document number: 1009361.10
+®
+BCAP0650 P270 
+BCAP1200 P270
+BCAP1500 P270
+BCAP2000 P270
+BCAP3000 P270
+DATASHEET 
+MC POWER SERIES 650 F - 3,000 F ULTRACAPACITORS
+PRODUCT SPECIFICATIONS (cont.)
+1	 Within ± #% of initial measured value at #°C. 
+2	 After 1,500 hours application of rated voltage at 65°C. Within % of initial specified value. 
+3	 After 10 years at rated voltage and 25°C. Within % of initial specified value.
+4	 Within % of initial specified value.
+5	 After 72 hours at 25°C. Initial leakage current can be higher.
+6	 CAUTION: C urrent possible with short circuit from UR. Do not use as an operating current.
+CURRENT
+BCAP0650
+BCAP1200
+BCAP1500
+BCAP2000
+BCAP3000
+Leakage current5
+1.5 mA
+2.7 mA
+3.0 mA
+4.2 mA
+5.2 mA
+Short circuit current (lsc)6
+3,500 A
+3,750 A
+3,900 A
+4,300 A
+4,800 A
+Maximum continuous  current
+105 A
+110 A
+115 A
+125 A
+150 A
+Maximum peak current, 1 sec
+875 A
+1,600 A
+2,000 A
+2,700 A
+4,000 A
+CONNECTION
+Terminal
+Threaded or Weldable
+MONITORING (IN-BUILT)
+Balancing
+N/A
+Fan voltage
+N/A
+Thermal monitoring
+N/A
+SIZE
+Dimensions (L x W x H) (mm)
+See drawings
+Weight
+0.2kg
+0.3kg
+0.32kg
+0.4kg
+0.55kg
+RATINGS
+Vibration resistance
+SAE J2380
+FEATURES AND BENEFITS
+Ultra-low internal resistance
+• 
+Highest power performance available
+• 
+Lowest RC time constant
+• 
+2.7 V operating voltage
+• 
+Over 1,000,000 duty cycles
+• 
+Proprietary material science and packaging technology
+• 
+Threded terminal or weldable post versions
+• 
+APPLICATIONS
+Automotive subsystems
+• 
+Hybrid drive trains
+• 
+Rail system power
+• 
+Transportation
+• 
+Utility vehicles
+• 
+MOUNTING RECOMMENDATIONS
+Do not reverse polarity.
+Maximum torque for M12 screw terminals is 10Nm.
+Cells are designed to be connected into series or parallel strings.
+Clean terminals before mounting.
+MARKINGS
+Capacitors are marked with the following information - Rated capacitance and rated voltage as well as energy/
+power type indication in the product naming. Serial number, name of manufacturer, positive and negative terminal, warning 
+marking.
+
+Page 3 • Document number: 1009361.10
+BCAP0650 P270
+BCAP1200 P270
+BCAP1500 P270
+BCAP2000 P270
+BCAP3000 P270
+DATASHEET
+MC POWER SERIES 650 F - 3,000 F ULTRACAPACITORS
+Maxwell Technologies, Inc.
+Worldwide Headquarters
+9244 Balboa Avenue
+San Diego, CA 92123
+USA
+Tel: +1 858 503 3300
+US Free Call: +1 877 511 4324
+Fax: +1 858 503 3301
+Maxwell Technologies SA
+CH-1728 Rossens
+Switzerland
+Tel: +41 (0)26 411 85 00
+Fax: +41 (0)26 411 85 05
+Maxwell Technologies, GmbH
+Brucker Strasse 21
+D-82205 Gilching
+Germany
+T: +49 (0)8105 24 16 10
+F: +49 (0)8105 24 16 19
+Maxwell Technologies, Inc.
+Shanghai Representative Office
+Rm.2104, Suncome Liauw’s Plaza
+738 Shang Cheng Road, Pudong New Area
+Shanghai 200120, P.R. China
+Tel: +86 21 5836 5733
+Fax: +86 21 5836 5620
+Online: www.maxwell.com • Email: info@maxwell.com
+®
+Product dimensions are for reference only unless otherwise identified.  Product dimensions and specifications may change without notice. Please contact Maxwell 
+Technologies directly for any technical specifications critical to application.
+DIMENSIONS (mm)
+Part Number
+Volume
+L (±0.3mm)
+H (±0.5mm)
+D1 (±0.2mm)
+D2 (±0.7mm)
+BCAP0650 P270 T04
+0.211 L
+51.5 mm (±0.5mm)
+14mm
+60.4mm
+60.7mm
+BCAP0650 P270 T05
+0.15 L
+51.5 mm (±0.5mm)
+3.18 mm
+60.4mm
+60.7mm
+BCAP1200 P270 T04
+0.294 L
+74 mm
+14mm
+60.4mm
+60.7mm
+BCAP1200 P270 T05
+0.233 L
+74 mm
+3.18 mm
+60.4mm
+60.7mm
+BCAP1500 P270 T04
+0.325 L
+85 mm
+14mm
+60.4mm
+60.7mm
+BCAP1500 P270 T05
+0.264 L
+85 mm
+3.18 mm
+60.4mm
+60.7mm
+BCAP2000 P270 T04
+0.373 L
+102 mm
+14mm
+60.4mm
+60.7mm
+BCAP2000 P270 T05
+0.312 L
+102 mm
+3.18 mm
+60.4mm
+60.7mm
+BCAP3000 P270 T04
+0.475 L
+138 mm
+14mm
+60.4mm
+60.7mm
+BCAP3000 P270 T05
+0.141 L
+138 mm
+3.18 mm
+60.4mm
+60.7mm

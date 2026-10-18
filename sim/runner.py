@@ -36,12 +36,8 @@ NATIVE = os.environ.get("GR1D_NATIVE") == "1"
 # settings, VFD thresholds, rack composition) are sampled but not yet consumed by the
 # model -- they are wired in as those components are built out.
 PARAM_MAP = {
-    "dip_depth_pu": "dip_depth_pu",
-    "dip_duration_s": "dip_duration_s",
-    "dip_start_s": "dip_start_s",
     "recovery_tau_s": "recovery_tau_s",
     "overshoot_pu": "overshoot_pu",
-    "reclose_gap_s": "reclose_gap_s",
     "workload": "workload",
     "swing_size_frac": "swing_size_frac",
     "swing_freq_hz": "swing_freq_hz",
@@ -59,15 +55,27 @@ PARAM_MAP = {
     "transfer_threshold_pu": "transfer_threshold_pu",
     "relay_pickup_pu": "relay_pickup_pu",
     "relay_delay_s": "relay_delay_s",
+    "legacy_open_delay_s": "legacy_open_delay_s",
     "restart_surge_x": "restart_surge_x",
     "restart_surge_s": "restart_surge_s",
     "battery_temp_c": "battery_temp_c",
     "psu_trip_spread_frac": "psu_trip_spread_frac",
+    "psu_uv_delay_s": "psu_uv_delay_s",
     "faulted_phase_frac": "faulted_phase_frac",
+    "cooling_vfd_frac": "cooling_vfd_frac",
+    "vfd_dc_uv_trip_pu": "vfd_dc_uv_trip_pu",
+    "cooling_ride_through_s": "cooling_ride_through_s",
+    "drive_restart_s": "drive_restart_s",
+    "compressor_restart_s": "compressor_restart_s",
+    "x_over_r": "x_over_r",
+    "chain_loading_frac": "chain_loading_frac",
+    "count_threshold_pu": "count_threshold_pu",
+    "count_min_dur_s": "count_min_dur_s",
+    "count_window_s": "count_window_s",
     "legacy_load_frac": "legacy_load_frac",
 }
 
-INT_PARAMS = {"shelves_per_rack": "shelves_per_rack", "bbu_modules_per_rack": "bbu_modules_per_rack"}
+INT_PARAMS = {"shelves_per_rack": "shelves_per_rack", "bbu_modules_per_rack": "bbu_modules_per_rack", "count_n": "count_n"}
 
 TRIP_SIGNALS = {
     "psu_enabled": ("psu_shutdown", False),
@@ -76,6 +84,9 @@ TRIP_SIGNALS = {
     "cool_s2_tripped": ("cooling_stage2", True),
     "servers_lost_power": ("servers_lost", True),
     "facility_connected": ("facility_disconnect", False),
+    "count_transfer": ("sag_count_transfer", True),
+    "vfd_stopped_any": ("vfd_stop", True),
+    "vfd_faulted_any": ("vfd_trip", True),
 }
 
 
@@ -113,7 +124,15 @@ def _overrides(sc: Scenario) -> str:
     for field, param in INT_PARAMS.items():
         parts.append(f"{param}={int(getattr(sc, field))}")
     parts.append(f"z_total_pu={sc.z_total_pct / 100.0}")
-    parts.append(f"second_dip={'true' if sc.second_dip else 'false'}")
+    parts.append(f"vfd_kinetic={'true' if sc.vfd_kinetic else 'false'}")
+    parts.append(f"psu_cap_datasheet={'true' if sc.psu_cap_datasheet else 'false'}")
+    parts.append(f"ramp_on_grid_only={'true' if sc.ramp_on_grid_only else 'false'}")
+    for name, arr in sc.group_arrays().items():
+        parts += [f"{name}[{k}]={v}" for k, v in enumerate(arr, start=1)]
+    seq = sc.dip_sequence()
+    parts.append(f"n_dips={len(seq)}")
+    for k, (start, dur, depth) in enumerate(seq, start=1):
+        parts += [f"dip_start_s[{k}]={start}", f"dip_dur_s[{k}]={dur}", f"dip_depth_pu[{k}]={depth}"]
     return ",".join(parts)
 
 
@@ -143,7 +162,9 @@ def run(sc: Scenario, tag: str = "run") -> Grade:
     """Simulate one scenario and grade it."""
     build()
     prefix = f"{tag}"
-    cmd = [f"./{MODEL}", "-override", _overrides(sc), "-r", f"{prefix}_res.csv"]
+    # stopTime/stepSize are runtime FLAGS, not -override keys: OpenModelica 1.25 accepted them as overrides but 1.27.1 (the pinned
+    # image) silently ignores them ("override variable name not found"), which left every run at the baked 15 s window.
+    cmd = [f"./{MODEL}", "-override", _overrides(sc), "-stopTime", str(sc.window_s()), "-stepSize", str(C.OUTPUT_STEP_S), "-r", f"{prefix}_res.csv"]
     r = _docker(cmd)
 
     res = BUILD / f"{prefix}_res.csv"
@@ -161,6 +182,21 @@ def run(sc: Scenario, tag: str = "run") -> Grade:
         if down.size and up.size and up[-1] > down[0]:
             psu_restart_s = float(d["time"][up[-1] + 1] - d["time"][down[0] + 1])
 
+    g = _grade_run(d, storage_left, psu_restart_s)
+    if "v_disc" in d:
+        # Voltage solution check (see the model): the physical root of the constant-power quadratic is the larger one, and a
+        # negative discriminant means no operating point exists at all.
+        no_solution = bool(d["v_disc"].min() < -1e-6)
+        wrong_root = bool(d["v_branch_margin"].min() < -1e-4)
+        if no_solution or wrong_root:
+            g.numerics_ok = False
+            g.numerics_note = "no operating point (voltage collapse)" if no_solution else "solver on the collapsed voltage root"
+            g.passed = False
+            g.failure_mode = "voltage collapse" if no_solution else "invalid: collapsed-root solution"
+    return g
+
+
+def _grade_run(d, storage_left, psu_restart_s) -> Grade:
     return grade(
         d["time"],
         d["v_sdp_pu"],

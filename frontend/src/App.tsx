@@ -1,8 +1,9 @@
 import { useRef, useState } from 'react'
 import GridDemo from './GridDemo'
 import { Deliverables, OurSolution, WhyItMattersBrief } from './Pages'
+import Results from './Results'
 
-const TABS = ['The Problem', 'Our Solution', 'Deliverables'] as const
+const TABS = ['The Problem', 'Our Solution', 'Deliverables', 'Results'] as const
 
 export default function App() {
   const [tab, setTab] = useState<(typeof TABS)[number]>('The Problem')
@@ -36,7 +37,7 @@ export default function App() {
             </div>
           </div>
         ) : (
-          <div className="h-full overflow-y-auto">{tab === 'Our Solution' ? <OurSolution /> : <Deliverables />}</div>
+          <div className="h-full overflow-y-auto">{tab === 'Our Solution' ? <OurSolution /> : tab === 'Deliverables' ? <Deliverables /> : <Results />}</div>
         )}
       </div>
     </div>

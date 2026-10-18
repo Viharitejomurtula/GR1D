@@ -1,0 +1,82 @@
+{
+ "old": {
+  "facility_A": {
+   "loss": 0.488,
+   "peak_i": 1.116,
+   "mode": "cooling tripped",
+   "numerics_ok": true
+  },
+  "facility_B": {
+   "loss": 0.3,
+   "peak_i": 1.116,
+   "mode": "storage hand-back too slow",
+   "numerics_ok": true
+  },
+  "shallow_0p844": {
+   "loss": 0.3,
+   "peak_i": 1.116,
+   "mode": "storage hand-back too slow",
+   "numerics_ok": true
+  }
+ },
+ "chain_only": {
+  "facility_A": {
+   "loss": 0.488,
+   "peak_i": 1.113,
+   "mode": "cooling tripped",
+   "numerics_ok": true
+  },
+  "facility_B": {
+   "loss": 0.3,
+   "peak_i": 1.113,
+   "mode": "storage hand-back too slow",
+   "numerics_ok": true
+  },
+  "shallow_0p844": {
+   "loss": 0.3,
+   "peak_i": 1.113,
+   "mode": "storage hand-back too slow",
+   "numerics_ok": true
+  }
+ },
+ "psu_only": {
+  "facility_A": {
+   "loss": 0.488,
+   "peak_i": 1.116,
+   "mode": "cooling tripped",
+   "numerics_ok": true
+  },
+  "facility_B": {
+   "loss": 0.3,
+   "peak_i": 1.116,
+   "mode": "storage hand-back too slow",
+   "numerics_ok": true
+  },
+  "shallow_0p844": {
+   "loss": 0.3,
+   "peak_i": 1.116,
+   "mode": "storage hand-back too slow",
+   "numerics_ok": true
+  }
+ },
+ "both": {
+  "facility_A": {
+   "loss": 0.488,
+   "peak_i": 1.113,
+   "mode": "cooling tripped",
+   "numerics_ok": true
+  },
+  "facility_B": {
+   "loss": 0.3,
+   "peak_i": 1.113,
+   "mode": "storage hand-back too slow",
+   "numerics_ok": true
+  },
+  "shallow_0p844": {
+   "loss": 0.3,
+   "peak_i": 1.113,
+   "mode": "storage hand-back too slow",
+   "numerics_ok": true
+  }
+ }
+}

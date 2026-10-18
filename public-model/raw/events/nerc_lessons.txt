@@ -1,0 +1,283 @@
+<<p1>>
+PJM © 2026
+www.pjm.com | Public
+NERC Lessons Learned / Incident Reviews
+Matthew Wharton
+Manager, Reliability Engineering 
+Operating Committee
+March 12, 2025
+
+<<p2>>
+PJM © 2026
+www.pjm.com | Public
+Load-Pocket Shoulder Season Challenges
+
+<<p3>>
+PJM © 2026
+3
+www.pjm.com | Public
+Problem Statement
+•
+Shoulder seasons are considered the fall and spring 
+•
+These months are used for planned Bulk Power System (BPS) 
+maintenance and construction (Generation and Transmission)
+•
+The BPS is in a cycle of growth and transition 
+– There is new transmission development to support load growth
+•
+Historically, BPS reserve margins have been sufficient
+– Reserve margins have shrunk in recent years
+•
+Thermal generation has been replaced by Variable Energy 
+Resources (VER) – introduced uncertainty for system operators
+
+<<p4>>
+PJM © 2026
+4
+www.pjm.com | Public
+Problem Statement
+•
+Loads with a flat demand curve has grown significantly
+•
+Seasons temperatures have varied more significantly than 
+historic norms
+– Thunderstorms and tornadoes create unplanned (forced) outages
+– Load patterns are less seasonal and harder to forecast
+•
+Multiple load-shed incidents have occurred in the shoulder 
+months
+– These incidents have occurred in a smaller area within a 
+Balancing Authority
+
+<<p5>>
+PJM © 2026
+5
+www.pjm.com | Public
+Summary of Incidents
+•
+Entity A – Three load-shed incidents in the same load pocket
+– Rapid and significant load growth in area
+– Transmission projects are planned to increase the capacity into 
+the area
+– Capacity margin in area contains substantial amount of VERs 
+– Contributing Factors:
+• Unavailable generation
+• Load Forecast Error 
+• Transmission Outages 
+• Solar ramping off
+• Low wind output
+
+<<p6>>
+PJM © 2026
+6
+www.pjm.com | Public
+Summary of Incidents
+•
+Entity B – Two load-shed incidents in the same load pocket
+– Real-Time Contingency Analysis (RTCA) indicated voltage 
+instability requiring pre-contingency load shed actions
+– Contributing Factors:
+• 3,000 MWs of planned generation outages
+• Transmission line and DC tie outages – reduced import capability 
+into the area
+• Higher than expected temperatures
+• Market analysis determined 347 MWs of natural gas generation 
+internal to the pocket was not needed
+
+<<p7>>
+PJM © 2026
+7
+www.pjm.com | Public
+Summary of Incidents
+•
+Entity C – load-shed incident of 600 MWs
+– Contributing Factors:
+• Combination of extensive planned and unplanned generation 
+outages (9332 MWs / 74% of the generation internal to the pocket) 
+• 500 kV forced transmission outage 
+• Higher than expected temperatures
+– Loading was above 125% for the next worse contingency 
+• Cascade scenario – created a temporary interconnection reliability 
+limit (TIROL)
+
+<<p8>>
+PJM © 2026
+8
+www.pjm.com | Public
+Future Considerations
+•
+All factors must be considered when granting equipment outage 
+request
+– Planning to a higher level of operating margin
+– Include demand-side management in assessment
+– Consider more extreme scenarios when determining which outage 
+requests to approve
+• PRC-023 loadability requirements for triggering cascade analysis
+– Reassess planned outages with updated system conditions
+– In market area – review processes to ensure the reliability studies 
+(OPA) are using accurate generation dispatch 
+
+<<p9>>
+PJM © 2026
+www.pjm.com | Public
+Preparing the Grid for Wind Energy Droughts and 
+Down-Ramps
+
+<<p10>>
+PJM © 2026
+10
+www.pjm.com | Public
+Problem Statement
+•
+Periods of low wind speed, known as wind energy droughts, can 
+occur and reduces output of wind energy resources
+•
+Regions with high wind penetration are vulnerable to these wind 
+energy droughts for an extended periods of time
+•
+Capacity factor for wind units is 33.2% vs Nuclear is 93%
+•
+Wind speed down-ramping can occur faster than forecast
+•
+MISO, ERCOT, and SPP had a combined installed wind capacity 
+of 99,101 MWs as of 2023
+
+<<p11>>
+PJM © 2026
+11
+www.pjm.com | Public
+Summary of Incident
+•
+In June 2023, ERCOT, MISO, and SPP experienced a period of 
+low wind speed
+– This was forecasted ahead of time 
+– They scheduled alternative resources
+– No energy emergency conditions or emergency procedures were 
+required due to actions taken by entities 
+•
+Combines wind output dropped as low as 1,681 MWs
+
+<<p12>>
+PJM © 2026
+12
+www.pjm.com | Public
+Future Considerations
+•
+To successfully manage these events requires:
+– Awareness, adequate planning, and appropriate operating 
+procedures/processes 
+• Categorize/communicate low-wind and down-ramp events
+– Accurate weather forecast
+• Detecting low wind speed weather patterns
+– Accurate variable resource forecasting 
+• Perform backcast reviews
+– Unit commitment process relies on accurate resource capability
+– Consider a flexibility needs assessment 
+– Use of multiple forecast providers and a meteorologist 
+
+<<p13>>
+PJM © 2026
+www.pjm.com | Public
+Voltage-Sensitive Crypto Load Reductions
+
+<<p14>>
+PJM © 2026
+14
+www.pjm.com | Public
+Problem Statement
+•
+Crypto-mining facility loads are unique and have sensitive ride-
+through characteristics 
+– They rely on constant-power electronic supplies, cooling 
+equipment, and single-phase devices that respond to normally 
+cleared transmission faults 
+– Experience load drops within milliseconds of a voltage sag
+– Facilities typically lack UPS systems or backup generation
+– Loads go through a multistage restoration process
+•
+Essential to understand these behaviors for assessing grid 
+impacts
+
+<<p15>>
+PJM © 2026
+15
+www.pjm.com | Public
+Summary of Incident
+•
+ERCOT has experienced 26 indirect load loss in response to 
+normal cleared transmission line faults
+– Due to a lack of ride through of temporary voltage depressions
+– Impacts varied from 17% - 95% of pre-disturbance consumption
+– Voltage depressions of ~0.7 p.u. triggered miners to disconnect
+•
+Crypto-miners deviates from the standard Information 
+Technology Industry Council (ITIC) ride-through assumptions
+•
+There are multiple technical observations based on the events
+– Protection schemes, transformer configuration, cooling system 
+load, facility recovery
+
+<<p16>>
+PJM © 2026
+16
+www.pjm.com | Public
+ITIC Curve
+
+<<p17>>
+PJM © 2026
+17
+www.pjm.com | Public
+Future Considerations
+•
+Review neutral overcurrent protection
+•
+Transformer winding configurations influence voltage sag severity
+•
+Constant-power device behavior must be incorporated into event 
+modeling
+•
+Cooling-load ride-through coordination must be strengthened
+•
+Restoration-time variability should be studied and tracked
+•
+Interconnection requirements may need updates for evolving load 
+types
+•
+Enhancements are unlikely to address multi-phase fault 
+conditions
+
+<<p18>>
+PJM © 2026
+18
+www.pjm.com | Public
+Links to Reports
+•
+NERC Event Analysis
+•
+Incident Review: Load-Pocket Shoulder Season Challenges
+•
+Incident Review: Preparing the Grid for Wind Energy Droughts 
+and Down Ramps
+•
+Incident Report: Voltage-Sensitive Crypto Load Reductions
+
+<<p19>>
+PJM © 2026
+19
+www.pjm.com | Public
+Contact
+ME: 
+Matthew Wharton, 
+Matthew.Wharton@pjm.com 
+NERC Lessons Learned / Incident 
+Review
+Member Hotline
+(610) 666 – 8980
+(866) 400 – 8980
+custsvc@pjm.com
+
+<<p20>>
+PJM © 2026
+20
+www.pjm.com | Public

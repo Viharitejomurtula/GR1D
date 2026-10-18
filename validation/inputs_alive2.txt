@@ -1,0 +1,10 @@
+contexts: ['deep_single', 'shallow_single', 'sequence_counting', 'kinetic_mid', 'second_dip', 'battery_runs_out', 'counting_edge', 'drive_fault']
+reclose_gap_s                DEAD in all contexts
+battery_temp_c               DEAD in all contexts
+battery_age_yr               DEAD in all contexts
+battery_soc0                 alive
+restart_surge_x              DEAD in all contexts
+restart_surge_s              DEAD in all contexts
+shelves_per_rack             DEAD in all contexts
+bbu_modules_per_rack         DEAD in all contexts
+cooling_ride_through_s       alive

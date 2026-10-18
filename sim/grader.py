@@ -41,11 +41,24 @@ class Grade:
     storage_left: float = float("nan")
     psu_restart_s: float | None = None
     trips: list[str] = field(default_factory=list)
+    # False when the voltage solution left the physical branch or had no real solution; such a run is not gradable.
+    numerics_ok: bool = True
+    numerics_note: str = ""
+    peak_current_raw_pu: float = float("nan")   # instantaneous maximum, for reference; peak_current_pu is the one-cycle average
 
     def summary(self) -> dict:
         d = self.__dict__.copy()
         d["passed"] = bool(self.passed)
         return d
+
+
+def _cycle_average(t: np.ndarray, x: np.ndarray, window_s: float = 1.0 / C.NOMINAL_FREQ_HZ) -> np.ndarray:
+    """Trailing moving average over one cycle, by time (trapezoid-integrated), valid for non-uniform sampling."""
+    cum = np.concatenate([[0.0], np.cumsum(0.5 * (x[1:] + x[:-1]) * np.diff(t))])
+    start = np.searchsorted(t, t - window_s, side="left")
+    span = np.maximum(t - t[np.minimum(start, t.size - 1)], 1e-12)
+    out = (cum - cum[np.minimum(start, t.size - 1)]) / span
+    return np.where(t - t[0] < window_s, x, out)
 
 
 def _disturbance_mask(v_pu: np.ndarray) -> np.ndarray:
@@ -110,7 +123,10 @@ def grade(
         )
 
     first = int(np.argmax(disturbed))
-    p_pre = float(np.mean(p_grid[:first])) if first > 0 else float(p_grid[0])
+    # Pre-disturbance power: median of the later half of the quiet period, so start-up
+    # transients cannot bias the reference (the mean over the whole prefix did, and its value
+    # then depended on the output sampling step).
+    p_pre = float(np.median(p_grid[first // 2:first])) if first > 1 else float(p_grid[0])
     if p_pre <= 0:
         p_pre = float(np.max(p_grid)) or 1.0
 
@@ -129,33 +145,47 @@ def grade(
     below_floor = disturbed & (p_frac < floor - 1e-9)
     floor_violation_s = float(np.sum(below_floor) * dt)
 
-    # (c) Recovery, measured from the final sustained return above 0.90 pu. Intermediate
-    # recoveries between dips are covered by the floor and envelope checks.
+    # (c) Recovery: after EVERY return above 0.90 pu that is followed by at least the deadline of
+    # undisturbed voltage (or by the end of the trace), power must be back to 90% within 2.0 s.
+    # Earlier versions graded only the final return, so a load that failed to come back after
+    # dip 2 of 6 and sat shed until dip 3 passed unnoticed. A return cut short by the next dip
+    # inside the deadline is not graded: NOGRR 282's clock semantics for that case are unread.
     above = v_pu >= C.RECOVERY_TRIGGER_V_PU
     recovery_margin_s = -C.RECOVERY_DEADLINE_S
-    trigger_idx = None
-    if above.any():
+    margins = []
+    returns = [i for i in range(1, t.size) if above[i] and not above[i - 1]]
+    for r in returns:
+        later_below = np.nonzero(~above[r:])[0]
+        window_end = t[r + later_below[0]] if later_below.size else t[-1]
+        if window_end - t[r] < C.RECOVERY_DEADLINE_S - 1e-9 and later_below.size:
+            continue  # next dip arrived before the deadline: not gradable
+        t_ret = t[r]
+        recovered = np.nonzero((t >= t_ret) & (t <= window_end) & (p_frac >= C.RECOVERY_FRACTION))[0]
+        if recovered.size:
+            margins.append(float(C.RECOVERY_DEADLINE_S - (t[recovered[0]] - t_ret)))
+        else:
+            margins.append(min(float(C.RECOVERY_DEADLINE_S - (window_end - t_ret)), -1e-9))
+    if margins:
+        recovery_margin_s = min(margins)
+    elif above.any():
+        # No gradable return (every return was cut short): fall back to the final sustained return.
         last_below = np.nonzero(~above)[0]
         candidate = int(last_below[-1]) + 1 if last_below.size else 0
         if candidate < t.size:
-            trigger_idx = candidate
-
-    if trigger_idx is not None:
-        t_trigger = t[trigger_idx]
-        recovered = np.nonzero((t >= t_trigger) & (p_frac >= C.RECOVERY_FRACTION))[0]
-        if recovered.size:
-            recovery_margin_s = float(C.RECOVERY_DEADLINE_S - (t[recovered[0]] - t_trigger))
-        else:
-            # Never recovered inside the trace; report how far past the deadline we ran.
-            recovery_margin_s = float(C.RECOVERY_DEADLINE_S - (t[-1] - t_trigger))
-            recovery_margin_s = min(recovery_margin_s, -1e-9)
+            recovered = np.nonzero((t >= t[candidate]) & (p_frac >= C.RECOVERY_FRACTION))[0]
+            recovery_margin_s = (float(C.RECOVERY_DEADLINE_S - (t[recovered[0]] - t[candidate])) if recovered.size
+                                 else min(float(C.RECOVERY_DEADLINE_S - (t[-1] - t[candidate])), -1e-9))
 
     # (d) Current cap. Section 2.14(2)(d) is an absolute limit: exceeding 125% at any
     # point during the disturbance is a violation. The March 2026 revision adds a "<= 0.5 s"
     # qualifier, but only a secondary source describes it and the semantics are ambiguous
     # (a 0.80 pu sag held for the required 2.0 s draws 1.25 pu throughout, which a naive
     # duration limit would fail). Gating on magnitude alone until the primary text is read.
-    peak_current_pu = float(np.max(i_pu)) if i_pu.size else 0.0
+    # Current is an RMS quantity: a sub-cycle spike (the 1-3 ms between voltage collapse and the protection acting, plus the
+    # event-instant sample of the solver) is not resolvable by an averaged model and is not what a cycle-based meter reports.
+    # Grade the one-cycle trailing average; the raw instantaneous maximum is kept for reference.
+    peak_current_raw_pu = float(np.max(i_pu)) if i_pu.size else 0.0
+    peak_current_pu = float(np.max(_cycle_average(t, i_pu))) if i_pu.size else 0.0
     current_violation = peak_current_pu > C.CURRENT_CAP_PU
 
     failures = []
@@ -186,6 +216,7 @@ def grade(
         storage_left=storage_left,
         psu_restart_s=psu_restart_s,
         trips=trips,
+        peak_current_raw_pu=peak_current_raw_pu,
     )
 
 
@@ -194,6 +225,8 @@ def _classify(failures: list[str], trips: list[str]) -> str:
     if not failures:
         return "passed"
     joined = " ".join(trips)
+    if "sag_count_transfer" in joined:
+        return "sag-count transfer (latched)"
     if "cooling" in joined or "vfd" in joined:
         return "cooling tripped"
     if "psu" in joined:
