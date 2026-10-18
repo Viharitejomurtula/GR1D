@@ -36,12 +36,8 @@ NATIVE = os.environ.get("GR1D_NATIVE") == "1"
 # settings, VFD thresholds, rack composition) are sampled but not yet consumed by the
 # model -- they are wired in as those components are built out.
 PARAM_MAP = {
-    "dip_depth_pu": "dip_depth_pu",
-    "dip_duration_s": "dip_duration_s",
-    "dip_start_s": "dip_start_s",
     "recovery_tau_s": "recovery_tau_s",
     "overshoot_pu": "overshoot_pu",
-    "reclose_gap_s": "reclose_gap_s",
     "workload": "workload",
     "swing_size_frac": "swing_size_frac",
     "swing_freq_hz": "swing_freq_hz",
@@ -113,7 +109,11 @@ def _overrides(sc: Scenario) -> str:
     for field, param in INT_PARAMS.items():
         parts.append(f"{param}={int(getattr(sc, field))}")
     parts.append(f"z_total_pu={sc.z_total_pct / 100.0}")
-    parts.append(f"second_dip={'true' if sc.second_dip else 'false'}")
+    seq = sc.dip_sequence()
+    parts.append(f"n_dips={len(seq)}")
+    for k, (start, dur, depth) in enumerate(seq, start=1):
+        parts += [f"dip_start_s[{k}]={start}", f"dip_dur_s[{k}]={dur}", f"dip_depth_pu[{k}]={depth}"]
+    parts += [f"stopTime={sc.window_s()}", f"stepSize={C.OUTPUT_STEP_S}"]
     return ",".join(parts)
 
 

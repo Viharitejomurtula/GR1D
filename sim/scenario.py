@@ -9,7 +9,7 @@ not sampled here.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, asdict, fields
+from dataclasses import dataclass, asdict, field, fields
 
 import numpy as np
 
@@ -82,14 +82,37 @@ class Scenario:
     # would actually ask: how much of the floor needs upgrading?
     legacy_load_frac: float
 
+    # --- Reclose sequence beyond the first dip (and beyond the simple `second_dip`) ---
+    # Each entry is (gap_after_previous_clear_s, duration_s, depth_pu). Real events had 4-6
+    # faults over up to 82 s (NERC 2024, PJM 2026), which `second_dip` cannot express. Kept out
+    # of the surrogate's input vector: a variable-length sequence is not a fixed-width feature
+    # (summarise it as n_dips / total span if the surrogate needs it).
+    extra_dips: tuple = field(default=(), metadata={"vector": False})
+
+    def dip_sequence(self) -> list[tuple[float, float, float]]:
+        """[(start_s, duration_s, retained_pu), ...] in time order, non-overlapping."""
+        seq = [(self.dip_start_s, self.dip_duration_s, self.dip_depth_pu)]
+        if self.second_dip:
+            seq.append((seq[-1][0] + seq[-1][1] + self.reclose_gap_s, self.dip_duration_s, self.dip_depth_pu))
+        for gap, dur, depth in self.extra_dips:
+            seq.append((seq[-1][0] + seq[-1][1] + gap, dur, depth))
+        if len(seq) > C.MAX_DIPS:
+            raise ValueError(f"{len(seq)} dips exceeds the model's MAX_DIPS={C.MAX_DIPS}")
+        return seq
+
+    def window_s(self) -> float:
+        """Simulation window: default settle time after the last dip clears, never shorter than the base window."""
+        start, dur, _ = self.dip_sequence()[-1]
+        return max(C.WINDOW_S, start + dur + C.POST_EVENT_SETTLE_S)
+
     def to_vector(self) -> np.ndarray:
-        return np.array([float(getattr(self, f.name)) for f in fields(self)])
+        return np.array([float(getattr(self, f.name)) for f in fields(self) if f.metadata.get("vector", True)])
 
     def as_dict(self) -> dict:
         return asdict(self)
 
 
-FIELD_ORDER = tuple(f.name for f in fields(Scenario))
+FIELD_ORDER = tuple(f.name for f in fields(Scenario) if f.metadata.get("vector", True))
 
 
 def sample_dip_depth(rng: np.random.Generator) -> float:

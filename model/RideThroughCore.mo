@@ -4,11 +4,13 @@ model RideThroughCore
    Parameter_Table.md for every value and its provenance."
 
   // ===================== Scenario parameters (set per run via the FMU) =====================
-  parameter Real dip_depth_pu = 0.60 "Retained voltage during the dip";
-  parameter Real dip_start_s = 1.0;
-  parameter Real dip_duration_s = 0.083;
-  parameter Boolean second_dip = false;
-  parameter Real reclose_gap_s = 0.4;
+  // Reclose sequence: up to N_MAX dips, time-ordered and non-overlapping (scenario.py enforces it).
+  // Unused slots are parked at 1e9 s. Real events: 6 faults over 82 s (NERC 2024, PJM 2026).
+  constant Integer N_MAX = 8;
+  parameter Integer n_dips = 1 "Number of dips actually used";
+  parameter Real dip_start_s[N_MAX] = cat(1, {1.0}, fill(1.0e9, N_MAX - 1)) "Start of each dip";
+  parameter Real dip_dur_s[N_MAX] = fill(0.083, N_MAX) "Duration of each dip";
+  parameter Real dip_depth_pu[N_MAX] = fill(0.60, N_MAX) "Retained voltage during each dip";
   // Post-fault shape, measured from ANDES fault studies (scripts/andes_dips.py).
   // A square dip assumes voltage snaps back instantly and never overshoots; neither holds.
   parameter Real recovery_tau_s = 0.065 "Time constant of the climb back after clearing";
@@ -102,6 +104,7 @@ model RideThroughCore
   constant Real SWING_SLEW_PU_S = 1.9;
 
   // ===================== Derived sizing =====================
+  final parameter Real t_clear_s[N_MAX] = {dip_start_s[k] + dip_dur_s[k] for k in 1:N_MAX};
   final parameter Real cooling_share =
     max(0.4 * cooling_share_25c, cooling_share_25c * (1.0 + 0.04 * (outdoor_temp_c - 25.0)));
   final parameter Real p_cooling_rated_w = cooling_share * p_it_rated_w;
@@ -142,7 +145,10 @@ model RideThroughCore
   Real v_source_pu "Source voltage, before facility impedance";
   Real v_recovering "Post-clearing recovery shape";
   Real dt_recover "Time since the most recent clearing";
-  Real t_clear1, t_start2, t_clear2;
+  Integer k_started(start = 0, fixed = true) "Dips started";
+  Integer k_cleared(start = 0, fixed = true) "Dips already cleared";
+  Real v_active "Retained voltage of the dip in progress (1.0 if none)";
+  Real depth_last "Depth of the most recently cleared dip";
   // Constant-power load behind a series impedance gives a quadratic in voltage with two real
   // roots. Start near the physical (high-voltage) root or the solver latches onto the spurious
   // collapsed-voltage branch, which looks plausible but inverts the physics entirely.
@@ -167,7 +173,7 @@ model RideThroughCore
   Real t_relay(start = 0, fixed = true);
   Real t_transfer(start = 0, fixed = true);
   Real t_restore(start = -1, fixed = true);
-  Real t_psu_up(start = 0, fixed = true);
+  Real t_psu_up(start = 1.0e3, fixed = true) "Seconds since the PSUs last (re)started; starts large so the run begins at full draw, not mid-ramp";
 
   Real p_server_w "Server/IT demand";
   Real p_swing_w(start = 0, fixed = true);
@@ -215,13 +221,19 @@ equation
   // This matters for grading: ANDES runs show overshoot reaching 1.124 pu, which is above
   // NOGRR's 1.10 continuous band and into the tier demanding 2.0 s of ride-through. A
   // square dip cannot produce that failure mode at all.
-  t_clear1 = dip_start_s + dip_duration_s;
-  t_start2 = t_clear1 + reclose_gap_s;
-  t_clear2 = t_start2 + dip_duration_s;
-
-  dt_recover = if second_dip and time >= t_clear2 then time - t_clear2
-               else if time >= t_clear1 then time - t_clear1
-               else 0.0;
+  // Event-driven bookkeeping. Written as `when` on time rather than as reductions over the
+  // arrays: reductions hide the time comparisons from the solver, which then steps straight
+  // past a dip (the first attempt produced a one-sample dip). Dips are time-ordered, so the
+  // counters identify the dip in progress and the last one cleared.
+  when time >= dip_start_s[min(pre(k_started) + 1, N_MAX)] and pre(k_started) < n_dips then
+    k_started = pre(k_started) + 1;
+  end when;
+  when time >= t_clear_s[min(pre(k_cleared) + 1, N_MAX)] and pre(k_cleared) < n_dips then
+    k_cleared = pre(k_cleared) + 1;
+  end when;
+  v_active = if k_started > k_cleared then dip_depth_pu[max(k_started, 1)] else 1.0;
+  dt_recover = if k_cleared >= 1 then time - t_clear_s[max(k_cleared, 1)] else 0.0;
+  depth_last = if k_cleared >= 1 then dip_depth_pu[max(k_cleared, 1)] else 1.0;
 
   // Written as a decaying departure from nominal plus an overshoot pulse, so the peak
   // actually lands near 1 + overshoot_pu. The pulse peaks at OVERSHOOT_PEAK_X time
@@ -231,15 +243,14 @@ equation
   // The ANDES library measures overshoot magnitude but not its timing, so the 4x factor
   // is an assumption; see Parameter_Table.md.
   v_recovering = 1.0
-    + (dip_depth_pu - 1.0) * exp(-dt_recover / recovery_tau_s)
+    + (depth_last - 1.0) * exp(-dt_recover / recovery_tau_s)
     + overshoot_pu * (dt_recover / (OVERSHOOT_PEAK_X * recovery_tau_s))
       * exp(1.0 - dt_recover / (OVERSHOOT_PEAK_X * recovery_tau_s));
 
   v_source_pu =
-    if time < dip_start_s then 1.0
-    elseif time < t_clear1 then dip_depth_pu
-    elseif second_dip and time >= t_start2 and time < t_clear2 then dip_depth_pu
-    else v_recovering;
+    if k_started > k_cleared then v_active
+    elseif k_cleared >= 1 then v_recovering
+    else 1.0;
 
   // Voltage drop across the transformer chain, referenced to the rated operating point.
   //
