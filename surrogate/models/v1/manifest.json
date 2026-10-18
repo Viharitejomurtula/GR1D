@@ -1,0 +1,5 @@
+{
+  "format": "torch-ensemble",
+  "name": "v1",
+  "description": "5-member MLP deep ensemble trained on 20k simulator runs (see provenance.json, metrics.json)"
+}

@@ -31,12 +31,14 @@ import numpy as np
 
 from ridethrough.pipeline import drivers, joint, performance
 from sim.scenario import GRID_FRIENDLY, LEGACY_UPS
-from surrogate.predict import Surrogate
+from surrogate import registry
 
 DESIGNS = {"grid_friendly": GRID_FRIENDLY, "legacy_ups": LEGACY_UPS}
+WEB_DIR = pathlib.Path(__file__).resolve().parents[2] / "frontend" / "public" / "data"   # served at /data/ by Vite
 SATURATION = (0.05, 0.95)
 FLAT = 0.10   # a driver whose best and worst levels differ by less than this share of the mean outcome has no 'worst level'
 STANDING_CAVEATS = [
+    "Scope: " + joint.scope()["note"],
     "Verdicts come from the neural surrogate, not the simulator; see 'surrogate_check' for how well it agrees on these events.",
     "The simulator is cross-checked with known gaps, not validated (validation/SCOPE.md).",
     "Design and settings are held at the chosen preset; this describes that product, not the range of possible designs.",
@@ -46,10 +48,12 @@ STANDING_CAVEATS = [
 ]
 
 
-def run(n: int, seed: int, design: str, events: int, perms: int, check: dict | None = None) -> dict:
+def run(n: int, seed: int, design: str, events: int, perms: int, check: dict | None = None, model: str | None = None) -> dict:
+    """model: surrogate name under surrogate/models/ or a path; None = GR1D_SURROGATE, else surrogate/models/ACTIVE."""
     t0 = time.time()
     sc, roots = joint.sample_joint(n, seed, DESIGNS[design])
-    ev = performance.Evaluator(Surrogate.load("surrogate/models/v1"))
+    sur = registry.load_active(model)
+    ev = performance.Evaluator(sur)
     perf, y = performance.performance(ev, sc, seed)
     names = ev.names
     fail = perf["fail_probability"]["mean"]
@@ -69,7 +73,7 @@ def run(n: int, seed: int, design: str, events: int, perms: int, check: dict | N
         "headline_output": headline, "saturated": saturated, "outputs": names,
         "performance": perf, "rankings": rankings, "group_split": split,
         "lifts": drivers.lift_tables(roots, y, names), "change_points": drivers.change_points(roots, y, names),
-        "surrogate_check": check, "caveats": caveats,
+        "surrogate_check": check, "surrogate": sur.provenance, "caveats": caveats, "scope": joint.scope(),
         "settings": {"shapley_events": events, "shapley_walks": 2 * perms}, "runtime_s": round(time.time() - t0, 1),
     }
 
@@ -95,14 +99,27 @@ def _fmt_rank(rows: list[dict], lifts: dict, output: str, top: int = 8) -> list[
     return out
 
 
+def _fmt_model(p: dict) -> str:
+    extra = [f"{k} {p[k]}" for k in ("trained_rows", "simulator_commit") if p.get(k) is not None]
+    return f"{p.get('name', 'unknown')} ({p.get('format', '?')}, {p.get('model_dir', '?')}" + "".join(f", {e}" for e in extra) + ")"
+
+
 def to_markdown(r: dict) -> str:
     p = r["performance"]
     fp = p["fail_probability"]
     L = [f"# Product performance and failure drivers: {r['design']}", "",
-         f"Unit: {r['unit']}. {r['n_events']:,} events, seed {r['seed']}.", "",
-         "## Performance", "",
+         f"Unit: {r['unit']}. {r['n_events']:,} events, seed {r['seed']}.", ""]
+    s = r.get("scope")
+    if s:
+        lo, hi = s["dip_depth_pu"]
+        L += [f"> **Scope: results cover only grid dips that retain {lo:.2f}-{hi:.2f} pu of nominal voltage "
+              f"(about {s['share_of_sags']:.0%} of sags).** Every figure below is conditional on such a dip. "
+              f"Deeper sags (below {lo:.2f} pu) are out of scope: they are unassessed, counted neither as pass nor as fail. "
+              "The simulator's deep-sag voltage-collapse problem is still open (validation/CROSSCHECK.md).", ""]
+    L += ["## Performance", "",
          f"- Probability an event fails: **{fp['mean']:.1%}** (Monte Carlo 95% interval {fp['mc_95ci'][0]:.1%} to {fp['mc_95ci'][1]:.1%}).",
          f"- By ensemble member: {', '.join(f'{v:.1%}' for v in fp['by_ensemble_member'])} (surrogate disagreement).",
+         f"- Surrogate model: {_fmt_model(r.get('surrogate') or {})}.",
          f"- Events that almost surely fail (P>0.9): {fp['share_events_fail_prob_above_0.9']:.1%}; almost surely pass (P<0.1): {fp['share_events_fail_prob_below_0.1']:.1%}.",
          "", "How events fail (share of all events):", ""]
     for m, v in sorted(p["failure_mode_share"].items(), key=lambda kv: -kv[1]):
@@ -141,13 +158,19 @@ def main() -> None:
     ap.add_argument("--perms", type=int, default=12)
     ap.add_argument("--out", default="reports/pipeline")
     ap.add_argument("--check", default=None, help="JSON written by ridethrough.pipeline.check, embedded in the report")
+    ap.add_argument("--model", default=None, help="surrogate name under surrogate/models/ or a path "
+                                                    "(default: $GR1D_SURROGATE, else surrogate/models/ACTIVE)")
+    ap.add_argument("--web", action="store_true", help=f"also write the JSON to {WEB_DIR}/ for the frontend's Results tab")
     a = ap.parse_args()
     check = json.loads(pathlib.Path(a.check).read_text()) if a.check else None
-    res = run(a.n, a.seed, a.design, a.events, a.perms, check)
+    res = run(a.n, a.seed, a.design, a.events, a.perms, check, model=a.model)
     out = pathlib.Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     (out / f"pipeline_{a.design}.json").write_text(json.dumps(res, indent=1))
     (out / f"pipeline_{a.design}.md").write_text(to_markdown(res))
+    if a.web:
+        WEB_DIR.mkdir(parents=True, exist_ok=True)
+        (WEB_DIR / f"pipeline_{a.design}.json").write_text(json.dumps(res, separators=(",", ":")))
     print(to_markdown(res))
 
 

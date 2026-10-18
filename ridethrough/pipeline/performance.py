@@ -20,10 +20,9 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
-import torch
 
 from sim.scenario import FIELD_ORDER
-from surrogate.predict import Surrogate
+from surrogate.registry import SurrogateModel
 
 CONTINUOUS = ("min_power", "peak_current_pu", "floor_violation_s", "recovery_margin_s")
 QUANTILES = (0.05, 0.25, 0.5, 0.75, 0.95)
@@ -31,42 +30,37 @@ CHUNK = 65_536
 
 
 class Evaluator:
-    def __init__(self, surrogate: Surrogate):
-        self.sur = surrogate
-        self.enc = surrogate.ensemble.encoder
-        self.modes = [c for c in self.enc.classes if c != "passed"]
-        self.names = ["p_fail", *[f"mode:{m}" for m in self.modes], *CONTINUOUS]
-        self._mode_idx = [self.enc.classes.index(m) for m in self.modes]
+    """Uses only the surrogate.registry.SurrogateModel contract, so any registered model can be swapped in."""
 
-    def _x(self, X, s: int):
-        frame = X if isinstance(X, pd.DataFrame) else pd.DataFrame(X, columns=list(FIELD_ORDER))
-        return self.enc.transform(frame.iloc[s:s + CHUNK])
+    def __init__(self, surrogate: SurrogateModel):
+        self.sur = surrogate
+        self.modes = [c for c in surrogate.classes if c != "passed"]
+        self.names = ["p_fail", *[f"mode:{m}" for m in self.modes], *CONTINUOUS]
+
+    @staticmethod
+    def _frame(X) -> pd.DataFrame:
+        return X if isinstance(X, pd.DataFrame) else pd.DataFrame(X, columns=list(FIELD_ORDER))
+
+    def _chunks(self, X):
+        frame = self._frame(X)
+        for s in range(0, len(frame), CHUNK):
+            yield frame.iloc[s:s + CHUNK]
 
     def __call__(self, X) -> np.ndarray:
         """(m, len(names)) array: ensemble-mean outputs for m scenarios."""
         parts = []
-        for s in range(0, len(X), CHUNK):
-            r = self.sur.ensemble.predict(self._x(X, s))
-            probs = r["failure_mode_prob_mean"]
-            parts.append(np.column_stack([1.0 - r["p_pass_mean"], probs[:, self._mode_idx]] +
-                                         [r[f"{t}_mean"] for t in CONTINUOUS]))
+        for chunk in self._chunks(X):
+            r = self.sur.predict(chunk)
+            parts.append(np.column_stack([1.0 - r["p_pass_mean"].to_numpy()] + [r[f"prob:{m}"].to_numpy() for m in self.modes] +
+                                         [r[f"{t}_mean"].to_numpy() for t in CONTINUOUS]))
         return np.vstack(parts)
 
     def member_fail_probs(self, X) -> np.ndarray:
-        """(members, m) probability of failing from each ensemble member alone."""
-        out = []
-        for member in self.sur.ensemble.members:
-            member.eval()
-            ps = []
-            with torch.no_grad():
-                for s in range(0, len(X), CHUNK):
-                    ps.append(1.0 - torch.sigmoid(member(torch.as_tensor(self._x(X, s), dtype=torch.float32))["passed"]).numpy())
-            out.append(np.concatenate(ps))
-        return np.stack(out)
+        """(members, m) probability of failing from each ensemble member alone ((1, m) for a single model)."""
+        return np.concatenate([np.asarray(self.sur.member_fail_probs(c)) for c in self._chunks(X)], axis=1)
 
     def outside_training(self, X) -> np.ndarray:
-        frame = X if isinstance(X, pd.DataFrame) else pd.DataFrame(X, columns=list(FIELD_ORDER))
-        return np.array([bool(f) for f in self.enc.outside_training(frame)])
+        return np.concatenate([(self.sur.predict(c)["outside_training"].to_numpy() != "") for c in self._chunks(X)])
 
 
 def _boot_ci(values: np.ndarray, rng: np.random.Generator, reps: int = 200) -> list[float]:

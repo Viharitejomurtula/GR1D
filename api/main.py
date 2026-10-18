@@ -31,9 +31,10 @@ from sim import constants as C  # noqa: E402
 from sim import runner  # noqa: E402
 from sim.grader import grade  # noqa: E402
 from sim.scenario import FIELD_ORDER, GRID_FRIENDLY, LEGACY_UPS  # noqa: E402
-from surrogate.web import DEFAULT_JSON, WebSurrogate  # noqa: E402  (numpy only: the image has no PyTorch)
+from surrogate.web import WebSurrogate, active_json  # noqa: E402  (numpy only: the image has no PyTorch)
 
-SURROGATE_JSON = pathlib.Path(os.environ.get("SURROGATE_JSON", DEFAULT_JSON))
+# $SURROGATE_JSON, else the active model's web.json (surrogate.registry), else frontend/public/data/surrogate.json.
+SURROGATE_JSON = pathlib.Path(os.environ.get("SURROGATE_JSON") or active_json())
 _surrogate: WebSurrogate | None = None
 
 
@@ -116,13 +117,17 @@ class SimulateResponse(BaseModel):
     scenario: dict[str, float]
     source: str = "simulator"
     trace: Trace | None = None
+    in_scope: bool = Field(description="every dip retains C.VALID_DIP_DEPTH_PU; outside it the simulator is not trusted and the answer is unassessed")
+    scope_note: str = ""
 
 
 @app.get("/health")
 def health() -> dict:
     try:
         prov = surrogate().spec["provenance"]
-        sur = {"loaded": True, "simulator_commit": prov.get("simulator_commit"), "rows": prov.get("rows")}
+        md = prov.get("model_dir") or ""
+        sur = {"loaded": True, "name": prov.get("name") or pathlib.Path(md).name or None, "model_dir": md or None,
+               "json": str(SURROGATE_JSON), "simulator_commit": prov.get("simulator_commit"), "rows": prov.get("rows")}
     except HTTPException as exc:
         sur = {"loaded": False, "error": exc.detail}
     return {"ok": True, "model": runner.MODEL, "window_s": C.WINDOW_S, "surrogate": sur}
@@ -151,6 +156,8 @@ class PredictResponse(BaseModel):
     scenario: dict[str, float]
     source: str = "surrogate"
     model: dict
+    in_scope: bool = Field(description="every dip retains C.VALID_DIP_DEPTH_PU; outside it the simulator is not trusted and the answer is unassessed")
+    scope_note: str = ""
 
 
 def _clean_overrides(base, overrides: dict[str, float]) -> dict[str, float]:
@@ -164,6 +171,15 @@ def _clean_overrides(base, overrides: dict[str, float]) -> dict[str, float]:
             value = max(lo, min(hi, value))
         clean[key] = int(value) if isinstance(getattr(base, key), int) else float(value)
     return clean
+
+
+def _scope(scenario) -> dict:
+    """in_scope / scope_note for a response. Out-of-scope requests are still answered, but flagged as unassessed."""
+    lo, hi = C.VALID_DIP_DEPTH_PU
+    if scenario.in_scope():
+        return {"in_scope": True, "scope_note": ""}
+    return {"in_scope": False, "scope_note": f"A dip retains voltage outside {lo:.2f}-{hi:.2f} pu, the range the simulator is trusted for; "
+                                             "treat this result as unassessed (deep-sag voltage collapse is an open issue)."}
 
 
 @app.post("/predict", response_model=PredictResponse)
@@ -186,6 +202,7 @@ def predict(req: PredictRequest) -> PredictResponse:
         outside_training=p["outside_training"], scenario=values,
         model={**spec["provenance"], "test_accuracy": spec["metrics"]["test"].get("passed_accuracy"),
                "test_auc": spec["metrics"]["test"].get("passed_auc")},
+        **_scope(scenario),
     )
 
 
@@ -286,6 +303,7 @@ def simulate(req: SimulateRequest) -> SimulateResponse:
         trips=g.trips,
         scenario={k: float(getattr(scenario, k)) for k in FIELD_ORDER},
         trace=trace,
+        **_scope(scenario),
     )
 
 

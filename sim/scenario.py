@@ -139,6 +139,11 @@ class Scenario:
             raise ValueError(f"{len(seq)} dips exceeds the model's MAX_DIPS={C.MAX_DIPS}")
         return seq
 
+    def in_scope(self) -> bool:
+        """True if every dip in dip_sequence() retains a voltage inside C.VALID_DIP_DEPTH_PU (the band the
+        simulator is trusted for; deeper sags are out of scope, not graded as pass or fail)."""
+        return all(in_scope_depth(depth) for _, _, depth in self.dip_sequence())
+
     def group_arrays(self) -> dict[str, list[float]]:
         """Per-group parameter arrays (length MAX_GROUPS; unused slots have zero weight)."""
         n = int(self.n_groups)
@@ -197,6 +202,30 @@ def sample_dip_depth(rng: np.random.Generator) -> float:
     if u < 0.96:
         return float(rng.uniform(0.10, 0.70))
     return float(rng.uniform(0.00, 0.10))
+
+
+def in_scope_depth(retained_pu: float) -> bool:
+    """True if a retained voltage lies inside C.VALID_DIP_DEPTH_PU (closed band, read at call time)."""
+    lo, hi = C.VALID_DIP_DEPTH_PU
+    return lo <= float(retained_pu) <= hi
+
+
+def sample_dip_depth_in_scope(rng: np.random.Generator, max_tries: int = 100_000) -> float:
+    """Retained voltage from the Eaton/EPRI distribution CONDITIONED on C.VALID_DIP_DEPTH_PU.
+
+    Rejection sampling on sample_dip_depth, so it stays the correct conditional if the band changes
+    (with today's 0.70-0.90 band it is uniform over the band, and ~C.IN_SCOPE_SAG_SHARE of draws are kept).
+    """
+    for _ in range(max_tries):
+        d = sample_dip_depth(rng)
+        if in_scope_depth(d):
+            return d
+    raise RuntimeError(f"no in-scope depth in {max_tries} draws; is C.VALID_DIP_DEPTH_PU {C.VALID_DIP_DEPTH_PU} reachable?")
+
+
+# Default for sample()/sample_many() when in_scope_only is not given. True: the simulator is only trusted inside
+# C.VALID_DIP_DEPTH_PU, so training data and analyses stay in scope unless a caller opts out explicitly.
+DEFAULT_IN_SCOPE_ONLY = True
 
 
 # Fitted across the ANDES dip library: deeper faults overshoot harder on recovery, and
@@ -323,6 +352,7 @@ def sample(
     fault_mix: str = "general",
     bbu_module_out: bool = False,
     hall_stress: str | None = None,
+    in_scope_only: bool | None = None,
 ) -> Scenario:
     """Draw one scenario from the ranges in Parameter_Table.md.
 
@@ -332,12 +362,18 @@ def sample(
         module is out.
     hall_stress: None (default, ASHRAE recommended range), "A1" or "A2"; see
         sample_battery_temp.
+    in_scope_only: True draws the dip depth from the Eaton/EPRI distribution conditioned on
+        C.VALID_DIP_DEPTH_PU (sample_dip_depth_in_scope); False draws the full 0-0.9 pu distribution
+        (sample_dip_depth), including deep sags the simulator is not trusted for. None (default) uses
+        DEFAULT_IN_SCOPE_ONLY (True). The second dip reuses this depth, so it is in band too.
     """
     rng = rng or np.random.default_rng()
+    if in_scope_only is None:
+        in_scope_only = DEFAULT_IN_SCOPE_ONLY
 
     second_dip = bool(rng.random() < 0.20)  # >80% of faults are temporary -> reclose
     high_speed_reclose = rng.random() < 0.5
-    depth = sample_dip_depth(rng)
+    depth = sample_dip_depth_in_scope(rng) if in_scope_only else sample_dip_depth(rng)
     tau, overshoot = sample_shape(rng, depth)
     shelves = int(rng.integers(1, C.MAX_SHELVES_PER_RACK + 1))
     # Analog Devices Part 4: six modules per shelf, 5+1 redundant (see constants.py).
@@ -405,7 +441,7 @@ def sample(
 
 def sample_many(n: int, seed: int | None = None, **kwargs) -> list[Scenario]:
     """n scenarios from one seeded generator; kwargs (fault_mix, bbu_module_out, hall_stress,
-    dip_start_s) are passed to sample()."""
+    dip_start_s, in_scope_only) are passed to sample(). In scope (C.VALID_DIP_DEPTH_PU) by default."""
     rng = np.random.default_rng(seed)
     return [sample(rng, **kwargs) for _ in range(n)]
 
