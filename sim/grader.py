@@ -22,6 +22,12 @@ from . import constants as C
 @dataclass
 class Grade:
     passed: bool
+    # NOGRR 2.14(2)(c) splits on energization date: before Jan 1 2028 the proportional power
+    # floor applies only "if capable", after it is mandatory. `passed` grades the post-2028
+    # rule (the standard anything designed today will actually energize under, given ERCOT's
+    # 410 GW queue). `passed_pre2028` is the same run under the escape clause -- reporting
+    # both costs nothing and "passes today, fails in 2028" is the actionable answer.
+    passed_pre2028: bool
     failure_mode: str
     recovery_margin_s: float
     min_power: float
@@ -90,6 +96,7 @@ def grade(
         p_pre = float(np.mean(p_grid)) if p_grid.size else 0.0
         return Grade(
             passed=True,
+            passed_pre2028=True,
             failure_mode="no disturbance",
             recovery_margin_s=C.RECOVERY_DEADLINE_S,
             min_power=float(np.min(p_grid) / p_pre) if p_pre else 1.0,
@@ -156,15 +163,19 @@ def grade(
         failures.append("disconnected inside envelope")
     if current_violation:
         failures.append("exceeded 125% current cap")
-    if floor_violation_s > 0:
-        failures.append("below power floor")
     if recovery_margin_s < 0:
         failures.append("missed 2.0 s recovery")
+
+    # The power floor is the only check the energization-date split touches.
+    failures_pre2028 = list(failures)
+    if floor_violation_s > 0:
+        failures.append("below power floor")
 
     mode = _classify(failures, trips)
 
     return Grade(
         passed=not failures,
+        passed_pre2028=not failures_pre2028,
         failure_mode=mode,
         recovery_margin_s=recovery_margin_s,
         min_power=float(np.min(p_frac)),
