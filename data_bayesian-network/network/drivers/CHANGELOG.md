@@ -18,3 +18,11 @@ implied factor covariance (Part B). One row per approved change. Times are local
 | 2026-10-17 21:22 | ridethrough/drivers/sample.py | edit | coupling scales temperature and calendar effects together (coupling 0 = flat load independent of weather and time of day) |
 | 2026-10-17 21:24 | ridethrough/drivers/sample.py | edit | move the residual's season x time-of-day mean into the coupling-scaled calendar part (coupling 0 was still tied to time of day in JJA) |
 | 2026-10-17 21:31 | ridethrough/drivers/implied.py | create | Part B implied covariance: S x sampled Sigma_D x noise over 216 cases, driver breakdown, assumption flags, Monte Carlo check |
+| 2026-10-17 21:35 | conftest.py | create | lets pytest import ridethrough from the repo root (no fixtures) |
+| 2026-10-17 21:35 | tests/test_drivers.py | create | Part A tests: join, load_index, curve shape, sampler reproducibility and coupling (also creates tests/) |
+| 2026-10-17 21:37 | tests/test_implied.py | create | Part B tests: symmetric/PSD covariances, valid correlations, zero-row factors, written files match |
+| 2026-10-17 21:38 | data_bayesian-network/network/drivers/ (10 files) | run fit.py | Part A outputs: temp_by_month_hour.csv, load_model.json, driver_covariance.csv, driver_copula.json, driver_fit_report.md, 5 PNGs |
+| 2026-10-17 21:39 | data_bayesian-network/network/drivers/README.md | edit | catalog entries for the 10 Part A outputs |
+| 2026-10-17 21:43 | data_bayesian-network/network/drivers/ (14 files) | run implied.py | Part B outputs: 10 nominal-case matrices, implied_all_cases.csv.gz, implied_summary.csv, implied_mc_check.csv, implied_report.md |
+| 2026-10-17 21:43 | data_bayesian-network/network/drivers/README.md | edit | catalog entries for the 14 Part B outputs |
+| 2026-10-17 21:46 | tests/ | run pytest | final check of Part A and Part B: 20 passed (no files written) |
