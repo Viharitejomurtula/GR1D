@@ -1,0 +1,51 @@
+# Categorical roots for the dependency network. Merge of Batches 1-6.
+# Every probability list is conditional on the stated population; see notes.
+
+fault_type:
+  categories: {SLG: 0.703, LLG: 0.182, LL: 0.078, 3LG: 0.037}
+  evidence: standard
+  range_for_sweep: {SLG: [0.65, 0.70], LLG: [0.15, 0.20], LL: [0.05, 0.10], 3LG: [0.02, 0.05]}
+  source_url: https://www.ercot.com/files/docs/2017/03/03/ERCOT_SPWG_Review_of_Ground_Fault_Protection_Methods_For_Transmission_Lines.pdf
+  page_or_table: p. 7 fault type table
+  note: >
+    Midpoints of the ERCOT working-group ranges (67.5, 17.5, 7.5, 3.5), normalized (my calculation;
+    3LG rounded up to 0.037 so the list sums to 1). Transmission-line fault statistics, not the mix
+    that affected large loads, which is skewed toward severe events. Report as conditional.
+
+protection_failure:
+  categories: {normal: 0.90, breaker_misoperation: 0.05, breaker_failure: 0.05}
+  evidence: assumed
+  note: >
+    Rough tally: 1 breaker misoperation and 1 breaker failure among about 20 ERCOT events with
+    clearing information. Selection-biased and tiny; a placeholder. Sweep it.
+
+grid_strength:
+  categories: {weak: 0.333, normal: 0.333, strong: 0.334}
+  evidence: assumed
+  note: >
+    Uniform placeholder. "Weak" means short-circuit ratio below about 3 (NERC short-circuit white
+    paper p. 14). No public SCR values for ERCOT large-load sites. No edges use it yet.
+
+season:
+  categories: {DJF: 0.25, MAM: 0.25, JJA: 0.25, SON: 0.25}
+  evidence: assumed
+  note: >
+    Uniform: an event is assumed equally likely in any quarter. Seasons group the NWS monthly
+    normals (Dec-Feb, Mar-May, Jun-Aug, Sep-Nov); the grouping is mine.
+
+workload_type:
+  categories: {training: 0.333, inference: 0.333, mixed: 0.334}
+  evidence: assumed
+  note: >
+    Uniform placeholder. No source gives a Texas or national training/inference/mixed split.
+    LBNL gives only AI vs conventional server counts (7.6% of installed servers in 2020).
+
+cooling_type:
+  categories: {air_cooled_chiller: 0.35, evaporative_cooling_tower: 0.22, other: 0.19, direct_expansion: 0.11, dry_cooler: 0.06, fresh_air: 0.04, adiabatic: 0.03}
+  evidence: measured
+  source_url: https://intelligence.uptimeinstitute.com/sites/default/files/2025-07/UI%20Field%20181_Data%20center%20cooling.pdf
+  page_or_table: Page 1 heat-rejection figure (n=400)
+  note: >
+    NON-TEXAS: global survey of 1,033 respondents (US and Canada 21%); the heat-rejection question had
+    400 answers. Labels were paired with percentages by position and sum to 100%. No edges use it yet
+    (no trip or restart values exist by cooling type).

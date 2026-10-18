@@ -1,0 +1,96 @@
+item,status,reason,batch
+grid_strength numeric range at ERCOT large-load sites,NOT FOUND,No public SCR values; only a generic below-3 weak-grid threshold | ERCOT or transmission owner study results; otherwise keep it categorical,1
+grid_strength -> dip_depth_pct edge,no data,No source links SCR to dip magnitude (NERC paper says so itself) | Stays a physics-reasoned placeholder in the starter edges; sweep it,1
+fault_type -> dip_depth_pct for 3LG and LL,no data,No retained voltage published for these fault types | Event reports that pair fault type with measured retained voltage,1
+fault_type -> n_dips,removed,Counts of dips per fault type are not tabulated; high counts came from reclose logic on one persistent fault | A reclose-scheme or persistent-fault node with data,1
+fault_type -> dip_duration_ms,replaced,Long clearing came from breaker problems | Replaced by protection_failure -> dip_duration_ms,1
+dip_depth_pct -> converter_loading,removed from network,Current during a dip is a time-evolving effect and belongs in the simulator | See simulator_validation.csv,1
+n_dips typical,assumed,Texas counts not tabulated; typical of 1 is an assumption | A Texas event count,1
+Dip depth basis (worst phase vs positive-sequence),decision needed,Slide 9 shows positive-sequence dips much shallower than worst-phase values | Pick the simulator's basis; extract positive-sequence values if needed,1
+NOGRR 282 status,not stated,The deck does not give the rule's status | Check the ERCOT rule page,1
+SCR under 5 ERCOT planning deck and West Texas system-strength scope,not verified,Not re-read in this check | Open both and confirm the numbers,1
+load_fraction low and typical (site level),NOT FOUND,No source gave a site-level share of rated power; the ERCOT 49.8% figure is a peak-to-requested-MW ratio on a different basis.,2
+hour_of_day -> load_fraction for data centers specifically,NOT FOUND,"Only combined ERCOT flexible-load ramp data (NERC LMWG slides 23, 25). The ERCOT load forecast says it uses load profiles by type but prints no values.",2
+load_fraction by workload type for Texas sites,NOT FOUND,Only a non-Texas operator's cluster data and a simulation; the two disagree on ordering (conflict flagged in Block 2).,2
+load_fraction for the mixed workload level,NOT FOUND,No source defines or measures mixed.,2
+gpus_synchronized_fraction low / typical / high,NOT FOUND,Only qualitative lockstep statements; no measured site-level share.,2
+workload_type -> gpus_synchronized_fraction for inference and mixed,NOT FOUND,Sources describe training lockstep only.,2
+gpus_synchronized_fraction -> osc_amp (quantitative rule),NOT FOUND,Qualitative argument only; no equation or table.,2
+osc_amp as a measured fraction of site load,NOT FOUND,Sources give MW without site size or server-level fractions; the 2-second spike is a proxy.,2
+osc_amp and osc_freq_hz typical values,NOT FOUND,Ranges and bands only.,2
+Texas / ERCOT oscillation observations for data centers,NOT FOUND,The ERCOT June 2025 board operations update (https://www.ercot.com/files/docs/2025/06/20/4.7-System-Operations-Update-REVISED.pdf) and the NERC LMWG ERCOT deck contain no load oscillation frequency or amplitude.,2
+workload_type -> osc_freq_hz,NOT FOUND,No source ties oscillation frequency to workload class.,2
+Per-second load ramp rate for ERCOT large loads,NOT FOUND,ERCOT data are 5-minute and 15-minute changes only; the 0.333 MW/s is my division.,2
+Workload mix (training / inference / mixed) in Texas or nationally,NOT FOUND,Only AI vs conventional server counts (Block 6 proxy).,2
+https://pmc.ncbi.nlm.nih.gov/articles/PMC13538459/ (measured AI training workload power),BLOCKED,Returned a browser-verification interstitial; no content read.,2
+https://web.eecs.utk.edu/~kaisun/FOTF/MonthlyMeetings/20260109_Biswas-Chatterjee.pdf (large load oscillations),BLOCKED,Fetch refused by the site's robots rules; not read.,2
+AI training swing of 35 to 70 MW within a minute (xAI site),unresolved,Appears only as a news citation inside the NERC whitepaper (p. 21); primary source not located. NON-TEXAS: Memphis TN. Not used.,2
+Sources I could not open to confirm the figure's own page numbers,note,"The fetch tool reported several page numbers as inferred from footers (NERC whitepaper, NERC data center load modeling reference, ERCOT load forecast); please check them in the PDFs.",2
+handoff: dip_gap_s / n_dips,handoff,Mishra et al. Sec. 4.2 report voltage sags about once per second for roughly 10 s each minute at a Virginia data center cluster: https://sites.ecse.rpi.edu/~vanfrl/documents/publications/pre-prints/20250218_CMLV_DataCenter.pdf (NON-TEXAS: Dominion area).,2
+handoff: trip_delay_ms / n_dips (batch 4),handoff,"NERC incident review p. 7 says data center schemes typically trip after three voltage disturbances within about one minute (https://www.nerc.com/globalassets/our-work/reports/event-reports/incident_review_large_load_loss.pdf, NON-TEXAS: Eastern Interconnection). The NERC whitepaper p. 22 repeats this. ERCOT SPWG slide 15(6) proposes barring count-based trips (https://www.ercot.com/files/docs/2026/03/02/04_LEL-RT-Requirements_SPWG_Feb2026.pdf).",2
+handoff: cooling_type (batch 5),handoff,"NERC data center load modeling reference p. 19: cooling under 10% of total load at PUE below 1.1, and over 30% of IT load for closed-loop liquid cooling: https://www.nerc.com/globalassets/who-we-are/standing-committees/rstc/data_center_load_modeling_technical_reference_r3_clean.pdf",2
+handoff: converter_current_limit_pu (batch 4),handoff,Mishra et al. Sec. 5: the data center owner attributed the 14.7 Hz oscillation to the UPS input stage (same Mishra URL). ERCOT slide 14 caps disturbance current at 125% of normal and notes observed events at 150 to 200%.,2
+handoff: soc_start (batch 3/6),handoff,"Choukse et al. Sec. IV-C, Fig. 7 simulate rack storage charge between about 50 and 54% (simulated only): https://arxiv.org/pdf/2508.14318",2
+hour_of_day -> outdoor_temp_c hourly curve,NOT FOUND,Hourly normals exist at NCEI but the documentation page had no station numbers; other pages not attempted after two tries.,3
+outdoor_temp_c actual extremes (coldest/hottest hour),NOT FOUND,Only normals were read; ~20 days/yr >=100F and ~29 freezes/season noted.,3
+outdoor_temp_c -> storage_resistance_pu curve,NOT FOUND,Only a single ratio (5x at -20C P3) and ~10x (NMC) found; no table. Penn State Fig. 6 and P3 p.4 chart have no readable values; IOP LFP EIS paper blocked by robots.,3
+equipment_age_years -> capacity_age_factor / storage_resistance_pu in years,NOT FOUND,Sources are in cycles; no years-to-cycles mapping or calendar-aging numbers (HAL calendar-aging page blocked by bot check).,3
+capacity_age_factor -> usable_energy_factor,NOT FOUND,No source gives the relationship.,3
+soc_estimate_error Texas peer-reviewed values,NOT FOUND,Only vendor or secondary articles; typical value not found.,3
+usable_energy_factor range,NOT FOUND,No direct source.,3
+Ultracapacitor capacitance/ESR vs age tables,NOT FOUND,Only limits and one-point figure reads.,3
+LFP datasheet capacity-vs-temperature figures (Wattstunde LIX 200LT; IFR18650),NOT FOUND,Figures not readable as text.,3
+season shares,NOT FOUND,No source gave shares; not required.,3
+handoff: batch 6 (soc_start) / ERCOT BESS,note,Modern Power Systems article reports ERCOT SOC-error revenue loss ~USD 1M per GWh-year and Pecos TX Dogfish BESS 3.8 MWh idle in one peak; URL https://www.modernpowersystems.com/analysis/energy-storage/soc-errors-in-lfp-batteries-the-1-million-per-gwh-challenge-for-bess/,3
+handoff: cooling_type / vendor_config,note,EVE datasheet Table 7 gives power limits by cell temperature (0.5P from -20 to 55C); URL https://cdn.shopify.com/s/files/1/0763/0562/9462/files/EVE_3.2V_314Ah_LiFePO4_Lithium_Battery_Cell.pdf,3
+converter_overload_s typical,NOT FOUND,No source says which overload level is typical,4
+converter_current_limit_pu typical,NOT FOUND,Same,4
+dclink_capacitance_factor typical and field values,NOT FOUND,Only end-of-life limit found; no field-aged measurements,4
+equipment_age_years -> dclink_capacitance_factor,NOT FOUND,No capacitance-vs-years numbers; only life-vs-temperature rules (OS-CON 10x per 20 C),4
+outdoor_temp_c -> converter_overload_s,NOT FOUND,Datasheets give overload at 25 C only; SMA derating (Block 5) is power vs temperature,4
+relay accuracy for voltage threshold (setting basis),NOT FOUND,SEL gives accuracy of reading only,4
+27/59 trip delay setting range,NOT FOUND,SEL-751A sheet gives none; Basler BE1-27/59 page gave no numbers (specs in manual),4
+STS voltage window threshold accuracy,NOT FOUND,ABB and Vertiv pages give no numeric accuracy for thresholds; Vertiv metering +-2% only,4
+vendor shares,NOT FOUND,No source,4
+Texas-specific converter data,NOT FOUND,All values are non-Texas manufacturer datasheets; Texas climate or ERCOT dependence not covered,4
+ERCOT NOGRR 282 voltage ride-through table,BLOCKED/unread,Later NOGRR 282 .docx files returned binary; Dec 2025 slides had no values. Handoff for ride-through batch,4
+handoff: dip_depth_pct/dip_duration_ms,info,ERCOT NOGRR 282 documents at https://www.ercot.com/files/docs/2026/07/11/282NOGRR-45-PUCT-Report-070926.docx (unreadable via fetch),4
+handoff: outdoor_temp_c,info,SMA SCS UP-XT 40 C and 50 C derating (Block 5) https://files.sma.de/downloads/SCS-UP-XT-DS-en-23.pdf,4
+Verification note,info,All values were read from fetch extracts of the cited pages not by a second open of each page; verified=yes means seen in the extract. Vertiv 800 kW spec is Portuguese. Basler / NREL 91714 / Sungrow / Victron results were not used,4
+Texas or ERCOT large-site cooling mix,NOT FOUND,"Texas searches returned water-use advocacy and press pieces, not a cooling-type split. Uptime global data used with NON-TEXAS flag.",5
+cooling_type -> compressor_trip_pct,NOT FOUND,"Only Trane RTAA (air-cooled) has a stated trip voltage (about 90% retained). No water-cooled, CRAH/CRAC or liquid-cooling trip voltage found.",5
+cooling_type -> compressor_restart_s,NOT FOUND,"120 s (RTAC) and 10 s (CGAM) are both air-cooled chillers, so they differ by model, not cooling type.",5
+Chiller or compressor under-voltage trip time delay,NOT FOUND,Trane article gives threshold only.,5
+PSU under-voltage trip delay,NOT FOUND,Only thresholds and ATX PWR_OK timing found. ERCOT LLWG slide 9 says supply trip threshold and delay are not modeled.,5
+Capacitor age vs hold-up numbers,NOT FOUND,DTIC abstract qualitative only; full PDF (ADA562492) not opened.,5
+SEMI F47 and CBEMA/ITIC curves,NOT FOUND,Not reached in two attempts.,5
+VFD manufacturer manual thresholds,NOT FOUND,Only a third-party KB (opinion) found; PowerFlex/ABB/Yaskawa parameters unverified.,5
+CRAH/CRAC fan VFD ride-through,NOT FOUND,No source reached.,5
+Compressor trip pct in Block 1,flag,Row mixes line-voltage basis (Trane) with DC-bus basis (VFD KB); labeled opinion.,5
+handoff: dip_depth_pct / dip_duration_ms,info,NERC Incident Review Large Load Loss: fault voltages 0.25-0.40 pu; six faults in 82 s; durations 42-66 ms (pp.2-3). https://nerc.com/pa/rrm/ea/Documents/Incident_Review_Large_Load_Loss.pdf,5
+handoff: dip_depth_pct / n_dips,info,NERC p.8: counting scheme trips after three voltage disturbances within one minute. p.9: about 1260 MW did not return for hours. https://nerc.com/pa/rrm/ea/Documents/Incident_Review_Large_Load_Loss.pdf,5
+handoff: protection / restart,info,ERCOT LLWG 2026-08-21 slide 4: some facilities tripped breakers on overcurrent in a 50 ms dip; recovery about 5 min to nearly 2 h. https://www.ercot.com/files/docs/2026/08/14/AIONTRACKS_LLWG_2026-08-21_FINAL_v3.pdf,5
+handoff: dip_depth_pct / converter_overload,info,"ERCOT LLWG slides 2, 5, 11: constant-power load reaches 150% current at 0.667 retained voltage; ride-through shown 2 s at 0.85 falling to 150 ms below 0.35; load recovers to 90% in 0.41 s median. Status of the curve not stated. https://www.ercot.com/files/docs/2026/08/14/AIONTRACKS_LLWG_2026-08-21_FINAL_v3.pdf",5
+handoff: soc / UPS sizing,info,NERC p.5: centralized UPS typically 2-5 MW; rack UPS 3-4 kW. p.7: static UPS transfers to battery during the disturbance. https://nerc.com/pa/rrm/ea/Documents/Incident_Review_Large_Load_Loss.pdf,5
+units_offline typical count at large data centers,NOT FOUND,"No measured count of modules offline for maintenance; only redundancy design allowances (N+1, N+2, 2N) were found.",6
+"Share of sites by redundancy scheme (N+1, 2N, N+2)",NOT FOUND,Not found in two attempts; Uptime survey pages were not machine-readable or did not give it.,6
+converter_loading typical single number,NOT FOUND,Only ranges and a UK distribution; no published average. The Energy Commission PDF (energy.ca.gov filebrowser 6686) and the LBL UPS field-data guideline returned no usable figures.,6
+Texas / ERCOT data center UPS loading,NOT FOUND,All loading data found is vendor or UK; none is Texas-specific.,6
+equipment_age_years low/typical/high for power equipment,NOT FOUND,Only facility ages (Uptime 2024 survey) and battery lifetime guidance found; Uptime EUL benchmark UPS values not readable.,6
+UPS service life in years (non-battery),NOT FOUND,Schneider gives only a 10-year maintenance-cost marker; no stated service life.,6
+soc_start state of charge at a random moment / share partly discharged,NOT FOUND,No float state of charge or partial-discharge frequency source found; IEEE 1188 and EnerSys blog gave no numbers.,6
+Quantified units_offline -> converter_loading and load_fraction -> converter_loading curves,NOT FOUND,"Sources give design caps, not numeric curves or the stated equation.",6
+handoff: vendor_config,info,"Redundancy scheme definitions (N, N+1, N+2, 2N with module counts) at https://product-help.schneider-electric.com/EcoStruxure/Power-Monitoring-Expert-2023/content/4_configuring/tools/ups_power_config_utility/ups_system_redundancy_types.htm",6
+handoff: capacity_age_factor / equipment_age_years,info,APC: battery life roughly halves for every 8 C above 25 C; batteries last 3 to 5 years (https://www.se.com/ca/en/faqs/FA158934/),6
+handoff: usable_energy_factor,info,APC FAQ: new batteries ship at about 80% charge (https://www.se.com/ca/en/faqs/FA158934/); shelf storage context only,6
+gpus_synchronized_fraction (node),dropped from the loaded graph,No numeric range in any source; its edges are in edges_candidate.csv,2
+trip_delay_ms (node),dropped from the loaded graph,No settable delay range on the SEL sheet; STS and relay figures are different devices,4
+soc_start (node),dropped from the loaded graph,No source for state of charge at event start. It is a simulator knob: choose it as a design input,6
+hour_of_day and vendor_config (roots),deferred,No hourly profile and no vendor categories with data,"2,3,4"
+workload_type probabilities,placeholder,Uniform 1/3 each; no split found,2
+equipment_age_years range,assumed,0 to 15 years from a facility design lifespan; no equipment-level data,6
+n_units = 10 for converter_loading,fixture,Fleet size unknown; change it in the equation config,6
+NOGRR 282 status and curve,conflict,The Feb 2026 SPWG deck (Table A) and the AIONTRACKS deck (in force since 1 Aug 2026) give different ride-through curves. Check the ERCOT Nodal Operating Guide 2.15,"1,4"
+"Texas-specific converter, PSU and chiller data",NOT FOUND,All hardware values are non-Texas manufacturer sheets used as proxies,"4,5"
+Weak sources kept at opinion grade,flag,"VFD DC-bus 70-75% article (unsigned, no standards cited) sets compressor_trip_pct low",5
+Edges demoted to edges_candidate.csv,flag,"Qualitative, categorical or unranged edges cannot load; see that file for each reason",all

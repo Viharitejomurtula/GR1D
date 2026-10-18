@@ -1,0 +1,15 @@
+edge,parent_category,child_center,unit,n,basis,note,batch
+fault_type->dip_depth_pct,SLG,51.3,% depth,10,data-fit,Mean of 10 single-phase values from slides 8-9 (slide 8 fault type inferred from phase label),1
+fault_type->dip_depth_pct,LLG,47.2,% depth,3,data-fit,Mean of BG+BC (slide 9) and the two NERC facility values; n=3,1
+fault_type->dip_depth_pct,3LG,51.4,% depth,0,placeholder,No 3LG retained voltage is published. Set to the overall median so it has no effect until data is found,1
+fault_type->dip_depth_pct,LL,51.4,% depth,0,placeholder,No line-to-line retained voltage published. Same neutral placeholder,1
+protection_failure->dip_duration_ms,normal,55,ms,15,data-fit,Mean of 15 normal-clearing values (3.3 cycles at 60 Hz),1
+protection_failure->dip_duration_ms,breaker_misoperation,167,ms,1,expert-range,"One event, about 10 cycles (ERCOT slide 4)",1
+protection_failure->dip_duration_ms,breaker_failure,317,ms,1,expert-range,"One event, 19 cycles (ERCOT slide 5)",1
+season->outdoor_temp_c,DJF,9.1,degC,3,data-fit,"Mean of the three monthly normal mean temperatures (Dec, Jan, Feb) from NWS DFW 1991-2020; seasons are my grouping (label inferred)",3
+season->outdoor_temp_c,MAM,18.9,degC,3,data-fit,"Mean of the three monthly normal mean temperatures (Mar, Apr, May) from NWS DFW 1991-2020; seasons are my grouping (label inferred)",3
+season->outdoor_temp_c,JJA,29.1,degC,3,data-fit,"Mean of the three monthly normal mean temperatures (Jun, Jul, Aug) from NWS DFW 1991-2020; seasons are my grouping (label inferred)",3
+season->outdoor_temp_c,SON,19.7,degC,3,data-fit,"Mean of the three monthly normal mean temperatures (Sep, Oct, Nov) from NWS DFW 1991-2020; seasons are my grouping (label inferred)",3
+workload_type->osc_amp,training,0.375,fraction of provisioned power,1,expert-range,"Largest 2 s spike, Microsoft production clusters (row level); one operator, so 2 categories only",2
+workload_type->osc_amp,inference,0.09,fraction of provisioned power,1,expert-range,Same source,2
+workload_type->osc_amp,mixed,0.2325,fraction of provisioned power,0,placeholder,No source defines or measures a mixed workload; set to the midpoint of training and inference,2
