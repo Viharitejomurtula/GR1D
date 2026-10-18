@@ -15,3 +15,6 @@ frontend/public/data/grid.json
 
 # downloaded datasets (see data_bayesian-network/network/responses/sources.csv)
 data_bayesian-network/drivers_raw/
+frontend/public/data/sample.json
+frontend/public/data/ridethrough_grid.json
+data/postfix*.csv
