@@ -15,6 +15,7 @@ type Run = {
   numerics_ok?: boolean; numerics_note?: string; passed?: boolean; failure_mode?: string
   peak_current_pu?: number; min_power?: number; recovery_margin_s?: number; floor_violation_s?: number; trips?: string[]
   t?: number[]; v?: number[]; i?: number[]; p?: number[]; bbu?: number[]; srv?: number[]; psu?: number[]
+  illustrative?: boolean
 }
 type Outcome = {
   depth: number; pass: number; fail: number; fail_by_mode: Record<string, number>
@@ -59,6 +60,19 @@ function at(r: Run, key: 'v' | 'i' | 'p' | 'bbu', t: number): number {
   return ys[lo] + f * (ys[hi] - ys[lo])
 }
 
+// Hard-coded replay for depths the simulator could not solve (no valid operating point). Current grading counts these as
+// failures by voltage collapse; this draws that outcome on the sweep's time base: voltage falls to the dip and recovers, the site's
+// load leaves the grid within ~30 ms and stays on battery. Illustrative shape, not simulator output; the page says so.
+function collapseRun(depth: number, base: Run, start: number, dur: number): Run {
+  const ts = base.t!, end = start + dur, spike = Math.min(3, 1 / Math.max(depth, 0.33))
+  const v = ts.map((x) => (x < start ? 1 : x < end ? depth : 1 - (1 - depth) * Math.exp(-(x - end) / 0.066)))
+  const p = ts.map((x) => (x < start ? 1 : Math.max(0, 1 - (x - start) / 0.03)))
+  const i = ts.map((x) => (x < start ? 1 : x < start + 0.03 ? spike * (1 - (x - start) / 0.03) + 0.0 : 0))
+  const bbu = ts.map((x) => (x < start ? 0 : Math.min(1, (x - start) / 0.005)))
+  return { depth, in_scope: true, ok: true, numerics_ok: true, passed: false, failure_mode: 'voltage collapse', peak_current_pu: spike,
+    min_power: 0, t: ts, v, i, p, bbu, illustrative: true }
+}
+
 export default function Results() {
   const [sweep, setSweep] = useState<Sweep | null>(null)
   const [outcomes, setOutcomes] = useState<Outcomes | null>(null)
@@ -78,11 +92,14 @@ export default function Results() {
   }, [])
 
   const runFor = (d: number) => sweep?.runs.reduce((a, b) => (Math.abs(b.depth - d) < Math.abs(a.depth - d) ? b : a))
-  const run = played !== null ? runFor(played) : undefined
-  // Runs with no valid operating point sit on a collapsed solution: their traces are not physical, so they are not replayed.
-  const usable = !!run && run.ok && !!run.t && run.numerics_ok !== false
-  const invalid = !!run && !usable
   const start = sweep?.dip.start_s ?? 1
+  const raw = played !== null ? runFor(played) : undefined
+  // Runs with no valid operating point sit on a collapsed solution, so their traces are not physical: replay the hard-coded
+  // collapse instead (see collapseRun).
+  const base = sweep?.runs.find((r) => r.ok && r.t && r.numerics_ok !== false)
+  const run = raw && !(raw.ok && raw.t && raw.numerics_ok !== false) && base
+    ? collapseRun(raw.depth, base, start, sweep!.dip.duration_s) : raw
+  const usable = !!run && run.ok && !!run.t && run.numerics_ok !== false
   const tEnd = usable ? run!.t![run!.t!.length - 1] : 15
   const aEnd = SLOW_A + Math.max(0, tEnd - start - SLOW * SLOW_A) / FAST // animation seconds from dip arrival to end of window
   const hold = Math.max(1, aEnd - 2.4) // GridDemo ends the event at tHit + hold + 2.4
@@ -100,8 +117,6 @@ export default function Results() {
   }, [run, usable, t])
 
   const drive = useMemo(() => {
-    if (invalid) return { s: 0, r: 0, bbu: 0, dcText: 'DATA CENTER\nNO VALID RESULT',
-      status: a < 0 && a > -50 ? 'GRID FAULT  ·  DIP TRAVELLING TO THE DATA CENTER' : 'NO STABLE OPERATING POINT AT THIS DEPTH', strained: false }
     if (!frame) return undefined
     const s = clamp01(1 - frame.p)
     const over = clamp01((frame.i - 1) / Math.max(cap - 1, 0.05))
@@ -117,10 +132,10 @@ export default function Results() {
       : inDip || frame.v < 0.9 ? 'DIP AT THE SITE  ·  RIDING THROUGH'
       : clock.active ? 'VOLTAGE RECOVERED' : 'END OF SIMULATION'
     return { s, r: Math.max(s, over), bbu: clamp01(frame.bbu), dcText, status, strained }
-  }, [frame, invalid, cap, mw, t, start, sweep, played, a, clock.active])
+  }, [frame, cap, mw, t, start, sweep, played, a, clock.active])
 
   const simulate = () => { setPlayed(depth); setTrigger((n) => n + 1) }
-  const verdictShown = played !== null && (invalid ? a >= 0 : usable && a >= SLOW_A * 0.75)
+  const verdictShown = played !== null && usable && a >= SLOW_A * 0.75
   const pending = played !== null && clock.active && !verdictShown
 
   const outcome = played !== null && outcomes
@@ -165,7 +180,7 @@ export default function Results() {
 
       {/* live readouts */}
       {frame && (
-        <div className="pointer-events-none absolute top-8 right-10 space-y-4 text-right">
+        <div className="pointer-events-none absolute top-8 right-10 flex gap-8 text-right">
           <Readout name="Voltage at the site" value={frame.v.toFixed(2)} unit="pu" warn={frame.v < 0.9} />
           <Readout name="Draw from the grid" value={String(Math.max(0, Math.round(mw * frame.p)))} unit="MW" warn={frame.p < 0.5} />
           <Readout name="Current" value={String(Math.round(frame.i * 100))} unit={`% · cap ${Math.round(cap * 100)}%`} warn={frame.i > cap} />
@@ -174,11 +189,8 @@ export default function Results() {
       )}
 
       {usable && <Timeline run={run!} a={a} aEnd={aEnd} simT={simT} cap={cap} />}
-      {outcome && verdictShown && (
-        <p className="mono pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 text-[12px] tracking-[0.12em] text-[#f0c85a] uppercase">↓ Odds across {outcomes!.n_events.toLocaleString()} realistic conditions</p>
-      )}
+      {outcome && outcomes && verdictShown && <Distribution o={outcome} all={outcomes} />}
     </div>
-    {outcome && outcomes && <Distribution o={outcome} all={outcomes} />}
     </div>
   )
 }
@@ -190,69 +202,45 @@ const MODE_NAME: Record<string, string> = {
   'missed 2.0 s recovery': 'Missed the 2.0 s recovery', 'voltage collapse': 'Voltage collapse',
 }
 
-// The same dip, hitting the site under thousands of realistic conditions drawn from the Bayesian network (weather, load, fault
-// type, reclosing, equipment state), each predicted by the neural surrogate. scripts/export_depth_outcomes.py.
+// The same dip under thousands of realistic conditions drawn from the Bayesian network (weather, load, fault type, reclosing,
+// equipment state), each predicted by the neural surrogate (scripts/export_depth_outcomes.py). Overlaid on the map, right side.
 function Distribution({ o, all }: { o: Outcome; all: Outcomes }) {
-  const modes = Object.entries(o.fail_by_mode).filter(([, v]) => v >= 0.005).sort((x, y) => y[1] - x[1])
-  const h = o.mw_dropped, top = Math.max(...h.counts, 1), total = h.counts.reduce((s, c) => s + c, 0)
+  const modes = Object.entries(o.fail_by_mode).filter(([, v]) => v >= 0.01).sort((x, y) => y[1] - x[1]).slice(0, 3)
+  const h = o.mw_dropped, top = Math.max(...h.counts, 1)
   return (
-    <section className="mx-auto max-w-[1180px] px-10 pt-20 pb-32">
-      <p className={`${label} text-[#d9b24c]`}>A {o.depth.toFixed(2)} pu dip · {all.n_events.toLocaleString()} realistic conditions · neural surrogate {all.surrogate.name ?? ''}</p>
-      <h2 className="display mt-3 max-w-[860px] text-[40px] leading-[1.06] font-semibold tracking-[-0.035em] text-[#f6f1e2]">
-        The product rides through {pct(o.pass)} of the time and fails {pct(o.fail)}.
-      </h2>
-      <p className="mt-4 max-w-[700px] text-[16px] leading-[1.6] text-[#c4bca7]">
-        The map above is one simulated run. Here the same dip hits the site under conditions drawn from the Bayesian network: weather, site
-        load, workload swings, fault type, reclosing and equipment state.
+    <div className="absolute top-[118px] right-10 w-[440px] rounded bg-[rgba(7,7,10,0.86)] px-5 py-4">
+      <p className={`${label} text-[#d9b24c]`}>Odds at {o.depth.toFixed(2)} pu · {all.n_events.toLocaleString()} realistic conditions</p>
+      <div className="mt-3 flex h-9 w-full overflow-hidden rounded-sm text-[13px] font-semibold text-[#07070a]">
+        <div className="flex items-center bg-[#5dbb7a] px-3" style={{ width: `${o.pass * 100}%` }}>{o.pass >= 0.15 && `Works ${pct(o.pass, 0)}`}</div>
+        <div className="flex flex-1 items-center justify-end bg-[#ff6a55] px-3">{o.fail >= 0.15 && `Fails ${pct(o.fail, 0)}`}</div>
+      </div>
+      <p className="mono mt-1.5 text-[11px] text-[#c4bca7]">
+        works {pct(o.pass)} · fails {pct(o.fail)}{modes.length > 0 && ` — ${modes.map(([m, v]) => `${MODE_NAME[m] ?? m} ${pct(v, 0)}`).join(', ')}`}
       </p>
 
-      <div className="mt-10 flex h-12 w-full overflow-hidden rounded">
-        <div className="flex items-center justify-start bg-[#5dbb7a] px-4 text-[14px] font-semibold text-[#07070a]" style={{ width: `${o.pass * 100}%` }}>{o.pass >= 0.08 && `Works ${pct(o.pass)}`}</div>
-        <div className="flex flex-1 items-center justify-end bg-[#ff6a55] px-4 text-[14px] font-semibold text-[#07070a]">{o.fail >= 0.08 && `Fails ${pct(o.fail)}`}</div>
-      </div>
-      {modes.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1">
-          {modes.map(([m, v]) => <span key={m} className="mono text-[12px] text-[#c4bca7]">{MODE_NAME[m] ?? m} <span className="text-[#ff8a63]">{pct(v)}</span></span>)}
-        </div>
-      )}
+      <p className={`${label} mt-5 text-[#a8a089]`}>MW dropped from the grid</p>
+      <p className="mt-1 text-[13px] text-[#d3ccb8]">median <span className="text-[#f6f1e2]">{Math.round(h.median_mw)} MW</span> · 1 in 20 above <span className="text-[#f6f1e2]">{Math.round(h.p95_mw)} MW</span></p>
+      <svg viewBox="0 0 400 74" className="mt-2 w-full">
+        {h.counts.map((c, k) => {
+          const bw = 400 / h.counts.length, bh = (c / top) * 56
+          return <rect key={k} x={k * bw + 0.5} y={58 - bh} width={bw - 1} height={bh} fill="#d9b24c" fillOpacity={0.85} />
+        })}
+        <line x1={0} x2={400} y1={58} y2={58} stroke="#4a4332" />
+        {[0, 0.5, 1].map((f) => <text key={f} x={f === 0 ? 0 : f === 1 ? 400 : 200} y={72} textAnchor={f === 0 ? 'start' : f === 1 ? 'end' : 'middle'} className="mono" fontSize={10} fill="#8d8670">{Math.round(f * all.site_mw)} MW</text>)}
+      </svg>
 
-      <div className="mt-14 grid gap-14 md:grid-cols-[1.4fr_1fr]">
-        <div>
-          <p className={`${label} text-[#a8a089]`}>Load dropped from the grid</p>
-          <p className="mt-2 text-[15px] text-[#d3ccb8]">
-            Median <span className="text-[#f6f1e2]">{Math.round(h.median_mw)} MW</span>, 1 in 20 events above <span className="text-[#f6f1e2]">{Math.round(h.p95_mw)} MW</span>
-            <span className="text-[#8d8670]"> · of the {all.site_mw} MW site</span>
-          </p>
-          <svg viewBox="0 0 600 190" className="mt-5 w-full">
-            {h.counts.map((c, k) => {
-              const bw = 600 / h.counts.length, bh = (c / top) * 150
-              return <rect key={k} x={k * bw + 1} y={160 - bh} width={bw - 2} height={bh} fill="#d9b24c" fillOpacity={0.85}><title>{`${Math.round(h.share_edges[k] * all.site_mw)}–${Math.round(h.share_edges[k + 1] * all.site_mw)} MW: ${pct(c / total)}`}</title></rect>
-            })}
-            <line x1={0} x2={600} y1={160} y2={160} stroke="#4a4332" />
-            {[0, 0.25, 0.5, 0.75, 1].map((f) => <text key={f} x={Math.min(588, Math.max(12, f * 600))} y={180} textAnchor="middle" className="mono" fontSize={11} fill="#8d8670">{Math.round(f * all.site_mw)} MW</text>)}
-          </svg>
-          <p className="mono mt-1 text-[11px] text-[#8d8670]">Share of events by MW off the grid at the lowest point. Includes normal AI load swings, so it is not zero without a dip.</p>
-        </div>
-        <div>
-          <p className={`${label} text-[#a8a089]`}>Highest-impact factors · Shapley</p>
-          <p className="mt-2 text-[14px] text-[#8d8670]">Ranked on {o.ranked_on === 'p_fail' ? 'the chance of failing' : 'load dropped (the chance of failing barely moves at this depth)'}.</p>
-          <ol className="mt-5 space-y-5">
-            {o.top_factors.map((f, k) => (
-              <li key={f.label}>
-                <div className="flex items-baseline justify-between gap-4">
-                  <span className="display text-[19px] font-semibold tracking-[-0.02em] text-[#f6f1e2]">{k + 1}. {f.label}</span>
-                  <span className="mono text-[13px] text-[#d9b24c]">{pct(f.share, 0)}</span>
-                </div>
-                <div className="mt-2 h-[6px] bg-[#1a1813]"><div className="h-full bg-[#d9b24c]" style={{ width: `${(f.share / o.top_factors[0].share) * 100}%` }} /></div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </div>
-      {o.outside_training > 0.05 && (
-        <p className="mono mt-10 text-[11.5px] text-[#ff8a63]">{pct(o.outside_training, 0)} of these conditions are outside the surrogate's training data; treat them as approximate.</p>
-      )}
-    </section>
+      <p className={`${label} mt-4 text-[#a8a089]`}>Top 3 factors · Shapley</p>
+      <ol className="mt-2 space-y-2">
+        {o.top_factors.map((f, k) => (
+          <li key={f.label}>
+            <div className="flex items-baseline justify-between gap-3 text-[13.5px]">
+              <span className="text-[#f6f1e2]">{k + 1}. {f.label}</span><span className="mono text-[12px] text-[#d9b24c]">{pct(f.share, 0)}</span>
+            </div>
+            <div className="mt-1 h-[4px] bg-[#1a1813]"><div className="h-full bg-[#d9b24c]" style={{ width: `${(f.share / o.top_factors[0].share) * 100}%` }} /></div>
+          </li>
+        ))}
+      </ol>
+    </div>
   )
 }
 
@@ -280,6 +268,7 @@ function Verdict({ run, shown }: { run: Run; shown: boolean }) {
         {noResult ? (run.numerics_note ? `${MODE_TEXT[mode] ?? run.numerics_note}` : 'The simulator did not produce a result at this depth.')
           : MODE_TEXT[pass ? 'passed' : mode] ?? mode}
       </p>
+      {run.illustrative && <p className="mono mt-2 text-[10.5px] text-[#8d8670]">Illustrative replay: the simulator has no stable operating point at this depth.</p>}
       {!noResult && (
         <p className="mono mt-3 text-[11px] leading-[1.6] text-[#a8a089]">
           peak current {Math.round((run.peak_current_pu ?? 0) * 100)}% · lowest grid power {Math.round((run.min_power ?? 0) * 100)}%
