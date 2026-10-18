@@ -119,9 +119,10 @@ def test_options_change_only_their_field(option):
 
 
 def test_outdoor_temp_matches_dfw(draws):
-    """Share of outdoor_temp_c >= 35 degC is 0.051 +/- 0.01 and < 0 degC is 0.024 +/- 0.01."""
+    """Share of outdoor_temp_c >= 35 degC is 0.046 +/- 0.01 and < 0 degC is 0.024 +/- 0.01
+    (DFW complete years 2021-2025)."""
     t = draws["outdoor_temp_c"]
-    assert abs((t >= 35.0).mean() - 0.051) <= 0.01
+    assert abs((t >= 35.0).mean() - 0.046) <= 0.01
     assert abs((t < 0.0).mean() - 0.024) <= 0.01
 
 
@@ -170,3 +171,12 @@ def test_constants_match_sources():
     assert C.NORMAL_CLEARING_CYCLES == (3, 4) and C.DELAYED_CLEARING_CYCLES == (10, 19)
     assert C.BBU_MODULES_PER_SHELF == 6 and C.BBU_REDUNDANT_MODULES == 1
     assert C.BBU_HANDBACK_CONFIRM_S == 0.2
+    assert C.OUTDOOR_TEMP_YEARS == (2021, 2025)
+
+
+def test_outdoor_temp_uses_complete_years_only():
+    """outdoor_temps() holds exactly the non-missing 2021-2025 hours of the DFW file."""
+    d = pd.read_csv(C.OUTDOOR_TEMP_CSV)
+    year = d["hour_lst"].str[:4].astype(int)
+    expected = d.loc[(d["flag"] != "missing") & year.between(2021, 2025), "temp_c"].to_numpy()
+    np.testing.assert_array_equal(scenario.outdoor_temps(), expected)

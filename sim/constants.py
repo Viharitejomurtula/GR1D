@@ -288,7 +288,11 @@ HALL_TEMP_RECOMMENDED_C = (18.0, 27.0)
 HALL_TEMP_ALLOWABLE_MAX_C = {"A1": 32.0, "A2": 35.0}
 
 # Empirical DFW hourly outdoor temperature (column temp_c; rows with flag != "missing").
-# NOAA Local Climatological Data, DFW airport station 72259003927, 2021-01-01 to 2026-10-10,
-# cleaned file in the repo (read-only). Interim, until the Bayesian network's
+# NOAA Local Climatological Data, DFW airport station 72259003927, cleaned file in the repo
+# (read-only; covers 2021-01-01 to 2026-10-10). Interim, until the Bayesian network's
 # ridethrough.drivers.sample.sample_drivers() supplies correlated temperature and load.
 OUTDOOR_TEMP_CSV = Path(__file__).resolve().parents[1] / "data_bayesian-network" / "dfw_hourly_temp_clean.csv"
+# Only complete calendar years (local standard time) are used, 2021-2025, the same fit
+# period as the Bayesian network's driver model. 2026 is excluded because the file stops on
+# Oct 10, so it holds a summer without a winter and would overweight hot hours.
+OUTDOOR_TEMP_YEARS = (2021, 2025)

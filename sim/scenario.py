@@ -208,13 +208,17 @@ def sample_battery_temp(rng: np.random.Generator, hall_stress: str | None = None
 def outdoor_temps() -> np.ndarray:
     """Empirical DFW hourly outdoor temperatures (degC), loaded once and cached.
 
-    Column temp_c of C.OUTDOOR_TEMP_CSV (NOAA LCD, DFW 72259003927, 2021-01-01 to
-    2026-10-10), rows with flag != "missing". The file is read, never written. Interim
-    until ridethrough.drivers.sample.sample_drivers() supplies correlated temperature and
-    load.
+    Column temp_c of C.OUTDOOR_TEMP_CSV (NOAA LCD, DFW 72259003927), rows with
+    flag != "missing" whose local-standard-time year (hour_lst) is within
+    C.OUTDOOR_TEMP_YEARS (complete years 2021-2025). The file is read, never written.
+    Interim until ridethrough.drivers.sample.sample_drivers() supplies correlated
+    temperature and load.
     """
-    d = pd.read_csv(C.OUTDOOR_TEMP_CSV, usecols=["temp_c", "flag"])
-    return d.loc[d["flag"] != "missing", "temp_c"].to_numpy(dtype=float)
+    d = pd.read_csv(C.OUTDOOR_TEMP_CSV, usecols=["hour_lst", "temp_c", "flag"])
+    year = d["hour_lst"].str[:4].astype(int)
+    first, last = C.OUTDOOR_TEMP_YEARS
+    keep = (d["flag"] != "missing") & (year >= first) & (year <= last)
+    return d.loc[keep, "temp_c"].to_numpy(dtype=float)
 
 
 def sample(
