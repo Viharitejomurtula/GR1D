@@ -18,3 +18,4 @@ data_bayesian-network/drivers_raw/
 frontend/public/data/sample.json
 frontend/public/data/ridethrough_grid.json
 data/postfix*.csv
+frontend/public/data/events.json
