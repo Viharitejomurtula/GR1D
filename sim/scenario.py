@@ -64,7 +64,6 @@ class Scenario:
     ramp_back_s: float
     relay_pickup_pu: float
     relay_delay_s: float
-    cooling_trip_v_pu: float
     cooling_ride_through_s: float
     vfd_dc_uv_trip_pu: float
 
@@ -156,7 +155,9 @@ def sample(rng: np.random.Generator | None = None, *, dip_start_s: float = 1.0) 
         restart_surge_s=float(rng.uniform(0.1, 2.0)),
         supply_voltage_v=float(rng.choice(SUPPLY_VOLTAGES)),
         shelves_per_rack=int(rng.integers(1, C.MAX_SHELVES_PER_RACK + 1)),
-        bbu_modules_per_rack=int(rng.integers(C.BBU_MODULES_PER_SHELF, 3 * C.BBU_MODULES_PER_SHELF + 1)),
+        # Spans undersized to sufficient: at 6 shelves and 85% load, roughly 31 modules
+        # per rack are needed to carry the load, so below that the BBU cannot hold the busbar.
+        bbu_modules_per_rack=int(rng.integers(6, 41)),
         cooling_share_25c=float(rng.uniform(0.20, 0.35)),
         # Unsourced split; sampled wide until the compressor/fan/pump breakdown is found.
         cooling_compressor_frac=float(rng.uniform(0.2, 0.6)),
@@ -168,7 +169,6 @@ def sample(rng: np.random.Generator | None = None, *, dip_start_s: float = 1.0) 
         ramp_back_s=float(rng.uniform(0.1, 1.0)),
         relay_pickup_pu=float(rng.uniform(0.02, 0.90)),
         relay_delay_s=float(rng.uniform(0.0, 2.0)),
-        cooling_trip_v_pu=float(rng.uniform(0.50, 0.85)),
         cooling_ride_through_s=float(rng.uniform(0.02, 5.0)),
         vfd_dc_uv_trip_pu=float(rng.uniform(0.65, 0.75)),
         psu_restart_delay_s=float(rng.uniform(0.0, 5.5)),
@@ -211,7 +211,6 @@ _BASE = dict(
     z_total_pct=19.75,
     x_over_r=10.0,
     ramp_back_s=0.3,
-    cooling_trip_v_pu=0.70,
     vfd_dc_uv_trip_pu=0.70,
 )
 

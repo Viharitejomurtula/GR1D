@@ -34,9 +34,31 @@ model RideThroughCore
 
   parameter Real psu_restart_delay_s = 0.0 "Sampled, not drawn internally (see scenario.py)";
   parameter Real handback_delay_s = 0.2;
+  parameter Real ramp_back_s = 0.3 "Time to return to full grid draw after the PSUs restart";
+
+  // Grid-side transfer. A legacy UPS leaves the grid early on a shallow sag; a compliant
+  // design rides through. This is the knob that separates the two reference presets.
+  parameter Real transfer_threshold_pu = 0.85;
+  parameter Real transfer_delay_s = 0.02;
+
+  // Facility undervoltage relay. NOGRR 2.14(4) requires protection be set to equipment
+  // tolerance rather than to the envelope edge, so a compliant design picks up below
+  // 0.20 pu while a legacy one sits at 0.85 and disconnects inside the envelope.
+  parameter Real relay_pickup_pu = 0.15;
+  parameter Real relay_delay_s = 0.5;
+
+  parameter Real restart_surge_x = 1.15 "Peak server draw on restart, times pre-fault";
+  parameter Real restart_surge_s = 0.5 "Decay time constant of the restart surge";
+
+  parameter Real battery_temp_c = 25.0 "Server hall temperature, an initial condition";
+  parameter Integer shelves_per_rack = 6;
+  parameter Integer bbu_modules_per_rack = 12;
 
   // ===================== Fixed constants (Parameter_Table.md) =====================
   constant Real PSU_RATED_W = 3000.0;
+  constant Real SHELF_RATED_W = 18000.0;
+  constant Real BBU_MODULE_W = 3000.0;
+  constant Real BBU_MODULE_WH = 200.0;
   constant Real PSU_UV_V = 172.0;
   constant Real PSU_RESTART_V = 178.0;
   constant Real PSU_HOLDUP_J = 60.0 "Per PSU";
@@ -69,8 +91,20 @@ model RideThroughCore
   final parameter Real p_total_rated_w = p_it_rated_w * workload + p_cooling_rated_w;
   final parameter Real n_psu = p_it_rated_w / PSU_RATED_W;
   final parameter Real e_holdup_max_j = n_psu * PSU_HOLDUP_J;
-  final parameter Real bbu_energy_j = p_it_rated_w * bbu_backup_s
-    * max(0.5, 1.0 - 0.025 * battery_age_yr) "Capacity fade with age";
+  // Capacity derating, Sandia SAND2008-5583 Table 2: 0.74 at 0 C rising to 1.06 at 35 C.
+  final parameter Real bat_temp_derate =
+    if battery_temp_c >= 25.0 then 1.0 + 0.006 * (battery_temp_c - 25.0)
+    else 0.74 + 0.0104 * battery_temp_c;
+  final parameter Real bat_derate =
+    max(0.3, (1.0 - 0.025 * battery_age_yr) * bat_temp_derate);
+
+  // Rack composition now sizes the backup, so an undersized BBU is a reachable failure:
+  // modules deliver 3 kW each, and if that total is below demand the busbar collapses
+  // however much energy is in the pack.
+  final parameter Real n_racks = p_it_rated_w / (shelves_per_rack * SHELF_RATED_W);
+  final parameter Real bbu_power_w = n_racks * bbu_modules_per_rack * BBU_MODULE_W;
+  final parameter Real bbu_energy_j =
+    n_racks * bbu_modules_per_rack * BBU_MODULE_WH * 3600.0 * bat_derate;
   final parameter Real cooling_pump_frac = max(0.0, 1.0 - cooling_compressor_frac - cooling_fan_frac);
 
   // Busbar voltage is an exact algebraic function of the hold-up energy state, so the
@@ -101,6 +135,14 @@ model RideThroughCore
   // resolved by this model, which is inherent to the averaged-RMS approach.
   Real v_sense_pu(start = 1.0) "Filtered Service Delivery Point voltage, for protection";
   Real e_frac "Hold-up energy remaining, fraction";
+  Real p_surge_w "Restart surge above baseline";
+  Real ramp_gate "Ramp-back gate, 0 to 1, after the PSUs restart";
+  Boolean facility_connected(start = true, fixed = true) "False once the relay trips";
+  Boolean transfer_demanded(start = false, fixed = true) "Grid-side transfer to backup";
+  Real t_relay(start = 0, fixed = true);
+  Real t_transfer(start = 0, fixed = true);
+  Real t_restore(start = -1, fixed = true);
+  Real t_psu_up(start = 0, fixed = true);
 
   Real p_server_w "Server/IT demand";
   Real p_swing_w(start = 0, fixed = true);
@@ -199,8 +241,23 @@ equation
                    min( SWING_SLEW_PU_S * p_it_rated_w,
                         (p_swing_target_w - p_swing_w) / 0.001));
 
-  p_server_w = if servers_lost_power then 0.0
-               else workload * p_it_rated_w + p_swing_w;
+  // Capture the instant power is restored so the surge decays from there.
+  when (not servers_lost_power) and pre(servers_lost_power) then
+    t_restore = time;
+  end when;
+  p_surge_w = if t_restore >= 0.0 and time >= t_restore then
+                (restart_surge_x - 1.0) * p_it_rated_w * exp(-(time - t_restore) / restart_surge_s)
+              else 0.0;
+
+  // Ramp back to full grid draw rather than snapping, once the PSUs are supplying again.
+  der(t_psu_up) = if psu_enabled then 1.0 else 0.0;
+  when not psu_enabled then
+    reinit(t_psu_up, 0);
+  end when;
+  ramp_gate = min(1.0, t_psu_up / max(ramp_back_s, 1e-3));
+
+  p_server_w = if servers_lost_power or not facility_connected then 0.0
+               else (workload * p_it_rated_w + p_swing_w) * ramp_gate + p_surge_w;
 
   // ---------------- Cooling, staged NERC Table 5.1 trips ----------------
   der(t_cool_s1) = if v_sense_pu < COOL_S1_V then 1.0 else 0.0;
@@ -233,7 +290,28 @@ equation
        elseif cool_s1_tripped and t_cool_ok < COOL_RECONNECT_S then (1.0 - COOL_S1_FRAC)
        else 1.0) * (cooling_fan_frac + cooling_pump_frac);
 
-  p_cooling_w = p_cooling_rated_w * cooling_available;
+  p_cooling_w = if facility_connected then p_cooling_rated_w * cooling_available else 0.0;
+
+  // ---------------- Facility relay and grid-side transfer ----------------
+  der(t_relay) = if v_sense_pu < relay_pickup_pu then 1.0 else 0.0;
+  when v_sense_pu >= relay_pickup_pu then
+    reinit(t_relay, 0);
+  end when;
+  // Latching: a tripped facility stays disconnected for the rest of the run, which is what
+  // NOGRR 2.14(6) is about -- no automatic re-closure on a sag count.
+  when t_relay > relay_delay_s then
+    facility_connected = false;
+  end when;
+
+  der(t_transfer) = if v_sense_pu < transfer_threshold_pu then 1.0 else 0.0;
+  when v_sense_pu >= transfer_threshold_pu then
+    reinit(t_transfer, 0);
+  end when;
+  when t_transfer > transfer_delay_s then
+    transfer_demanded = true;
+  elsewhen v_sense_pu > transfer_threshold_pu and e_frac > E_FRAC_BBU and psu_enabled then
+    transfer_demanded = false;
+  end when;
 
   // ---------------- PSU ----------------
   der(t_psu_down) = if psu_enabled then 0.0 else 1.0;
@@ -273,13 +351,14 @@ equation
     reinit(t_bus_ok, 0);
   end when;
 
-  when t_bus_low > BBU_TAKEOVER_DELAY_S then
+  when t_bus_low > BBU_TAKEOVER_DELAY_S or transfer_demanded then
     bbu_active = true;
   elsewhen t_bus_ok > handback_delay_s then
     bbu_active = false;
   end when;
 
-  p_bbu_w = if bbu_active and soc > 0 then max(0.0, p_server_w - p_psu_w) else 0.0;
+  // Modules cannot deliver more than their rated power regardless of stored energy.
+  p_bbu_w = if bbu_active and soc > 0 then min(bbu_power_w, max(0.0, p_server_w - p_psu_w)) else 0.0;
   der(soc) = -p_bbu_w / bbu_energy_j;
 
   when e_frac < E_FRAC_IT_FLOOR and not bbu_active then

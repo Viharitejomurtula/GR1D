@@ -55,7 +55,16 @@ PARAM_MAP = {
     "battery_age_yr": "battery_age_yr",
     "psu_restart_delay_s": "psu_restart_delay_s",
     "handback_delay_s": "handback_delay_s",
+    "ramp_back_s": "ramp_back_s",
+    "transfer_threshold_pu": "transfer_threshold_pu",
+    "relay_pickup_pu": "relay_pickup_pu",
+    "relay_delay_s": "relay_delay_s",
+    "restart_surge_x": "restart_surge_x",
+    "restart_surge_s": "restart_surge_s",
+    "battery_temp_c": "battery_temp_c",
 }
+
+INT_PARAMS = {"shelves_per_rack": "shelves_per_rack", "bbu_modules_per_rack": "bbu_modules_per_rack"}
 
 TRIP_SIGNALS = {
     "psu_enabled": ("psu_shutdown", False),
@@ -63,6 +72,7 @@ TRIP_SIGNALS = {
     "cool_s1_tripped": ("cooling_stage1", True),
     "cool_s2_tripped": ("cooling_stage2", True),
     "servers_lost_power": ("servers_lost", True),
+    "facility_connected": ("facility_disconnect", False),
 }
 
 
@@ -97,6 +107,8 @@ def _overrides(sc: Scenario) -> str:
     parts = []
     for field, param in PARAM_MAP.items():
         parts.append(f"{param}={float(getattr(sc, field))}")
+    for field, param in INT_PARAMS.items():
+        parts.append(f"{param}={int(getattr(sc, field))}")
     parts.append(f"z_total_pu={sc.z_total_pct / 100.0}")
     parts.append(f"second_dip={'true' if sc.second_dip else 'false'}")
     return ",".join(parts)
@@ -151,7 +163,10 @@ def run(sc: Scenario, tag: str = "run") -> Grade:
         d["v_sdp_pu"],
         d["p_grid_w"],
         d["i_grid_pu"],
-        connected=None if "servers_lost_power" not in d else (d["servers_lost_power"] < 0.5),
+        # The envelope check grades whether the facility stayed *connected to the grid*,
+        # which is the relay state -- not whether the servers kept power (a facility can be
+        # connected while its servers ride on battery).
+        connected=None if "facility_connected" not in d else (d["facility_connected"] > 0.5),
         storage_left=storage_left,
         psu_restart_s=psu_restart_s,
         trips=_extract_trips(d),
