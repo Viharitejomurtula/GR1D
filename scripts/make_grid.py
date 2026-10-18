@@ -50,13 +50,27 @@ ANNOTATIONS = {
         "note": "Ticks are the three documented ERCOT events (NERC crypto incident review, Jan 2026).",
     },
     "dip_duration_s": {
-        # GE Vernova via Parameter_Table.md: normal clearing is 4-6 cycles depending on
-        # voltage class, breaker failure 9-15. At 60 Hz that is 67-100 ms and 150-250 ms.
+        # Read from the same constants the sampler uses, so the shading cannot drift from
+        # the distribution being sampled. ERCOT OWG Large Load Events deck (Nov 2024):
+        # 3-4 cycles normal, 10-19 on breaker misoperation or failure.
         "bands": [
-            {"from": 0.067, "to": 0.100, "label": "normal clearing"},
-            {"from": 0.150, "to": 0.250, "label": "breaker-failure clearing"},
+            {
+                "from": round(C.NORMAL_CLEARING_CYCLES[0] / C.NOMINAL_FREQ_HZ, 4),
+                "to": round(C.NORMAL_CLEARING_CYCLES[1] / C.NOMINAL_FREQ_HZ, 4),
+                "label": "normal clearing",
+            },
+            {
+                "from": round(C.DELAYED_CLEARING_CYCLES[0] / C.NOMINAL_FREQ_HZ, 4),
+                "to": round(C.DELAYED_CLEARING_CYCLES[1] / C.NOMINAL_FREQ_HZ, 4),
+                "label": "delayed clearing",
+            },
         ],
-        "note": "Shaded: real fault-clearing times, 4-6 cycles normal and 9-15 on breaker failure.",
+        "note": (
+            f"Shaded: observed fault-clearing times, {C.NORMAL_CLEARING_CYCLES[0]}-"
+            f"{C.NORMAL_CLEARING_CYCLES[1]} cycles normal and {C.DELAYED_CLEARING_CYCLES[0]}-"
+            f"{C.DELAYED_CLEARING_CYCLES[1]} on breaker failure. Delayed in "
+            f"{C.DELAYED_CLEARING_P:.0%} of events."
+        ),
     },
     "battery_age_yr": {
         "marks": [{"v": 10.0, "label": "typical replacement"}],
@@ -74,9 +88,13 @@ def build_axes(steps: list[int]) -> dict[str, list[float]]:
     d, t, c, a = steps
     return {
         "dip_depth_pu": np.linspace(0.05, 1.0, d).round(4).tolist(),
-        # Log-spaced: most sags are short, and the interesting behaviour (PSU hold-up is
-        # 20 ms) lives at the bottom of the range.
-        "dip_duration_s": np.geomspace(0.02, 1.0, t).round(4).tolist(),
+        # Spans what sample_dip_duration can actually produce: 3-19 cycles at 60 Hz.
+        # Log-spaced, since ~89% of faults clear in the 3-4 cycle mode at the bottom.
+        "dip_duration_s": np.geomspace(
+            C.NORMAL_CLEARING_CYCLES[0] / C.NOMINAL_FREQ_HZ,
+            C.DELAYED_CLEARING_CYCLES[1] / C.NOMINAL_FREQ_HZ,
+            t,
+        ).round(4).tolist(),
         "outdoor_temp_c": np.linspace(0.0, 42.0, c).round(2).tolist(),
         # Past the 8-15 yr service life, so this reaches deferred-replacement packs --
         # degraded storage is where failures hide, which is the point of the sweep.
