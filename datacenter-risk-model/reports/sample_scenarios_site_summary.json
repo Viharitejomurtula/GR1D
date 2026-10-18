@@ -1,0 +1,42 @@
+{
+ "site": "Reference campus (Abilene weather station KABI; ERCOT West; 138/345 kV transmission class) - public-information proxy",
+ "dry_bulb_aug_15h_c_p5_p50_p95": [
+  27.5,
+  35.9,
+  40.5
+ ],
+ "capacitor_loss_12V_5000h_p5_p50_p95_mid_default": [
+  0.13,
+  0.15,
+  0.17
+ ],
+ "low_mid_high": {
+  "ai_swing_200MW_mw_p99_p1": {
+   "low": 8.6,
+   "mid": 51.8,
+   "high": 201.1
+  },
+  "systemic_P_year_below_59_5Hz": {
+   "low": 0.02,
+   "mid": 0.098,
+   "high": 0.251
+  },
+  "voltage_dips_per_year_p5_p50_p95": {
+   "low": [
+    1.0,
+    9.0,
+    37.0
+   ],
+   "mid": [
+    3.0,
+    14.0,
+    56.049999999999955
+   ],
+   "high": [
+    4.0,
+    18.0,
+    70.0
+   ]
+  }
+ }
+}

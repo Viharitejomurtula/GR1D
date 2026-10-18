@@ -1,0 +1,9 @@
+# Reference scenario (change here; models read this)
+location:
+  grid: ERCOT
+  region: Texas
+  weather_station_hint: Austin-Bergstrom (KAUS) / Dallas-Fort Worth (KDFW)
+  nominal_frequency_hz: 60.0
+hardware:
+  battery: Li-ion NMC
+  dc_link_capacitor: film

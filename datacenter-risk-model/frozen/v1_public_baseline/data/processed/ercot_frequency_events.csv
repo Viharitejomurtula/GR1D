@@ -1,0 +1,312 @@
+datetime,delta_freq_hz,max_min_freq_hz,duration,mw_loss,load_mw,wind_pct,inertia_gws,source
+2018-11-06 07:53:00,0.068,59.93,0:05:15,428.24,36489.0,2.0,232371.0,Nov_18_ERCOT_Operations_Report_Public_01092019.docx
+2018-11-10 09:25:00,0.11,59.905,0:05:58,515.99,37432.0,10.0,224652.0,Nov_18_ERCOT_Operations_Report_Public_01092019.docx
+2018-11-14 22:30:00,0.096,59.918,0:04:14,428.2,39968.0,24.0,215470.0,Nov_18_ERCOT_Operations_Report_Public_01092019.docx
+2018-11-30 15:51:00,0.083,59.928,0:02:55,335.57,37956.0,6.0,227531.0,Nov_18_ERCOT_Operations_Report_Public_01092019.docx
+2018-12-02 00:34:00,0.071,59.911,0:07:51,483.25,39100.0,34.0,186383.0,Dec_18_ERCOT_Operations_Report_Public.docx
+2018-12-23 06:53:00,0.16,59.823,0:03:44,854.37,30225.0,32.0,168974.0,Dec_18_ERCOT_Operations_Report_Public.docx
+2018-12-23 18:28:00,0.091,59.91,0:03:36,393.5,35032.0,26.0,210941.0,Dec_18_ERCOT_Operations_Report_Public.docx
+2018-12-26 09:24:00,0.096,59.887,0:04:17,491.33,37864.0,11.0,226254.0,Dec_18_ERCOT_Operations_Report_Public.docx
+2019-01-02 11:25:00,0.056,59.912,0:05:05,367.71,51340.0,2.0,311339.0,Jan_19_ERCOT_Operations_Report_Public.docx
+2019-01-10 12:14:00,0.086,59.909,0:04:34,382.843,39919.0,26.0,220223.0,Jan_19_ERCOT_Operations_Report_Public.docx
+2019-01-22 07:05:00,0.093,59.87,0:04:36,657.153,39573.0,36.0,182427.0,Jan_19_ERCOT_Operations_Report_Public.docx
+2019-01-22 13:42:00,0.106,59.94,0:00:30,461.298,37908.0,37.0,195513.0,Jan_19_ERCOT_Operations_Report_Public.docx
+2019-01-27 06:03:00,0.106,59.909,0:03:08,294.5,43559.0,19.0,257750.0,Jan_19_ERCOT_Operations_Report_Public.docx
+2019-02-26 06:30:00,0.105,59.904,0:03:20,413.763,38219.0,26.0,211523.0,Feb_19_ERCOT_Operations_Report_Public.docx
+2019-02-26 19:21:00,0.146,59.877,0:03:29,658.199,39847.0,18.0,218029.0,Feb_19_ERCOT_Operations_Report_Public.docx
+2019-03-02 03:18:00,0.227,59.774,0:06:57,1224.4,33942.0,20.0,211920.0,Mar_19_ERCOT_Operations_Report_Public.docx
+2019-03-11 21:24:00,0.151,59.823,0:04:23,610.645,39387.0,13.0,225633.0,Mar_19_ERCOT_Operations_Report_Public.docx
+2019-03-21 13:39:00,0.148,59.865,0:04:58,650.155,36714.0,2.0,231504.0,Mar_19_ERCOT_Operations_Report_Public.docx
+2019-04-11 03:37:00,0.17,59.814,0:05:48,664.037,30874.0,44.0,157521.0,Apr_19_ERCOT_Operations_Report_Public.docx
+2019-04-18 17:04:00,0.145,59.856,0:04:56,897.549,40069.0,41.0,205973.0,Apr_19_ERCOT_Operations_Report_Public.docx
+2019-04-19 08:00:00,0.08,59.893,0:04:42,340.77,33029.0,25.0,201495.0,Apr_19_ERCOT_Operations_Report_Public.docx
+2019-04-21 15:30:00,0.117,59.898,0:06:21,423.214,40226.0,32.0,174778.0,Apr_19_ERCOT_Operations_Report_Public.docx
+2019-04-25 11:20:00,0.104,59.857,0:02:53,554.64,39151.0,7.0,250067.0,Apr_19_ERCOT_Operations_Report_Public.docx
+2019-04-30 09:37:00,0.121,59.866,0:04:11,576.024,42609.0,21.0,232039.0,Apr_19_ERCOT_Operations_Report_Public.docx
+2019-04-30 21:11:00,0.116,59.87,0:03:49,595.0,46473.0,21.0,250837.0,Apr_19_ERCOT_Operations_Report_Public.docx
+2019-05-01 10:17:00,0.103,59.904,0:05:12,396.933,44059.0,16.0,259953.0,May_19_ERCOT_Operations_Report_Public_v2.docx
+2019-05-08 12:15:00,0.079,59.91,0:07:22,406.0,43230.0,17.0,259473.0,May_19_ERCOT_Operations_Report_Public_v2.docx
+2019-05-12 08:57:00,0.109,59.902,0:03:19,374.76,32072.0,3.0,233592.0,May_19_ERCOT_Operations_Report_Public_v2.docx
+2019-05-16 21:42:00,0.11,59.91,0:04:51,722.37,47916.0,30.0,250435.0,May_19_ERCOT_Operations_Report_Public_v2.docx
+2019-05-18 15:24:00,0.148,59.871,0:02:57,728.84,45588.0,27.0,244967.0,May_19_ERCOT_Operations_Report_Public_v2.docx
+2019-05-23 16:41:00,0.11,59.869,0:03:48,568.977,61048.0,30.0,288788.0,May_19_ERCOT_Operations_Report_Public_v2.docx
+2019-05-30 02:56:00,0.111,59.855,0:04:23,596.9,36106.0,22.0,242769.0,May_19_ERCOT_Operations_Report_Public_v2.docx
+2019-05-31 11:56:00,0.095,59.854,0:02:20,367.64,49835.0,3.0,310129.0,May_19_ERCOT_Operations_Report_Public_v2.docx
+2019-05-31 21:06:00,0.165,59.813,0:05:41,848.837,50284.0,13.0,292026.0,May_19_ERCOT_Operations_Report_Public_v2.docx
+2019-06-09 19:35:00,0.079,59.925,0:09:38,503.315,55942.0,28.0,320206.0,Jun_19_ERCOT_Operations_Report_Public_v3.docx
+2019-06-18 04:05:00,0.093,59.925,0:01:11,415.962,36430.0,21.0,263944.0,Jun_19_ERCOT_Operations_Report_Public_v3.docx
+2019-07-15 14:37:00,0.067,59.904,0:04:44,586.812,65437.0,4.0,370442.0,Jul_19_ERCOT_Operations_Report_Public.docx
+2019-07-22 10:34:00,0.132,59.878,0:04:17,736.46,54911.0,10.0,336792.0,Jul_19_ERCOT_Operations_Report_Public.docx
+2019-07-23 09:10:00,0.096,59.887,0:04:36,624.9,46685.0,7.0,318639.0,Jul_19_ERCOT_Operations_Report_Public.docx
+2019-07-23 13:47:00,0.07,59.91,0:03:52,470.17,57192.0,8.0,342129.0,Jul_19_ERCOT_Operations_Report_Public.docx
+2019-07-29 17:59:00,0.138,59.834,0:05:50,817.34,64952.0,11.0,354610.0,Jul_19_ERCOT_Operations_Report_Public.docx
+2019-08-02 14:07:00,0.062,59.894,0:06:16,285.6,67527.0,4.0,386480.0,Aug_19_ERCOT_Operations_Report_Public_v4.docx
+2019-08-10 06:49:00,0.122,59.869,0:03:08,1081.29,44191.0,21.0,313403.0,Aug_19_ERCOT_Operations_Report_Public_v4.docx
+2019-08-11 06:18:00,0.086,59.933,0:03:36,503.902,43469.0,29.0,311274.0,Aug_19_ERCOT_Operations_Report_Public_v4.docx
+2019-08-14 20:31:00,0.068,59.899,0:03:21,432.7,63612.0,7.0,373030.0,Aug_19_ERCOT_Operations_Report_Public_v4.docx
+2019-09-03 16:45:00,0.078,59.898,0:04:46,391.47,68703.0,4.0,384791.0,Sep_19_ERCOT_Operations_Report_Public_v2.docx
+2019-09-21 03:00:00,0.089,59.89,0:03:48,461.814,40544.0,37.0,234748.0,Sep_19_ERCOT_Operations_Report_Public_v2.docx
+2019-09-22 14:44:00,0.071,59.895,0:03:13,325.48,60049.0,7.0,342837.0,Sep_19_ERCOT_Operations_Report_Public_v2.docx
+2019-09-22 14:49:00,0.126,59.899,0:07:27,696.817,60082.0,6.0,343617.0,Sep_19_ERCOT_Operations_Report_Public_v2.docx
+2019-09-22 15:27:00,0.091,59.905,0:03:18,418.403,61094.0,6.0,344593.0,Sep_19_ERCOT_Operations_Report_Public_v2.docx
+2019-10-14 15:31:00,0.119,59.896,0:04:25,575.77,49398.0,12.0,281850.0,Oct_19_ERCOT_Operations_Report_Public.docx
+2019-10-15 01:53:00,0.073,59.906,0:04:02,363.602,36071.0,35.0,215139.0,Oct_19_ERCOT_Operations_Report_Public.docx
+2019-10-30 21:29:00,0.164,59.841,0:04:31,745.7,44392.0,33.0,204249.0,Oct_19_ERCOT_Operations_Report_Public.docx
+2019-11-18 16:20:00,0.114,59.891,0:06:29,466.25,37479.0,3.0,242551.0,Nov_19_ERCOT_Operations_Report_Public.docx
+2019-12-29 22:27:00,0.093,59.892,0:05:13,458.75,38993.0,14.0,237436.0,Dec_19_ERCOT_Operations_Report_Public_v2.docx
+2020-01-01 12:53:00,0.256,59.745,0:05:01,1209.6,39991.0,35.0,208454.0,Jan_10_ERCOT_Operations_Report_Public.docx
+2020-01-10 20:54:00,0.132,59.846,0:04:12,773.1,38960.0,46.0,207115.0,Jan_10_ERCOT_Operations_Report_Public.docx
+2020-01-16 18:04:00,0.138,59.864,0:04:55,543.05,43989.0,12.0,251022.0,Jan_10_ERCOT_Operations_Report_Public.docx
+2020-01-17 10:01:00,0.182,59.827,0:03:54,663.25,41416.0,13.0,234344.0,Jan_10_ERCOT_Operations_Report_Public.docx
+2020-02-06 01:16:00,0.102,59.904,0:05:12,595.56,45134.0,13.0,280980.0,Feb_20_ERCOT_Operations_Report_Public.docx
+2020-02-06 21:22:00,0.153,59.863,0:06:49,622.643,48300.0,17.0,258881.0,Feb_20_ERCOT_Operations_Report_Public.docx
+2020-02-10 16:07:00,0.151,59.86,0:06:58,510.026,43864.0,10.0,253543.0,Feb_20_ERCOT_Operations_Report_Public.docx
+2020-03-01 17:43:00,0.106,59.893,0:04:14,440.52,37071.0,32.0,193820.0,Mar_20_ERCOT_Operations_Report_Public_v2.docx
+2020-03-02 13:13:00,0.095,59.896,0:05:31,396.0,39418.0,4.0,238739.0,Mar_20_ERCOT_Operations_Report_Public_v2.docx
+2020-03-16 06:02:00,-0.133,60.108,0:00:00,543.0,34314.0,8.0,223637.0,Mar_20_ERCOT_Operations_Report_Public_v2.docx
+2020-03-18 19:15:00,0.113,59.854,0:04:35,691.0,44814.0,30.0,236351.0,Mar_20_ERCOT_Operations_Report_Public_v2.docx
+2020-03-22 08:10:00,0.167,59.855,0:04:38,699.0,33030.0,9.0,227793.0,Mar_20_ERCOT_Operations_Report_Public_v2.docx
+2020-03-26 13:05:00,0.059,59.905,0:03:12,277.0,47397.0,23.0,242436.0,Mar_20_ERCOT_Operations_Report_Public_v2.docx
+2020-04-08 15:37:00,0.059,59.909,0:05:39,352.65,54216.0,11.0,283884.0,Apr_20_ERCOT_Operations_Report_Public.v3.docx
+2020-04-22 12:44:00,0.073,59.902,0:05:29,320.85,42810.0,33.0,206475.0,Apr_20_ERCOT_Operations_Report_Public.v3.docx
+2020-04-28 17:48:00,0.083,59.932,0:07:10,331.93,53059.0,20.0,253320.0,Apr_20_ERCOT_Operations_Report_Public.v3.docx
+2020-04-30 21:56:00,0.078,59.911,0:02:48,396.82,41159.0,46.0,204387.0,Apr_20_ERCOT_Operations_Report_Public.v3.docx
+2020-05-06 05:57:00,0.081,59.891,0:03:16,385.0,31753.0,23.0,226799.0,May_2020_ERCOT_Operations_Report_Public.docx
+2020-05-07 23:29:00,0.102,59.901,0:03:54,406.0,40975.0,49.0,175063.0,May_2020_ERCOT_Operations_Report_Public.docx
+2020-05-26 21:23:00,0.113,59.905,0:04:24,481.0,44343.0,5.0,268224.0,May_2020_ERCOT_Operations_Report_Public.docx
+2020-05-31 10:45:00,0.174,59.819,0:08:34,820.0,40765.0,7.0,263918.0,May_2020_ERCOT_Operations_Report_Public.docx
+2020-06-01 09:48:00,0.068,59.91,0:03:01,342.0,40955.0,6.0,282780.0,June_2020_ERCOT_Operations_Report_Public.docx
+2020-06-13 12:00:00,0.118,59.892,0:05:44,679.0,50102.0,20.0,290825.0,June_2020_ERCOT_Operations_Report_Public.docx
+2020-06-15 17:22:00,0.107,59.906,0:07:18,511.0,64602.0,19.0,331183.0,June_2020_ERCOT_Operations_Report_Public.docx
+2020-06-22 14:22:00,0.072,59.909,0:07:53,349.0,55472.0,10.0,321106.0,June_2020_ERCOT_Operations_Report_Public.docx
+2020-06-23 16:53:00,0.114,59.897,0:04:57,502.0,54891.0,12.0,299412.0,June_2020_ERCOT_Operations_Report_Public.docx
+2020-07-01 18:28:00,0.123,59.847,0:04:37,800.92,66356.0,19.0,353136.0,July_2020_ERCOT_Operations_Report_Public.docx
+2020-07-05 16:44:00,0.104,59.909,0:08:42,432.92,64821.0,4.0,359952.0,July_2020_ERCOT_Operations_Report_Public.docx
+2020-07-06 15:09:00,0.172,59.808,0:06:09,762.19,63148.0,6.0,342816.0,July_2020_ERCOT_Operations_Report_Public.docx
+2020-07-09 20:14:00,0.14,59.838,0:05:44,842.66,64409.0,26.0,338134.0,July_2020_ERCOT_Operations_Report_Public.docx
+2020-07-16 15:13:00,0.089,59.882,0:06:43,510.85,72245.0,11.0,360193.0,July_2020_ERCOT_Operations_Report_Public.docx
+2020-07-20 11:47:00,0.159,59.815,0:06:00,806.31,59603.0,5.0,341428.0,July_2020_ERCOT_Operations_Report_Public.docx
+2020-08-09 15:23:00,0.071,59.91,0:07:53,456.78,67212.0,22.0,323532.0,August_2020_ERCOT_Operations_Report_Public_v2.docx
+2020-08-16 21:53:00,0.08,59.938,0:02:10,449.61,58612.0,22.0,349497.0,August_2020_ERCOT_Operations_Report_Public_v2.docx
+2020-08-22 23:46:00,0.114,59.883,0:05:21,664.48,45225.0,27.0,290745.0,August_2020_ERCOT_Operations_Report_Public_v2.docx
+2020-09-19 16:02:00,0.119,59.895,0:05:50,493.45,50481.0,9.0,277061.0,September_2020_ERCOT_Operations_Report_Public.docx
+2020-10-08 11:09:00,0.085,59.909,0:08:09,364.52,45174.0,9.0,270005.0,October_2020_ERCOT_Operations_Report_Public.docx
+2020-10-10 14:18:00,0.104,59.866,0:06:25,561.38,54728.0,3.0,312365.0,October_2020_ERCOT_Operations_Report_Public.docx
+2020-10-10 16:44:00,0.126,59.828,0:04:43,541.79,58602.0,4.0,317166.0,October_2020_ERCOT_Operations_Report_Public.docx
+2020-10-13 17:13:00,0.082,59.9,0:06:28,473.23,54686.0,6.0,294969.0,October_2020_ERCOT_Operations_Report_Public.docx
+2020-10-19 14:30:00,0.123,59.89,0:05:56,627.71,50391.0,7.0,281865.0,October_2020_ERCOT_Operations_Report_Public.docx
+2020-10-26 13:23:00,0.134,59.876,0:03:35,468.97,46105.0,19.0,234219.0,October_2020_ERCOT_Operations_Report_Public.docx
+2020-10-27 08:41:00,0.155,59.818,0:04:39,845.0,43616.0,7.0,264949.0,October_2020_ERCOT_Operations_Report_Public.docx
+2020-11-07 18:05:00,0.098,59.891,0:03:40,474.2,42152.0,35.0,181125.0,November_2020_ERCOT_Operations_Report_Public.docx
+2020-11-15 10:47:00,-0.096,60.112,0:03:58,579.02,36150.0,16.0,204029.0,November_2020_ERCOT_Operations_Report_Public.docx
+2020-11-16 09:51:00,0.209,59.797,0:07:56,1020.3,39374.0,21.0,209662.0,November_2020_ERCOT_Operations_Report_Public.docx
+2020-11-21 00:20:00,0.166,59.829,0:05:29,734.18,33709.0,30.0,205995.0,November_2020_ERCOT_Operations_Report_Public.docx
+2020-11-22 12:35:00,0.075,59.902,0:04:15,367.36,39964.0,24.0,219654.0,November_2020_ERCOT_Operations_Report_Public.docx
+2020-11-27 09:19:00,0.09,59.91,0:03:49,338.51,37165.0,42.0,167172.0,November_2020_ERCOT_Operations_Report_Public.docx
+2020-12-04 07:44:00,0.111,59.869,0:05:28,595.0,50168.0,13.0,276381.0,December_2020_ERCOT_Operations_Report_Public_v1.docx
+2020-12-07 12:38:00,0.053,59.928,0:05:03,360.11,39824.0,4.0,263002.0,December_2020_ERCOT_Operations_Report_Public_v1.docx
+2020-12-10 14:34:00,0.119,59.89,0:04:37,571.0,39455.0,41.0,181176.0,December_2020_ERCOT_Operations_Report_Public_v1.docx
+2020-12-22 15:45:00,0.079,59.893,0:05:10,370.0,38696.0,52.0,157245.0,December_2020_ERCOT_Operations_Report_Public_v1.docx
+2020-12-26 20:49:00,0.06,59.906,0:01:28,286.0,38848.0,54.0,157639.0,December_2020_ERCOT_Operations_Report_Public_v1.docx
+2021-01-03 11:34:00,0.149,59.828,0:04:13,768.276,39068.0,17.0,222656.0,January_2021_ERCOT_Operations_Report_Public_V1.docx
+2021-01-06 18:20:00,0.164,59.848,0:04:50,774.066,43289.0,42.0,192810.0,January_2021_ERCOT_Operations_Report_Public_V1.docx
+2021-01-11 13:03:00,0.115,59.866,0:04:31,757.421,49921.0,7.0,304713.0,January_2021_ERCOT_Operations_Report_Public_V1.docx
+2021-01-16 21:35:00,0.111,59.898,0:04:17,453.471,41291.0,17.0,211857.0,January_2021_ERCOT_Operations_Report_Public_V1.docx
+2021-01-28 14:21:00,0.134,59.875,0:04:18,718.262,41220.0,20.0,232320.0,January_2021_ERCOT_Operations_Report_Public_V1.docx
+2021-02-13 08:36:00,0.027,59.897,0:05:38,221.22,55385.0,6.0,323214.0,February_2021_ERCOT_Operations_Report_Public.docx
+2021-02-15 04:54:00,0.085,59.833,0:05:16,421.44,54087.0,9.0,278052.0,February_2021_ERCOT_Operations_Report_Public.docx
+2021-02-15 05:26:00,0.246,59.775,0:03:58,1378.1,61695.0,7.0,331731.0,February_2021_ERCOT_Operations_Report_Public.docx
+2021-02-15 12:55:00,0.073,59.936,0:05:30,981.68,45868.0,6.0,259583.0,February_2021_ERCOT_Operations_Report_Public.docx
+2021-02-16 12:46:00,0.086,59.931,0:05:26,628.3,43716.0,9.0,264302.0,February_2021_ERCOT_Operations_Report_Public.docx
+2021-02-22 05:38:00,0.134,59.885,0:03:26,714.0,52486.0,9.0,287039.0,February_2021_ERCOT_Operations_Report_Public.docx
+2021-03-03 09:56:00,0.106,59.909,0:04:58,429.0,39927.0,26.0,202664.0,March_2021_ERCOT_Operations_Report_Public.docx
+2021-03-30 18:01:00,0.143,59.834,0:03:30,673.17,44238.0,24.0,197926.0,March_2021_ERCOT_Operations_Report_Public.docx
+2021-05-05 12:39:00,0.093,59.909,0:04:45,362.0,42200.0,14.0,228253.0,May_2021_ERCOT_Operations_Report_Public.v2.docx
+2021-05-09 11:21:00,0.174,59.817,0:02:43,1299.0,47341.0,34.0,227246.0,May_2021_ERCOT_Operations_Report_Public.v2.docx
+2021-05-19 12:06:00,0.09,59.887,0:03:14,420.15,41658.0,15.0,223178.0,May_2021_ERCOT_Operations_Report_Public.v2.docx
+2021-05-24 20:03:00,0.138,59.851,0:05:13,823.57,47599.0,42.0,212045.0,May_2021_ERCOT_Operations_Report_Public.v2.docx
+2021-05-25 07:02:00,0.12,59.85,0:04:40,470.97,39853.0,23.0,217438.0,May_2021_ERCOT_Operations_Report_Public.v2.docx
+2021-05-26 23:14:00,0.092,59.864,0:02:07,485.11,48442.0,42.0,197971.0,May_2021_ERCOT_Operations_Report_Public.v2.docx
+2021-06-07 15:26:00,0.241,59.77,0:05:25,1324.3,56442.0,10.0,294509.0,June_2021_ERCOT_Operations_Report_Public.docx
+2021-06-12 13:23:00,0.083,59.906,0:05:59,503.39,60352.0,7.0,329949.0,June_2021_ERCOT_Operations_Report_Public.docx
+2021-06-14 09:55:00,-0.092,60.101,0:07:00,566.0,56253.0,7.0,318342.0,June_2021_ERCOT_Operations_Report_Public.docx
+2021-06-20 22:53:00,0.114,59.894,0:05:19,555.6,55886.0,38.0,244065.0,June_2021_ERCOT_Operations_Report_Public.docx
+2021-06-26 11:14:00,0.088,59.927,0:01:51,518.0,56958.0,21.0,278944.0,June_2021_ERCOT_Operations_Report_Public.docx
+2021-07-06 17:04:00,0.071,59.909,0:03:58,383.45,61479.0,,335421.0,July_2021_ERCOT_Operations_Report_Public_-_Proposed_Changes.docx
+2021-07-20 08:46:00,0.134,59.858,0:04:22,800.9,46020.0,,306168.0,July_2021_ERCOT_Operations_Report_Public_-_Proposed_Changes.docx
+2021-08-10 13:34:00,0.086,59.887,0:02:53,563.6,69847.0,,327909.0,August_2021_ERCOT_Operations_Report_Public.docx
+2021-08-28 07:07:00,0.123,59.894,0:05:57,781.47,42187.0,,293174.0,August_2021_ERCOT_Operations_Report_Public.docx
+2021-08-31 17:40:00,0.088,59.915,0:05:34,502.0,73198.0,,379073.0,August_2021_ERCOT_Operations_Report_Public.docx
+2021-09-03 02:49:15,0.105,59.911,00:09:23,601.2,46466.0,,274833.0,September_2021_ERCOT_Operations_Report_Public.v3.docx
+2021-09-09 17:11:20,0.07,59.908,00:04:21,493.23,67528.0,,348192.0,September_2021_ERCOT_Operations_Report_Public.v3.docx
+2021-09-12 23:17:44,0.178,59.832,00:03:56,847.46,47800.0,,233712.0,September_2021_ERCOT_Operations_Report_Public.v3.docx
+2021-09-14 07:55:50,0.08,59.938,00:06:10,398.55,39535.0,,263820.0,September_2021_ERCOT_Operations_Report_Public.v3.docx
+2021-09-22 09:15:10,0.088,59.891,00:02:44,604.49,41615.0,,263433.0,September_2021_ERCOT_Operations_Report_Public.v3.docx
+2021-09-25 15:39:15,0.103,59.903,00:03:06,498.53,55498.0,,295724.0,September_2021_ERCOT_Operations_Report_Public.v3.docx
+2021-10-01 11:10:56,0.088,59.864,00:03:58,464.7,46346.0,,286620.0,October_2021_ERCOT_Operations_Report_Public.docx
+2021-10-02 05:51:11,0.122,59.848,00:04:04,648.0,37198.0,,250260.0,October_2021_ERCOT_Operations_Report_Public.docx
+2021-11-01 04:57:04,0.108,59.905,00:09:14,539.87,31788.0,,190153.0,November_2021_ERCOT_Operations_Report_Public.docx
+2021-11-15 17:53:11,0.092,59.868,00:02:37,452.28,45335.0,,241063.0,November_2021_ERCOT_Operations_Report_Public.docx
+2021-11-17 14:32:48,0.079,59.88,00:02:26,351.98,48752.0,,191133.0,November_2021_ERCOT_Operations_Report_Public.docx
+2021-12-30 06:57:16,0.095,59.911,00:01:43,371.93,37036.0,,213704.0,December-2021-ERCOT-Operations-Report-Public_v1.2.docx
+2022-01-13 18:06:27,0.099,59.876,00:03:33,547.73,41585.0,,261648.0,January 2022 ERCOT Operations Report_Public.docx
+2022-01-24 18:02:15,0.094,59.923,00:02:18,393.11,47902.0,,275960.0,January 2022 ERCOT Operations Report_Public.docx
+2022-01-26 02:27:47,0.166,59.842,00:06:03,814.04,41489.0,,210833.0,January 2022 ERCOT Operations Report_Public.docx
+2022-02-04 18:21:26,0.128,59.851,00:06:01,1210.0,60637.0,,355057.0,February 2022 ERCOT Operations Report Public.docx
+2022-02-20 10:13:02,-0.143,60.109,00:03:38,467.0,41996.0,,154655.0,February 2022 ERCOT Operations Report Public.docx
+2022-02-22 06:18:28,0.193,59.807,00:02:05,764.0,37834.0,,155873.0,February 2022 ERCOT Operations Report Public.docx
+2022-03-12 10:21:03,0.104,59.882,00:04:23,747.0,49842.0,,242446.0,March 2022 ERCOT Operations Report Public.docx
+2022-03-14 21:41:15,0.097,59.898,00:04:30,440.0,41259.0,,168819.0,March 2022 ERCOT Operations Report Public.docx
+2022-03-22 04:16:26,0.119,59.889,00:02:56,703.0,34421.0,,130435.0,March 2022 ERCOT Operations Report Public.docx
+2022-04-13 07:28:39,0.153,59.855,00:10:05,725.0,44477.0,,171987.0,April 2022 ERCOT Operations Report Public.docx
+2022-04-18 02:48:46,-0.12,60.098,00:19:08,388.0,35068.0,,180367.0,April 2022 ERCOT Operations Report Public.docx
+2022-04-19 15:16:19,0.197,59.792,00:06:28,810.16,44123.0,,145899.0,April 2022 ERCOT Operations Report Public.docx
+2022-04-20 09:04:53,0.084,59.932,00:02:58,383.74,43020.0,,174650.0,April 2022 ERCOT Operations Report Public.docx
+2022-04-22 06:54:16,-0.088,60.105,00:09:26,423.0,43830.0,,158910.0,April 2022 ERCOT Operations Report Public.docx
+2022-05-08 23:37:46,0.109,59.905,00:04:39,520.24,52241.0,,221543.0,May 2022 ERCOT Operations Report.docx
+2022-05-13 12:32:24,0.099,59.901,00:05:02,563.49,57810.0,,304563.0,May 2022 ERCOT Operations Report.docx
+2022-05-19 18:52:55,0.065,59.934,00:04:31,493.0,67848.0,,305144.0,May 2022 ERCOT Operations Report.docx
+2022-05-22 01:26:37,-0.103,60.107,00:07:24,-573.0,43634.0,,189128.0,May 2022 ERCOT Operations Report.docx
+2022-05-26 18:17:24,0.086,59.922,00:03:06,401.32,61103.0,,322219.0,May 2022 ERCOT Operations Report.docx
+2022-06-03 19:33:41,0.088,59.924,00:04:16,375.36,57258.0,,327158.0,June 2022 ERCOT Operations Report Public.docx
+2022-06-04 12:59:26,0.305,59.7,00:01:19,2519.0,55412.0,,310669.0,June 2022 ERCOT Operations Report Public.docx
+2022-06-28 16:18:37,0.071,59.902,00:04:19,624.23,66485.0,,341862.0,June 2022 ERCOT Operations Report Public.docx
+2022-07-11 06:27:53,0.066,59.939,00:05:56,435.16,51241.0,,353888.0,July 2022 ERCOT Operations Report Public.docx
+2022-07-25 07:36:33,0.091,59.928,00:04:51,549.19,51285.0,,286659.0,July 2022 ERCOT Operations Report Public.docx
+2022-07-27 01:17:48,0.106,59.909,00:06:13,517.0,55404.0,,274756.0,July 2022 ERCOT Operations Report Public.docx
+2022-08-13 07:22:11,0.074,59.913,00:05:46,507.69,46123.0,,312197.0,August 2022 ERCOT Operations Report Public.docx
+2022-08-17 22:02:15,0.071,59.937,00:06:14,469.94,64518.0,,354119.0,August 2022 ERCOT Operations Report Public.docx
+2022-08-17 23:10:31,0.071,59.921,00:08:55,645.73,58622.0,,335506.0,August 2022 ERCOT Operations Report Public.docx
+2022-08-21 19:27:02,0.104,59.875,00:04:51,713.66,60530.0,,324104.0,August 2022 ERCOT Operations Report Public.docx
+2022-09-05 23:48:10,0.186,59.81,00:05:14,1208.0,46201.0,,281556.0,September 2022 ERCOT Operations Report Public.docx
+2022-10-03 16:46:58,0.079,59.928,00:04:19,413.0,56216.0,,298992.0,October 2022 ERCOT Operations Report Public.docx
+2022-10-06 02:24:28,0.117,59.863,00:06:15,656.0,36217.0,,240438.0,October 2022 ERCOT Operations Report Public.docx
+2022-10-06 11:54:34,0.11,59.877,00:03:14,782.0,49366.0,,297112.0,October 2022 ERCOT Operations Report Public.docx
+2022-10-08 06:47:42,0.116,59.897,00:04:22,685.0,35990.0,,222114.0,October 2022 ERCOT Operations Report Public.docx
+2022-10-16 18:41:48,0.079,59.898,00:03:18,501.0,53385.0,,252089.0,October 2022 ERCOT Operations Report Public.docx
+2022-10-20 05:04:54,0.121,59.858,00:06:38,796.0,34646.0,,184973.0,October 2022 ERCOT Operations Report Public.docx
+2022-10-21 16:45:49,0.077,59.88,00:02:24,505.0,52521.0,,214399.0,October 2022 ERCOT Operations Report Public.docx
+2022-10-26 00:21:03,0.101,59.893,00:04:25,496.0,34610.0,,216713.0,October 2022 ERCOT Operations Report Public.docx
+2022-10-27 23:15:32,0.089,59.888,00:04:47,430.0,39190.0,,170934.0,October 2022 ERCOT Operations Report Public.docx
+2022-10-31 23:12:25,-0.161,60.14,00:03:07,-500.0,37970.0,,197386.0,October 2022 ERCOT Operations Report Public.docx
+2022-11-16 13:14:41,0.064,59.921,00:02:02,629.0,44444.0,,253681.0,November-2022-ERCOT-Operations-Report-Public.docx
+2022-11-18 01:02:16,0.077,59.936,00:06:20,329.0,40427.0,,220447.0,November-2022-ERCOT-Operations-Report-Public.docx
+2022-12-07 03:50:10,-0.232,60.24,00:12:27,1400.0,35387.0,,198703.0,December-2022-ERCOT-Operations-Report-Public.docx
+2022-12-08 03:39:45,0.117,59.905,00:03:52,552.0,36089.0,,207677.0,December-2022-ERCOT-Operations-Report-Public.docx
+2022-12-17 18:53:50,0.089,59.895,00:07:01,713.0,46164.0,,270548.0,December-2022-ERCOT-Operations-Report-Public.docx
+2022-12-23 04:15:25,0.056,59.948,00:11:24,463.0,70730.0,,355163.0,December-2022-ERCOT-Operations-Report-Public.docx
+2023-01-02 04:35:53,-0.11,60.105,00:06:21,600.0,34252.0,,149645.0,January-2023-ERCOT-Operations-Report-Public.docx
+2023-01-24 07:12:31,0.105,59.91,00:04:19,350.0,48373.0,,275315.0,January-2023-ERCOT-Operations-Report-Public.docx
+2023-01-24 14:27:10,0.123,59.884,00:04:40,966.0,48371.0,,276682.0,January-2023-ERCOT-Operations-Report-Public.docx
+2023-02-08 22:31:24,0.1,59.915,00:06:42,711.0,45835.0,,238704.0,February-2023-ERCOT-Operations-Report-Public-Final.docx
+2023-02-28 18:30:15,0.077,59.91,00:03:38,410.0,48973.0,,238299.0,February-2023-ERCOT-Operations-Report-Public-Final.docx
+2023-03-10 06:58:39,0.095,59.919,00:03:58,461.0,42508.0,,251650.0,march-2023-ercot-operations-report-public_rev2.docx
+2023-03-26 06:25:00,-0.087,60.096,00:11:47,-501.0,35731.0,,206513.0,march-2023-ercot-operations-report-public_rev2.docx
+2023-04-12 20:46:25,0.071,59.901,00:01:52,525.0,47772.0,,208846.0,April 2023 ERCOT Operations Report Public Rev1.docx
+2023-05-01 13:32:02,0.168,59.847,00:03:37,851.0,47892.0,,220211.0,may-2023-ercot-operations-report-public_final_v2.docx
+2023-05-03 18:03:37,0.085,59.931,00:07:34,475.0,55926.0,,260922.0,may-2023-ercot-operations-report-public_final_v2.docx
+2023-05-12 01:40:28,0.096,59.92,00:08:10,471.0,45985.0,,228052.0,may-2023-ercot-operations-report-public_final_v2.docx
+2023-05-23 11:21:12,0.082,59.898,00:03:30,651.0,52869.0,,271409.0,may-2023-ercot-operations-report-public_final_v2.docx
+2023-05-24 20:38:59,0.082,59.892,00:01:25,606.0,56899.0,,293684.0,may-2023-ercot-operations-report-public_final_v2.docx
+2023-06-03 00:27:05,0.083,59.934,00:01:54,477.0,48414.0,,276475.0,june-2023-ercot-operations-report-public.docx
+2023-06-10 17:12:44,0.072,59.934,00:08:39,989.0,70739.0,,326506.0,june-2023-ercot-operations-report-public.docx
+2023-06-16 18:31:51,0.081,59.88,00:03:37,1236.0,73977.0,,362708.0,june-2023-ercot-operations-report-public.docx
+2023-06-20 18:57:06,0.073,59.921,00:17:55,619.0,76838.0,,378999.0,june-2023-ercot-operations-report-public.docx
+2023-06-25 16:08:22,0.061,59.946,00:04:19,410.0,78283.0,,358374.0,june-2023-ercot-operations-report-public.docx
+2023-07-02 05:02:48,0.065,59.945,00:13:18,420.0,45872.0,,328755.0,july-2023-ercot-operations-report-public-v2.docx
+2023-07-06 21:05:09,0.107,59.899,00:08:10,751.0,62436.0,,325753.0,july-2023-ercot-operations-report-public-v2.docx
+2023-07-14 06:23:50,0.078,59.934,00:04:52,451.0,55550.0,,304048.0,july-2023-ercot-operations-report-public-v2.docx
+2023-07-16 10:41:20,0.087,59.893,00:03:59,862.0,58522.0,,345265.0,july-2023-ercot-operations-report-public-v2.docx
+2023-07-17 07:56:09,0.054,59.931,00:07:21,549.0,53429.0,,335117.0,july-2023-ercot-operations-report-public-v2.docx
+2023-07-21 04:22:00,0.071,59.924,00:07:13,617.0,52271.0,,335661.0,july-2023-ercot-operations-report-public-v2.docx
+2023-07-31 18:35:48,0.05,59.905,00:07:23,437.0,82072.0,,386881.0,july-2023-ercot-operations-report-public-v2.docx
+2023-08-02 21:55:48,0.064,59.952,00:09:18,452.0,73637.0,,366602.0,august-2023-ercot-operations-report_public.docx
+2023-08-04 21:01:56,0.059,59.911,00:07:12,552.0,75832.0,,388030.0,august-2023-ercot-operations-report_public.docx
+2023-08-08 19:26:17,0.098,59.918,00:04:33,687.0,80192.0,,385012.0,august-2023-ercot-operations-report_public.docx
+2023-08-22 01:27:29,0.072,59.901,00:07:06,604.0,60786.0,,345430.0,august-2023-ercot-operations-report_public.docx
+2023-08-24 05:04:09,0.062,59.927,00:05:01,493.0,53397.0,,350562.0,august-2023-ercot-operations-report_public.docx
+2023-09-08 22:05:10,0.08,59.901,00:08:29,820.0,60786.0,,345430.0,september-2023-ercot-operations-report_public.docx
+2023-09-10 05:52:38,0.085,59.925,00:04:07,536.0,45862.0,,308998.0,september-2023-ercot-operations-report_public.docx
+2023-09-22 10:09:16,0.075,59.897,00:03:29,694.0,59751.0,,295144.0,september-2023-ercot-operations-report_public.docx
+2023-10-05 19:49:59,0.087,59.897,00:06:19,632.0,54029.0,,301519.0,october-2023-ercot-operations-report-public.docx
+2023-10-25 22:30:46,0.078,59.9,00:00:30,589.0,51091.0,,260962.0,october-2023-ercot-operations-report-public.docx
+2023-10-28 22:23:26,0.053,59.934,00:06:34,448.0,48325.0,,250998.0,october-2023-ercot-operations-report-public.docx
+2023-11-07 10:03:04,0.067,59.914,00:04:29,423.0,47341.0,,190593.0,November_2023_ERCOT Operations Report Public_.docx
+2023-11-09 12:37:36,0.096,59.918,00:03:29,512.0,49597.0,,225369.0,November_2023_ERCOT Operations Report Public_.docx
+2023-11-13 06:21:41,0.077,59.905,00:03:38,611.0,42163.0,,217179.0,November_2023_ERCOT Operations Report Public_.docx
+2023-11-13 07:10:44,-0.071,60.103,00:05:59,-648.0,42792.0,,218902.0,November_2023_ERCOT Operations Report Public_.docx
+2023-11-13 10:28:23,0.126,59.883,00:05:39,748.0,44710.0,,223619.0,November_2023_ERCOT Operations Report Public_.docx
+2023-11-20 23:39:17,0.08,59.904,00:03:47,554.0,41045.0,,162615.0,November_2023_ERCOT Operations Report Public_.docx
+2023-12-14 19:29:32,0.073,59.89,00:06:09,565.0,47499.0,,239607.0,december-2023-ercot-operations-report-public.docx
+2024-01-01 20:13:25,0.073,59.89,00:06:09,565.0,47499.0,,239607.0,january-2024-ercot-operations-report-public.docx
+2024-01-09 17:51:13,0.079,59.936,00:05:30,445.0,52267.0,,294925.0,january-2024-ercot-operations-report-public.docx
+2024-01-14 09:15:58,0.078,59.922,00:06:44,685.0,64760.0,,347910.0,january-2024-ercot-operations-report-public.docx
+2024-01-18 17:28:30,0.074,59.933,00:08:28,399.0,45476.0,,279186.0,january-2024-ercot-operations-report-public.docx
+2024-01-21 05:26:03,0.056,59.93,00:03:30,475.0,56316.0,,275477.0,january-2024-ercot-operations-report-public.docx
+2024-02-27 09:21:15,0.099,59.844,00:05:46,761.0,45914.0,,187881.0,february-2024-ercot-operations-report-public.docx
+2024-02-28 02:29:49,0.093,59.919,00:02:43,539.0,38870.0,,189713.0,february-2024-ercot-operations-report-public.docx
+2024-02-28 10:15:58,0.077,59.902,00:02:42,603.0,46396.0,,200705.0,february-2024-ercot-operations-report-public.docx
+2024-03-06 16:11:49,0.055,59.914,00:03:47,434.0,52314.0,,254721.0,march-2024-ercot-operations-report-public_v2.docx
+2024-03-12 08:16:53,0.12,59.853,00:07:14,819.0,43332.0,,167898.0,march-2024-ercot-operations-report-public_v2.docx
+2024-03-17 15:16:25,0.085,59.871,00:02:36,644.0,43859.0,,224994.0,march-2024-ercot-operations-report-public_v2.docx
+2024-04-08 22:29:11,0.082,59.94,00:01:33,472.0,49143.0,,223554.0,april-2024-ercot-operations-report-public.docx
+2024-04-10 20:55:09,0.092,59.918,00:08:42,556.0,46662.0,,217373.0,april-2024-ercot-operations-report-public.docx
+2024-04-13 18:05:09,0.071,59.931,00:02:03,419.0,51347.0,,180507.0,april-2024-ercot-operations-report-public.docx
+2024-05-12 02:51:17,0.073,59.918,00:04:11,510.0,40636.0,,224896.0,may-2024-ercot-operations-report_public.docx
+2024-05-13 03:44:13,0.051,59.918,00:03:30,392.0,41182.0,,248131.0,may-2024-ercot-operations-report_public.docx
+2024-05-22 18:36:12,0.096,59.91,00:08:23,1146.0,64955.0,,300942.0,may-2024-ercot-operations-report_public.docx
+2024-06-03 23:19:36,0.059,59.939,00:07:45,478.0,57719.0,,287855.0,june-2024-ercot-operations-report-public_.docx
+2024-06-19 07:15:13,0.106,59.9,00:06:55,793.0,50915.0,,261922.0,june-2024-ercot-operations-report-public_.docx
+2024-06-25 09:36:49,0.062,59.952,00:06:41,461.0,64937.0,,309524.0,june-2024-ercot-operations-report-public_.docx
+2024-06-29 19:57:23,0.103,59.908,00:05:12,822.0,75547.0,,329424.0,june-2024-ercot-operations-report-public_.docx
+2024-07-23 05:26:53,0.07,59.946,00:10:31,461.0,48931.0,,317935.0,July 2024 ERCOT Operations Report Public.docx
+2024-07-24 07:02:45,0.137,59.871,00:06:47,1289.0,46721.0,,318438.0,July 2024 ERCOT Operations Report Public.docx
+2024-08-07 17:55:44,0.079,59.938,00:04:29,622.0,83620.0,,379895.0,august-2024-ercot-operations-report-public.docx
+2024-08-10 02:56:27,0.073,59.911,00:03:55,655.0,53096.0,,329572.0,august-2024-ercot-operations-report-public.docx
+2024-08-26 14:38:25,0.08,59.94,00:00:19,774.0,74060.0,,328824.0,august-2024-ercot-operations-report-public.docx
+2024-09-23 16:12:49,0.054,59.943,00:07:17,499.0,45476.0,,279186.0,september-2024-ercot-operations-report-public.docx
+2024-10-14 12:10:11,0.025,59.963,00:02:31,449.0,57599.0,,281109.0,october-2024-ercot-operations-report-public.docx
+2024-10-15 17:06:17,0.048,59.965,00:04:28,606.0,71194.0,,288891.0,october-2024-ercot-operations-report-public.docx
+2024-10-23 13:17:24,0.067,59.913,00:07:45,778.0,61105.0,,280752.0,october-2024-ercot-operations-report-public.docx
+2024-11-17 12:58:54,0.076,59.894,00:01:46,753.0,58214.0,,243340.0,November 2024 ERCOT Operations Report Public.docx
+2024-11-21 05:28:17,0.065,59.921,00:04:14,650.0,71194.0,,288891.0,November 2024 ERCOT Operations Report Public.docx
+2024-11-23 18:18:58,0.088,59.928,00:12:49,527.0,52013.0,,217261.0,November 2024 ERCOT Operations Report Public.docx
+2024-11-23 18:48:15,0.073,59.929,00:04:12,502.0,44242.0,,228778.0,November 2024 ERCOT Operations Report Public.docx
+2024-12-01 05:18:48,0.084,59.93,00:03:48,608.0,43714.0,,247929.0,december-2024-ercot-operations-report-public.docx
+2025-01-17 12:56:51,0.083,59.933,00:03:57,686.0,53380.0,,202723.0,January-2025-ERCOT-Operations-Report-Public-1.docx
+2025-02-12 20:48:03,0.075,59.923,00:04:21,813.0,58152.0,,266266.0,February-2025-ERCOT-Operations-Report-Public.docx
+2025-02-13 02:11:55,0.061,59.947,00:03:11,571.0,53705.0,,274731.0,February-2025-ERCOT-Operations-Report-Public.docx
+2025-02-15 15:33:32,0.081,59.928,00:03:13,582.0,47677.0,,188857.0,February-2025-ERCOT-Operations-Report-Public.docx
+2025-02-16 02:20:08,0.054,59.944,00:06:17,507.0,47945.0,,206084.0,February-2025-ERCOT-Operations-Report-Public.docx
+2025-02-18 09:44:12,0.033,59.943,00:05:23,437.0,52277.0,,233508.0,February-2025-ERCOT-Operations-Report-Public.docx
+2025-02-25 09:56:07,0.043,59.937,00:04:04,438.0,48160.0,,210489.0,February-2025-ERCOT-Operations-Report-Public.docx
+2025-03-01 16:24:56,0.081,59.931,00:05:09,560.0,49468.0,,224338.0,March-2025-ERCOT-Operations-Report-Public_rev1.docx
+2025-03-05 04:31:20,0.073,59.902,00:06:11,792.0,41364.0,,204580.0,March-2025-ERCOT-Operations-Report-Public_rev1.docx
+2025-03-17 00:06:50,0.075,59.941,00:04:55,567.0,41391.0,,207347.0,March-2025-ERCOT-Operations-Report-Public_rev1.docx
+2025-03-18 22:22:33,0.098,59.917,00:03:28,777.0,49865.0,,167585.0,March-2025-ERCOT-Operations-Report-Public_rev1.docx
+2025-04-03 21:47:06,0.048,59.95,00:05:47,477.0,54928.0,,241611.0,April-2025-ERCOT-Operations-Report-Public_rev1.docx
+2025-04-05 22:19:20,0.046,59.935,00:03:03,528.0,48058.0,,181863.0,April-2025-ERCOT-Operations-Report-Public_rev1.docx
+2025-04-15 07:13:27,0.08,59.927,00:05:07,629.0,46221.0,,198797.0,April-2025-ERCOT-Operations-Report-Public_rev1.docx
+2025-04-23 05:17:32,0.076,59.938,00:05:14,560.0,45338.0,,212195.0,April-2025-ERCOT-Operations-Report-Public_rev1.docx
+2025-04-24 01:03:32,0.088,59.915,00:05:19,773.0,47252.0,,218628.0,April-2025-ERCOT-Operations-Report-Public_rev1.docx
+2025-05-06 10:44:22,0.047,59.933,00:03:57,570.0,51132.0,,226822.0,May-2025-ERCOT-Operations-Report-Public_rev1.docx
+2025-05-15 16:59:38,0.076,59.939,00:04:17,683.0,74327.0,,329024.0,May-2025-ERCOT-Operations-Report-Public_rev1.docx
+2025-05-29 23:47:55,0.047,59.934,00:07:18,626.0,55461.0,,293192.0,May-2025-ERCOT-Operations-Report-Public_rev1.docx
+2025-06-02 02:49:34,0.079,59.935,00:03:41,643.0,49631.0,,265215.0,June-2025-ERCOT-Operations-Report-Redline-Public_rev1.docx
+2025-06-05 02:25:19,0.044,59.933,00:08:41,496.0,50798.0,,290392.0,June-2025-ERCOT-Operations-Report-Redline-Public_rev1.docx
+2025-06-14 19:35:43,0.064,59.949,00:15:19,556.0,71448.0,,287090.0,June-2025-ERCOT-Operations-Report-Redline-Public_rev1.docx
+2025-06-17 16:19:19,0.027,59.951,00:03:32,455.0,76504.0,,278630.0,June-2025-ERCOT-Operations-Report-Redline-Public_rev1.docx
+2025-07-01 08:19:13,0.062,59.918,00:03:16,772.0,55512.0,,315149.0,05.-July-2025-ERCOT-Operations-Report-Redline_Public.docx
+2025-07-06 04:28:34,0.046,59.973,00:08:06,595.0,48086.0,,308472.0,05.-July-2025-ERCOT-Operations-Report-Redline_Public.docx
+2025-07-24 06:30:24,0.031,59.957,00:03:28,505.0,56725.0,,302064.0,05.-July-2025-ERCOT-Operations-Report-Redline_Public.docx
+2025-07-24 13:31:05,0.055,59.96,00:01:23,479.0,80418.0,,328791.0,05.-July-2025-ERCOT-Operations-Report-Redline_Public.docx
+2025-08-01 12:03:03,0.042,59.974,00:09:10,759.0,73710.0,,336376.0,04.-August-2025-ERCOT-Operations-Report-Public_rev2.v2.docx
+2025-08-05 14:17:34,0.06,59.953,00:07:18,471.0,78895.0,,323307.0,04.-August-2025-ERCOT-Operations-Report-Public_rev2.v2.docx
+2025-08-19 05:24:20,0.04,59.939,00:07:32,539.0,56686.0,,344612.0,04.-August-2025-ERCOT-Operations-Report-Public_rev2.v2.docx
+2025-08-25 03:46:13,0.071,59.925,00:03:40,849.0,53522.0,,333587.0,04.-August-2025-ERCOT-Operations-Report-Public_rev2.v2.docx
+2025-08-27 15:44:08,0.074,59.928,00:03:49,745.0,78996.0,,325857.0,04.-August-2025-ERCOT-Operations-Report-Public_rev2.v2.docx
+2025-09-11 15:33:17,0.074,59.942,00:03:18,735.0,78505.0,,294968.0,05.-September-2025-ERCOT-Operations-Report-Public.docx
+2025-09-14 20:21:11,0.081,59.907,00:03:43,1172.0,69513.0,,328142.0,05.-September-2025-ERCOT-Operations-Report-Public.docx
+2025-09-21 16:14:52,0.043,59.973,00:09:18,547.0,77024.0,,317456.0,05.-September-2025-ERCOT-Operations-Report-Public.docx
+2025-09-23 22:19:01,0.035,59.947,00:05:40,560.0,69959.0,,338609.0,05.-September-2025-ERCOT-Operations-Report-Public.docx
+2025-09-24 18:30:13,0.104,59.905,00:02:38,1171.0,70687.0,,325150.0,05.-September-2025-ERCOT-Operations-Report-Public.docx

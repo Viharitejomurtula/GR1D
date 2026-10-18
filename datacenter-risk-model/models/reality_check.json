@@ -1,0 +1,107 @@
+{
+ "kabi_dry_bulb_holdout_2016_2026": {
+  "n_test": 93975,
+  "cov_5_95": 0.876903431763767,
+  "cov_25_75": 0.49419526469805797,
+  "mean_shift_c": 1.0996752099475167,
+  "frac_above_p95": 0.084926842245278
+ },
+ "kabi_annual_max_holdout": {
+  "train_years": 84,
+  "test_years": 10,
+  "fitted_10y_level_c": 41.45655031416837,
+  "test_years_exceeding_10y_level": 5,
+  "expected_in_test": 1.0,
+  "test_max_c": 43.95,
+  "train_max_c": 42.8
+ },
+ "kabi_hours_per_year_above_dry_bulb": {
+  "35": {
+   "mean": 258.53846153846155,
+   "p90": 504.5,
+   "max": 723,
+   "last10_mean": 314.6,
+   "first10_mean": 223.5
+  },
+  "38": {
+   "mean": 60.42307692307692,
+   "p90": 194.0,
+   "max": 304,
+   "last10_mean": 94.2,
+   "first10_mean": 39.3125
+  },
+  "40": {
+   "mean": 12.423076923076923,
+   "p90": 39.5,
+   "max": 104,
+   "last10_mean": 23.7,
+   "first10_mean": 5.375
+  },
+  "42": {
+   "mean": 1.6923076923076923,
+   "p90": 6.5,
+   "max": 16,
+   "last10_mean": 3.7,
+   "first10_mean": 0.4375
+  }
+ },
+ "frequency_events_vs_recent_years": {
+  "2024": {
+   "59.95": {
+    "model": 33.532467499999996,
+    "observed": 31.934426229508198
+   },
+   "59.9": {
+    "model": 3.749543,
+    "observed": 5.987704918032787
+   },
+   "59.85": {
+    "model": 0.318556,
+    "observed": 0.9979508196721312
+   },
+   "59.8": {
+    "model": 0.0428575,
+    "observed": 0.0
+   },
+   "events_per_year": {
+    "model": 43.4,
+    "observed": 34.92827868852459
+   }
+  },
+  "2025_Jan_Sep": {
+   "59.95": {
+    "model": 33.532467499999996,
+    "observed": 38.79945054945055
+   },
+   "59.9": {
+    "model": 3.749543,
+    "observed": 0.0
+   },
+   "59.85": {
+    "model": 0.318556,
+    "observed": 0.0
+   },
+   "59.8": {
+    "model": 0.0428575,
+    "observed": 0.0
+   },
+   "events_per_year": {
+    "model": 43.4,
+    "observed": 49.502747252747255
+   }
+  }
+ },
+ "utilization_transfer_gap": {
+  "alibaba_median_sm_util": 0.219,
+  "implied_node_power_fraction_of_peak": 0.3752,
+  "nlr_training_median_over_p95_power": 0.837328338100217,
+  "ratio_training_to_alibaba": 2.2316853360879985,
+  "note": "Alibaba is a mixed fleet dominated by light inference; a dedicated training campus draws ~2x more of its peak power on average"
+ },
+ "voltage_dips_plausibility": {
+  "epri_transmission_median_below_0_8pu": 9.0,
+  "ercot_west_far_west_load_affecting_fault_events_12mo": 11,
+  "ratio": 1.2222222222222223,
+  "note": "same order of magnitude; ERCOT count is a different, load-sensitivity-defined quantity"
+ }
+}

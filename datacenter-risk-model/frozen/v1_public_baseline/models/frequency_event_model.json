@@ -1,0 +1,242 @@
+{
+ "source_id": "F1a-ev1",
+ "kind": "observed events (ERCOT monthly Operations Reports, n=311) + two-stage model; extrapolation beyond observed range is MODELED",
+ "units": "Hz nadir; MW loss; rates per year",
+ "years_covered": 6.88,
+ "span": [
+  "2018-11-06 07:53:00",
+  "2025-09-24 18:30:13"
+ ],
+ "under_frequency": {
+  "n": 299,
+  "rate_per_year": 43.4,
+  "observed_min_nadir_hz": 59.7,
+  "observed_max_mw_loss": 2519.0,
+  "stage1_gpd_mw": {
+   "threshold_mw": 820.0,
+   "shape": 0.1482793917783104,
+   "scale": 234.76152675833993,
+   "p_exceed": 0.09698996655518395,
+   "return_levels_mw": {
+    "1y": 1196.0,
+    "5y": 1725.0,
+    "10y": 1994.0,
+    "50y": 2737.0,
+    "100y": 3116.0
+   }
+  },
+  "stage2_nadir": {
+   "formula": "log(depth) = a + b log(MW) + c log(inertia GW*s) + d*years_since_2018-11 + eps; evaluated at yr_ref (latest observed)",
+   "a": -4.066088280067185,
+   "b_mw": 0.6419334195341759,
+   "c_inertia": -0.3543555132219528,
+   "d_year": -0.11343184068292236,
+   "yr_ref": 6.896646132785763,
+   "eps_sigma": 0.23697169114484834,
+   "r2_note": "~0.6 with year term (0.25 without)"
+  },
+  "annual_rate_nadir_below_legacy_response_2019": {
+   "hz": [
+    59.9,
+    59.8,
+    59.7,
+    59.6,
+    59.5,
+    59.4,
+    59.3
+   ],
+   "model": [
+    34.841,
+    4.393,
+    0.406,
+    0.0525,
+    0.0095,
+    0.003,
+    0.0005
+   ]
+  },
+  "annual_rate_nadir_below": {
+   "hz": [
+    59.9,
+    59.8,
+    59.7,
+    59.6,
+    59.5,
+    59.4,
+    59.3
+   ],
+   "observed": [
+    18.741945107398568,
+    1.0170047732696896,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "model": [
+    3.782,
+    0.0525,
+    0.002,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "model_ci95": [
+    [
+     2.6491,
+     4.9965
+    ],
+    [
+     0.002,
+     0.1977
+    ],
+    [
+     0.0,
+     0.0691
+    ],
+    [
+     0.0,
+     0.0457
+    ],
+    [
+     0.0,
+     0.034
+    ],
+    [
+     0.0,
+     0.0246
+    ],
+    [
+     0.0,
+     0.02
+    ]
+   ],
+   "direct_gpd_depth": [
+    18.741945107398564,
+    1.2164441815456062,
+    0.034396056223586206,
+    0.00011955309004462642,
+    3.939462928571832e-11,
+    0.0,
+    0.0
+   ]
+  },
+  "cross_check_direct_gpd": {
+   "threshold_depth_hz": 0.1544000000000025,
+   "shape": -0.10203009243746318,
+   "scale": 0.03810735652049454
+  }
+ },
+ "over_frequency": {
+  "n": 12,
+  "rate_per_year": 1.74,
+  "log_excess_intercept": -6.295394206324087,
+  "log_excess_slope": 0.651499817052827,
+  "resid_sigma": 0.1458974744415911,
+  "max_peak_hz": 60.24,
+  "max_abs_mw": 1400.0
+ },
+ "systemic_stress_regime": {
+  "events": [
+   {
+    "date": "2011-02-02",
+    "lowest_freq_hz": 59.58,
+    "max_load_shed_mw": 4000,
+    "shed_duration_h": 7.5,
+    "peak_load_without_shed_mw": 59000,
+    "cumulative_outages_mw": 14702
+   },
+   {
+    "date": "2021-02-15",
+    "lowest_freq_hz": 59.3,
+    "nadir_detail_hz": 59.302,
+    "max_load_shed_mw": 20000,
+    "shed_duration_h": 70.5,
+    "peak_load_without_shed_mw": 76819,
+    "cumulative_outages_mw": 52277,
+    "below_59_4_hz_s": 263,
+    "load_shed_orders_mw": [
+     1000,
+     5000,
+     8500,
+     10500
+    ]
+   }
+  ],
+  "window": [
+   "2011-01-01",
+   "2025-09-30"
+  ],
+  "exposure_years": 14.75,
+  "rate_mle_per_year": 0.136,
+  "rate_posterior_median": 0.14754649413271828,
+  "rate_ci95": [
+   0.028,
+   0.435
+  ],
+  "conditional_nadir": {
+   "distribution": "Uniform(59.302, 59.58) Hz between the two documented events (2 data points: scenario-grade)",
+   "low": 59.302,
+   "high": 59.58
+  },
+  "sensitivity_annual_probability_by_rate": {
+   "0.02": {
+    "P(year min nadir<59.7)": 0.0198,
+    "P(year min nadir<59.5)": 0.0141,
+    "P(year min nadir<59.4)": 0.007,
+    "P(year min nadir<59.3)": 0.0
+   },
+   "0.07": {
+    "P(year min nadir<59.7)": 0.0676,
+    "P(year min nadir<59.5)": 0.0482,
+    "P(year min nadir<59.4)": 0.0238,
+    "P(year min nadir<59.3)": 0.0
+   },
+   "0.15": {
+    "P(year min nadir<59.7)": 0.1372,
+    "P(year min nadir<59.5)": 0.0977,
+    "P(year min nadir<59.4)": 0.0484,
+    "P(year min nadir<59.3)": 0.0
+   },
+   "0.30": {
+    "P(year min nadir<59.7)": 0.2592,
+    "P(year min nadir<59.5)": 0.1846,
+    "P(year min nadir<59.4)": 0.0914,
+    "P(year min nadir<59.3)": 0.0
+   }
+  },
+  "note": "Rate evidence is 2 events / 14.7 years (credible interval wide); events defined as ERCOT cold-weather/scarcity emergencies with firm load shed. Earlier events (e.g. 1989) not used. In-regime nadir comes from 2 events only. Units: rate per year."
+ },
+ "stress_scenarios_not_probabilistic": [
+  {
+   "name": "Winter Storm Uri 2021-02-15",
+   "fact": "frequency below 59.4 Hz for 4 min 23 s; ~52 GW generation forced out (S&P Global reporting); NOT in event table",
+   "use": "stress case for system-collapse tail"
+  },
+  {
+   "name": "ERCOT largest single contingency",
+   "fact": "1,430 MW (ERCOT AS study 2024); RRS sized to keep frequency >=59.7 Hz",
+   "use": "design basis"
+  },
+  {
+   "name": "Two largest units",
+   "fact": "ERCOT procures RRS to survive loss of two largest units and stay above 59.3 Hz (UFLS first stage)",
+   "use": "design basis (statement of intent, not observed)"
+  },
+  {
+   "name": "Lowest inertia",
+   "fact": "115 GW*s (March 2022, ERCOT AS study 2024)",
+   "use": "low-inertia stress"
+  }
+ ],
+ "limitations": [
+  "Table lists unit-trip/load-loss events; system-collapse conditions (Uri) are missing, so true extremes are NOT in the data",
+  "Nadir depth for a given MW loss fell ~11%/yr (t=-16.7) over 2018-2025 (faster/more frequency response); the model holds the latest-year response fixed: it does not extrapolate the trend and assumes the response persists; a legacy-response (2019) sensitivity is provided",
+  "Stage 2 explains ~60% of nadir variance with the year term; response timing and event type remain unmodeled",
+  "Nadir levels below ~59.7 Hz (observed minimum) are extrapolated; rates there have very wide CIs and depend on the tail model",
+  "Reporting thresholds (dF>=60 mHz or >=350 MW) truncate small events; Poisson rate assumes independent events",
+  "Inertia in these reports is a system estimate; future inertia/IBR levels may differ"
+ ]
+}

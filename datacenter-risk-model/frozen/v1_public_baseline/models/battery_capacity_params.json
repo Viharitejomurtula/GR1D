@@ -1,0 +1,51 @@
+{
+  "model": "soh(n) = exp(-k*n), SOH relative to initial; k ~ LogNormal(mu, sigma) per cell",
+  "source_id": "F2d",
+  "kind": "observed fit (NASA PCoE, small Li-ion 18650 cells, ~2 Ah)",
+  "units": {
+    "k": "1/discharge cycle"
+  },
+  "mu_log_k": -6.0726659184593945,
+  "sigma_log_k": 0.3033638188443039,
+  "mu_ci95": [
+    -6.250047887931926,
+    -5.905189297261311
+  ],
+  "sigma_ci95": [
+    0.16755656244150638,
+    0.36618626560058015
+  ],
+  "n_cells": 10,
+  "cells": [
+    "B0005",
+    "B0006",
+    "B0007",
+    "B0018",
+    "B0025",
+    "B0028",
+    "B0029",
+    "B0030",
+    "B0032",
+    "B0042"
+  ],
+  "temp_range_c": [
+    22.0,
+    43.0
+  ],
+  "temp_effect": {
+    "spearman_rho": 0.589510684825006,
+    "p": 0.07288171578381043,
+    "note": "not significant at this sample size"
+  },
+  "cycles_to_70pct_soh_5_50_95": [
+    94.0,
+    155.0,
+    256.0
+  ],
+  "limitations": [
+    "10 cells; temperature dependence not resolved",
+    "4C cells excluded: reversible cold capacity loss confounds fade (only 1 clean cold cell)",
+    "cycles at 1.5A charge / 2A discharge (~1C), constant conditions; no calendar aging or SOC/DoD dependence",
+    "small 18650 cells, not NMC-specific; transfer to a data-center UPS/BESS pack is an assumption"
+  ]
+}

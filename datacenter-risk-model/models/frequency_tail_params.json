@@ -1,0 +1,114 @@
+{
+ "source_id": "F1a-ev1",
+ "kind": "observed events (ERCOT BAL-003 selected events, OY2020-2022, n=55) + GPD fit; extrapolation is model-based",
+ "units": "Hz (settling DelFreq, B to A; not the instantaneous nadir)",
+ "under_frequency": {
+  "n_events": 50,
+  "years": 3,
+  "threshold_hz": 0.06,
+  "n_exceed": 31,
+  "rate_per_year": 10.33,
+  "gpd": {
+   "shape": -0.12446912643486106,
+   "scale": 0.03137897780054707,
+   "shape_ci95": [
+    -1.14,
+    0.12
+   ],
+   "ks_p": 0.7519357705126921
+  },
+  "return_levels_abs_dfreq_hz": {
+   "1y": {
+    "est": 0.124,
+    "ci95": [
+     0.104,
+     0.143
+    ]
+   },
+   "5y": {
+    "est": 0.158,
+    "ci95": [
+     0.109,
+     0.191
+    ]
+   },
+   "10y": {
+    "est": 0.171,
+    "ci95": [
+     0.109,
+     0.217
+    ]
+   },
+   "25y": {
+    "est": 0.186,
+    "ci95": [
+     0.109,
+     0.255
+    ]
+   }
+  },
+  "observed_max_hz": 0.177,
+  "threshold_sensitivity": {
+   "0.05": {
+    "n": 40,
+    "shape": -0.17,
+    "scale": 0.0357
+   },
+   "0.06": {
+    "n": 31,
+    "shape": -0.12,
+    "scale": 0.0314
+   },
+   "0.07": {
+    "n": 21,
+    "shape": -0.15,
+    "scale": 0.0324
+   },
+   "0.08": {
+    "n": 15,
+    "shape": -0.12,
+    "scale": 0.0296
+   }
+  }
+ },
+ "over_frequency_bal003": {
+  "n": 5,
+  "delfreq_hz": [
+   0.042,
+   0.046,
+   0.053,
+   0.055,
+   0.075
+  ],
+  "note": "too few to fit; all small"
+ },
+ "over_frequency_large_load_cases": [
+  {
+   "peak_hz": 60.086,
+   "mw_load_reduction": 415,
+   "note": "West Texas, multiple 3LG faults"
+  },
+  {
+   "peak_hz": 60.132,
+   "mw_load_reduction": 500,
+   "note": "DFW 2022-10-31, delayed clearing"
+  },
+  {
+   "peak_hz": 60.235,
+   "mw_load_reduction": 1560,
+   "note": "Far West Texas 2022-12-07, recovered in 12m27s"
+  },
+  {
+   "peak_hz": 60.11,
+   "mw_load_reduction": null,
+   "note": "Texas coast single load, 5 FMEs, 7 min recovery"
+  }
+ ],
+ "limitations": [
+  "55 BAL-003 'selected' events: selection criteria change by year (OY2020 events are larger on average) and exclude extreme/UFLS events",
+  "Settling-frequency deltas, not nadirs; nadir needs a separate dynamic relationship",
+  "OY2023+ not collected; values transcribed from images (OY2021/22) and an EMF (OY2020), spot-check recommended",
+  "GPD fitted to ~31 exceedances: shape poorly constrained; return levels beyond ~25 years are not supported by data",
+  "Over-frequency load-loss cases are 4 scenario points from an ERCOT presentation, not a fitted distribution"
+ ]
+}

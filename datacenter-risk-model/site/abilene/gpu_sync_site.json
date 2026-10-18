@@ -1,0 +1,229 @@
+{
+ "kind": "site-scale facility MC; job sizes + power shapes observed, MW/kW-per-GPU/rho are scenario inputs",
+ "training_share": 0.8,
+ "results": {
+  "load200MW_kwgpu1.25_rho0.0": {
+   "swing_p99_p1_mw": 7.7,
+   "std_mw": 1.9,
+   "ramp_1s_p99_mw_per_s": 1.1,
+   "ramp_1s_p999_mw_per_s": 1.3,
+   "mean_training_mw": 160.0,
+   "n_jobs": 4977
+  },
+  "load200MW_kwgpu1.25_rho0.25": {
+   "swing_p99_p1_mw": 50.0,
+   "std_mw": 19.1,
+   "ramp_1s_p99_mw_per_s": 7.9,
+   "ramp_1s_p999_mw_per_s": 21.4,
+   "mean_training_mw": 160.0,
+   "n_jobs": 5080
+  },
+  "load200MW_kwgpu1.25_rho1.0": {
+   "swing_p99_p1_mw": 188.8,
+   "std_mw": 76.1,
+   "ramp_1s_p99_mw_per_s": 34.1,
+   "ramp_1s_p999_mw_per_s": 88.5,
+   "mean_training_mw": 160.0,
+   "n_jobs": 5026
+  },
+  "load200MW_kwgpu1.75_rho0.0": {
+   "swing_p99_p1_mw": 8.6,
+   "std_mw": 2.2,
+   "ramp_1s_p99_mw_per_s": 1.2,
+   "ramp_1s_p999_mw_per_s": 1.7,
+   "mean_training_mw": 160.0,
+   "n_jobs": 3571
+  },
+  "load200MW_kwgpu1.75_rho0.25": {
+   "swing_p99_p1_mw": 51.8,
+   "std_mw": 20.0,
+   "ramp_1s_p99_mw_per_s": 9.4,
+   "ramp_1s_p999_mw_per_s": 24.1,
+   "mean_training_mw": 160.0,
+   "n_jobs": 3592
+  },
+  "load200MW_kwgpu1.75_rho1.0": {
+   "swing_p99_p1_mw": 201.1,
+   "std_mw": 78.8,
+   "ramp_1s_p99_mw_per_s": 48.0,
+   "ramp_1s_p999_mw_per_s": 95.9,
+   "mean_training_mw": 160.0,
+   "n_jobs": 3662
+  },
+  "load200MW_kwgpu2.25_rho0.0": {
+   "swing_p99_p1_mw": 10.2,
+   "std_mw": 2.6,
+   "ramp_1s_p99_mw_per_s": 1.4,
+   "ramp_1s_p999_mw_per_s": 1.9,
+   "mean_training_mw": 160.0,
+   "n_jobs": 2814
+  },
+  "load200MW_kwgpu2.25_rho0.25": {
+   "swing_p99_p1_mw": 52.1,
+   "std_mw": 20.2,
+   "ramp_1s_p99_mw_per_s": 8.4,
+   "ramp_1s_p999_mw_per_s": 23.4,
+   "mean_training_mw": 160.0,
+   "n_jobs": 2773
+  },
+  "load200MW_kwgpu2.25_rho1.0": {
+   "swing_p99_p1_mw": 189.6,
+   "std_mw": 73.9,
+   "ramp_1s_p99_mw_per_s": 43.9,
+   "ramp_1s_p999_mw_per_s": 109.2,
+   "mean_training_mw": 160.0,
+   "n_jobs": 2795
+  },
+  "load600MW_kwgpu1.25_rho0.0": {
+   "swing_p99_p1_mw": 14.3,
+   "std_mw": 3.7,
+   "ramp_1s_p99_mw_per_s": 1.8,
+   "ramp_1s_p999_mw_per_s": 2.3,
+   "mean_training_mw": 480.0,
+   "n_jobs": 15183
+  },
+  "load600MW_kwgpu1.25_rho0.25": {
+   "swing_p99_p1_mw": 154.0,
+   "std_mw": 61.0,
+   "ramp_1s_p99_mw_per_s": 34.2,
+   "ramp_1s_p999_mw_per_s": 75.0,
+   "mean_training_mw": 480.0,
+   "n_jobs": 15139
+  },
+  "load600MW_kwgpu1.25_rho1.0": {
+   "swing_p99_p1_mw": 577.6,
+   "std_mw": 236.6,
+   "ramp_1s_p99_mw_per_s": 112.4,
+   "ramp_1s_p999_mw_per_s": 285.1,
+   "mean_training_mw": 480.0,
+   "n_jobs": 15095
+  },
+  "load600MW_kwgpu1.75_rho0.0": {
+   "swing_p99_p1_mw": 18.0,
+   "std_mw": 4.9,
+   "ramp_1s_p99_mw_per_s": 2.1,
+   "ramp_1s_p999_mw_per_s": 2.7,
+   "mean_training_mw": 480.0,
+   "n_jobs": 10831
+  },
+  "load600MW_kwgpu1.75_rho0.25": {
+   "swing_p99_p1_mw": 146.9,
+   "std_mw": 57.2,
+   "ramp_1s_p99_mw_per_s": 25.1,
+   "ramp_1s_p999_mw_per_s": 66.7,
+   "mean_training_mw": 480.0,
+   "n_jobs": 10702
+  },
+  "load600MW_kwgpu1.75_rho1.0": {
+   "swing_p99_p1_mw": 601.0,
+   "std_mw": 243.4,
+   "ramp_1s_p99_mw_per_s": 138.1,
+   "ramp_1s_p999_mw_per_s": 297.6,
+   "mean_training_mw": 480.0,
+   "n_jobs": 10839
+  },
+  "load600MW_kwgpu2.25_rho0.0": {
+   "swing_p99_p1_mw": 18.8,
+   "std_mw": 4.8,
+   "ramp_1s_p99_mw_per_s": 2.4,
+   "ramp_1s_p999_mw_per_s": 3.1,
+   "mean_training_mw": 480.0,
+   "n_jobs": 8452
+  },
+  "load600MW_kwgpu2.25_rho0.25": {
+   "swing_p99_p1_mw": 152.5,
+   "std_mw": 61.9,
+   "ramp_1s_p99_mw_per_s": 28.4,
+   "ramp_1s_p999_mw_per_s": 70.8,
+   "mean_training_mw": 480.0,
+   "n_jobs": 8478
+  },
+  "load600MW_kwgpu2.25_rho1.0": {
+   "swing_p99_p1_mw": 577.9,
+   "std_mw": 231.6,
+   "ramp_1s_p99_mw_per_s": 122.6,
+   "ramp_1s_p999_mw_per_s": 306.7,
+   "mean_training_mw": 480.0,
+   "n_jobs": 8355
+  },
+  "load1200MW_kwgpu1.25_rho0.0": {
+   "swing_p99_p1_mw": 17.8,
+   "std_mw": 4.7,
+   "ramp_1s_p99_mw_per_s": 2.5,
+   "ramp_1s_p999_mw_per_s": 3.2,
+   "mean_training_mw": 960.0,
+   "n_jobs": 30321
+  },
+  "load1200MW_kwgpu1.25_rho0.25": {
+   "swing_p99_p1_mw": 305.2,
+   "std_mw": 123.7,
+   "ramp_1s_p99_mw_per_s": 63.3,
+   "ramp_1s_p999_mw_per_s": 151.5,
+   "mean_training_mw": 960.0,
+   "n_jobs": 30181
+  },
+  "load1200MW_kwgpu1.25_rho1.0": {
+   "swing_p99_p1_mw": 1204.7,
+   "std_mw": 484.1,
+   "ramp_1s_p99_mw_per_s": 301.0,
+   "ramp_1s_p999_mw_per_s": 643.8,
+   "mean_training_mw": 960.0,
+   "n_jobs": 30199
+  },
+  "load1200MW_kwgpu1.75_rho0.0": {
+   "swing_p99_p1_mw": 21.9,
+   "std_mw": 5.6,
+   "ramp_1s_p99_mw_per_s": 3.0,
+   "ramp_1s_p999_mw_per_s": 4.0,
+   "mean_training_mw": 960.0,
+   "n_jobs": 21558
+  },
+  "load1200MW_kwgpu1.75_rho0.25": {
+   "swing_p99_p1_mw": 312.0,
+   "std_mw": 122.6,
+   "ramp_1s_p99_mw_per_s": 74.6,
+   "ramp_1s_p999_mw_per_s": 164.8,
+   "mean_training_mw": 960.0,
+   "n_jobs": 21535
+  },
+  "load1200MW_kwgpu1.75_rho1.0": {
+   "swing_p99_p1_mw": 1234.2,
+   "std_mw": 505.0,
+   "ramp_1s_p99_mw_per_s": 269.8,
+   "ramp_1s_p999_mw_per_s": 597.4,
+   "mean_training_mw": 960.0,
+   "n_jobs": 21442
+  },
+  "load1200MW_kwgpu2.25_rho0.0": {
+   "swing_p99_p1_mw": 24.0,
+   "std_mw": 6.2,
+   "ramp_1s_p99_mw_per_s": 3.5,
+   "ramp_1s_p999_mw_per_s": 4.4,
+   "mean_training_mw": 960.0,
+   "n_jobs": 16751
+  },
+  "load1200MW_kwgpu2.25_rho0.25": {
+   "swing_p99_p1_mw": 310.6,
+   "std_mw": 121.0,
+   "ramp_1s_p99_mw_per_s": 69.5,
+   "ramp_1s_p999_mw_per_s": 149.3,
+   "mean_training_mw": 960.0,
+   "n_jobs": 16745
+  },
+  "load1200MW_kwgpu2.25_rho1.0": {
+   "swing_p99_p1_mw": 1090.1,
+   "std_mw": 438.1,
+   "ramp_1s_p99_mw_per_s": 194.9,
+   "ramp_1s_p999_mw_per_s": 537.0,
+   "mean_training_mw": 960.0,
+   "n_jobs": 16751
+  }
+ },
+ "note": "swing scales ~linearly with load only when rho=1; for independent jobs it grows more slowly (central-limit averaging)",
+ "limitations": [
+  "kW per GPU and training share are placeholders",
+  "power shapes from H100 training runs of 2-16 nodes applied to other hardware as normalized fractions",
+  "job sizes from Alibaba (not this site's scheduler)",
+  "rho unobservable"
+ ]
+}

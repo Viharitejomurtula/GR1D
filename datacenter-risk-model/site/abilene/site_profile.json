@@ -1,0 +1,32 @@
+{
+  "name": "Reference campus (Abilene, TX): a public-information proxy, NOT the operator's actual equipment or design",
+  "use": "Demonstration/reference only. Results describe what the models give for a campus with these publicly stated characteristics, not a claim about any operator's real design, protection settings or hardware.",
+  "selection_reason": "Located in ERCOT (the Texas rule), in the West weather zone where ERCOT documented large-load fault and ride-through events; public information about its grid connection exists.",
+  "verified_from_primary_pages": {
+    "note": "Verified 2026-10-17 by reading the company/contractor pages directly (not independent confirmation).",
+    "campus": {"statement": "1.2 GW total power capacity; eight buildings; up to 50,000 NVIDIA GB200 NVL72 per building; phase 1 two buildings, >200 MW; phase 2 six buildings expected mid-2026; 1.2 GW grid interconnection", "source": "Crusoe newsroom: expands Abilene AI campus to 1.2 GW"},
+    "cooling": {"statement": "Direct-to-chip liquid cooling, 'zero-water evaporation', closed water loop chilled by air-cooled chillers; ~1 million gallons of water per building", "source": "Crusoe newsroom; Madrona interview"},
+    "electrical": {"statement": "Original 200 MW, 138 kV substation (2022-2024); 12.5-acre 1 GW, 345 kV greenfield substation with five main power transformers (three temporary units while permanent ones are procured; fully energized 2026-03-10; swap expected Oct 2026); work done 'in coordination with AEP'. Medium-voltage distribution to low-voltage transformers, switchgear, low-voltage UPS, RPPs as modular units", "source": "Mortenson project page; Madrona interview"},
+    "on_site_resources": {"statement": "Natural-gas turbines for backup power; large-scale behind-the-meter battery storage and solar", "source": "Crusoe newsroom (capacities not stated)"}
+  },
+  "not_verified_do_not_present": {
+    "coordinates": "exact location not confirmed (Crusoe names the Lancium Clean Campus in Abilene; county not explicitly stated); the KABI weather station is ~8 km from city centre only",
+    "transmission_owner": "contractor says work was 'in coordination with AEP'; ownership of the line is not stated",
+    "onsite_gas_capacity_mw": "~360 MW appeared only in a secondary report (Cleanview); Crusoe gives no capacity",
+    "load_ramp": "421 MW rising to 843 MW (Epoch AI) appeared in a secondary source only",
+    "not_found_publicly": ["UPS/BBU converter limits", "battery chemistry/capacity", "DC-link capacitor part", "restart surge", "rail droop or board undervoltage settings", "ride-through design", "protection settings", "scheduler or PDU power behaviour"]
+  },
+  "scenario_inputs": {
+    "weather_station": "USW00013962 Abilene Regional Airport (KABI)",
+    "voltage_dip_class": "transmission (138/345 kV), stated by the contractor",
+    "load_scenarios_mw": {"phase1_verified": 200, "illustrative_mid": 600, "full_verified": 1200},
+    "training_share_of_load": 0.8,
+    "kw_per_gpu_rack_level": {"low": 1.25, "mid": 1.75, "high": 2.25, "basis": "GB200 NVL72 racks ~120-132 kW per 72 GPUs (third-party guides)"}
+  },
+  "low_mid_high_policy": {
+    "rho_cross_job_phase_sharing": {"low": 0.0, "mid": 0.25, "high": 1.0, "note": "bounds plus illustrative midpoint; NOT probabilities; never collapsed to a default"},
+    "systemic_event_rate_per_year": {"low": 0.028, "mid": 0.148, "high": 0.435, "note": "95% interval bounds and posterior median from 2 documented events in 14.75 years; never collapsed to a default"},
+    "west_texas_dip_rate_multiplier": {"low": 1.0, "mid": 1.5, "high": 2.0},
+    "capacitor_transfer": {"default": "mid: 12 V stress group, no film-vs-electrolytic scaling (1.0); spread reported but not driven into headline results"}
+  }
+}

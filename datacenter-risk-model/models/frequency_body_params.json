@@ -1,0 +1,140 @@
+{
+ "source_id": "F1a",
+ "kind": "observed (Open Frequency Database, Texas, 1 s, 2019-05; 5.1 days total)",
+ "units": {
+  "deviation": "mHz from 60 Hz",
+  "rocof": "mHz/s"
+ },
+ "quantiles": [
+  0.001,
+  0.01,
+  0.05,
+  0.25,
+  0.5,
+  0.75,
+  0.95,
+  0.99,
+  0.999
+ ],
+ "files": {
+  "US_TX01": {
+   "n": 123883,
+   "days": 1.44,
+   "mean": 0.365131116351719,
+   "rms": 14.60184783029985,
+   "std": 14.597340831677483,
+   "dev_q": [
+    -36.44,
+    -29.36,
+    -23.33,
+    -13.0,
+    3.09,
+    13.07,
+    19.68,
+    24.88,
+    30.25
+   ],
+   "rocof1s_q": [
+    -5.34,
+    -3.04,
+    -1.87,
+    -0.71,
+    -0.01,
+    0.69,
+    1.92,
+    3.35,
+    5.79
+   ],
+   "rocof10s_q": [
+    -3.195,
+    -1.968,
+    -1.144,
+    -0.389,
+    -0.008,
+    0.384,
+    1.171,
+    2.013,
+    3.277
+   ],
+   "rocof1s_abs_max": 12.266300000000001,
+   "autocorr_lags_1_10_60_300s": [
+    0.997,
+    0.876,
+    0.494,
+    -0.041
+   ]
+  },
+  "US_TX02": {
+   "n": 306224,
+   "days": 3.69,
+   "mean": 0.2544422160509952,
+   "rms": 17.39512848412308,
+   "std": 17.3932958942271,
+   "dev_q": [
+    -60.53,
+    -42.08,
+    -28.42,
+    -14.86,
+    5.2,
+    14.16,
+    22.04,
+    31.98,
+    40.12
+   ],
+   "rocof1s_q": [
+    -5.68,
+    -3.42,
+    -2.09,
+    -0.78,
+    -0.02,
+    0.75,
+    2.16,
+    3.73,
+    6.26
+   ],
+   "rocof10s_q": [
+    -3.354,
+    -2.074,
+    -1.203,
+    -0.406,
+    -0.005,
+    0.404,
+    1.219,
+    2.111,
+    3.317
+   ],
+   "rocof1s_abs_max": 63.356356,
+   "autocorr_lags_1_10_60_300s": [
+    0.997,
+    0.904,
+    0.632,
+    0.124
+   ]
+  }
+ },
+ "pooled": {
+  "rms": 16.6387355612891,
+  "std": 16.63629115121644
+ },
+ "validation": {
+  "ercot_published_rms1_mhz_2023": [
+   12.48,
+   18.21
+  ],
+  "ks_between_files": {
+   "stat": 0.054391997145123036,
+   "p": 3.058409692375086e-227
+  },
+  "pooled_rms_in_published_range": true
+ },
+ "sampling": {
+  "method": "resample 300-s contiguous blocks from data/processed/frequency_blocks.parquet",
+  "n_blocks": 1346
+ },
+ "limitations": [
+  "5.1 days in one May window: no seasonal, load-level or diurnal coverage",
+  "Body only: tails come from event model (frequency_tail)",
+  "Measurement site/accuracy not verified; 1 s resolution misses sub-second RoCoF",
+  "QI==0 samples only (2-4% flagged bad)"
+ ]
+}
