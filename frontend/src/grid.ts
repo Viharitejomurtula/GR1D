@@ -20,8 +20,18 @@ export type GridCell = {
   c: number;
 };
 
+export type Annotation = {
+  /** Shaded regions, e.g. real fault-clearing times. */
+  bands?: { from: number; to: number; label: string }[];
+  /** Single ticks, e.g. the documented ERCOT events. */
+  marks?: { v: number; label: string }[];
+  /** One line explaining what the shading means. */
+  note?: string;
+};
+
 export type Grid = {
   axes: Record<string, number[]>;
+  annotations: Record<string, Annotation>;
   order: string[];
   shape: number[];
   modes: string[];
@@ -38,7 +48,7 @@ export type GridResult = {
   snapped: Record<string, number>;
 };
 
-export async function loadGrid(url = '/data/grid.json'): Promise<Grid> {
+export async function loadGrid(url = '/data/ridethrough_grid.json'): Promise<Grid> {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`grid failed to load: ${res.status}`);
   return res.json();
@@ -86,6 +96,11 @@ export function lookup(grid: Grid, scenario: Record<string, number>): GridResult
     peakCurrent: cell.c,
     snapped,
   };
+}
+
+/** Shading and ticks for a slider, empty when the axis has none. */
+export function annotations(grid: Grid, name: string): Annotation {
+  return grid.annotations?.[name] ?? {};
 }
 
 /** Slider bounds, read from the grid so the UI cannot offer a value that was not computed. */

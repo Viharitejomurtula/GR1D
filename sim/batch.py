@@ -17,8 +17,8 @@ from dataclasses import fields
 
 import numpy as np
 
+from . import constants as C
 from . import runner
-from .grader import grade
 from .scenario import FIELD_ORDER, Scenario, sample_many
 
 DATA = runner.REPO / "data"
@@ -29,15 +29,21 @@ def _run_all(scenarios: list[Scenario]) -> list[pathlib.Path]:
     runner.build()
     ov_file = runner.BUILD / "batch_overrides.txt"
     ov_file.write_text(
-        "".join(f"{i}|{runner._overrides(sc)}\n" for i, sc in enumerate(scenarios))
+        "".join(
+            f"{i}|{sc.window_s()}|{C.OUTPUT_STEP_S}|{runner._overrides(sc)}\n"
+            for i, sc in enumerate(scenarios)
+        )
     )
 
     script = runner.BUILD / "batch_run.sh"
     script.write_text(
         "#!/bin/sh\n"
         "while IFS= read -r line; do\n"
-        '  idx="${line%%|*}"; ov="${line#*|}"\n'
-        '  ./RideThroughCore -override "$ov" -r "b_${idx}_res.csv" >/dev/null 2>&1\n'
+        '  idx="${line%%|*}"; rest="${line#*|}"\n'
+        '  win="${rest%%|*}"; rest="${rest#*|}"\n'
+        '  step="${rest%%|*}"; ov="${rest#*|}"\n'
+        '  ./RideThroughCore -override "$ov" -stopTime "$win" -stepSize "$step" '
+        '-r "b_${idx}_res.csv" >/dev/null 2>&1\n'
         "done < batch_overrides.txt\n"
     )
     script.chmod(0o755)
@@ -65,15 +71,7 @@ def run_batch(
             continue
         try:
             d = runner._read_csv(path)
-            g = grade(
-                d["time"],
-                d["v_sdp_pu"],
-                d["p_grid_w"],
-                d["i_grid_pu"],
-                connected=(d["facility_connected"] > 0.5) if "facility_connected" in d else None,
-                storage_left=float(d["soc"][-1]) if "soc" in d else float("nan"),
-                trips=runner._extract_trips(d),
-            )
+            g = runner.grade_trace(d)
         except Exception:
             failed += 1
             continue

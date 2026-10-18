@@ -182,6 +182,25 @@ def run(sc: Scenario, tag: str = "run") -> Grade:
         if down.size and up.size and up[-1] > down[0]:
             psu_restart_s = float(d["time"][up[-1] + 1] - d["time"][down[0] + 1])
 
+    return grade_trace(d)
+
+
+def grade_trace(d) -> Grade:
+    """Grade a finished trace, including the voltage-solution validity check.
+
+    Shared by run() and the batch runner: grading a trace without this check is how
+    collapsed-root solutions previously came back as clean passes.
+    """
+    storage_left = float(d["soc"][-1]) if "soc" in d else float("nan")
+
+    psu_restart_s = None
+    if "psu_enabled" in d:
+        on = d["psu_enabled"] > 0.5
+        down = np.nonzero(np.diff(on.astype(int)) == -1)[0]
+        up = np.nonzero(np.diff(on.astype(int)) == 1)[0]
+        if down.size and up.size and up[-1] > down[0]:
+            psu_restart_s = float(d["time"][up[-1] + 1] - d["time"][down[0] + 1])
+
     g = _grade_run(d, storage_left, psu_restart_s)
     if "v_disc" in d:
         # Voltage solution check (see the model): the physical root of the constant-power quadratic is the larger one, and a

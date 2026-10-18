@@ -10,7 +10,7 @@ facility under varying conditions rather than a different facility per slider po
     python3 scripts/make_grid.py --steps 21,10,10,11      # 23,100 runs, ~40 min
     python3 scripts/make_grid.py --steps 16,8,8,8         #  8,192 runs, ~14 min
 
-Writes frontend/public/data/grid.json:
+Writes frontend/public/data/ridethrough_grid.json (NOT grid.json, which is the map):
 
     { axes: {name: [values...]}, shape: [...], order: [names],
       cells: [{p, m, r, c}, ...] }   flat, row-major over `order`
@@ -38,6 +38,31 @@ from sim.grader import grade  # noqa: E402
 from sim.scenario import GRID_FRIENDLY  # noqa: E402
 
 AXES = ("dip_depth_pu", "dip_duration_s", "outdoor_temp_c", "battery_age_yr")
+
+# Shaded regions and ticks for the sliders. Every value is sourced; see Parameter_Table.md.
+ANNOTATIONS = {
+    "dip_depth_pu": {
+        "marks": [
+            {"v": 0.535, "label": "TX 0.535"},
+            {"v": 0.670, "label": "TX 0.670"},
+            {"v": 0.844, "label": "TX 0.844"},
+        ],
+        "note": "Ticks are the three documented ERCOT events (NERC crypto incident review, Jan 2026).",
+    },
+    "dip_duration_s": {
+        # GE Vernova via Parameter_Table.md: normal clearing is 4-6 cycles depending on
+        # voltage class, breaker failure 9-15. At 60 Hz that is 67-100 ms and 150-250 ms.
+        "bands": [
+            {"from": 0.067, "to": 0.100, "label": "normal clearing"},
+            {"from": 0.150, "to": 0.250, "label": "breaker-failure clearing"},
+        ],
+        "note": "Shaded: real fault-clearing times, 4-6 cycles normal and 9-15 on breaker failure.",
+    },
+    "battery_age_yr": {
+        "marks": [{"v": 10.0, "label": "typical replacement"}],
+        "note": "Li-ion service life is 8-15 years; past 10 is deferred replacement.",
+    },
+}
 MODES = (
     "passed", "exceeded 125% current cap", "cooling tripped",
     "PSU shutdown and restart delay", "below power floor",
@@ -62,7 +87,7 @@ def build_axes(steps: list[int]) -> dict[str, list[float]]:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--steps", default="16,8,8,8", help="steps per axis, in AXES order")
-    ap.add_argument("--out", default="frontend/public/data/grid.json")
+    ap.add_argument("--out", default="frontend/public/data/ridethrough_grid.json")
     ap.add_argument("--chunk", type=int, default=2000, help="runs per container invocation")
     args = ap.parse_args()
 
@@ -129,6 +154,7 @@ def main() -> None:
         "order": list(AXES),
         "shape": steps,
         "modes": list(MODES),
+        "annotations": ANNOTATIONS,
         "design": "GRID_FRIENDLY reference facility; all other inputs held at its values",
         "cells": cells,
     }))
