@@ -28,6 +28,18 @@ HEADS = ("passed",) + REGRESSION_TARGETS
 # Hard upper bounds that hold by definition, applied to each member's prediction before averaging:
 # recovery_margin_s = deadline - recovery time, so it cannot exceed the grader's deadline (NOGRR 282 2.0 s).
 UPPER_BOUNDS = {"recovery_margin_s": C.RECOVERY_DEADLINE_S}
+# Targets clamped to the range seen in training (encoder.target_low/high): the heads are unbounded and otherwise
+# extrapolate to impossible values (e.g. negative minimum power). recovery_margin_s is clamped only from above (censored
+# runs bound it from above, so lower predictions are legitimate).
+CLAMP_TO_TRAINING = ("min_power", "peak_current_pu", "floor_violation_s")
+
+
+def target_bounds(encoder, t: str) -> tuple[float | None, float | None]:
+    """(lower, upper) clamp for target t: UPPER_BOUNDS, plus the training range for CLAMP_TO_TRAINING targets."""
+    lo, hi = None, UPPER_BOUNDS.get(t)
+    if t in CLAMP_TO_TRAINING and getattr(encoder, "target_low", None):
+        lo, hi = encoder.target_low[t], encoder.target_high[t] if hi is None else min(hi, encoder.target_high[t])
+    return lo, hi
 
 
 class MemberNet(nn.Module):
@@ -94,8 +106,8 @@ class Ensemble:
         res["p_pass_mean"], res["p_pass_std"] = p.mean(0), p.std(0)
         for t in REGRESSION_TARGETS:
             y = np.stack([self.encoder.unscale(t, o[t].numpy()) for o in outs])
-            if t in UPPER_BOUNDS:
-                y = np.minimum(y, UPPER_BOUNDS[t])
+            lo, hi = target_bounds(self.encoder, t)
+            y = np.clip(y, lo, hi) if lo is not None or hi is not None else y
             res[f"{t}_mean"], res[f"{t}_std"] = y.mean(0), y.std(0) * self.std_scale.get(t, 1.0)
         pr = np.stack([torch.softmax(o["failure_mode"], dim=1).numpy() for o in outs])
         res["failure_mode_prob_mean"], res["failure_mode_prob_std"] = pr.mean(0), pr.std(0)

@@ -210,7 +210,13 @@ def grade_trace(d) -> Grade:
     if "v_disc" in d:
         # Voltage solution check (see the model): the physical root of the constant-power quadratic is the larger one, and a
         # negative discriminant means no operating point exists at all.
-        no_solution = bool(d["v_disc"].min() < -1e-6)
+        no_solution_t = d["time"][d["v_disc"] < -1e-6]
+        no_solution, transient_ms = _sustained_no_solution(d, no_solution_t)
+        if no_solution_t.size and not no_solution:
+            # A short stretch (dip onset until the faulted phases' PSUs lock out or the battery takes over): the PSUs still draw
+            # constant power, which the sagged network cannot deliver. A real PSU's input current saturates and its hold-up capacitor bridges that gap, so the
+            # run is graded (the model holds v_sdp_pu at the nose of the curve, the deepest voltage the network can reach).
+            g.numerics_note = f"transient no-operating-point for {transient_ms:.1f} ms, within PSU hold-up (graded through)"
         wrong_root = bool(d["v_branch_margin"].min() < -1e-4)
         if no_solution or wrong_root:
             g.numerics_ok = False
@@ -218,6 +224,23 @@ def grade_trace(d) -> Grade:
             g.passed = False
             g.failure_mode = "voltage collapse" if no_solution else "invalid: collapsed-root solution"
     return g
+
+
+def _sustained_no_solution(d, no_solution_t: np.ndarray) -> tuple[bool, float]:
+    """(collapse, transient_ms). "No operating point" is a collapse only if one stretch of it lasts longer than the PSU
+    hold-up time (PSU_HOLDUP_ENERGY_J / PSU_RATED_W = 60 J / 3 kW = 20 ms, the gap a PSU's bulk capacitor bridges while its
+    input cannot draw power), plus two output steps for the trace's sampling (stretches often end exactly when hold-up
+    runs out and the PSUs drop). Shorter stretches (the ms before the faulted
+    phases' PSUs lock out or the battery takes over) are graded through. transient_ms is the longest stretch (0 if none)."""
+    if not no_solution_t.size:
+        return False, 0.0
+    step = C.OUTPUT_STEP_S
+    breaks = np.nonzero(np.diff(no_solution_t) > 1.5 * step)[0]
+    starts = np.r_[no_solution_t[0], no_solution_t[breaks + 1]]
+    ends = np.r_[no_solution_t[breaks], no_solution_t[-1]]
+    longest = float((ends - starts).max()) + step
+    holdup_s = C.PSU_HOLDUP_ENERGY_J / C.PSU_RATED_W
+    return longest > holdup_s + 2 * step, 1e3 * longest
 
 
 def _invariants(d) -> list[str]:

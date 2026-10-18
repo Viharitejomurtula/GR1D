@@ -112,11 +112,15 @@ class FeatureEncoder:
         return self
 
     def fit_targets(self, train: pd.DataFrame, classes: list[str] | None = None) -> "FeatureEncoder":
-        """Regression-target scaling and failure_mode classes (default: those in train) from simulator outputs."""
+        """Regression-target scaling and failure_mode classes (default: those in train) from simulator outputs.
+        Scaling uses only rows whose regression targets are valid (regression_ok, when the column exists)."""
+        classes_src = train
+        if "regression_ok" in train:
+            train = train[train["regression_ok"].astype(bool)]
         for t in REGRESSION_TARGETS:
             self.target_mean[t], self.target_std[t] = _scale(pd.Series(self.target_raw(train, t)))
             self.target_low[t], self.target_high[t] = float(train[t].min()), float(train[t].max())
-        self.classes = sorted(classes if classes is not None else train["failure_mode"].unique())
+        self.classes = sorted(classes if classes is not None else classes_src["failure_mode"].unique())
         return self
 
     @property
@@ -169,6 +173,9 @@ class FeatureEncoder:
         idx = {c: i for i, c in enumerate(self.classes)}
         out["failure_mode"] = d["failure_mode"].map(idx).fillna(-1).astype(int).to_numpy()
         out["censored"] = d["censored"].to_numpy(bool) if "censored" in d else np.zeros(len(d), bool)
+        out["regression_ok"] = d["regression_ok"].to_numpy(bool) if "regression_ok" in d else np.ones(len(d), bool)
+        for t in REGRESSION_TARGETS:                  # masked rows: any finite placeholder, excluded from the loss
+            out[t] = np.where(out["regression_ok"], np.nan_to_num(out[t]), 0.0)
         return out
 
     def unscale(self, t: str, z: np.ndarray) -> np.ndarray:

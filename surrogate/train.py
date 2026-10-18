@@ -65,8 +65,9 @@ def calibrate(ens: Ensemble, val: pd.DataFrame) -> dict[str, float]:
     are left out for recovery_margin_s; rows with zero ensemble std are left out."""
     pr = ens.predict(ens.encoder.transform(val))
     out = {}
+    reg_ok = val["regression_ok"].to_numpy(bool) if "regression_ok" in val else np.ones(len(val), bool)
     for t in REGRESSION_TARGETS:
-        keep = ~val["censored"].to_numpy(bool) if t == "recovery_margin_s" else np.ones(len(val), bool)
+        keep = reg_ok & (~val["censored"].to_numpy(bool) if t == "recovery_margin_s" else True)
         sd = pr[f"{t}_std"] / ens.std_scale.get(t, 1.0)
         keep &= sd > 0
         z2 = ((val[t].astype(float).to_numpy() - pr[f"{t}_mean"]) / np.where(sd > 0, sd, 1.0)) ** 2
@@ -89,18 +90,20 @@ def member_loss(out: dict, y: dict, cfg: dict) -> torch.Tensor:
     FeatureEncoder.targets; failure_mode index -1 (class absent from training) is ignored."""
     w = cfg["loss_weights"]
     loss = w["passed"] * F.binary_cross_entropy_with_logits(out["passed"], y["passed"])
-    m_pred, m_true, cens = out["recovery_margin_s"], y["recovery_margin_s"], y["censored"]
-    resid = torch.where(cens, torch.relu(m_pred - m_true), m_pred - m_true)
-    loss = loss + w["recovery_margin_s"] * F.huber_loss(resid, torch.zeros_like(resid), delta=cfg["huber_delta"])
-    for t in ("min_power", "peak_current_pu", "floor_violation_s"):
-        loss = loss + w[t] * F.mse_loss(out[t], y[t])
+    ok = y["regression_ok"]                           # collapse rows: pass/fail and failure mode only
+    if ok.any():
+        m_pred, m_true, cens = out["recovery_margin_s"][ok], y["recovery_margin_s"][ok], y["censored"][ok]
+        resid = torch.where(cens, torch.relu(m_pred - m_true), m_pred - m_true)
+        loss = loss + w["recovery_margin_s"] * F.huber_loss(resid, torch.zeros_like(resid), delta=cfg["huber_delta"])
+        for t in ("min_power", "peak_current_pu", "floor_violation_s"):
+            loss = loss + w[t] * F.mse_loss(out[t][ok], y[t][ok])
     loss = loss + w["failure_mode"] * F.cross_entropy(out["failure_mode"], y["failure_mode"], ignore_index=-1)
     return loss
 
 
 def _tensors(x: np.ndarray, y: dict) -> tuple[torch.Tensor, dict]:
     """numpy features and targets -> torch tensors."""
-    yt = {k: torch.as_tensor(np.array(v), dtype=torch.long if k == "failure_mode" else torch.bool if k == "censored" else torch.float32)
+    yt = {k: torch.as_tensor(np.array(v), dtype=torch.long if k == "failure_mode" else torch.bool if k in ("censored", "regression_ok") else torch.float32)
           for k, v in y.items()}
     return torch.as_tensor(x, dtype=torch.float32), yt
 
@@ -153,8 +156,9 @@ def metrics(ens: Ensemble, d: pd.DataFrame, k_std: float) -> dict:
     out = {"n": len(d), "passed_accuracy": float(((pr["p_pass_mean"] > 0.5) == y).mean()),
            "passed_auc": auc(y, pr["p_pass_mean"]), "passed_brier": float(np.mean((pr["p_pass_mean"] - y) ** 2)),
            "failure_mode_accuracy": float((pr["failure_mode"] == d["failure_mode"].to_numpy()).mean())}
+    reg_ok = d["regression_ok"].to_numpy(bool) if "regression_ok" in d else np.ones(len(d), bool)
     for t in REGRESSION_TARGETS:
-        keep = ~d["censored"].to_numpy(bool) if t == "recovery_margin_s" else np.ones(len(d), bool)
+        keep = reg_ok & (~d["censored"].to_numpy(bool) if t == "recovery_margin_s" else True)
         err = np.abs(pr[f"{t}_mean"] - d[t].astype(float).to_numpy())[keep]
         out[f"{t}_mae"] = float(err.mean()) if keep.any() else float("nan")
         out[f"{t}_within_{k_std:g}std"] = float((err <= k_std * pr[f"{t}_std"][keep]).mean()) if keep.any() else float("nan")
@@ -192,7 +196,7 @@ def train(csv: str | Path, out_dir: str | Path, seed: int, overrides: dict | Non
     (out_dir / "config.json").write_text(json.dumps(cfg, indent=2))
     (out_dir / "provenance.json").write_text(json.dumps({"dataset": str(Path(csv).resolve()), **prov}, indent=2))
     (out_dir / "split.json").write_text(json.dumps({k: v.tolist() for k, v in split.items()}))
-    edge = te[te["recovery_margin_s"].abs() < cfg["edge_band_s"]]
+    edge = te[te["regression_ok"].astype(bool) & (te["recovery_margin_s"].abs() < cfg["edge_band_s"])]
     result = {"data": report, "seed": seed, "warnings": notes, "class_counts": counts,
               "std_scale": ens.std_scale, "members": history,
               "test": metrics(ens, te, cfg["uncertainty_k"]), "edge": metrics(ens, edge, cfg["uncertainty_k"])}

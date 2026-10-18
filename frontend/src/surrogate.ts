@@ -24,7 +24,7 @@ export type SurrogateModel = {
   excluded: string[];
   ood_margin_frac: number;
   heads: string[];
-  targets: Record<string, { mean: number; std: number; log1p: boolean; std_scale: number; upper: number | null }>;
+  targets: Record<string, { mean: number; std: number; log1p: boolean; std_scale: number; lower: number | null; upper: number | null }>;
   classes: string[];
   presets: Record<'grid_friendly' | 'legacy_ups', Record<string, number>>;
   members: { layers: Layer[]; scalar: Layer; classes: Layer }[];
@@ -189,6 +189,7 @@ export function predict(
       const spec = model.targets[t];
       let y = sc[i + 1] * spec.std + spec.mean;
       if (spec.log1p) y = Math.expm1(y);
+      if (spec.lower !== null && spec.lower !== undefined) y = Math.max(y, spec.lower);
       reg[t].push(spec.upper !== null ? Math.min(y, spec.upper) : y);
     });
     softmax(dense(h, m.classes)).forEach((p, i) => (modeSums[i] += p));

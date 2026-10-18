@@ -74,9 +74,10 @@ def verify(model_dir: str | Path, n: int, seed: int) -> dict:
     pred = Surrogate.load(model_dir).predict(d)
     sim_pass, sur_pass = d["passed"].to_numpy(bool), pred["p_pass_mean"].to_numpy() > 0.5
     k = CONFIG["uncertainty_k"]
-    within = {t: float((np.abs(d[t].to_numpy(float) - pred[f"{t}_mean"]) <= k * pred[f"{t}_std"]).mean())
+    reg = d["regression_ok"].to_numpy(bool)          # collapse rows: pass/fail only
+    within = {t: float((np.abs(d[t].to_numpy(float) - pred[f"{t}_mean"]) <= k * pred[f"{t}_std"])[reg].mean())
               for t in REGRESSION_TARGETS}
-    unc = ~d["censored"].to_numpy(bool)
+    unc = reg & ~d["censored"].to_numpy(bool)
     return {"n": n, "seed": seed, "simulated": len(sim), "usable": len(d),
             "confusion": {"tp": int((sur_pass & sim_pass).sum()), "fp": int((sur_pass & ~sim_pass).sum()),
                           "fn": int((~sur_pass & sim_pass).sum()), "tn": int((~sur_pass & ~sim_pass).sum())},

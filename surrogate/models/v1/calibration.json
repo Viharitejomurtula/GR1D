@@ -1,6 +1,6 @@
 {
-  "recovery_margin_s": 2.7962838285769887,
-  "min_power": 4.975482526116176,
-  "peak_current_pu": 5.324720536683419,
-  "floor_violation_s": 6.569027416696337
+  "recovery_margin_s": 5.450684563390974,
+  "min_power": 5.216490252440733,
+  "peak_current_pu": 3.2952361029992714,
+  "floor_violation_s": 4.989184022592698
 }

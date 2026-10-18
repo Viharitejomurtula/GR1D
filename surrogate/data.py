@@ -34,6 +34,8 @@ OUTPUT_COLUMNS = ("passed", "passed_pre2028", "failure_mode", "recovery_margin_s
                   "final_power_frac", "floor_violation_s", "peak_current_pu", "envelope_violation_s",
                   "storage_left", "n_trips")
 NUMERIC_OUTPUTS = tuple(c for c in OUTPUT_COLUMNS if c not in ("failure_mode", "storage_left"))
+COLLAPSE_MODE = "voltage collapse"
+COLLAPSE_MAX_DEPTH_PU = 0.2   # at or below this retained voltage a sustained collapse is a real failure (see load())
 NUMERICS_COLUMN = "numerics_ok"   # written by sim.batch since the structure fixes; 0 = the solver's voltage solution is invalid
 CRASH_MODE = "no disturbance"
 CRASH_DEPTH_PU = 0.9        # a run graded "no disturbance" while the dip retained < 0.9 pu never saw its dip
@@ -140,14 +142,20 @@ def load(csv: str | Path, require_inputs: bool = True) -> tuple[pd.DataFrame, di
 
     Inputs: csv; require_inputs (default True) raises ValueError when the CSV lacks any current Scenario
         input (missing_inputs). Set False only to inspect the outputs of an older dataset.
+    Collapse rule: a run that ended in "voltage collapse" (no operating point even after the PSUs locked out) with
+        dip_depth_pu <= COLLAPSE_MAX_DEPTH_PU is KEPT as a failure (passed = 0, failure_mode "voltage collapse") with
+        regression_ok = False, so training uses its pass/fail and failure mode but not its other outputs (they come
+        from a solve with no operating point). At such depths the network cannot supply the facility, NOGRR 282 still
+        requires staying connected, and real ERCOT loads at ~0 pu lost all consumption.
     Filters (each count reported):
-        numerics: numerics_ok == 0 (the simulator flagged an invalid voltage solution), when the column exists
+        numerics: numerics_ok == 0 (the simulator flagged an invalid run), when the column exists, except collapses
+            kept by the collapse rule
         crash: failure_mode == "no disturbance" with dip_depth_pu < 0.9 (the solver failed before the dip)
         non_finite: any numeric output (NUMERIC_OUTPUTS) not finite
     Censored: recovery_margin_s < 0 and final_power_frac < 0.9 (never recovered inside the window, so
         the true margin is at most the recorded one).
-    Output: (kept rows with a "censored" column, {"rows_read", "dropped_numerics", "dropped_crash",
-        "dropped_non_finite", "kept", "censored", "missing_inputs"}).
+    Output: (kept rows with "censored" and "regression_ok" columns, {"rows_read", "collapse_kept", "dropped_numerics",
+        "dropped_crash", "dropped_non_finite", "kept", "censored", "missing_inputs"}).
     """
     gone = missing_inputs(csv)
     if gone and require_inputs:
@@ -157,13 +165,17 @@ def load(csv: str | Path, require_inputs: bool = True) -> tuple[pd.DataFrame, di
     missing = [c for c in OUTPUT_COLUMNS if c not in d.columns]
     if missing:
         raise ValueError(f"{csv}: missing simulator output columns {missing}")
-    bad_num = (d[NUMERICS_COLUMN] == 0) if NUMERICS_COLUMN in d else pd.Series(False, index=d.index)
-    crash = ~bad_num & (d["failure_mode"] == CRASH_MODE) & (d["dip_depth_pu"] < CRASH_DEPTH_PU)
-    finite = np.isfinite(d[list(NUMERIC_OUTPUTS)].astype(float)).all(axis=1)
+    invalid = (d[NUMERICS_COLUMN] == 0) if NUMERICS_COLUMN in d else pd.Series(False, index=d.index)
+    collapse = invalid & (d["failure_mode"] == COLLAPSE_MODE) & (d["dip_depth_pu"] <= COLLAPSE_MAX_DEPTH_PU)
+    bad_num = invalid & ~collapse
+    crash = ~invalid & (d["failure_mode"] == CRASH_MODE) & (d["dip_depth_pu"] < CRASH_DEPTH_PU)
+    finite = np.isfinite(d[list(NUMERIC_OUTPUTS)].astype(float)).all(axis=1) | collapse
     non_finite = ~bad_num & ~crash & ~finite
     kept = d[~bad_num & ~crash & finite].copy()
-    kept["censored"] = (kept["recovery_margin_s"] < 0) & (kept["final_power_frac"] < RECOVERY_FRACTION)
-    report = {"rows_read": len(d), "dropped_numerics": int(bad_num.sum()), "dropped_crash": int(crash.sum()),
+    kept["regression_ok"] = ~collapse[kept.index]
+    kept.loc[~kept["regression_ok"], "passed"] = 0
+    kept["censored"] = kept["regression_ok"] & (kept["recovery_margin_s"] < 0) & (kept["final_power_frac"] < RECOVERY_FRACTION)
+    report = {"rows_read": len(d), "collapse_kept": int(collapse.sum()), "dropped_numerics": int(bad_num.sum()), "dropped_crash": int(crash.sum()),
               "dropped_non_finite": int(non_finite.sum()), "kept": len(kept), "censored": int(kept["censored"].sum()),
               "missing_inputs": gone}
     return kept.reset_index(drop=True), report

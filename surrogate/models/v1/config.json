@@ -32,5 +32,6 @@
   "onnx_parity_atol": 0.0001,
   "uncertainty_k": 2.0,
   "calibrate_std": true,
-  "min_class_rows": 3
+  "min_class_rows": 3,
+  "ood_margin_frac": 0.01
 }

@@ -36,7 +36,7 @@ def export_web(model_dir: str | Path = DEFAULT_MODEL, out: str | Path = DEFAULT_
     import torch
 
     from sim import scenario
-    from surrogate.model import HEADS, UPPER_BOUNDS
+    from surrogate.model import HEADS, target_bounds
     from surrogate.predict import Surrogate
 
     d = Path(model_dir)
@@ -65,7 +65,8 @@ def export_web(model_dir: str | Path = DEFAULT_MODEL, out: str | Path = DEFAULT_
         "ood_margin_frac": cfg.get("ood_margin_frac", 0.01),
         "heads": list(HEADS),
         "targets": {t: {"mean": enc.target_mean[t], "std": enc.target_std[t], "log1p": t == "floor_violation_s",
-                        "std_scale": sur.ensemble.std_scale.get(t, 1.0), "upper": UPPER_BOUNDS.get(t)}
+                        "std_scale": sur.ensemble.std_scale.get(t, 1.0),
+                        "lower": target_bounds(enc, t)[0], "upper": target_bounds(enc, t)[1]}
                     for t in HEADS[1:]},
         "classes": enc.classes,
         "presets": {"grid_friendly": preset(scenario.GRID_FRIENDLY), "legacy_ups": preset(scenario.LEGACY_UPS)},
@@ -179,6 +180,8 @@ class WebSurrogate:
                 spec = targets[t]
                 y = sc[i] * spec["std"] + spec["mean"]
                 y = math.expm1(y) if spec["log1p"] else y
+                if spec.get("lower") is not None:
+                    y = max(y, spec["lower"])
                 reg[t].append(min(y, spec["upper"]) if spec["upper"] is not None else y)
             z = h @ m["classes"][0] + m["classes"][1]
             e = np.exp(z - z.max())
