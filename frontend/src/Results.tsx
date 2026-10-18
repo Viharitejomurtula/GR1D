@@ -526,8 +526,7 @@ function FailureMap({ you }: { you: Scenario }) {
 }
 
 // ---- 02 replay ----
-function Replay({ s }: { s: Scenario }) {
-  const tr = useMemo(() => trace(s), [s])
+function Replay({ s, tr }: { s: Scenario; tr: TraceShape }) {
   const W = 1100, L = 64, R = 24, PH = 112, STEP = 168, TOP = 56
   const X = (t: number) => L + (t / tr.window) * (W - L - R)
   const bottom = TOP + 2 * STEP + PH
@@ -624,7 +623,7 @@ function ReportCard() {
           <div key={id} className={`grid gap-x-8 gap-y-4 border-b border-[#2b2720] py-7 ${cols}`}>
             <div>
               <h3 className="display flex items-center gap-2.5 text-[22px] leading-[1.2] font-semibold tracking-[-0.02em] text-[#f6f1e2]">
-                <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: m.color }} />{id} · {m.name}
+                <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: m.color }} />{m.name}
               </h3>
               <p className="mt-2 pl-5 text-[15px] leading-[1.55] text-[#c4bca7]">{m.what}</p>
             </div>
@@ -716,8 +715,10 @@ export default function Results() {
         { includeTrace: true }
       )
       if (r.trace) setSimulated(traceFromApi(r.trace, next, r))
-    } catch {
-      // Simulator unreachable: the illustrative curve stays, labelled as such.
+    } catch (err) {
+      // Simulator unreachable, or the response could not be read: the illustrative curve
+      // stays. Logged rather than swallowed -- a silent catch here hides real failures.
+      console.warn('simulator run failed, keeping the illustrative curve:', err)
     }
   }
 
@@ -761,15 +762,15 @@ export default function Results() {
           ? `A ${VARS.depth.fmt(lastRun.depth)} dip at ${VARS.temp.fmt(lastRun.temp)}. Power is back ${Math.abs(late).toFixed(2)} s before the deadline.`
           : `A ${VARS.depth.fmt(lastRun.depth)} dip at ${VARS.temp.fmt(lastRun.temp)}. Power comes back ${late.toFixed(2)} s too late.`}
         lede="One illustrative run with the slider settings: the voltage dip, how much power the site draws from the grid, and what the battery does. It updates each time you run the stress test.">
-        <Replay s={lastRun} />
+        <Replay s={lastRun} tr={tr} />
       </Section>
 
-      <Section n="03" kicker="Report card" title="Three failure modes, three small fixes."
-        lede="Ranked by how often each one happens across all conditions. Each fix is the smallest change that removed the mode in re-testing.">
+      <Section n="03" kicker="Report card" title="Five ways this design fails."
+        lede="Ranked by how often each one happens across the simulated runs, with a 95% band. Naming the smallest fix needs a search over the design space, which is not built yet.">
         <ReportCard />
       </Section>
 
-      <Section n="04" kicker="Legacy vs product · Texas events" title="Legacy equipment fails two of three real dips. The product passes all three."
+      <Section n="04" kicker="Legacy vs product · Texas events" title="Legacy equipment fails all three real dips. The product passes all three."
         lede="Three recorded ERCOT voltage events replayed against the same reference campus, once with legacy double-conversion UPS and once with the product.">
         <Comparison />
       </Section>
