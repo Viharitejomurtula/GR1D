@@ -72,6 +72,12 @@ class Scenario:
     # inrush. Sampling it here keeps the input -> verdict mapping deterministic, so the
     # surrogate is not trained against label noise.
     psu_restart_delay_s: float
+    # Fleet spread of the 172 V trip threshold. Unsourced; sampled so sensitivity
+    # analysis can judge whether it matters.
+    psu_trip_spread_frac: float
+    # 1/3, 2/3 or 1.0 of load on faulted phases. ANDES gives balanced faults only, so this
+    # is the one place single-phase behaviour enters the model.
+    faulted_phase_frac: float
 
     def to_vector(self) -> np.ndarray:
         return np.array([float(getattr(self, f.name)) for f in fields(self)])
@@ -172,6 +178,8 @@ def sample(rng: np.random.Generator | None = None, *, dip_start_s: float = 1.0) 
         cooling_ride_through_s=float(rng.uniform(0.02, 5.0)),
         vfd_dc_uv_trip_pu=float(rng.uniform(0.65, 0.75)),
         psu_restart_delay_s=float(rng.uniform(0.0, 5.5)),
+        psu_trip_spread_frac=float(rng.uniform(0.01, 0.08)),
+        faulted_phase_frac=float(rng.choice([1/3, 2/3, 1.0])),
     )
 
 
@@ -224,6 +232,8 @@ GRID_FRIENDLY = Scenario(
     relay_delay_s=0.5,
     cooling_ride_through_s=3.0,
     psu_restart_delay_s=0.0,
+    psu_trip_spread_frac=0.04,
+    faulted_phase_frac=1.0,
 )
 
 LEGACY_UPS = Scenario(
@@ -234,4 +244,6 @@ LEGACY_UPS = Scenario(
     relay_delay_s=0.0,
     cooling_ride_through_s=0.02,  # unprotected contactor
     psu_restart_delay_s=5.5,
+    psu_trip_spread_frac=0.04,
+    faulted_phase_frac=1.0,
 )

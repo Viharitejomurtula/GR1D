@@ -62,6 +62,8 @@ PARAM_MAP = {
     "restart_surge_x": "restart_surge_x",
     "restart_surge_s": "restart_surge_s",
     "battery_temp_c": "battery_temp_c",
+    "psu_trip_spread_frac": "psu_trip_spread_frac",
+    "faulted_phase_frac": "faulted_phase_frac",
 }
 
 INT_PARAMS = {"shelves_per_rack": "shelves_per_rack", "bbu_modules_per_rack": "bbu_modules_per_rack"}

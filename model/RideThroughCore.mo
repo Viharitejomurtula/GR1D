@@ -50,6 +50,17 @@ model RideThroughCore
   parameter Real restart_surge_x = 1.15 "Peak server draw on restart, times pre-fault";
   parameter Real restart_surge_s = 0.5 "Decay time constant of the restart surge";
 
+  // PSUs do not trip as one block. The 172 V figure is nominal: manufacturing spread,
+  // per-rack feeder differences and (in reality) unbalanced faults mean the fleet sheds
+  // progressively. Unsourced -- sampled so sensitivity analysis can judge whether it matters.
+  parameter Real psu_trip_spread_frac = 0.04 "Half-width of the fleet trip threshold spread";
+
+  // Fraction of facility load sitting on phases that actually dip. ORv3 PSUs connect
+  // line-to-neutral, so a single-phase fault leaves two thirds of the fleet at nominal
+  // voltage. The real ERCOT events were unbalanced (1-2 of 3 phases below 0.7 pu), which
+  // is why a balanced model over-predicts load loss. 1.0 = balanced three-phase fault.
+  parameter Real faulted_phase_frac = 1.0;
+
   parameter Real battery_temp_c = 25.0 "Server hall temperature, an initial condition";
   parameter Integer shelves_per_rack = 6;
   parameter Integer bbu_modules_per_rack = 12;
@@ -91,6 +102,9 @@ model RideThroughCore
   final parameter Real p_total_rated_w = p_it_rated_w * workload + p_cooling_rated_w;
   final parameter Real n_psu = p_it_rated_w / PSU_RATED_W;
   final parameter Real e_holdup_max_j = n_psu * PSU_HOLDUP_J;
+  final parameter Real PSU_UV_HIGH_V = PSU_UV_V * (1.0 + psu_trip_spread_frac);
+  final parameter Real PSU_UV_LOW_V = PSU_UV_V * (1.0 - psu_trip_spread_frac);
+  constant Real TRIP_TAU_S = 0.001;
   // Capacity derating, Sandia SAND2008-5583 Table 2: 0.74 at 0 C rising to 1.06 at 35 C.
   final parameter Real bat_temp_derate =
     if battery_temp_c >= 25.0 then 1.0 + 0.006 * (battery_temp_c - 25.0)
@@ -136,6 +150,9 @@ model RideThroughCore
   Real v_sense_pu(start = 1.0) "Filtered Service Delivery Point voltage, for protection";
   Real e_frac "Hold-up energy remaining, fraction";
   Real p_surge_w "Restart surge above baseline";
+  Real psu_trip_demand "Fraction of the fleet below its own trip threshold right now";
+  Real psu_tripped_frac(start = 0, fixed = true) "Fraction latched off";
+  Real psu_online_frac "Fraction still supplying";
   Real ramp_gate "Ramp-back gate, 0 to 1, after the PSUs restart";
   Boolean facility_connected(start = true, fixed = true) "False once the relay trips";
   Boolean transfer_demanded(start = false, fixed = true) "Grid-side transfer to backup";
@@ -314,21 +331,32 @@ equation
   end when;
 
   // ---------------- PSU ----------------
-  der(t_psu_down) = if psu_enabled then 0.0 else 1.0;
-
-  when supply_voltage_v * v_sense_pu < PSU_UV_V then
-    psu_enabled = false;
+  der(t_psu_down) = if psu_tripped_frac > 0.01 then 1.0 else 0.0;
+  when psu_tripped_frac < 0.01 then
     reinit(t_psu_down, 0);
-  elsewhen supply_voltage_v * v_sense_pu > PSU_RESTART_V
+  end when;
+
+  // Fraction of the fleet whose own threshold is above the present voltage.
+  psu_trip_demand = max(0.0, min(1.0,
+    (PSU_UV_HIGH_V - supply_voltage_v * v_sense_pu) / (PSU_UV_HIGH_V - PSU_UV_LOW_V)));
+
+  // Ratchets up only: a tripped PSU stays off until the restart conditions are met, so the
+  // fleet does not follow voltage back up instantaneously.
+  der(psu_tripped_frac) = max(0.0, (psu_trip_demand - psu_tripped_frac) / TRIP_TAU_S);
+  // Only the faulted-phase portion of the fleet can trip; the rest never sees the dip.
+  psu_online_frac = (1.0 - faulted_phase_frac) + faulted_phase_frac * (1.0 - psu_tripped_frac);
+  psu_enabled = psu_online_frac > 0.5;
+
+  when supply_voltage_v * v_sense_pu > PSU_RESTART_V
       and t_psu_down > PSU_TON_BBU_S + psu_restart_delay_s then
-    psu_enabled = true;
+    reinit(psu_tripped_frac, 0.0);
   end when;
 
   // PSUs deliver what they can; the shortfall drains hold-up energy, then the BBU.
-  p_psu_w = if psu_enabled then min(p_server_w, n_psu * PSU_RATED_W * max(v_sdp_pu, 0.0)) else 0.0;
+  p_psu_w = min(p_server_w, psu_online_frac * n_psu * PSU_RATED_W * max(v_sdp_pu, 0.0));
 
   der(e_holdup_j) =
-    if psu_enabled and p_psu_w >= p_server_w then
+    if p_psu_w >= p_server_w then
       max(0.0, (e_holdup_max_j - e_holdup_j) / 0.05)
     else
       -(p_server_w - p_psu_w - p_bbu_w);
