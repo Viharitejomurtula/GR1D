@@ -92,6 +92,7 @@ class Scenario:
     # validation facilities' peak currents and has been withdrawn.
     psu_uv_delay_s: float = 0.0045
     legacy_open_delay_s: float = 0.05   # breaker/contactor opening time after the relay operates (G: 2-5 cycles)
+    bbu_sharing: bool = field(default=True, metadata={"vector": False})        # False = old all-or-none battery (ablation only)
     ramp_on_grid_only: bool = field(default=True, metadata={"vector": False})   # False = old behaviour (servers' demand fell with the ramp gate)
     psu_cap_datasheet: bool = field(default=True, metadata={"vector": False})   # False reproduces the old per-unit scaling (ablation only)
 
