@@ -1,0 +1,44 @@
+
+=== deep_0.30_277V
+   v_sdp max|d| (pu)        +0.00009
+   v_source max|d| (pu)     +0.00008
+   p_grid rms rel           +0.00000
+   p_grid energy rel d      -0.00000
+   e_holdup rms rel         +0.00001
+   soc end d                +0.00000
+   bbu takeover     julia [1.018]  modelica [1.0175]
+   bbu hand-back    julia [2.506]  modelica [2.5052]
+   psu trip(>50%)   julia [1.006]  modelica [1.0058]
+
+=== partial_0.60_2of3
+   v_sdp max|d| (pu)        +0.00206
+   v_source max|d| (pu)     +0.00005
+   p_grid rms rel           +0.00016
+   p_grid energy rel d      -0.00000
+   e_holdup rms rel         +0.00005
+   soc end d                -0.00000
+   bbu takeover     julia [1.02]  modelica [1.0193]
+   bbu hand-back    julia [2.507]  modelica [2.5064]
+   psu trip(>50%)   julia [1.008]  modelica [1.0078]
+
+=== edge_0.80_208V
+   v_sdp max|d| (pu)        +0.00003
+   v_source max|d| (pu)     +0.00002
+   p_grid rms rel           +0.00000
+   p_grid energy rel d      +0.00000
+   e_holdup rms rel         +0.00007
+   soc end d                -0.00000
+   bbu takeover     julia [1.019]  modelica [1.0182]
+   bbu hand-back    julia [2.506]  modelica [2.5057]
+   psu trip(>50%)   julia [1.007]  modelica [1.0065]
+
+=== no_trip_0.80_277V
+   v_sdp max|d| (pu)        +0.00003
+   v_source max|d| (pu)     +0.00002
+   p_grid rms rel           +0.00000
+   p_grid energy rel d      +0.00000
+   e_holdup rms rel         +0.00000
+   soc end d                +0.00000
+   bbu takeover     julia []  modelica []
+   bbu hand-back    julia []  modelica []
+   psu trip(>50%)   julia []  modelica []

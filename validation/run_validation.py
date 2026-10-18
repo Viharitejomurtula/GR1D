@@ -15,15 +15,15 @@ def run_cases():
     return out
 
 def run_product(n=70, seed=0):
-    rng = np.random.default_rng(seed); rec, disc = [], 0
+    rng = np.random.default_rng(seed); rec, disc, dl = [], 0, []
     for i in range(n):
         d = S.sample_dip_depth(rng); tau, os_ = S.sample_shape(rng, d)
         sc = replace(S.GRID_FRIENDLY, dip_depth_pu=d, dip_duration_s=S.sample_dip_duration(rng), recovery_tau_s=tau, overshoot_pu=os_)
         g = runner.run(sc, tag="val_product")
-        disc += any(t.startswith("facility_disconnect") for t in g.trips); rec.append(C_REC - g.recovery_margin_s)
+        disc += any(t.startswith("facility_disconnect") for t in g.trips); rec.append(g.recovery_deadline_s - g.recovery_margin_s); dl.append(g.recovery_deadline_s)
     rec = np.array(rec)
     return dict(n=n, never_disconnected=(disc == 0), median_recovery_s=round(float(np.median(rec)), 3), worst_recovery_s=round(float(rec.max()), 3),
-                inside_rule_frac=round(float((rec <= C_REC).mean()), 3), target=dict(median_recovery_s=0.41, worst_recovery_s=0.49, never_disconnected=True))
+                inside_rule_frac=round(float((rec <= np.array(dl) + 1e-9).mean()), 3), within_half_second_frac=round(float((rec <= 0.5).mean()), 3), target=dict(median_recovery_s=0.41, worst_recovery_s=0.49, never_disconnected=True))
 
 from sim import constants as _C
 C_REC = _C.RECOVERY_DEADLINE_S

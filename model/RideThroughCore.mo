@@ -136,6 +136,7 @@ model RackGroup
   parameter Real restart_surge_s = 0.5;
   parameter Boolean psu_cap_datasheet = true;
   parameter Real psu_ilim_x = 0.0 "PSU input-current limit as a multiple of the current needed for full power at 180 V (17.3 A); 0 = no limit";
+  parameter Boolean bbu_sharing = true "The BBU covers only what the PSUs cannot (false = old: once the BBU is active it carries the whole load)";
   parameter Boolean ramp_on_grid_only = true "The post-restart ramp shapes what the PSUs draw from the grid, not what the servers consume (false = old behaviour)";
   final parameter Real n_psu = p_it_w / PSU_RATED_W;
   final parameter Real e_holdup_max_j = max(n_psu * PSU_HOLDUP_J * holdup_scale, 1.0e-9);
@@ -169,6 +170,7 @@ model RackGroup
   Real t_restore(start = -1, fixed = true);
   Real p_surge_w;
   Real p_demand_w "What the servers would draw if powered";
+  Real shortfall_w "Demand the PSUs are not supplying";
   Real e_holdup_j(start = 0, fixed = false);
   Real e_frac;
   Real v_bus_v;
@@ -236,17 +238,26 @@ equation
 
   // PSUs deliver what they can; the shortfall drains hold-up energy, then the BBU. Once the facility transfers to backup the
   // server load comes off the battery and the PSUs stop pulling it from the grid.
-  p_psu_w = (if bbu_active and soc > 0 then 0.0
+  // Only a deliberate transfer unloads the PSUs. Otherwise they supply what they can (the unfaulted-phase share, the ramp) and the BBU
+  // covers the rest. The old model put the BBU in charge of the WHOLE load the moment it became active, so a facility with two thirds of
+  // its PSUs still up and a battery on standby could neither share nor hand back cleanly: it handed back, found the PSUs short of the
+  // load, drained the hold-up store and took over again, and the outcome depended on that timing (a cliff in facility B).
+  p_psu_w = (if (if bbu_sharing then transfer_demanded else bbu_active) and soc > 0 then 0.0
              else min(p_server_w, psu_online_frac * n_psu * PSU_RATED_W *
                       min((if psu_cap_datasheet then 1.0 else max(v_sdp_pu, 0.0)),
                           (if psu_ilim_x > 0 then psu_ilim_x * supply_voltage_v * max(v_sdp_pu, 0.0) / 180.0 else 1.0e9))))
             * (if ramp_on_grid_only then ramp_gate else 1.0);
+  shortfall_w = max(0.0, p_server_w - p_psu_w);
 
+  // The store cannot go below empty: once spent, a shortfall no longer drains it (the servers-lost logic below handles the consequence).
+  // Unclamped, it ran negative (seen in a random 6-group run), an impossible state that also corrupted the busbar-voltage estimate.
   der(e_holdup_j) =
-    if psu_enabled and (bbu_active or p_psu_w >= p_server_w) then
+    if psu_enabled and (if bbu_sharing then p_psu_w + p_bbu_w >= p_server_w - 1.0 else (bbu_active or p_psu_w >= p_server_w)) then
       max(0.0, (e_holdup_max_j - e_holdup_j) / 0.05)
+    elseif e_holdup_j > 1.0e-6 then
+      -(p_server_w - p_psu_w - p_bbu_w)
     else
-      -(p_server_w - p_psu_w - p_bbu_w);
+      max(0.0, -(p_server_w - p_psu_w - p_bbu_w));
 
   // The BBU clamps the busbar only if it can carry the whole demand; an undersized or empty battery leaves the shortfall to drain the
   // hold-up store and the busbar sags (the old model pinned the bus at 48 V whatever the battery could actually deliver).
@@ -255,7 +266,7 @@ equation
 
   // ---------------- BBU ----------------
   der(t_bus_low) = if e_frac < E_FRAC_BBU then 1.0 else 0.0;
-  der(t_bus_ok) = if psu_enabled and not transfer_demanded then 1.0 else 0.0;
+  der(t_bus_ok) = if psu_enabled and not transfer_demanded and (not bbu_sharing or shortfall_w <= 1.0) then 1.0 else 0.0;   // sharing: hand back only once the PSUs alone can carry the load
   when e_frac >= E_FRAC_BBU then
     reinit(t_bus_low, 0);
   end when;
@@ -270,7 +281,7 @@ equation
 
   // Modules cannot deliver more than their rated power regardless of stored energy.
   // While the PSUs ramp back in after a hand-back the BBU keeps covering the gap, so the servers never see a dip.
-  p_bbu_w = if bbu_active and soc > 0 then min(bbu_power_w, p_server_w)
+  p_bbu_w = if bbu_active and soc > 0 then min(bbu_power_w, (if bbu_sharing then shortfall_w else p_server_w))
             elseif ramp_on_grid_only and ramp_gate < 1.0 and soc > 0 and psu_enabled then min(bbu_power_w, max(0.0, p_server_w - p_psu_w))
             else 0.0;
   der(soc) = -p_bbu_w / max(bbu_energy_j, 1.0);
@@ -316,6 +327,7 @@ model RideThroughCore
   // transformer capacity), i.e. by how heavily the chain is loaded; summing own-base percentages implicitly assumes 100%
   // loading and overstates the voltage drop. Installed capacity is not public: G, 0.5-1.0.
   parameter Real chain_loading_frac = 0.75 "Facility load / installed transformer capacity";
+  parameter Boolean bbu_sharing = true "BBU covers only what the PSUs cannot (false = old: the active BBU carries the whole load; kept for ablation)";
   parameter Boolean ramp_on_grid_only = true "Ramp-back shapes the PSUs' grid draw, not the servers' consumption (false = old behaviour, kept for ablation)";
   parameter Real psu_ilim_x = 0.0 "PSU input-current limit, multiple of the full-power-at-180-V current (0 = no limit)";
   parameter Boolean psu_cap_datasheet = true "PSU delivers rated power until lockout (false = old per-unit-voltage scaling, kept for ablation)";
@@ -480,7 +492,8 @@ model RideThroughCore
     each supply_voltage_v = supply_voltage_v, each faulted_phase_frac = faulted_phase_frac, each trip_spread_frac = psu_trip_spread_frac,
     each psu_uv_delay_s = psu_uv_delay_s, each psu_restart_delay_s = psu_restart_delay_s, each handback_delay_s = handback_delay_s,
     each ramp_back_s = ramp_back_s, each restart_surge_x = restart_surge_x, each restart_surge_s = restart_surge_s,
-    each psu_cap_datasheet = psu_cap_datasheet, each psu_ilim_x = psu_ilim_x, each ramp_on_grid_only = ramp_on_grid_only);
+    each psu_cap_datasheet = psu_cap_datasheet, each psu_ilim_x = psu_ilim_x, each ramp_on_grid_only = ramp_on_grid_only,
+    each bbu_sharing = bbu_sharing);
   // Facility aggregates (names kept so the runner, grader and tests are unchanged). Fractions are weighted by IT rating.
   Real p_server_w "Server/IT demand";
   Real p_psu_w "Power the PSUs deliver to the busbars";

@@ -44,7 +44,10 @@ class Grade:
     # False when the voltage solution left the physical branch or had no real solution; such a run is not gradable.
     numerics_ok: bool = True
     numerics_note: str = ""
-    peak_current_raw_pu: float = float("nan")   # instantaneous maximum, for reference; peak_current_pu is the one-cycle average
+    peak_current_raw_pu: float = float("nan")   # instantaneous maximum (per unit of rating), for reference
+    overcurrent_s: float = 0.0                   # longest stretch above the facility's normal maximum current
+    cooling_exempted: bool = False               # cooling tripped below 0.35 pu and was removed from the reference (2.14(2)(c))
+    recovery_deadline_s: float = 2.0             # 2.0 s, or 0.5 s when a load-transfer scheme was used below 0.8 pu (2.14(2)(e))
 
     def summary(self) -> dict:
         d = self.__dict__.copy()
@@ -59,6 +62,16 @@ def _cycle_average(t: np.ndarray, x: np.ndarray, window_s: float = 1.0 / C.NOMIN
     span = np.maximum(t - t[np.minimum(start, t.size - 1)], 1e-12)
     out = (cum - cum[np.minimum(start, t.size - 1)]) / span
     return np.where(t - t[0] < window_s, x, out)
+
+
+def _longest_run_s(t: np.ndarray, mask: np.ndarray) -> float:
+    """Longest contiguous stretch where mask is true, in seconds."""
+    best, start = 0.0, None
+    for i, m in enumerate(mask):
+        if m and start is None: start = t[i]
+        if (not m or i == mask.size - 1) and start is not None:
+            best = max(best, t[i] - start if not m else t[i] - start); start = None
+    return float(best)
 
 
 def _disturbance_mask(v_pu: np.ndarray) -> np.ndarray:
@@ -89,6 +102,8 @@ def grade(
     storage_left: float = float("nan"),
     psu_restart_s: float | None = None,
     trips: list[str] | None = None,
+    p_cooling: np.ndarray | None = None,
+    used_load_transfer: bool = False,
 ) -> Grade:
     """Grade one run.
 
@@ -130,6 +145,14 @@ def grade(
     if p_pre <= 0:
         p_pre = float(np.max(p_grid)) or 1.0
 
+    # Cooling carve-out (2.14(2)(c)): cooling load that trips below 0.35 pu is removed from the reference consumption.
+    cooling_exempted = False
+    if p_cooling is not None and v_pu.min() < C.COOLING_EXEMPT_BELOW_PU and first > 1:
+        p_cool = np.asarray(p_cooling, dtype=float); p_cool_pre = float(np.median(p_cool[first // 2:first]))
+        if p_cool_pre > 0 and p_cool.min() < 0.9 * p_cool_pre and p_pre - p_cool_pre > 0:
+            p_pre -= p_cool_pre; cooling_exempted = True
+    deadline = C.TRANSFER_RECOVERY_DEADLINE_S if (used_load_transfer and v_pu.min() < 0.8) else C.RECOVERY_DEADLINE_S
+
     p_frac = p_grid / p_pre
 
     # (a) Envelope. At each instant the requirement is read from the instantaneous
@@ -151,20 +174,20 @@ def grade(
     # dip 2 of 6 and sat shed until dip 3 passed unnoticed. A return cut short by the next dip
     # inside the deadline is not graded: NOGRR 282's clock semantics for that case are unread.
     above = v_pu >= C.RECOVERY_TRIGGER_V_PU
-    recovery_margin_s = -C.RECOVERY_DEADLINE_S
+    recovery_margin_s = -deadline
     margins = []
     returns = [i for i in range(1, t.size) if above[i] and not above[i - 1]]
     for r in returns:
         later_below = np.nonzero(~above[r:])[0]
         window_end = t[r + later_below[0]] if later_below.size else t[-1]
-        if window_end - t[r] < C.RECOVERY_DEADLINE_S - 1e-9 and later_below.size:
+        if window_end - t[r] < deadline - 1e-9 and later_below.size:
             continue  # next dip arrived before the deadline: not gradable
         t_ret = t[r]
         recovered = np.nonzero((t >= t_ret) & (t <= window_end) & (p_frac >= C.RECOVERY_FRACTION))[0]
         if recovered.size:
-            margins.append(float(C.RECOVERY_DEADLINE_S - (t[recovered[0]] - t_ret)))
+            margins.append(float(deadline - (t[recovered[0]] - t_ret)))
         else:
-            margins.append(min(float(C.RECOVERY_DEADLINE_S - (window_end - t_ret)), -1e-9))
+            margins.append(min(float(deadline - (window_end - t_ret)), -1e-9))
     if margins:
         recovery_margin_s = min(margins)
     elif above.any():
@@ -173,26 +196,31 @@ def grade(
         candidate = int(last_below[-1]) + 1 if last_below.size else 0
         if candidate < t.size:
             recovered = np.nonzero((t >= t[candidate]) & (p_frac >= C.RECOVERY_FRACTION))[0]
-            recovery_margin_s = (float(C.RECOVERY_DEADLINE_S - (t[recovered[0]] - t[candidate])) if recovered.size
-                                 else min(float(C.RECOVERY_DEADLINE_S - (t[-1] - t[candidate])), -1e-9))
+            recovery_margin_s = (float(deadline - (t[recovered[0]] - t[candidate])) if recovered.size
+                                 else min(float(deadline - (t[-1] - t[candidate])), -1e-9))
 
-    # (d) Current cap. Section 2.14(2)(d) is an absolute limit: exceeding 125% at any
-    # point during the disturbance is a violation. The March 2026 revision adds a "<= 0.5 s"
-    # qualifier, but only a secondary source describes it and the semantics are ambiguous
-    # (a 0.80 pu sag held for the required 2.0 s draws 1.25 pu throughout, which a naive
-    # duration limit would fail). Gating on magnitude alone until the primary text is read.
-    # Current is an RMS quantity: a sub-cycle spike (the 1-3 ms between voltage collapse and the protection acting, plus the
-    # event-instant sample of the solver) is not resolvable by an averaged model and is not what a cycle-based meter reports.
-    # Grade the one-cycle trailing average; the raw instantaneous maximum is kept for reference.
+    # (d) Current. Section 2.14(2)(d): at most 150% of the facility's own normal-operations maximum, and overcurrent (above that
+    # maximum) may persist at most 0.5 s. Current is an RMS quantity: graded as the one-cycle trailing average (a sub-cycle spike is not
+    # resolvable by an averaged model), normalised to the pre-disturbance maximum of the same quantity.
     peak_current_raw_pu = float(np.max(i_pu)) if i_pu.size else 0.0
-    peak_current_pu = float(np.max(_cycle_average(t, i_pu))) if i_pu.size else 0.0
-    current_violation = peak_current_pu > C.CURRENT_CAP_PU
+    i_cyc = _cycle_average(t, i_pu) if i_pu.size else i_pu
+    # Normal maximum: the quiet stretch before the disturbance, excluding the last cycle (the current already moves at the onset sample) and the
+    # first half second (start-up).
+    t_first = t[first] if first > 0 else t[0]
+    sel = (t >= 0.5) & (t <= t_first - 1.0 / C.NOMINAL_FREQ_HZ)
+    if not sel.any(): sel = t <= max(t_first - 1.0 / C.NOMINAL_FREQ_HZ, t[0])
+    i_normal = float(np.max(i_cyc[sel])) if sel.any() else 1.0
+    i_norm = i_cyc / max(i_normal, 1e-9)
+    peak_current_pu = float(np.max(i_norm)) if i_norm.size else 0.0
+    over = disturbed & (i_norm > 1.0 + C.CURRENT_OVERCURRENT_TOL)
+    overcurrent_s = _longest_run_s(t, over)
+    current_violation = peak_current_pu > C.CURRENT_CAP_PU or overcurrent_s > C.CURRENT_CAP_DURATION_S
 
     failures = []
     if envelope_violation_s > 0:
         failures.append("disconnected inside envelope")
     if current_violation:
-        failures.append("exceeded 125% current cap")
+        failures.append("exceeded 150% current cap" if peak_current_pu > C.CURRENT_CAP_PU else "overcurrent longer than 0.5 s")
     if recovery_margin_s < 0:
         failures.append("missed 2.0 s recovery")
 
@@ -217,6 +245,9 @@ def grade(
         psu_restart_s=psu_restart_s,
         trips=trips,
         peak_current_raw_pu=peak_current_raw_pu,
+        overcurrent_s=overcurrent_s,
+        cooling_exempted=cooling_exempted,
+        recovery_deadline_s=deadline,
     )
 
 

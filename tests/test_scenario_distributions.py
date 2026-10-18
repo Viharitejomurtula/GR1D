@@ -135,7 +135,8 @@ def test_same_seed_same_scenarios():
     assert a != c
 
 
-# Preset values after the simulator structure fixes (items 1-9, merged 2026-10-18): GRID_FRIENDLY and
+# Preset values after the simulator structure fixes (items 1-9) and fix-1-3/fix-4 (4.5 ms sourced PSU debounce,
+# bbu_sharing, psu_ilim_x), merged 2026-10-18: GRID_FRIENDLY and
 # LEGACY_UPS must not change unless a preset is changed on purpose (then update this snapshot).
 _BASE = dict(
     dip_depth_pu=0.6, dip_duration_s=0.083, dip_start_s=1.0, recovery_tau_s=0.0658,
@@ -145,7 +146,7 @@ _BASE = dict(
     supply_voltage_v=277.0, shelves_per_rack=6, bbu_modules_per_rack=36, cooling_share_25c=0.3,
     cooling_compressor_frac=0.4, cooling_fan_frac=0.35, z_total_pct=19.75, x_over_r=10.0,
     ramp_back_s=0.3, vfd_dc_uv_trip_pu=0.7, psu_trip_spread_frac=0.04, faulted_phase_frac=1.0,
-    chain_loading_frac=0.75, psu_uv_delay_s=0.016666666666666666, legacy_open_delay_s=0.05,
+    chain_loading_frac=0.75, psu_uv_delay_s=0.0045, bbu_sharing=True, psu_ilim_x=0.0, legacy_open_delay_s=0.05,
     ramp_on_grid_only=True, psu_cap_datasheet=True, n_groups=1, grp_load_cv=0.0, grp_holdup_cv=0.0,
     grp_bbu_cv=0.0, grp_trip_cv=0.0, cooling_vfd_frac=0.5, compressor_restart_s=180.0, count_n=0,
     count_threshold_pu=0.9, count_min_dur_s=0.0, count_window_s=60.0, extra_dips=(), horizon_s=0.0,
