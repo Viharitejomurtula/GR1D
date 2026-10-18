@@ -94,6 +94,196 @@ equation
   p_grid_w = p_in_w;
 end VfdClass;
 
+model RackGroup
+  "One group of racks that share a vintage, loading, hold-up health and battery sizing: the PSU fleet, its hold-up energy store,
+   busbar, BBU and servers. The facility is several of these in parallel on one grid connection, so a mixed facility (some racks
+   on old gear, some modern; heavily and lightly loaded; fresh and aged capacitors) is no longer forced to share one hold-up
+   store, one busbar voltage and one battery state."
+  // ---- constants (single source; the facility model refers to these) ----
+  constant Real PSU_RATED_W = 3000.0;
+  constant Real PSU_UV_V = 172.0;
+  constant Real PSU_RESTART_V = 178.0;
+  constant Real PSU_HOLDUP_J = 60.0 "Per PSU";
+  constant Real PSU_EFF = 0.965;
+  constant Real PSU_TON_BBU_S = 1.0 "Base turn-on; the sampled random delay adds to this";
+  constant Real BUS_PSU_V = 50.75;
+  constant Real BUS_DROOP_FULL_V = 6.0 "3 V droop at 50% hold-up depletion";
+  constant Real BBU_TAKEOVER_V = 48.5;
+  constant Real BBU_TAKEOVER_DELAY_S = 0.002;
+  constant Real BBU_BUS_V = 48.0;
+  constant Real IT_FLOOR_V = 46.0 "Servers lose power below this";
+  constant Real TRIP_TAU_S = 0.001;
+  constant Real E_FRAC_BBU = 1.0 - (BUS_PSU_V - BBU_TAKEOVER_V) / BUS_DROOP_FULL_V;
+  constant Real E_FRAC_IT_FLOOR = 1.0 - (BUS_PSU_V - IT_FLOOR_V) / BUS_DROOP_FULL_V;
+
+  // ---- parameters ----
+  parameter Real p_it_w = 1.0e6 "IT rating of this group (0 = unused slot)";
+  parameter Real workload = 0.85 "Fraction of the group's rating";
+  parameter Real holdup_scale = 1.0 "Hold-up capacitor health (1 = new)";
+  parameter Real legacy_frac = 0.0 "Share of the group behind legacy latching protection";
+  parameter Real bbu_power_w = 1.0e6;
+  parameter Real bbu_energy_j = 1.0e9;
+  parameter Real soc0 = 0.95;
+  parameter Real trip_offset_frac = 0.0 "Shift of this group's PSU lockout threshold (unit-to-unit / feeder differences)";
+  parameter Real supply_voltage_v = 277.0;
+  parameter Real faulted_phase_frac = 1.0;
+  parameter Real trip_spread_frac = 0.04;
+  parameter Real psu_uv_delay_s = 0.0;
+  parameter Real psu_restart_delay_s = 0.0;
+  parameter Real handback_delay_s = 0.2;
+  parameter Real ramp_back_s = 0.3;
+  parameter Real restart_surge_x = 1.15;
+  parameter Real restart_surge_s = 0.5;
+  parameter Boolean psu_cap_datasheet = true;
+  parameter Boolean ramp_on_grid_only = true "The post-restart ramp shapes what the PSUs draw from the grid, not what the servers consume (false = old behaviour)";
+  final parameter Real n_psu = p_it_w / PSU_RATED_W;
+  final parameter Real e_holdup_max_j = max(n_psu * PSU_HOLDUP_J * holdup_scale, 1.0e-9);
+  final parameter Real psu_uv_high_v = PSU_UV_V * (1.0 + trip_offset_frac) * (1.0 + trip_spread_frac);
+  final parameter Real psu_uv_low_v = PSU_UV_V * (1.0 + trip_offset_frac) * (1.0 - trip_spread_frac);
+  final parameter Boolean used = p_it_w > 1.0;
+  final parameter Boolean bbu_undersized = used and bbu_power_w < workload * p_it_w "Installed battery power below the group's steady demand";
+
+  // ---- inputs from the facility ----
+  input Real v_sense_pu "Filtered voltage at the service delivery point";
+  input Real v_sdp_pu;
+  input Boolean transfer_demanded;
+  input Real p_swing_w "This group's share of the synchronised AI swing";
+  input Boolean legacy_tripped "Facility relay has opened the legacy loads";
+
+  // ---- outputs ----
+  output Real p_server_w "Server demand of this group";
+  output Real p_psu_w;
+  output Real p_bbu_w;
+  output Real avail "Share of the group still connected";
+
+  Real psu_trip_demand;
+  Real psu_trip_demand_eff;
+  Real t_psu_uv(start = 0, fixed = true);
+  Real psu_tripped_frac(start = 0, fixed = true);
+  Real psu_online_frac;
+  Boolean psu_enabled(start = true, fixed = true);
+  Real t_psu_down(start = 0, fixed = true);
+  Real t_psu_up(start = 1.0e3, fixed = true) "Seconds since the PSUs last (re)started; large so the run begins at full draw";
+  Real ramp_gate;
+  Real t_restore(start = -1, fixed = true);
+  Real p_surge_w;
+  Real p_demand_w "What the servers would draw if powered";
+  Real e_holdup_j(start = 0, fixed = false);
+  Real e_frac;
+  Real v_bus_v;
+  Real t_bus_low(start = 0, fixed = true);
+  Real t_bus_ok(start = 0, fixed = true);
+  Boolean bbu_active(start = false, fixed = true);
+  Real soc(start = soc0, fixed = true);
+  Boolean servers_lost_power(start = false, fixed = true);
+
+initial equation
+  e_holdup_j = e_holdup_max_j;
+
+equation
+  avail = (1.0 - legacy_frac) + legacy_frac * (if legacy_tripped then 0.0 else 1.0);
+  e_frac = max(0.0, min(1.0, e_holdup_j / e_holdup_max_j));
+
+  // ---------------- PSU fleet ----------------
+  der(t_psu_down) = if psu_tripped_frac > 0.01 then 1.0 else 0.0;
+  when psu_tripped_frac < 0.01 then
+    reinit(t_psu_down, 0);
+  end when;
+
+  // Fraction of the fleet whose own threshold is above the present voltage.
+  psu_trip_demand = max(0.0, min(1.0,
+    (psu_uv_high_v - supply_voltage_v * v_sense_pu) / (psu_uv_high_v - psu_uv_low_v)));
+
+  // Real PSUs keep drawing constant power from the AC until their lockout debounce expires, which is what produces the 150-160%
+  // facility current seen in the ERCOT events; a model that sheds load within the 1 ms sense filter cannot show it.
+  der(t_psu_uv) = if psu_trip_demand > 0.0 then 1.0 else 0.0;
+  when psu_trip_demand <= 0.0 then
+    reinit(t_psu_uv, 0);
+  end when;
+  psu_trip_demand_eff = if t_psu_uv > psu_uv_delay_s + 1.0e-6 then psu_trip_demand else 0.0;
+  // Ratchets up only: a tripped PSU stays off until the restart conditions are met.
+  der(psu_tripped_frac) = max(0.0, (psu_trip_demand_eff - psu_tripped_frac) / TRIP_TAU_S);
+  // Only the faulted-phase portion of the fleet can trip; the rest never sees the dip.
+  psu_online_frac = (1.0 - faulted_phase_frac) + faulted_phase_frac * (1.0 - psu_tripped_frac);
+  psu_enabled = psu_online_frac > 0.5;
+
+  when supply_voltage_v * v_sense_pu > PSU_RESTART_V
+      and t_psu_down > PSU_TON_BBU_S + psu_restart_delay_s then
+    reinit(psu_tripped_frac, 0.0);
+  end when;
+
+  // ---------------- Server / AI load ----------------
+  when (not servers_lost_power) and pre(servers_lost_power) then
+    t_restore = time;
+  end when;
+  p_surge_w = if t_restore >= 0.0 and time >= t_restore then
+                (restart_surge_x - 1.0) * p_it_w * exp(-(time - t_restore) / restart_surge_s)
+              else 0.0;
+
+  // Ramp back to full grid draw rather than snapping; restarts after a hand-back as well as after a PSU restart.
+  der(t_psu_up) = if psu_enabled then 1.0 else 0.0;
+  when not psu_enabled or (pre(bbu_active) and not bbu_active) then
+    reinit(t_psu_up, 0);
+  end when;
+  ramp_gate = min(1.0, t_psu_up / max(ramp_back_s, 1e-3));
+
+  // The servers' DC demand. The old model multiplied it by the ramp gate, so the instant the PSUs tripped the servers stopped
+  // consuming: hold-up never drained, the BBU never took over on its own, and 'servers lost' / the restart surge were unreachable.
+  // In reality the servers keep drawing from hold-up, then the BBU, while the PSUs are off; the ramp shapes only the PSUs' share.
+  p_demand_w = ((workload * p_it_w + p_swing_w) * (if ramp_on_grid_only then 1.0 else ramp_gate) + p_surge_w) * avail;
+  p_server_w = if servers_lost_power then 0.0 else p_demand_w;
+
+  // PSUs deliver what they can; the shortfall drains hold-up energy, then the BBU. Once the facility transfers to backup the
+  // server load comes off the battery and the PSUs stop pulling it from the grid.
+  p_psu_w = (if bbu_active and soc > 0 then 0.0
+             else min(p_server_w, psu_online_frac * n_psu * PSU_RATED_W *
+                      (if psu_cap_datasheet then 1.0 else max(v_sdp_pu, 0.0))))
+            * (if ramp_on_grid_only then ramp_gate else 1.0);
+
+  der(e_holdup_j) =
+    if psu_enabled and (bbu_active or p_psu_w >= p_server_w) then
+      max(0.0, (e_holdup_max_j - e_holdup_j) / 0.05)
+    else
+      -(p_server_w - p_psu_w - p_bbu_w);
+
+  // The BBU clamps the busbar only if it can carry the whole demand; an undersized or empty battery leaves the shortfall to drain the
+  // hold-up store and the busbar sags (the old model pinned the bus at 48 V whatever the battery could actually deliver).
+  v_bus_v = if bbu_active and soc > 0 and not bbu_undersized then BBU_BUS_V
+            else BUS_PSU_V - BUS_DROOP_FULL_V * (1.0 - e_frac);
+
+  // ---------------- BBU ----------------
+  der(t_bus_low) = if e_frac < E_FRAC_BBU then 1.0 else 0.0;
+  der(t_bus_ok) = if psu_enabled and not transfer_demanded then 1.0 else 0.0;
+  when e_frac >= E_FRAC_BBU then
+    reinit(t_bus_low, 0);
+  end when;
+  when transfer_demanded or not psu_enabled then
+    reinit(t_bus_ok, 0);
+  end when;
+  when t_bus_low > BBU_TAKEOVER_DELAY_S or transfer_demanded then
+    bbu_active = true;
+  elsewhen t_bus_ok > handback_delay_s then
+    bbu_active = false;
+  end when;
+
+  // Modules cannot deliver more than their rated power regardless of stored energy.
+  // While the PSUs ramp back in after a hand-back the BBU keeps covering the gap, so the servers never see a dip.
+  p_bbu_w = if bbu_active and soc > 0 then min(bbu_power_w, p_server_w)
+            elseif ramp_on_grid_only and ramp_gate < 1.0 and soc > 0 and psu_enabled then min(bbu_power_w, max(0.0, p_server_w - p_psu_w))
+            else 0.0;
+  der(soc) = -p_bbu_w / max(bbu_energy_j, 1.0);
+
+  // Servers lose power when the hold-up store is spent and nothing else is carrying the load: no battery engaged, an empty one, or one
+  // too small for the demand.
+  // (Compared against the steady demand, a parameter: using the instantaneous demand inside this when-equation makes the compiler build a
+  // non-linear system inside a when, which it cannot do.)
+  when e_frac < E_FRAC_IT_FLOOR and (not bbu_active or soc <= 0 or bbu_undersized) then
+    servers_lost_power = true;
+  elsewhen e_frac > E_FRAC_BBU and psu_enabled then
+    servers_lost_power = false;
+  end when;
+end RackGroup;
+
 model RideThroughCore
   "Rack-level data center ride-through: grid -> PSU -> 48 V busbar -> servers, with BBU
    backup and staged cooling trips. Averaged (RMS) power-balance model; see
@@ -124,6 +314,7 @@ model RideThroughCore
   // transformer capacity), i.e. by how heavily the chain is loaded; summing own-base percentages implicitly assumes 100%
   // loading and overstates the voltage drop. Installed capacity is not public: G, 0.5-1.0.
   parameter Real chain_loading_frac = 0.75 "Facility load / installed transformer capacity";
+  parameter Boolean ramp_on_grid_only = true "Ramp-back shapes the PSUs' grid draw, not the servers' consumption (false = old behaviour, kept for ablation)";
   parameter Boolean psu_cap_datasheet = true "PSU delivers rated power until lockout (false = old per-unit-voltage scaling, kept for ablation)";
 
   parameter Real cooling_share_25c = 0.30;
@@ -196,22 +387,12 @@ model RideThroughCore
   parameter Integer bbu_modules_per_rack = 12;
 
   // ===================== Fixed constants (Parameter_Table.md) =====================
-  constant Real PSU_RATED_W = 3000.0;
+  constant Real PSU_RATED_W = RackGroup.PSU_RATED_W;
   constant Real SHELF_RATED_W = 18000.0;
   constant Real BBU_MODULE_W = 3000.0;
   constant Real BBU_MODULE_WH = 200.0;
-  constant Real PSU_UV_V = 172.0;
-  constant Real PSU_RESTART_V = 178.0;
-  constant Real PSU_HOLDUP_J = 60.0 "Per PSU";
-  constant Real PSU_EFF = 0.965;
-  constant Real PSU_TON_BBU_S = 1.0 "Base turn-on; the sampled random delay adds to this";
+  constant Real PSU_EFF = RackGroup.PSU_EFF;
 
-  constant Real BUS_PSU_V = 50.75;
-  constant Real BUS_DROOP_FULL_V = 6.0 "3 V droop at 50% hold-up depletion";
-  constant Real BBU_TAKEOVER_V = 48.5;
-  constant Real BBU_TAKEOVER_DELAY_S = 0.002;
-  constant Real BBU_BUS_V = 48.0;
-  constant Real IT_FLOOR_V = 46.0 "Servers lose power below this";
 
   constant Real COOL_S1_V = 0.70;
   constant Real COOL_S1_DELAY_S = 0.05;
@@ -231,11 +412,6 @@ model RideThroughCore
     max(0.4 * cooling_share_25c, cooling_share_25c * (1.0 + 0.04 * (outdoor_temp_c - 25.0)));
   final parameter Real p_cooling_rated_w = cooling_share * p_it_rated_w;
   final parameter Real p_total_rated_w = p_it_rated_w * workload + p_cooling_rated_w;
-  final parameter Real n_psu = p_it_rated_w / PSU_RATED_W;
-  final parameter Real e_holdup_max_j = n_psu * PSU_HOLDUP_J;
-  final parameter Real PSU_UV_HIGH_V = PSU_UV_V * (1.0 + psu_trip_spread_frac);
-  final parameter Real PSU_UV_LOW_V = PSU_UV_V * (1.0 - psu_trip_spread_frac);
-  constant Real TRIP_TAU_S = 0.001;
   // Capacity derating, Sandia SAND2008-5583 Table 2: 0.74 at 0 C rising to 1.06 at 35 C.
   final parameter Real bat_temp_derate =
     if battery_temp_c >= 25.0 then 1.0 + 0.006 * (battery_temp_c - 25.0)
@@ -263,18 +439,57 @@ model RideThroughCore
                     uv_trip_pu = vfd_dc_uv_trip_pu, hold_s = cooling_ride_through_s, fault_restart_s = drive_restart_s,
                     min_off_s = 0.0, kinetic = vfd_kinetic, c_uf_per_kw = vfd_c_uf_per_kw, v_ll_v = cooling_ll_v);
 
-  // Busbar voltage is an exact algebraic function of the hold-up energy state, so the
-  // busbar-side thresholds can be expressed against that state directly. This keeps the BBU
-  // and server-power-loss decisions out of the grid-side algebraic loop entirely.
-  final parameter Real E_FRAC_BBU = 1.0 - (BUS_PSU_V - BBU_TAKEOVER_V) / BUS_DROOP_FULL_V;
-  final parameter Real E_FRAC_IT_FLOOR = 1.0 - (BUS_PSU_V - IT_FLOOR_V) / BUS_DROOP_FULL_V;
-
   constant Real SENSE_TAU_S = 0.001 "Protection sensing lag";
   // Fraction of |Z| that becomes real voltage drop: R/|Z|*cos(phi) + X/|Z|*sin(phi); 0.523 at X/R = 10, pf = 0.9.
   final parameter Real Z_EFF_FACTOR = (load_pf + x_over_r * sqrt(1.0 - load_pf * load_pf)) / sqrt(1.0 + x_over_r * x_over_r);
   constant Real OVERSHOOT_PEAK_X = 4.0 "Overshoot peaks this many recovery time constants after clearing";
 
   // ===================== Variables =====================
+
+  // ---- Rack groups (parallel IT sub-facilities) ----
+  constant Integer N_GRP = 6;
+  parameter Real grp_w[N_GRP] = cat(1, {1.0}, fill(0.0, N_GRP - 1)) "Share of the IT rating in each group (0 = unused slot)";
+  parameter Real grp_workload_scale[N_GRP] = fill(1.0, N_GRP) "Loading relative to the facility workload";
+  parameter Real grp_holdup_scale[N_GRP] = fill(1.0, N_GRP) "Hold-up capacitor health";
+  parameter Real grp_bbu_scale[N_GRP] = fill(1.0, N_GRP) "Installed BBU power and energy relative to nominal";
+  // Legacy share is filled group by group from legacy_load_frac, cumulatively by LOAD (weight x loading scale), so the share of the facility's
+  // load behind legacy protection equals legacy_load_frac whatever the spread of loading. Computed here, not passed from Python: an
+  // element override of a parameter that has a binding was silently replaced by the binding (group 1 kept legacy_load_frac regardless).
+  final parameter Real grp_load_w[N_GRP] = {grp_w[g] * grp_workload_scale[g] for g in 1:N_GRP} "Group load as a share of facility load";
+  final parameter Real grp_legacy_frac[N_GRP] = {
+    if grp_load_w[g] > 0 then min(1.0, max(0.0, (legacy_load_frac - sum({if j < g then grp_load_w[j] else 0.0 for j in 1:N_GRP})) / grp_load_w[g])) else 0.0
+    for g in 1:N_GRP} "Share of each group behind legacy protection";
+  parameter Real grp_trip_offset[N_GRP] = fill(0.0, N_GRP) "Shift of each group's PSU lockout threshold";
+  RackGroup grp[N_GRP](
+    p_it_w = {p_it_rated_w * grp_w[g] for g in 1:N_GRP},
+    workload = {workload * grp_workload_scale[g] for g in 1:N_GRP},
+    holdup_scale = grp_holdup_scale,
+    legacy_frac = grp_legacy_frac,
+    bbu_power_w = {bbu_power_w * grp_w[g] * grp_bbu_scale[g] for g in 1:N_GRP},
+    bbu_energy_j = {bbu_energy_j * grp_w[g] * grp_bbu_scale[g] for g in 1:N_GRP},
+    soc0 = fill(battery_soc0, N_GRP),
+    trip_offset_frac = grp_trip_offset,
+    each supply_voltage_v = supply_voltage_v, each faulted_phase_frac = faulted_phase_frac, each trip_spread_frac = psu_trip_spread_frac,
+    each psu_uv_delay_s = psu_uv_delay_s, each psu_restart_delay_s = psu_restart_delay_s, each handback_delay_s = handback_delay_s,
+    each ramp_back_s = ramp_back_s, each restart_surge_x = restart_surge_x, each restart_surge_s = restart_surge_s,
+    each psu_cap_datasheet = psu_cap_datasheet, each ramp_on_grid_only = ramp_on_grid_only);
+  // Facility aggregates (names kept so the runner, grader and tests are unchanged). Fractions are weighted by IT rating.
+  Real p_server_w "Server/IT demand";
+  Real p_psu_w "Power the PSUs deliver to the busbars";
+  Real p_bbu_w "Power the BBUs deliver";
+  Real psu_tripped_frac "Share of PSUs latched off";
+  Real psu_online_frac "Share of PSUs still supplying";
+  Real bbu_active_frac "Share of load on battery";
+  Real servers_lost_frac "Share of servers without power";
+  Real e_holdup_j "Total hold-up energy";
+  Real e_holdup_max_j "Total hold-up capacity";
+  Real e_frac "Hold-up energy remaining, fraction";
+  Real soc "Mean state of charge";
+  Real v_bus_v "Mean busbar voltage";
+  Real facility_available_frac "Share of facility load still able to draw";
+  Boolean psu_enabled "Most PSUs are supplying";
+  Boolean bbu_active "Any group on battery";
+  Boolean servers_lost_power "Any group has lost its servers";
   Real v_source_pu "Source voltage, before facility impedance";
   Real v_recovering "Post-clearing recovery shape";
   Real dt_recover "Time since the most recent clearing";
@@ -296,19 +511,10 @@ model RideThroughCore
   // nonlinear system, but it can act on a state. Decisions faster than SENSE_TAU_S are not
   // resolved by this model, which is inherent to the averaged-RMS approach.
   Real v_sense_pu(start = 1.0) "Filtered Service Delivery Point voltage, for protection";
-  Real e_frac "Hold-up energy remaining, fraction";
-  Real p_surge_w "Restart surge above baseline";
-  Real psu_trip_demand "Fraction of the fleet below its own trip threshold right now";
-  Real psu_trip_demand_eff "Trip demand after the lockout debounce";
-  Real t_psu_uv(start = 0, fixed = true) "Time undervoltage has persisted";
-  Real psu_tripped_frac(start = 0, fixed = true) "Fraction latched off";
-  Real psu_online_frac "Fraction still supplying";
-  Real ramp_gate "Ramp-back gate, 0 to 1, after the PSUs restart";
   Boolean facility_connected(start = true, fixed = true) "False only if the whole facility is off";
   Boolean legacy_cmd(start = false, fixed = true) "Relay has issued its trip command";
   Real t_open(start = 0, fixed = true) "Time since the trip command";
   Boolean legacy_tripped(start = false, fixed = true) "Legacy portion latched off";
-  Real facility_available_frac "Fraction of facility load still able to draw";
   Boolean transfer_demanded(start = false, fixed = true) "Grid-side transfer to backup";
   Real t_sag(start = 0, fixed = true) "Time the present sag has lasted";
   Real count_t1(start = -1.0e9, fixed = true) "Times of the five most recent counted sags, newest first";
@@ -320,35 +526,22 @@ model RideThroughCore
   Boolean count_transfer(start = false, fixed = true) "Latched: sag count reached, stays on backup until manual reset";
   Real t_relay(start = 0, fixed = true);
   Real t_transfer(start = 0, fixed = true);
-  Real t_restore(start = -1, fixed = true);
-  Real t_psu_up(start = 1.0e3, fixed = true) "Seconds since the PSUs last (re)started; starts large so the run begins at full draw, not mid-ramp";
 
-  Real p_server_w "Server/IT demand";
   Real p_swing_w(start = 0, fixed = true);
   Real p_swing_target_w;
 
   Real p_cooling_w "Cooling demand after trips";
   Real cooling_available "Fraction of cooling still running";
 
-  Real e_holdup_j(start = 0, fixed = false) "PSU hold-up energy store";
-  Real v_bus_v "48 V busbar";
-  Real p_psu_w "Power the PSUs deliver to the busbar";
-  Real p_bbu_w "Power the BBU delivers";
-  Real soc(start = battery_soc0, fixed = true);
 
   Real p_grid_w "Active power drawn from the grid";
   Real i_grid_pu "Grid current as a fraction of maximum normal";
 
   // Discrete state
-  Boolean psu_enabled(start = true, fixed = true);
-  Boolean bbu_active(start = false, fixed = true);
   Boolean cool_s1_tripped(start = false, fixed = true);
   Boolean cool_s2_tripped(start = false, fixed = true);
-  Boolean servers_lost_power(start = false, fixed = true);
 
   // Timers
-  Real t_bus_low(start = 0, fixed = true);
-  Real t_bus_ok(start = 0, fixed = true);
   Real t_cool_s1(start = 0, fixed = true);
   Real t_cool_s2(start = 0, fixed = true);
   Real t_cool_ok(start = 0, fixed = true);
@@ -358,7 +551,6 @@ model RideThroughCore
   Real p_vfd_w "VFD-driven cooling demand";
   Boolean vfd_stopped_any;
   Boolean vfd_faulted_any;
-  Real t_psu_down(start = 0, fixed = true);
 
 initial equation
   e_holdup_j = e_holdup_max_j;
@@ -427,7 +619,6 @@ equation
   v_branch_margin = v_sdp_pu - 0.5 * v_source_pu * (1.0 + z_drop_pu);
   v_psu_in_v = supply_voltage_v * max(v_sdp_pu, 0.0);
   der(v_sense_pu) = (v_sdp_pu - v_sense_pu) / SENSE_TAU_S;
-  e_frac = max(0.0, min(1.0, e_holdup_j / e_holdup_max_j));
 
   // ---------------- Server / AI load ----------------
   // Slew-limited square wave: periodic 0.2-3 Hz synchronised swing, 1.9 pu/s ramp.
@@ -436,28 +627,6 @@ equation
   der(p_swing_w) = max(-SWING_SLEW_PU_S * p_it_rated_w,
                    min( SWING_SLEW_PU_S * p_it_rated_w,
                         (p_swing_target_w - p_swing_w) / 0.001));
-
-  // Capture the instant power is restored so the surge decays from there.
-  when (not servers_lost_power) and pre(servers_lost_power) then
-    t_restore = time;
-  end when;
-  p_surge_w = if t_restore >= 0.0 and time >= t_restore then
-                (restart_surge_x - 1.0) * p_it_rated_w * exp(-(time - t_restore) / restart_surge_s)
-              else 0.0;
-
-  // Ramp back to full grid draw rather than snapping, once the PSUs are supplying again.
-  der(t_psu_up) = if psu_enabled then 1.0 else 0.0;
-  // The ramp restarts after a hand-back as well as after a PSU restart: a UPS returning
-  // load to the grid ramps it rather than stepping it, which is why the measured product
-  // recovery is hand-back plus ramp rather than hand-back alone.
-  when not psu_enabled or (pre(bbu_active) and not bbu_active) then
-    reinit(t_psu_up, 0);
-  end when;
-  ramp_gate = min(1.0, t_psu_up / max(ramp_back_s, 1e-3));
-
-  p_server_w = if servers_lost_power then 0.0
-               else ((workload * p_it_rated_w + p_swing_w) * ramp_gate + p_surge_w)
-                    * facility_available_frac;
 
   // ---------------- Cooling, staged NERC Table 5.1 trips ----------------
   der(t_cool_s1) = if v_sense_pu < COOL_S1_V then 1.0 else 0.0;
@@ -538,8 +707,6 @@ equation
   when t_open > legacy_open_delay_s + 1.0e-6 then
     legacy_tripped = true;
   end when;
-  facility_available_frac =
-    (1.0 - legacy_load_frac) + legacy_load_frac * (if legacy_tripped then 0.0 else 1.0);
   // NOGRR grades whether the LEL stayed *connected*. Partial load loss is not
   // disconnection, so this is false only when nothing is left drawing.
   facility_connected = facility_available_frac > 0.01;
@@ -583,89 +750,30 @@ equation
     transfer_demanded = false;
   end when;
 
-  // ---------------- PSU ----------------
-  der(t_psu_down) = if psu_tripped_frac > 0.01 then 1.0 else 0.0;
-  when psu_tripped_frac < 0.01 then
-    reinit(t_psu_down, 0);
-  end when;
-
-  // Fraction of the fleet whose own threshold is above the present voltage.
-  psu_trip_demand = max(0.0, min(1.0,
-    (PSU_UV_HIGH_V - supply_voltage_v * v_sense_pu) / (PSU_UV_HIGH_V - PSU_UV_LOW_V)));
-
-  // Ratchets up only: a tripped PSU stays off until the restart conditions are met, so the
-  // fleet does not follow voltage back up instantaneously.
-  // Real PSUs keep drawing constant power from the AC until their lockout debounce expires, which is what produces the 150-160%
-  // facility current seen in the ERCOT events; a model that sheds load within the 1 ms sense filter cannot show it.
-  der(t_psu_uv) = if psu_trip_demand > 0.0 then 1.0 else 0.0;
-  when psu_trip_demand <= 0.0 then
-    reinit(t_psu_uv, 0);
-  end when;
-  psu_trip_demand_eff = if t_psu_uv > psu_uv_delay_s + 1.0e-6 then psu_trip_demand else 0.0;
-  der(psu_tripped_frac) = max(0.0, (psu_trip_demand_eff - psu_tripped_frac) / TRIP_TAU_S);
-  // Only the faulted-phase portion of the fleet can trip; the rest never sees the dip.
-  psu_online_frac = (1.0 - faulted_phase_frac) + faulted_phase_frac * (1.0 - psu_tripped_frac);
+  // ---------------- Rack groups ----------------
+  for g in 1:N_GRP loop
+    grp[g].v_sense_pu = v_sense_pu;
+    grp[g].v_sdp_pu = v_sdp_pu;
+    grp[g].transfer_demanded = transfer_demanded;
+    grp[g].p_swing_w = p_swing_w * grp_w[g];
+    grp[g].legacy_tripped = legacy_tripped;
+  end for;
+  p_server_w = sum(grp[g].p_server_w for g in 1:N_GRP);
+  p_psu_w = sum(grp[g].p_psu_w for g in 1:N_GRP);
+  p_bbu_w = sum(grp[g].p_bbu_w for g in 1:N_GRP);
+  psu_tripped_frac = sum(grp_w[g] * grp[g].psu_tripped_frac for g in 1:N_GRP);
+  psu_online_frac = sum(grp_w[g] * grp[g].psu_online_frac for g in 1:N_GRP);
+  bbu_active_frac = sum(grp_w[g] * (if grp[g].bbu_active then 1.0 else 0.0) for g in 1:N_GRP);
+  servers_lost_frac = sum(grp_w[g] * (if grp[g].servers_lost_power then 1.0 else 0.0) for g in 1:N_GRP);
+  e_holdup_j = sum(grp[g].e_holdup_j for g in 1:N_GRP);
+  e_holdup_max_j = sum(grp[g].e_holdup_max_j for g in 1:N_GRP);
+  e_frac = max(0.0, min(1.0, e_holdup_j / max(e_holdup_max_j, 1.0e-9)));
+  soc = sum(grp_w[g] * grp[g].soc for g in 1:N_GRP);
+  v_bus_v = sum(grp_w[g] * grp[g].v_bus_v for g in 1:N_GRP);
+  facility_available_frac = sum(grp_load_w[g] * grp[g].avail for g in 1:N_GRP);   // by load: cooling follows the load that is connected
   psu_enabled = psu_online_frac > 0.5;
-
-  when supply_voltage_v * v_sense_pu > PSU_RESTART_V
-      and t_psu_down > PSU_TON_BBU_S + psu_restart_delay_s then
-    reinit(psu_tripped_frac, 0.0);
-  end when;
-
-  // PSUs deliver what they can; the shortfall drains hold-up energy, then the BBU.
-  // Once the facility transfers to backup, the server load comes off the battery and the
-  // PSUs stop pulling it from the grid. This is the mechanism ERCOT exists to worry about --
-  // demand vanishing from the grid, as in the Virginia events -- and the model previously
-  // could not express it: the BBU only filled the shortfall when PSUs could not supply, so
-  // a transfer left grid draw unchanged.
-  p_psu_w = if bbu_active and soc > 0 then 0.0
-            else min(p_server_w, psu_online_frac * n_psu * PSU_RATED_W *
-                   (if psu_cap_datasheet then 1.0 else max(v_sdp_pu, 0.0)));
-  // psu_cap_datasheet: the Advanced Energy ORv3 3 kW datasheet rates the unit at 3 kW over the whole 180-305 VAC input range and
-  // specifies an undervoltage lockout at 172 VAC -- full power down to the lockout, then shutdown, which the trip logic above
-  // already models. The old per-unit scaling (0.8 pu -> 80% capability) had no source. No derating between 172 and 180 V is
-  // documented, so none is applied.
-
-  der(e_holdup_j) =
-    if psu_enabled and (bbu_active or p_psu_w >= p_server_w) then
-      max(0.0, (e_holdup_max_j - e_holdup_j) / 0.05)
-    else
-      -(p_server_w - p_psu_w - p_bbu_w);
-
-  // Busbar droops as hold-up depletes; the BBU clamps it once it takes over.
-  v_bus_v = if bbu_active and soc > 0 then BBU_BUS_V
-            else BUS_PSU_V - BUS_DROOP_FULL_V * (1.0 - max(0.0, min(1.0, e_holdup_j / e_holdup_max_j)));
-
-  // ---------------- BBU ----------------
-  der(t_bus_low) = if e_frac < E_FRAC_BBU then 1.0 else 0.0;
-  // Hand back only once the PSUs are actually supplying the busbar again. Ticking this
-  // while the BBU is carrying the load hands back to nothing during the PSU restart
-  // delay, which dropped the servers after the dip had already cleared.
-  der(t_bus_ok) = if psu_enabled and not transfer_demanded then 1.0 else 0.0;
-
-  when e_frac >= E_FRAC_BBU then
-    reinit(t_bus_low, 0);
-  end when;
-  when transfer_demanded or not psu_enabled then
-    reinit(t_bus_ok, 0);
-  end when;
-
-  when t_bus_low > BBU_TAKEOVER_DELAY_S or transfer_demanded then
-    bbu_active = true;
-  elsewhen t_bus_ok > handback_delay_s then
-    bbu_active = false;
-  end when;
-
-  // Modules cannot deliver more than their rated power regardless of stored energy.
-  // Carrying the whole server load, capped by installed module power.
-  p_bbu_w = if bbu_active and soc > 0 then min(bbu_power_w, p_server_w) else 0.0;
-  der(soc) = -p_bbu_w / bbu_energy_j;
-
-  when e_frac < E_FRAC_IT_FLOOR and not bbu_active then
-    servers_lost_power = true;
-  elsewhen e_frac > E_FRAC_BBU and psu_enabled then
-    servers_lost_power = false;
-  end when;
+  bbu_active = bbu_active_frac > 0.01;
+  servers_lost_power = servers_lost_frac > 0.01;
 
   // ---------------- Grid-side totals ----------------
   p_grid_w = p_psu_w / PSU_EFF + p_cooling_w;

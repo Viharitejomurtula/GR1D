@@ -87,7 +87,17 @@ class Scenario:
     psu_uv_delay_s: float = 1.0 / 60.0   # lockout debounce (G, ~1 cycle: the value at which BOTH facility A (1.60 pu) and B (1.50 pu) peak currents are
                                          # reproduced -- inferred from the validation data, so NOT independent evidence; see validation/psu_delay_sweep.py)
     legacy_open_delay_s: float = 0.05   # breaker/contactor opening time after the relay operates (G: 2-5 cycles)
+    ramp_on_grid_only: bool = field(default=True, metadata={"vector": False})   # False = old behaviour (servers' demand fell with the ramp gate)
     psu_cap_datasheet: bool = field(default=True, metadata={"vector": False})   # False reproduces the old per-unit scaling (ablation only)
+
+    # --- Facility heterogeneity: the IT side is n_groups parallel RackGroups (model/RideThroughCore.mo). n_groups = 1 is the old single
+    # lumped facility. Spreads are mean-preserving and assigned deterministically by stratified quantile (no random draw inside a run),
+    # so a mixed facility is reproducible. All G (no public data on how real facilities are mixed). ---
+    n_groups: int = 1
+    grp_load_cv: float = 0.0       # spread of group loading (total workload preserved)
+    grp_holdup_cv: float = 0.0     # spread of hold-up capacitor health
+    grp_bbu_cv: float = 0.0        # spread of installed BBU power/energy
+    grp_trip_cv: float = 0.0       # spread of PSU lockout threshold between groups
 
     # --- Cooling drives (see VfdClass in the model). Defaults keep the factory ATV320 behaviour.
     cooling_vfd_frac: float = 0.5
@@ -123,6 +133,31 @@ class Scenario:
             raise ValueError(f"{len(seq)} dips exceeds the model's MAX_DIPS={C.MAX_DIPS}")
         return seq
 
+    def group_arrays(self) -> dict[str, list[float]]:
+        """Per-group parameter arrays (length MAX_GROUPS; unused slots have zero weight)."""
+        n = int(self.n_groups)
+        if not 1 <= n <= C.MAX_GROUPS:
+            raise ValueError(f"n_groups must be 1..{C.MAX_GROUPS}")
+        u = [2.0 * (k + 0.5) / n - 1.0 for k in range(n)]           # stratified, symmetric about 0, in (-1, 1)
+        order = {"load": list(range(n)), **_ORDERINGS[n]}              # fixed permutations so the spreads are not perfectly correlated
+        def spread(key, cv): return [1.0 + cv * u[order[key][k]] for k in range(n)]
+        load = spread("load", self.grp_load_cv)
+        mean_load = sum(load) / n
+        load = [max(0.2, x / mean_load) for x in load]                 # total workload preserved
+        pad = lambda xs, fill: list(xs) + [fill] * (C.MAX_GROUPS - n)
+        return {"grp_w": pad([1.0 / n] * n, 0.0), "grp_workload_scale": pad(load, 1.0),
+                "grp_holdup_scale": pad([max(0.3, x) for x in spread("holdup", self.grp_holdup_cv)], 1.0),
+                "grp_bbu_scale": pad([max(0.3, x) for x in spread("bbu", self.grp_bbu_cv)], 1.0),
+                "grp_trip_offset": pad([self.grp_trip_cv * u[order["trip"][k]] * 0.1 for k in range(n)], 0.0)}
+
+    def legacy_fractions(self) -> list[float]:
+        """Per-group legacy share (same cumulative-by-load rule as the model; used by tests and reports only)."""
+        a = self.group_arrays(); n = int(self.n_groups); lw = [a["grp_w"][k] * a["grp_workload_scale"][k] for k in range(n)]
+        out, done = [], 0.0
+        for w in lw:
+            out.append(min(1.0, max(0.0, (self.legacy_load_frac - done) / w))); done += w
+        return out
+
     def window_s(self) -> float:
         """Simulation window: default settle time after the last dip clears, never shorter than the base window."""
         start, dur, _ = self.dip_sequence()[-1]
@@ -136,6 +171,12 @@ class Scenario:
         return asdict(self)
 
 
+_ORDERINGS = {1: dict(holdup=[0], bbu=[0], trip=[0]),
+              2: dict(holdup=[1, 0], bbu=[1, 0], trip=[1, 0]),
+              3: dict(holdup=[2, 0, 1], bbu=[1, 2, 0], trip=[2, 1, 0]),
+              4: dict(holdup=[2, 0, 3, 1], bbu=[1, 3, 0, 2], trip=[3, 2, 1, 0]),
+              5: dict(holdup=[2, 4, 1, 3, 0], bbu=[3, 0, 4, 1, 2], trip=[4, 3, 2, 1, 0]),
+              6: dict(holdup=[3, 0, 5, 2, 4, 1], bbu=[4, 1, 5, 0, 3, 2], trip=[5, 4, 3, 2, 1, 0])}
 FIELD_ORDER = tuple(f.name for f in fields(Scenario) if f.metadata.get("vector", True))
 
 
@@ -220,6 +261,9 @@ def sample(rng: np.random.Generator | None = None, *, dip_start_s: float = 1.0) 
         cooling_fan_frac=float(rng.uniform(0.2, 0.5)),
         z_total_pct=float(rng.uniform(15.0, 23.0)),  # substation + distribution + PDU, summed on each unit's own base
         chain_loading_frac=float(rng.uniform(0.5, 1.0)),
+        n_groups=int(rng.choice([1, 3, 6])),
+        grp_load_cv=float(rng.uniform(0.0, 0.4)), grp_holdup_cv=float(rng.uniform(0.0, 0.4)),
+        grp_bbu_cv=float(rng.uniform(0.0, 0.4)), grp_trip_cv=float(rng.uniform(0.0, 0.4)),
         legacy_open_delay_s=float(rng.uniform(2.0, 5.0) / 60.0),
         psu_uv_delay_s=float(np.exp(rng.uniform(np.log(0.001), np.log(0.025)))),   # G: ~1 ms to 1.5 cycles
         x_over_r=float(rng.uniform(5.0, 20.0)),
@@ -271,7 +315,8 @@ _BASE = dict(
     restart_surge_s=0.5,
     supply_voltage_v=277.0,
     shelves_per_rack=6,
-    bbu_modules_per_rack=12,
+    bbu_modules_per_rack=36,   # 6 shelves x 6 modules: 108 kW per rack vs ~92 kW of IT at 85% load. The old 12 could carry only 40 MW of a 102 MW load; that was
+                               # invisible while the servers' demand fell to zero the moment the PSUs tripped (see ramp_on_grid_only)
     cooling_share_25c=0.30,
     cooling_compressor_frac=0.4,
     cooling_fan_frac=0.35,

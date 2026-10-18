@@ -8,6 +8,7 @@ Sources are tracked in Parameter_Table.md.
 WINDOW_S = 15.0
 DT_S = 1e-4
 NOMINAL_FREQ_HZ = 60.0
+MAX_GROUPS = 6           # array size N_GRP in model/RideThroughCore.mo
 MAX_DIPS = 8             # array size in model/RideThroughCore.mo; NERC/PJM events had 4-6 faults
 POST_EVENT_SETTLE_S = 14.0   # window = last clear + this, so late PSU restarts (up to 11.5 s) are still seen
 OUTPUT_STEP_S = 2e-3     # result sampling; resolves 20 ms trip delays even in 100 s windows
