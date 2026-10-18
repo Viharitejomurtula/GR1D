@@ -53,7 +53,9 @@ def build_axes(steps: list[int]) -> dict[str, list[float]]:
         # 20 ms) lives at the bottom of the range.
         "dip_duration_s": np.geomspace(0.02, 1.0, t).round(4).tolist(),
         "outdoor_temp_c": np.linspace(0.0, 42.0, c).round(2).tolist(),
-        "battery_age_yr": np.linspace(0.0, 10.0, a).round(2).tolist(),
+        # Past the 8-15 yr service life, so this reaches deferred-replacement packs --
+        # degraded storage is where failures hide, which is the point of the sweep.
+        "battery_age_yr": np.linspace(0.0, 14.0, a).round(2).tolist(),
     }
 
 

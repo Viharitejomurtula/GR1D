@@ -1,0 +1,25 @@
+app = "gr1d-simulator"
+primary_region = "dfw"   # Dallas: the facility being modelled is in ERCOT
+
+[build]
+  dockerfile = "api/Dockerfile"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  # Kept warm deliberately. Scaling to zero saves a few dollars and costs a 30-60 s cold
+  # start on the first request -- which is exactly what a demo is.
+  auto_stop_machines = false
+  min_machines_running = 1
+
+[[vm]]
+  memory = "1gb"
+  cpu_kind = "shared"
+  cpus = 1
+
+[checks.health]
+  type = "http"
+  port = 8080
+  path = "/health"
+  interval = "30s"
+  timeout = "5s"

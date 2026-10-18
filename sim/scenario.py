@@ -154,7 +154,7 @@ def sample(rng: np.random.Generator | None = None, *, dip_start_s: float = 1.0) 
         # Hall temperature cannot change meaningfully inside a 15 s window, so this is an
         # initial condition (a facility that is already hot), not something the run evolves.
         battery_temp_c=float(rng.uniform(20.0, 40.0)),
-        battery_age_yr=float(rng.uniform(0.0, 10.0)),
+        battery_age_yr=float(rng.uniform(0.0, 14.0)),
         battery_soc0=float(rng.uniform(0.80, 1.00)),
         workload=float(rng.uniform(0.50, 1.00)),
         swing_size_frac=float(rng.uniform(0.0, 0.5)),
