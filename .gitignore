@@ -9,3 +9,5 @@ venv/
 # OpenModelica build output: compiled binaries, generated C, object files
 build/
 *.o
+data/runs*.csv
+frontend/public/data/surrogate.json
