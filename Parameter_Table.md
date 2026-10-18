@@ -299,6 +299,14 @@ tuning knob — but a fitted number cannot also be a validation.
 | Facility B | 0.30 | 25.2% vs real 24% | **1.33 vs 1.50 pu** (−11%) | — |
 | Shallow dip, 0.844 pu | **none — predicted** | **22.0% vs real 19%**, using facility B's inferred 0.30 | — | — |
 
+| Product, 70 sags | **none — predicted** | never disconnected ✓; median recovery **0.375 s vs real 0.41** | — | 100% inside the 2.0 s rule |
+
+The product benchmark validates the **grid-friendly preset**, which until now had nothing behind
+it — every other case was a legacy-equipment failure. Worst-case recovery is heavier than the
+vendor's (1.35 s vs 0.49 s), plausibly because the Eaton distribution sampled here includes ~4%
+of sags below 0.10 pu that a vendor benchmarking its own product would not have tested; that is
+unverified and stands as a discrepancy.
+
 The 0.844 pu case is a genuine out-of-sample prediction: nothing was refitted, the legacy share
 came from facility B, and it sits in a different envelope tier (0.80-0.90 pu, the 2.0 s band)
 than either calibration case. Caveat: the result hinges on the legacy relay pickup sitting at

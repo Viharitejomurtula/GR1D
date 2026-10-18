@@ -276,7 +276,10 @@ equation
 
   // Ramp back to full grid draw rather than snapping, once the PSUs are supplying again.
   der(t_psu_up) = if psu_enabled then 1.0 else 0.0;
-  when not psu_enabled then
+  // The ramp restarts after a hand-back as well as after a PSU restart: a UPS returning
+  // load to the grid ramps it rather than stepping it, which is why the measured product
+  // recovery is hand-back plus ramp rather than hand-back alone.
+  when not psu_enabled or (pre(bbu_active) and not bbu_active) then
     reinit(t_psu_up, 0);
   end when;
   ramp_gate = min(1.0, t_psu_up / max(ramp_back_s, 1e-3));
@@ -341,7 +344,7 @@ equation
   end when;
   when t_transfer > transfer_delay_s then
     transfer_demanded = true;
-  elsewhen v_sense_pu > transfer_threshold_pu and e_frac > E_FRAC_BBU and psu_enabled then
+  elsewhen v_sense_pu > transfer_threshold_pu and psu_enabled then
     transfer_demanded = false;
   end when;
 
@@ -368,10 +371,16 @@ equation
   end when;
 
   // PSUs deliver what they can; the shortfall drains hold-up energy, then the BBU.
-  p_psu_w = min(p_server_w, psu_online_frac * n_psu * PSU_RATED_W * max(v_sdp_pu, 0.0));
+  // Once the facility transfers to backup, the server load comes off the battery and the
+  // PSUs stop pulling it from the grid. This is the mechanism ERCOT exists to worry about --
+  // demand vanishing from the grid, as in the Virginia events -- and the model previously
+  // could not express it: the BBU only filled the shortfall when PSUs could not supply, so
+  // a transfer left grid draw unchanged.
+  p_psu_w = if bbu_active and soc > 0 then 0.0
+            else min(p_server_w, psu_online_frac * n_psu * PSU_RATED_W * max(v_sdp_pu, 0.0));
 
   der(e_holdup_j) =
-    if p_psu_w >= p_server_w then
+    if psu_enabled and (bbu_active or p_psu_w >= p_server_w) then
       max(0.0, (e_holdup_max_j - e_holdup_j) / 0.05)
     else
       -(p_server_w - p_psu_w - p_bbu_w);
@@ -385,12 +394,12 @@ equation
   // Hand back only once the PSUs are actually supplying the busbar again. Ticking this
   // while the BBU is carrying the load hands back to nothing during the PSU restart
   // delay, which dropped the servers after the dip had already cleared.
-  der(t_bus_ok) = if psu_enabled and e_frac > E_FRAC_BBU then 1.0 else 0.0;
+  der(t_bus_ok) = if psu_enabled and not transfer_demanded then 1.0 else 0.0;
 
   when e_frac >= E_FRAC_BBU then
     reinit(t_bus_low, 0);
   end when;
-  when e_frac <= E_FRAC_BBU or not psu_enabled then
+  when transfer_demanded or not psu_enabled then
     reinit(t_bus_ok, 0);
   end when;
 
@@ -401,7 +410,8 @@ equation
   end when;
 
   // Modules cannot deliver more than their rated power regardless of stored energy.
-  p_bbu_w = if bbu_active and soc > 0 then min(bbu_power_w, max(0.0, p_server_w - p_psu_w)) else 0.0;
+  // Carrying the whole server load, capped by installed module power.
+  p_bbu_w = if bbu_active and soc > 0 then min(bbu_power_w, p_server_w) else 0.0;
   der(soc) = -p_bbu_w / bbu_energy_j;
 
   when e_frac < E_FRAC_IT_FLOOR and not bbu_active then
