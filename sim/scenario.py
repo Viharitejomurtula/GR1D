@@ -24,6 +24,10 @@ class Scenario:
     dip_depth_pu: float  # retained voltage, not the drop
     dip_duration_s: float
     dip_start_s: float
+    # Post-fault shape from the ANDES library (scripts/andes_dips.py). A square dip has
+    # neither: it snaps back instantly and never overshoots.
+    recovery_tau_s: float
+    overshoot_pu: float
     second_dip: bool
     reclose_gap_s: float
 
@@ -93,6 +97,23 @@ def sample_dip_depth(rng: np.random.Generator) -> float:
     return float(rng.uniform(0.00, 0.10))
 
 
+# Fitted across the ANDES dip library: deeper faults overshoot harder on recovery, and
+# the climb-back time constant is nearly invariant. Residual scatter is kept so sampling
+# is not confined to the handful of discrete library entries.
+OVERSHOOT_PER_DEPTH = 0.122
+OVERSHOOT_RESIDUAL = 0.018
+RECOVERY_TAU_MEAN = 0.0658
+RECOVERY_TAU_STD = 0.0017
+
+
+def sample_shape(rng: np.random.Generator, retained_pu: float) -> tuple[float, float]:
+    """Recovery time constant and overshoot, conditioned on dip depth."""
+    tau = float(np.clip(rng.normal(RECOVERY_TAU_MEAN, RECOVERY_TAU_STD), 0.02, 0.2))
+    mean_os = OVERSHOOT_PER_DEPTH * (1.0 - retained_pu)
+    overshoot = float(max(0.0, rng.normal(mean_os, OVERSHOOT_RESIDUAL)))
+    return tau, overshoot
+
+
 def sample_dip_duration(rng: np.random.Generator) -> float:
     """Lognormal, median 0.1 s, sigma 1.0, truncated to 0.02-1.0 s."""
     for _ in range(100):
@@ -108,11 +129,15 @@ def sample(rng: np.random.Generator | None = None, *, dip_start_s: float = 1.0) 
 
     second_dip = bool(rng.random() < 0.20)  # >80% of faults are temporary -> reclose
     high_speed_reclose = rng.random() < 0.5
+    depth = sample_dip_depth(rng)
+    tau, overshoot = sample_shape(rng, depth)
 
     return Scenario(
-        dip_depth_pu=sample_dip_depth(rng),
+        dip_depth_pu=depth,
         dip_duration_s=sample_dip_duration(rng),
         dip_start_s=dip_start_s,
+        recovery_tau_s=tau,
+        overshoot_pu=overshoot,
         second_dip=second_dip,
         reclose_gap_s=float(
             rng.uniform(0.25, 0.6) if high_speed_reclose else rng.uniform(1.0, 5.0)
@@ -163,6 +188,8 @@ _BASE = dict(
     dip_depth_pu=0.60,
     dip_duration_s=0.083,
     dip_start_s=1.0,
+    recovery_tau_s=0.0658,
+    overshoot_pu=0.049,
     second_dip=False,
     reclose_gap_s=0.4,
     outdoor_temp_c=38.0,

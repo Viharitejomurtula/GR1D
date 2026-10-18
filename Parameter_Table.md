@@ -40,7 +40,8 @@ ERCOT's large-load queue is ~410 GW, ~87% data centers, <6 GW energized (RTO Ins
 | reclose_gap_s | 0.4 | 0.25-0.6 high-speed; 1-5 delayed | ☑️ | NERC SPCS | dead time before reclose |
 | dip_shape | from ANDES | - | ✅ | ANDES IEEE 14-bus | **Decided: ANDES is in.** Dip depth comes from fault distance; see the generated library below |
 | recovery_tau_s | 0.065 | 0.06-0.07 | ✅ | ANDES | Time to climb back within 10% of nominal after clearing. A square dip assumes instant |
-| overshoot_pu | 0.06 | 0.00-0.124 | ✅ | ANDES | **Post-fault overshoot reaches 1.124 pu, above the 1.10 continuous band** |
+| overshoot_pu | 0.06 | 0.00-0.124 | ✅ | ANDES | Fitted **0.122 x (1 - retained)**, residual std 0.018. **Peak reaches 1.124 pu, above the 1.10 continuous band** |
+| overshoot_peak_x | 4.0 | - | G | - | Overshoot peaks this many recovery time constants after clearing. The library measures magnitude but **not timing** — assumption, worth measuring |
 
 **Real Texas dips (validation inputs, not sampled):** 0.535 pu, 0.670 pu, 0.844 pu at ERCOT
 facilities. ✅ [NERC Incident Review: Voltage-Sensitive Crypto Load Reductions, Jan 9 2026, p.5](https://www.nerc.com/globalassets/our-work/reports/event-reports/incident_review_considering_voltage-sensitive_crypto_load_reductions.pdf)

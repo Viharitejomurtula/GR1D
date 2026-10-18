@@ -39,6 +39,8 @@ PARAM_MAP = {
     "dip_depth_pu": "dip_depth_pu",
     "dip_duration_s": "dip_duration_s",
     "dip_start_s": "dip_start_s",
+    "recovery_tau_s": "recovery_tau_s",
+    "overshoot_pu": "overshoot_pu",
     "reclose_gap_s": "reclose_gap_s",
     "workload": "workload",
     "swing_size_frac": "swing_size_frac",

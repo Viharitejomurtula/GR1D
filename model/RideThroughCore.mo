@@ -9,6 +9,10 @@ model RideThroughCore
   parameter Real dip_duration_s = 0.083;
   parameter Boolean second_dip = false;
   parameter Real reclose_gap_s = 0.4;
+  // Post-fault shape, measured from ANDES fault studies (scripts/andes_dips.py).
+  // A square dip assumes voltage snaps back instantly and never overshoots; neither holds.
+  parameter Real recovery_tau_s = 0.065 "Time constant of the climb back after clearing";
+  parameter Real overshoot_pu = 0.06 "Peak above nominal after clearing";
 
   parameter Real p_it_rated_w = 120e6 "Facility IT rating";
   parameter Real workload = 0.85 "Fraction of IT rating";
@@ -78,9 +82,13 @@ model RideThroughCore
   constant Real SENSE_TAU_S = 0.001 "Protection sensing lag";
   // R/|Z|*cos(phi) + X/|Z|*sin(phi) at X/R = 10, pf = 0.9.
   constant Real Z_EFF_FACTOR = 0.523 "Fraction of |Z| that becomes real voltage drop";
+  constant Real OVERSHOOT_PEAK_X = 4.0 "Overshoot peaks this many recovery time constants after clearing";
 
   // ===================== Variables =====================
   Real v_source_pu "Source voltage, before facility impedance";
+  Real v_recovering "Post-clearing recovery shape";
+  Real dt_recover "Time since the most recent clearing";
+  Real t_clear1, t_start2, t_clear2;
   // Constant-power load behind a series impedance gives a quadratic in voltage with two real
   // roots. Start near the physical (high-voltage) root or the solver latches onto the spurious
   // collapsed-voltage branch, which looks plausible but inverts the physics entirely.
@@ -130,12 +138,41 @@ initial equation
 
 equation
   // ---------------- Grid ----------------
+  // Realistic dip shape. During a fault the voltage sits at the retained level; after
+  // clearing it climbs back exponentially and overshoots before settling. The overshoot
+  // term peaks at overshoot_pu one time constant after clearing, then decays to zero, so
+  // the expression is continuous and tends to 1.0.
+  //
+  //   v(dt) = v_dip + (1 - v_dip)(1 - e^(-dt/tau)) + A (dt/tau) e^(1 - dt/tau)
+  //
+  // This matters for grading: ANDES runs show overshoot reaching 1.124 pu, which is above
+  // NOGRR's 1.10 continuous band and into the tier demanding 2.0 s of ride-through. A
+  // square dip cannot produce that failure mode at all.
+  t_clear1 = dip_start_s + dip_duration_s;
+  t_start2 = t_clear1 + reclose_gap_s;
+  t_clear2 = t_start2 + dip_duration_s;
+
+  dt_recover = if second_dip and time >= t_clear2 then time - t_clear2
+               else if time >= t_clear1 then time - t_clear1
+               else 0.0;
+
+  // Written as a decaying departure from nominal plus an overshoot pulse, so the peak
+  // actually lands near 1 + overshoot_pu. The pulse peaks at OVERSHOOT_PEAK_X time
+  // constants, by which point the climb term has decayed to ~2% -- peaking it earlier
+  // (at 1 tau, as first written) merely speeds the recovery and never exceeds nominal.
+  //
+  // The ANDES library measures overshoot magnitude but not its timing, so the 4x factor
+  // is an assumption; see Parameter_Table.md.
+  v_recovering = 1.0
+    + (dip_depth_pu - 1.0) * exp(-dt_recover / recovery_tau_s)
+    + overshoot_pu * (dt_recover / (OVERSHOOT_PEAK_X * recovery_tau_s))
+      * exp(1.0 - dt_recover / (OVERSHOOT_PEAK_X * recovery_tau_s));
+
   v_source_pu =
-    if time >= dip_start_s and time < dip_start_s + dip_duration_s then dip_depth_pu
-    elseif second_dip
-      and time >= dip_start_s + dip_duration_s + reclose_gap_s
-      and time < dip_start_s + 2 * dip_duration_s + reclose_gap_s then dip_depth_pu
-    else 1.0;
+    if time < dip_start_s then 1.0
+    elseif time < t_clear1 then dip_depth_pu
+    elseif second_dip and time >= t_start2 and time < t_clear2 then dip_depth_pu
+    else v_recovering;
 
   // Voltage drop across the transformer chain, referenced to the rated operating point.
   //
