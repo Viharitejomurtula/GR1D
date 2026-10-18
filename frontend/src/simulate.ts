@@ -12,6 +12,20 @@
 
 import { loadGrid, lookup, type Grid } from './grid';
 
+/** Time series for the replay panel, downsampled by the API. */
+export type ApiTrace = {
+  t: number[];
+  voltage_pu: number[];
+  facility_pct: number[];
+  battery_pct: number[];
+  t0: number;
+  t1: number;
+  back: number | null;
+  deadline: number | null;
+  reached90: number | null;
+  min_pct: number;
+};
+
 export type Verdict = {
   passed: boolean;
   failureMode: string;
@@ -24,6 +38,8 @@ export type Verdict = {
   source: 'simulator' | 'precomputed';
   /** Set when the scenario was snapped to grid points. */
   snapped?: Record<string, number>;
+  /** Only present on a live run that asked for it; the grid stores no time series. */
+  trace?: ApiTrace;
 };
 
 export type SimulateOptions = {
@@ -31,6 +47,8 @@ export type SimulateOptions = {
   preset?: 'grid_friendly' | 'legacy_ups';
   /** Give up on the API after this long and use the grid. */
   timeoutMs?: number;
+  /** Ask for the time series as well as the verdict. Live path only. */
+  includeTrace?: boolean;
 };
 
 const DEFAULT_API = import.meta.env?.VITE_API_URL ?? '/api';
@@ -55,7 +73,12 @@ export async function simulate(
   scenario: Record<string, number>,
   opts: SimulateOptions = {}
 ): Promise<Verdict> {
-  const { apiUrl = DEFAULT_API, preset = 'grid_friendly', timeoutMs = 8000 } = opts;
+  const {
+    apiUrl = DEFAULT_API,
+    preset = 'grid_friendly',
+    timeoutMs = 8000,
+    includeTrace = false,
+  } = opts;
 
   try {
     const ctrl = new AbortController();
@@ -63,7 +86,7 @@ export async function simulate(
     const res = await fetch(`${apiUrl}/simulate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ preset, overrides: scenario }),
+      body: JSON.stringify({ preset, overrides: scenario, include_trace: includeTrace }),
       signal: ctrl.signal,
     });
     clearTimeout(timer);
@@ -80,6 +103,7 @@ export async function simulate(
         storageLeft: d.storage_left,
         trips: d.trips,
         source: 'simulator',
+        trace: d.trace ?? undefined,
       };
     }
 

@@ -1,8 +1,13 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import sampleRuns from './data/sample.json'
+import eventRuns from './data/events.json'
+import { simulate } from './simulate'
 
 // ILLUSTRATIVE VALUES: the pipeline does not produce these outputs yet. Every number on this tab comes from the
 // placeholder dataset below, so the header, map, report card and scenario estimate agree with each other.
-// To connect the backend, replace SAMPLE with real runs (data/runs.csv) and classify() with the run's failure_mode.
+// Connected to the simulator. SAMPLE is real graded runs (scripts/export_sample.py from
+// data/runs.csv); EVENTS is six replays of the documented ERCOT dips
+// (scripts/export_events.py). Regenerate either and rebuild to refresh the page.
 
 // ---- the variable list: every slider, axis and label reads its range from here (see the hookup notes) ----
 type VarKey = 'depth' | 'duration' | 'temp' | 'age'
@@ -53,33 +58,49 @@ type Scenario = Record<VarKey, number>
 const PRESET: Scenario = { depth: 0.62, duration: 120, temp: 41, age: 2 }
 
 const MODES = {
-  A: {
-    name: 'Power-supply trip', color: '#ff8a3d',
-    what: 'Server power supplies drop out when the voltage falls below about 0.30 pu, at any temperature.',
-    fix: 'Lower the power-supply trip point from 0.60 to 0.50 pu.', fixNote: 'Firmware only · removes 94%',
-    setting: 'PSU trip delay = 10 ms', settingNote: 'Factory default on 38% of racks.',
+  'exceeded 125% current cap': {
+    name: 'Current cap exceeded', color: '#ff8a3d',
+    what: 'The site pulls more than 125% of its normal current during the dip. A constant-power load draws more amps as voltage falls, and NOGRR 282 section 2.14(2)(d) caps that at 125%.',
+    fix: 'Not yet determined', fixNote: 'Needs a fix search',
+    setting: 'Not yet determined', settingNote: 'Needs a sensitivity analysis',
   },
-  B: {
-    name: 'Cold battery stall', color: '#ff4a3a',
-    what: 'Below −3 °C a cold battery cannot deliver full current into a dip below 0.65 pu.',
-    fix: 'Raise the battery heater setpoint from 5 °C to 12 °C.', fixNote: 'Setting change · removes 88%',
-    setting: 'Minimum charge = 20%', settingNote: 'At −10 °C this leaves 9 s of support.',
+  'cooling tripped': {
+    name: 'Cooling tripped', color: '#ffd873',
+    what: 'Chiller motors drop out on undervoltage. Fans and pumps come back after 0.25 s, but compressors stay off for the rest of the event, so that share of load never returns.',
+    fix: 'Not yet determined', fixNote: 'Needs a fix search',
+    setting: 'Not yet determined', settingNote: 'Needs a sensitivity analysis',
   },
-  C: {
-    name: 'Heat-derated recovery', color: '#ffd873',
-    what: 'Above 33 °C, with a long dip or an old battery, the inverter throttles and misses the 2 s deadline.',
-    fix: 'Speed up the power ramp from 0.8 to 1.4 pu per second.', fixNote: 'Control tuning · removes 97%',
-    setting: 'Derate onset = 35 °C', settingNote: 'Exceeded about 140 hours a year in Texas.',
+  'below power floor': {
+    name: 'Below the power floor', color: '#ff4a3a',
+    what: 'The site sheds more load than the rule allows. Between 0.80 and 0.50 pu the reduction has to stay proportional to the voltage drop.',
+    fix: 'Not yet determined', fixNote: 'Needs a fix search',
+    setting: 'Not yet determined', settingNote: 'Needs a sensitivity analysis',
+  },
+  'storage hand-back too slow': {
+    name: 'Hand-back too slow', color: '#e0725c',
+    what: 'The battery is still carrying the load when the 2 s deadline passes, so the grid never sees the demand return in time.',
+    fix: 'Not yet determined', fixNote: 'Needs a fix search',
+    setting: 'Not yet determined', settingNote: 'Needs a sensitivity analysis',
+  },
+  'PSU shutdown and restart delay': {
+    name: 'Power-supply restart', color: '#c86fd4',
+    what: 'Rack power supplies shut down and then wait to restart. After a battery discharge the Open Rack V3 spec allows 1 to 8.5 s, including a deliberate random delay, which is longer than the rule permits.',
+    fix: 'Not yet determined', fixNote: 'Needs a fix search',
+    setting: 'Not yet determined', settingNote: 'Needs a sensitivity analysis',
   },
 } as const
+
+// The fix and setting columns are the one part of this page with nothing behind them yet:
+// naming the smallest change that removes a mode needs a search over the design space, and
+// ranking the most dangerous setting needs a sensitivity analysis. Neither exists, so they
+// say so rather than showing a number nobody computed.
 type Mode = keyof typeof MODES | 'pass'
 const MODE_KEYS = Object.keys(MODES) as (keyof typeof MODES)[]
 
-const EVENTS = [
-  { pu: '0.535', tag: 'Deepest · winter morning', note: 'Legacy sheds 186 MW', legacy: 38, product: 93 },
-  { pu: '0.670', tag: 'Mid · summer peak', note: 'Legacy sheds 83 MW', legacy: 71, product: 96 },
-  { pu: '0.844', tag: 'Shallow · shoulder season', note: 'Both hold', legacy: 92, product: 99 },
-]
+const EVENTS = eventRuns as {
+  pu: string; tag: string; note: string
+  legacy: number; product: number; legacy_min: number; product_min: number
+}[]
 
 const PASS_GREEN = '#5dbb7a'
 const GOLD = '#d9b24c'
@@ -88,33 +109,7 @@ const pct = (x: number, d = 1) => `${(x * 100).toFixed(d)}%`
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v))
 const frac = (k: VarKey, v: number) => (v - VARS[k].min) / (VARS[k].max - VARS[k].min)
 
-// deterministic noise so the data is stable between renders
-function rng(seed: number) { return () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296 } }
-function gauss(R: () => number) { return Math.sqrt(-2 * Math.log(R() || 1e-9)) * Math.cos(2 * Math.PI * R()) }
-
-// placeholder failure rules; the noise terms soften the edges the way real runs would
-function classify(s: Scenario, n1 = 0, n2 = 0): Mode {
-  if (s.depth + 0.03 * n1 < 0.3) return 'A'
-  if (s.temp + 3 * n2 < -3 && s.depth < 0.65) return 'B'
-  if (s.temp + 2.5 * n2 > 33 && s.depth + 0.03 * n1 < 0.74 && (s.duration > 160 || s.age > 5)) return 'C'
-  return 'pass'
-}
-
-// distributions shaped like her scenario generator (sim/scenario.py)
-const SAMPLE = (() => {
-  const R = rng(7)
-  const pts: (Scenario & { mode: Mode })[] = []
-  for (let i = 0; i < 1500; i++) {
-    const u = R()
-    const depth = u < 0.69 ? 0.7 + 0.2 * R() : u < 0.96 ? 0.1 + 0.6 * R() : 0.1 * R()
-    const duration = R() < 0.889 ? 50 + 17 * R() : 167 + 150 * R()
-    const temp = clamp(21 + 10 * gauss(R), -18.3, 42.8)
-    const age = 10 * R()
-    const s = { depth, duration, temp, age }
-    pts.push({ ...s, mode: classify(s, gauss(R), gauss(R)) })
-  }
-  return pts
-})()
+const SAMPLE = sampleRuns as (Scenario & { mode: Mode })[]
 
 function summarize(pts: { mode: Mode }[]) {
   const n = pts.length, fails = pts.filter((p) => p.mode !== 'pass').length
@@ -139,11 +134,11 @@ function localEstimate(s: Scenario) {
     else wm[p.mode] = (wm[p.mode] ?? 0) + wt
   }
   const top = Object.entries(wm).sort((a, b) => b[1] - a[1])[0]
-  const own = classify(s)
   return {
-    pass: w > 1e-6 ? wp / w : own === 'pass' ? 1 : 0,
-    mode: (own !== 'pass' ? own : top && top[1] / Math.max(w, 1e-9) > 0.02 ? top[0] : null) as keyof typeof MODES | null,
-    sparse: w < 3, // few real runs look like this, so the estimate leans on the rules
+    pass: w > 1e-6 ? wp / w : 1,
+    mode: (top && top[1] / Math.max(w, 1e-9) > 0.02 ? top[0] : null) as keyof typeof MODES | null,
+    // Few simulated runs land near these settings, so the estimate is thin here.
+    sparse: w < 3,
   }
 }
 
@@ -181,7 +176,7 @@ function describe(x: VarKey, y: VarKey, you: Scenario) {
   const fails = SAMPLE.filter((p) => p.mode !== 'pass')
   const top = MODE_KEYS.map((m) => ({ m, n: fails.filter((p) => p.mode === m).length })).sort((a, b) => b.n - a.n)[0]
   const est = localEstimate(you)
-  return `${sentence(x)} ${sentence(y)} Most failures are ${MODES[top.m].name.toLowerCase()} (${top.m}, ${pct(top.n / Math.max(fails.length, 1), 0)} of them). Your scenario sits where about ${pct(est.pass, 0)} of runs pass.`
+  return `${sentence(x)} ${sentence(y)} Most failures are ${MODES[top.m].name.toLowerCase()} (${pct(top.n / Math.max(fails.length, 1), 0)} of them). Your scenario sits where about ${pct(est.pass, 0)} of runs pass.`
 }
 
 // ---- one illustrative trace for the slider values. Replace with the simulator's result CSV for that run ----
@@ -190,9 +185,9 @@ function trace(s: Scenario) {
   const back = t1 + 0.05 * Math.log(Math.max((1 - s.depth) / 0.1, 1)) // voltage back above 0.90 pu
   const deadline = back + 2
   const minP = clamp(15 + s.depth * 33, 12, 55)
-  // recovery is slow only when the same rules that color the map call it a failure, so the two always agree
-  const mode = classify(s)
-  const tau = 0.35 + s.age * 0.03 + (mode === 'A' ? 1.2 : mode === 'B' ? 1.0 : mode === 'C' ? 0.9 + Math.max(0, s.temp - 35) * 0.04 : 0)
+  // Recovery is slow exactly when the nearby real runs failed, so the curve and the map agree.
+  const mode = localEstimate(s).mode ?? 'pass'
+  const tau = 0.35 + s.age * 0.03 + (mode === 'pass' ? 0 : mode === 'storage hand-back too slow' ? 1.2 : mode === 'PSU shutdown and restart delay' ? 1.1 : 0.9)
   const volt = (t: number) => (t < t0 ? 1 : t < t1 ? s.depth : 1 - (1 - s.depth) * Math.exp(-(t - t1) / 0.05))
   const facility = (t: number) =>
     t < t0 ? 100 : t < t0 + 0.06 ? 100 - ((100 - minP) * (t - t0)) / 0.06 : minP + (98 - minP) * (1 - Math.exp(-(t - t0 - 0.06) / tau))
@@ -204,6 +199,32 @@ function trace(s: Scenario) {
       : (hot ? 0.64 * peak : peak) * Math.exp(-(t - (hot ? 2.2 : 1.35)) / (hot ? 1.1 : tau))
   const window = clamp(Math.ceil(reached90 + 1.5), 6, 15)
   return { t0, t1, back, deadline, minP, volt, facility, battery, peak, hot, reached90, window, mode, passed: reached90 <= deadline }
+}
+
+type TraceShape = ReturnType<typeof trace>
+
+function traceFromApi(api: NonNullable<Awaited<ReturnType<typeof simulate>>['trace']>, s: Scenario, verdict: { passed: boolean; failureMode: string }): TraceShape {
+  const ts = api.t
+  // Linear interpolation between samples, so the chart can ask for any instant.
+  const at = (ys: number[]) => (t: number) => {
+    if (t <= ts[0]) return ys[0]
+    if (t >= ts[ts.length - 1]) return ys[ys.length - 1]
+    let lo = 0, hi = ts.length - 1
+    while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (ts[mid] <= t) lo = mid; else hi = mid }
+    const span = ts[hi] - ts[lo] || 1
+    return ys[lo] + ((ys[hi] - ys[lo]) * (t - ts[lo])) / span
+  }
+  const back = api.back ?? api.t1
+  return {
+    t0: api.t0, t1: api.t1, back, deadline: api.deadline ?? back + 2,
+    minP: api.min_pct, reached90: api.reached90 ?? ts[ts.length - 1],
+    volt: at(api.voltage_pu), facility: at(api.facility_pct), battery: at(api.battery_pct),
+    peak: Math.max(...api.battery_pct, 1),
+    hot: s.temp > 35,
+    window: clamp(Math.ceil((api.reached90 ?? ts[ts.length - 1]) + 1.5), 6, 15),
+    mode: (verdict.passed ? 'pass' : verdict.failureMode) as Mode,
+    passed: verdict.passed,
+  }
 }
 
 function Section({ n, kicker, title, lede, children }: { n: string; kicker: string; title: string; lede: string; children: ReactNode }) {
@@ -342,7 +363,7 @@ function ScenarioPanel({ values, lastRun, onChange, onRun, onReset }: {
             ) : (
               <p className="mono text-[12px] text-[#c4bca7]">
                 Under these conditions about <span className="text-[#f6f1e2]">{pct(est.pass, 0)}</span> of runs pass
-                {est.mode ? `; the most likely failure is ${est.mode} · ${MODES[est.mode].name.toLowerCase()}.` : '.'}
+                {est.mode ? `; the most likely failure is ${MODES[est.mode].name.toLowerCase()}.` : '.'}
                 {est.sparse && ' Few runs look like this, so treat it as rough.'}
               </p>
             )}
@@ -397,7 +418,7 @@ function ScenarioPanel({ values, lastRun, onChange, onRun, onReset }: {
                 </div>
               </div>
               <p className="mt-4 text-[15px] leading-[1.55] text-[#d3ccb8]">
-                {live.mode ? `The most likely failure here is ${live.mode} · ${MODES[live.mode].name.toLowerCase()}.` : 'No failure mode stands out under these conditions.'}
+                {live.mode ? `The most likely failure here is ${MODES[live.mode].name.toLowerCase()}.` : 'No failure mode stands out under these conditions.'}
               </p>
             </div>
           </div>
@@ -468,7 +489,7 @@ function FailureMap({ you }: { you: Scenario }) {
       </div>
 
       <div className="mt-9 flex flex-wrap gap-x-8 gap-y-2">
-        {[{ name: 'Pass', c: PASS_GREEN }, ...MODE_KEYS.map((m) => ({ name: `${m} · ${MODES[m].name}`, c: MODES[m].color })), { name: 'Your scenario', c: '' }].map((k) => (
+        {[{ name: 'Pass', c: PASS_GREEN }, ...MODE_KEYS.map((m) => ({ name: MODES[m].name, c: MODES[m].color })), { name: 'Your scenario', c: '' }].map((k) => (
           <span key={k.name} className="mono flex items-center gap-2 text-[11.5px] tracking-[0.1em] text-[#c4bca7] uppercase">
             {k.c ? <span className="h-2 w-2 rounded-full" style={{ background: k.c }} /> : <span className="h-3 w-3 rounded-full border-[1.5px] border-[#f6f1e2]" />}{k.name}
           </span>
@@ -521,7 +542,7 @@ function Replay({ s }: { s: Scenario }) {
   const atDeadline = tr.facility(tr.deadline)
   const scenarioRow: [string, string][] = [
     ['Dip', `${VARS.depth.fmt(s.depth)} for ${VARS.duration.fmt(s.duration)}`], ['Outdoor', VARS.temp.fmt(s.temp)], ['Battery age', VARS.age.fmt(s.age)],
-    ['Verdict', tr.passed ? 'Pass' : tr.mode === 'pass' ? 'Fail' : `Fail · ${tr.mode} · ${MODES[tr.mode].name.toLowerCase()}`],
+    ['Verdict', tr.passed ? 'Pass' : tr.mode === 'pass' ? 'Fail' : `Fail · ${MODES[tr.mode as keyof typeof MODES]?.name.toLowerCase() ?? tr.mode}`],
   ]
   return (
     <div className="mt-10">
@@ -674,8 +695,31 @@ function Comparison() {
 export default function Results() {
   const [values, setValues] = useState<Scenario>(PRESET)
   const [lastRun, setLastRun] = useState<Scenario>(PRESET)
-  const tr = useMemo(() => trace(lastRun), [lastRun])
+  // Set once the simulator has answered for lastRun. Until then the page draws the
+  // illustrative curve and says so, rather than presenting a sketch as a result.
+  const [simulated, setSimulated] = useState<TraceShape | null>(null)
+  const illustrative = useMemo(() => trace(lastRun), [lastRun])
+  const tr = simulated ?? illustrative
   const late = tr.reached90 - tr.deadline
+
+  const run = async (next: Scenario) => {
+    setLastRun(next)
+    setSimulated(null)
+    try {
+      const r = await simulate(
+        {
+          dip_depth_pu: next.depth,
+          dip_duration_s: next.duration / 1000,  // the page works in ms
+          outdoor_temp_c: next.temp,
+          battery_age_yr: next.age,
+        },
+        { includeTrace: true }
+      )
+      if (r.trace) setSimulated(traceFromApi(r.trace, next, r))
+    } catch {
+      // Simulator unreachable: the illustrative curve stays, labelled as such.
+    }
+  }
 
   return (
     <div className="mx-auto max-w-[1180px] px-10 pt-16 pb-40">
@@ -683,8 +727,8 @@ export default function Results() {
       <ScenarioPanel
         values={values} lastRun={lastRun}
         onChange={(k, v) => setValues((s) => ({ ...s, [k]: v }))}
-        onRun={() => setLastRun(values)}
-        onReset={() => { setValues(PRESET); setLastRun(PRESET) }}
+        onRun={() => { void run(values) }}
+        onReset={() => { setValues(PRESET); setLastRun(PRESET); setSimulated(null) }}
       />
 
       <div className="flex flex-col gap-10 pt-24 md:flex-row md:items-end md:justify-between">
