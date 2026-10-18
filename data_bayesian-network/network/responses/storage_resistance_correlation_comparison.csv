@@ -1,0 +1,91 @@
+variant,group,other,correlation,driver_share_of_resistance_variance
+"original (P3 slope, 0.72% noise)",overall,capacity_age_factor,-0.7664324556245026,0.9996375755585213
+"original (P3 slope, 0.72% noise)",overall,usable_energy_factor,-0.6077183534097652,0.9996375755585213
+"original (P3 slope, 0.72% noise)",overall,converter_current_limit_pu,0.32859566703925097,0.9996375755585213
+"original (P3 slope, 0.72% noise)",overall,dclink_capacitance_factor,-0.34140244723287083,0.9996375755585213
+"original (P3 slope, 0.72% noise)",overall,psu_holdup_ms,-0.010309068680422284,0.9996375755585213
+"original (P3 slope, 0.72% noise)",overall,converter_loading,-0.21990859078776503,0.9996375755585213
+"original (P3 slope, 0.72% noise)",DJF,capacity_age_factor,-0.8375409143639285,0.9995672054658548
+"original (P3 slope, 0.72% noise)",DJF,usable_energy_factor,-0.6180171130450596,0.9995672054658548
+"original (P3 slope, 0.72% noise)",DJF,converter_current_limit_pu,0.22933665006183104,0.9995672054658548
+"original (P3 slope, 0.72% noise)",DJF,dclink_capacitance_factor,-0.373077256479847,0.9995672054658548
+"original (P3 slope, 0.72% noise)",DJF,psu_holdup_ms,-0.6080894135591437,0.9995672054658548
+"original (P3 slope, 0.72% noise)",DJF,converter_loading,0.23341740136728592,0.9995672054658548
+"original (P3 slope, 0.72% noise)",JJA,capacity_age_factor,-0.9332102585773434,0.9994626853123341
+"original (P3 slope, 0.72% noise)",JJA,usable_energy_factor,-0.6365189779535723,0.9994626853123341
+"original (P3 slope, 0.72% noise)",JJA,converter_current_limit_pu,0.093725872991257,0.9994626853123341
+"original (P3 slope, 0.72% noise)",JJA,dclink_capacitance_factor,-0.4156925554535973,0.9994626853123341
+"original (P3 slope, 0.72% noise)",JJA,psu_holdup_ms,-0.0455438323999132,0.9994626853123341
+"original (P3 slope, 0.72% noise)",JJA,converter_loading,-0.23585366933716934,0.9994626853123341
+"slope Sandia 1 Hz (-0.0124), noise 0.037",overall,capacity_age_factor,-0.9845847915992848,0.9843240533740041
+"slope Sandia 1 Hz (-0.0124), noise 0.037",overall,usable_energy_factor,-0.6526033588817182,0.9843240533740041
+"slope Sandia 1 Hz (-0.0124), noise 0.037",overall,converter_current_limit_pu,0.059062581886781526,0.9843240533740041
+"slope Sandia 1 Hz (-0.0124), noise 0.037",overall,dclink_capacitance_factor,-0.4385770133995298,0.9843240533740041
+"slope Sandia 1 Hz (-0.0124), noise 0.037",overall,psu_holdup_ms,-0.2881018417819098,0.9843240533740041
+"slope Sandia 1 Hz (-0.0124), noise 0.037",overall,converter_loading,-0.03952690328523911,0.9843240533740041
+"slope Sandia 1 Hz (-0.0124), noise 0.037",DJF,capacity_age_factor,-0.9871810374759244,0.984241272751952
+"slope Sandia 1 Hz (-0.0124), noise 0.037",DJF,usable_energy_factor,-0.6502787053724949,0.984241272751952
+"slope Sandia 1 Hz (-0.0124), noise 0.037",DJF,converter_current_limit_pu,0.037821225493486876,0.984241272751952
+"slope Sandia 1 Hz (-0.0124), noise 0.037",DJF,dclink_capacitance_factor,-0.43973349456026145,0.984241272751952
+"slope Sandia 1 Hz (-0.0124), noise 0.037",DJF,psu_holdup_ms,-0.4380276817140151,0.984241272751952
+"slope Sandia 1 Hz (-0.0124), noise 0.037",DJF,converter_loading,0.03849420565285016,0.984241272751952
+"slope Sandia 1 Hz (-0.0124), noise 0.037",JJA,capacity_age_factor,-0.9898027786501225,0.9841574580010537
+"slope Sandia 1 Hz (-0.0124), noise 0.037",JJA,usable_energy_factor,-0.6479165751909612,0.9841574580010537
+"slope Sandia 1 Hz (-0.0124), noise 0.037",JJA,converter_current_limit_pu,0.01390913166931968,0.9841574580010537
+"slope Sandia 1 Hz (-0.0124), noise 0.037",JJA,dclink_capacitance_factor,-0.44090133243862084,0.9841574580010537
+"slope Sandia 1 Hz (-0.0124), noise 0.037",JJA,psu_holdup_ms,-0.29105574899079734,0.9841574580010537
+"slope Sandia 1 Hz (-0.0124), noise 0.037",JJA,converter_loading,-0.035001218306164934,0.9841574580010537
+"slope Panasonic 1 Hz (-0.0201), noise 0.037",overall,capacity_age_factor,-0.9741815778115368,0.9846535702731265
+"slope Panasonic 1 Hz (-0.0201), noise 0.037",overall,usable_energy_factor,-0.658438366730733,0.9846535702731265
+"slope Panasonic 1 Hz (-0.0201), noise 0.037",overall,converter_current_limit_pu,0.09452163045248704,0.9846535702731265
+"slope Panasonic 1 Hz (-0.0201), noise 0.037",overall,dclink_capacitance_factor,-0.43394296819416334,0.9846535702731265
+"slope Panasonic 1 Hz (-0.0201), noise 0.037",overall,psu_holdup_ms,-0.2577408078043603,0.9846535702731265
+"slope Panasonic 1 Hz (-0.0201), noise 0.037",overall,converter_loading,-0.06325743348674592,0.9846535702731265
+"slope Panasonic 1 Hz (-0.0201), noise 0.037",DJF,capacity_age_factor,-0.9808016763952613,0.9844442867545229
+"slope Panasonic 1 Hz (-0.0201), noise 0.037",DJF,usable_energy_factor,-0.6538763666939327,0.9844442867545229
+"slope Panasonic 1 Hz (-0.0201), noise 0.037",DJF,converter_current_limit_pu,0.06077878006325193,0.9844442867545229
+"slope Panasonic 1 Hz (-0.0201), noise 0.037",DJF,dclink_capacitance_factor,-0.4368918488695842,0.9844442867545229
+"slope Panasonic 1 Hz (-0.0201), noise 0.037",DJF,psu_holdup_ms,-0.4630113263802713,0.9844442867545229
+"slope Panasonic 1 Hz (-0.0201), noise 0.037",DJF,converter_loading,0.06186026043727939,0.9844442867545229
+"slope Panasonic 1 Hz (-0.0201), noise 0.037",JJA,capacity_age_factor,-0.9875711954192066,0.9842288138262322
+"slope Panasonic 1 Hz (-0.0201), noise 0.037",JJA,usable_energy_factor,-0.6491820639487562,0.9842288138262322
+"slope Panasonic 1 Hz (-0.0201), noise 0.037",JJA,converter_current_limit_pu,0.02244666116945571,0.9842288138262322
+"slope Panasonic 1 Hz (-0.0201), noise 0.037",JJA,dclink_capacitance_factor,-0.43990728792674316,0.9842288138262322
+"slope Panasonic 1 Hz (-0.0201), noise 0.037",JJA,psu_holdup_ms,-0.2660710680234139,0.9842288138262322
+"slope Panasonic 1 Hz (-0.0201), noise 0.037",JJA,converter_loading,-0.0564852290218533,0.9842288138262322
+"slope Panasonic 10 mHz (-0.0246), noise 0.037",overall,capacity_age_factor,-0.9659341840758787,0.9849123152350564
+"slope Panasonic 10 mHz (-0.0246), noise 0.037",overall,usable_energy_factor,-0.6603493002349445,0.9849123152350564
+"slope Panasonic 10 mHz (-0.0246), noise 0.037",overall,converter_current_limit_pu,0.11493752934904027,0.9849123152350564
+"slope Panasonic 10 mHz (-0.0246), noise 0.037",overall,dclink_capacitance_factor,-0.43026921927606404,0.9849123152350564
+"slope Panasonic 10 mHz (-0.0246), noise 0.037",overall,psu_holdup_ms,-0.23949699971086907,0.9849123152350564
+"slope Panasonic 10 mHz (-0.0246), noise 0.037",overall,converter_loading,-0.07692052161100357,0.9849123152350564
+"slope Panasonic 10 mHz (-0.0246), noise 0.037",DJF,capacity_age_factor,-0.9756877503936332,0.984606079660152
+"slope Panasonic 10 mHz (-0.0246), noise 0.037",DJF,usable_energy_factor,-0.6550682533668796,0.984606079660152
+"slope Panasonic 10 mHz (-0.0246), noise 0.037",DJF,converter_current_limit_pu,0.07414889129504333,0.984606079660152
+"slope Panasonic 10 mHz (-0.0246), noise 0.037",DJF,dclink_capacitance_factor,-0.43461388316091515,0.984606079660152
+"slope Panasonic 10 mHz (-0.0246), noise 0.037",DJF,psu_holdup_ms,-0.47700501954461194,0.984606079660152
+"slope Panasonic 10 mHz (-0.0246), noise 0.037",DJF,converter_loading,0.07546827563622345,0.984606079660152
+"slope Panasonic 10 mHz (-0.0246), noise 0.037",JJA,capacity_age_factor,-0.9857617166714764,0.9842865544373127
+"slope Panasonic 10 mHz (-0.0246), noise 0.037",JJA,usable_energy_factor,-0.6496063103771033,0.9842865544373127
+"slope Panasonic 10 mHz (-0.0246), noise 0.037",JJA,converter_current_limit_pu,0.02747756945008662,0.9842865544373127
+"slope Panasonic 10 mHz (-0.0246), noise 0.037",JJA,dclink_capacitance_factor,-0.43910126716371634,0.9842865544373127
+"slope Panasonic 10 mHz (-0.0246), noise 0.037",JJA,psu_holdup_ms,-0.25118321978127334,0.9842865544373127
+"slope Panasonic 10 mHz (-0.0246), noise 0.037",JJA,converter_loading,-0.06914510766812886,0.9842865544373127
+"original slope, noise 0.037",overall,capacity_age_factor,-0.7629550040487226,0.9905870580277164
+"original slope, noise 0.037",overall,usable_energy_factor,-0.6049610182653745,0.9905870580277164
+"original slope, noise 0.037",overall,converter_current_limit_pu,0.3271047652490743,0.9905870580277164
+"original slope, noise 0.037",overall,dclink_capacitance_factor,-0.33985343861587836,0.9905870580277164
+"original slope, noise 0.037",overall,psu_holdup_ms,-0.010262294451506905,0.9905870580277164
+"original slope, noise 0.037",overall,converter_loading,-0.21891082318286978,0.9905870580277164
+"original slope, noise 0.037",DJF,capacity_age_factor,-0.8330089659526231,0.9887791209384126
+"original slope, noise 0.037",DJF,usable_energy_factor,-0.6146730117294227,0.9887791209384126
+"original slope, noise 0.037",DJF,converter_current_limit_pu,0.22809570547145105,0.9887791209384126
+"original slope, noise 0.037",DJF,dclink_capacitance_factor,-0.371058528975553,0.9887791209384126
+"original slope, noise 0.037",DJF,psu_holdup_ms,-0.6047990311975799,0.9887791209384126
+"original slope, noise 0.037",DJF,converter_loading,0.2321543757608284,0.9887791209384126
+"original slope, noise 0.037",JJA,capacity_age_factor,-0.9269533956137971,0.9861054870081889
+"original slope, noise 0.037",JJA,usable_energy_factor,-0.6322513308910297,0.9861054870081889
+"original slope, noise 0.037",JJA,converter_current_limit_pu,0.09309747233014654,0.9861054870081889
+"original slope, noise 0.037",JJA,dclink_capacitance_factor,-0.41290547576760595,0.9861054870081889
+"original slope, noise 0.037",JJA,psu_holdup_ms,-0.04523847622155806,0.9861054870081889
+"original slope, noise 0.037",JJA,converter_loading,-0.2342723492917361,0.9861054870081889

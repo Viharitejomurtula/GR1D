@@ -9,3 +9,6 @@ venv/
 # OpenModelica build output: compiled binaries, generated C, object files
 build/
 *.o
+
+# downloaded datasets (see data_bayesian-network/network/responses/sources.csv)
+data_bayesian-network/drivers_raw/
