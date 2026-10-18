@@ -1,0 +1,56 @@
+op_year,event_date,delfreq_hz,mw_loss_value_b,source_deck,transcription
+2020,1/1/2020,-0.105,1210,fcr_2022-01 slide18,parsed from EMF text
+2020,1/17/2020,-0.134,663,fcr_2022-01 slide18,parsed from EMF text
+2020,2/6/2020,-0.109,623,fcr_2022-01 slide18,parsed from EMF text
+2020,5/31/2020,-0.108,820,fcr_2022-01 slide18,parsed from EMF text
+2020,7/6/2020,-0.097,762,fcr_2022-01 slide18,parsed from EMF text
+2020,7/20/2020,-0.104,806,fcr_2022-01 slide18,parsed from EMF text
+2020,10/27/2020,-0.079,845,fcr_2022-01 slide18,parsed from EMF text
+2020,11/16/2020,-0.069,1020,fcr_2022-01 slide18,parsed from EMF text
+2020,11/21/2020,-0.091,734,fcr_2022-01 slide18,parsed from EMF text
+2021,12/4/2020,-0.039,595,fcr_2023-01 slide18,read from image (date as printed)
+2021,1/3/2021,-0.070,768,fcr_2023-01 slide18,read from image
+2021,1/7/2021,-0.093,774,fcr_2023-01 slide18,read from image
+2021,1/11/2021,-0.066,757,fcr_2023-01 slide18,read from image
+2021,1/28/2021,-0.069,718,fcr_2023-01 slide18,read from image
+2021,2/15/2021,-0.177,1378,fcr_2023-01 slide18,read from image (Winter Storm Uri)
+2021,2/22/2021,-0.085,714,fcr_2023-01 slide18,read from image
+2021,3/3/2021,-0.062,429,fcr_2023-01 slide18,read from image
+2021,3/11/2021,-0.058,324,fcr_2023-01 slide18,read from image
+2021,4/9/2021,-0.058,368,fcr_2023-01 slide18,read from image
+2021,4/29/2021,-0.065,529,fcr_2023-01 slide18,read from image
+2021,5/1/2021,-0.090,780,fcr_2023-01 slide18,read from image
+2021,5/9/2021,-0.067,1375,fcr_2023-01 slide18,read from image
+2021,5/17/2021,-0.056,420,fcr_2023-01 slide18,read from image
+2021,5/19/2021,-0.036,420,fcr_2023-01 slide18,read from image
+2021,5/25/2021,-0.076,824,fcr_2023-01 slide18,read from image
+2021,6/7/2021,-0.125,1324,fcr_2023-01 slide18,read from image
+2021,6/12/2021,-0.039,503,fcr_2023-01 slide18,read from image
+2021,6/14/2021,0.046,-566,fcr_2023-01 slide18,read from image
+2021,6/21/2021,-0.075,556,fcr_2023-01 slide18,read from image
+2021,8/28/2021,-0.065,781,fcr_2023-01 slide18,read from image
+2021,8/31/2021,-0.058,502,fcr_2023-01 slide18,read from image
+2021,9/3/2021,-0.055,601,fcr_2023-01 slide18,read from image
+2021,9/13/2021,-0.103,847,fcr_2023-01 slide18,read from image
+2021,9/25/2021,-0.052,499,fcr_2023-01 slide18,read from image
+2021,11/1/2021,-0.082,540,fcr_2023-01 slide18,read from image
+2022,12/30/2021,-0.038,372,pdcwg-fcr-aug-2023 slide18,read from image
+2022,1/26/2022,-0.080,814,pdcwg-fcr-aug-2023 slide18,read from image
+2022,2/20/2022,0.075,-467,pdcwg-fcr-aug-2023 slide18,read from image
+2022,3/12/2022,-0.042,747,pdcwg-fcr-aug-2023 slide18,read from image
+2022,3/15/2022,-0.040,440,pdcwg-fcr-aug-2023 slide18,read from image
+2022,3/22/2022,-0.067,703,pdcwg-fcr-aug-2023 slide18,read from image
+2022,4/13/2022,-0.093,725,pdcwg-fcr-aug-2023 slide18,read from image
+2022,4/19/2022,-0.049,810,pdcwg-fcr-aug-2023 slide18,read from image
+2022,4/22/2022,0.055,-423,pdcwg-fcr-aug-2023 slide18,read from image
+2022,5/9/2022,-0.066,520,pdcwg-fcr-aug-2023 slide18,read from image
+2022,5/13/2022,-0.047,563,pdcwg-fcr-aug-2023 slide18,read from image
+2022,5/22/2022,0.042,-573,pdcwg-fcr-aug-2023 slide18,read from image
+2022,7/27/2022,-0.054,517,pdcwg-fcr-aug-2023 slide18,read from image
+2022,9/6/2022,-0.075,1208,pdcwg-fcr-aug-2023 slide18,read from image
+2022,10/6/2022,-0.055,656,pdcwg-fcr-aug-2023 slide18,read from image
+2022,10/6/2022,-0.038,782,pdcwg-fcr-aug-2023 slide18,read from image
+2022,10/8/2022,-0.079,685,pdcwg-fcr-aug-2023 slide18,read from image
+2022,10/12/2022,0.053,-406,pdcwg-fcr-aug-2023 slide18,read from image
+2022,10/20/2022,-0.056,796,pdcwg-fcr-aug-2023 slide18,read from image
+2022,10/26/2022,-0.046,496,pdcwg-fcr-aug-2023 slide18,read from image

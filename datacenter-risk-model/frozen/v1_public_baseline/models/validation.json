@@ -1,0 +1,147 @@
+{
+ "temperature_KAUS_train1996_2015_test2016_2025": {
+  "cov_5_95": 0.8860817324165657,
+  "expected_5_95": 0.9,
+  "cov_25_75": 0.4946090412773831,
+  "expected_25_75": 0.5,
+  "mean_shift_c": 0.7950748050930088,
+  "note": "coverage close to nominal; held-out decade is ~0.8 C warmer than the fit period (warming trend not modeled)"
+ },
+ "ai_swing_even_vs_odd_repeats": {
+  "per_group": [
+   {
+    "model": "llama2_70b_lora",
+    "nodes": 2,
+    "ks": 0.07294627171318196,
+    "p": 1.6088185938523057e-06
+   },
+   {
+    "model": "llama2_70b_lora",
+    "nodes": 4,
+    "ks": 0.09365234202581257,
+    "p": 1.6104069387836779e-06
+   },
+   {
+    "model": "llama2_70b_lora",
+    "nodes": 8,
+    "ks": 0.0627282389835977,
+    "p": 0.00744818294842769
+   },
+   {
+    "model": "llama2_70b_lora",
+    "nodes": 16,
+    "ks": 0.11110894058008525,
+    "p": 8.554905121953953e-06
+   },
+   {
+    "model": "stable_diffusion",
+    "nodes": 2,
+    "ks": 0.014857482566920654,
+    "p": 0.36866697871188636
+   },
+   {
+    "model": "stable_diffusion",
+    "nodes": 4,
+    "ks": 0.08656751237472582,
+    "p": 1.3596574863402957e-09
+   },
+   {
+    "model": "stable_diffusion",
+    "nodes": 8,
+    "ks": 0.036956100738549824,
+    "p": 0.21109912023217003
+   },
+   {
+    "model": "stable_diffusion",
+    "nodes": 16,
+    "ks": 0.1724823260975275,
+    "p": 1.1301041124290152e-08
+   }
+  ],
+  "median_ks": 0.07975689204395389,
+  "note": "KS statistic <~0.15 means repeats are distributionally close; p-values inflated by autocorrelation"
+ },
+ "battery_capacity_leave_one_cell_out": {
+  "n": 10,
+  "pit_values": [
+   0.6,
+   0.91,
+   0.3,
+   0.61,
+   0.02,
+   0.04,
+   0.82,
+   0.81,
+   0.84,
+   0.24
+  ],
+  "frac_in_5_95": 0.8,
+  "expected": 0.9,
+  "median_abs_err_log_k": 0.2739446269997998
+ },
+ "frequency_body": {
+  "pooled_rms_mhz": 16.6387355612891,
+  "ercot_published_rms1_range_mhz": [
+   12.48,
+   18.21
+  ],
+  "in_range": true,
+  "ks_between_files": {
+   "stat": 0.054391997145123036,
+   "p": 3.058409692375086e-227
+  }
+ },
+ "frequency_tail": {
+  "observed_max_hz": 0.177,
+  "gpd_return_level_10y": {
+   "est": 0.171,
+   "ci95": [
+    0.109,
+    0.217
+   ]
+  },
+  "ks_gof_p": 0.7519357705126921,
+  "note": "observed 3-year max 0.177 Hz vs fitted 5y/10y levels 0.158/0.171 Hz: consistent"
+ },
+ "capacitor_leave_one_out_5000h": {
+  "n": 24,
+  "frac_within_2sd": 0.9166666666666666,
+  "expected": 0.95
+ },
+ "frequency_event_time_split": {
+  "train_events": 165,
+  "test_events": 134,
+  "rates": {
+   "no_year_term": {
+    "59.9": {
+     "pred_rate_per_year": 29.828168712406015,
+     "observed_test_rate_per_year": 8.733561058923996
+    },
+    "59.85": {
+     "pred_rate_per_year": 8.427985841165412,
+     "observed_test_rate_per_year": 0.9357386848847139
+    },
+    "59.8": {
+     "pred_rate_per_year": 1.8256595582706767,
+     "observed_test_rate_per_year": 0.0
+    }
+   },
+   "year_term_extrapolated": {
+    "59.9": {
+     "pred_rate_per_year": 26.15985723214286,
+     "observed_test_rate_per_year": 8.733561058923996
+    },
+    "59.85": {
+     "pred_rate_per_year": 6.299635643796993,
+     "observed_test_rate_per_year": 0.9357386848847139
+    },
+    "59.8": {
+     "pred_rate_per_year": 1.3004822368421052,
+     "observed_test_rate_per_year": 0.0
+    }
+   }
+  },
+  "mw_loss_rate_train": 45.31296992481203,
+  "mw_loss_rate_test": 41.79632792485056
+ }
+}

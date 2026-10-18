@@ -1,0 +1,88 @@
+{
+ "source_id": "F2a",
+ "kind": "observed aggregate (EPRI DPQ II sag statistics, monitored 2000s) + explicit assumptions",
+ "units": {
+  "rate": "events per year at a site",
+  "depth": "per-unit residual voltage"
+ },
+ "locations": {
+  "transmission": {
+   "site_median_events_per_year": {
+    "SARFI80": 9.0,
+    "SARFI_ITIC": 6.3,
+    "SARFI70": 5.8,
+    "SARFI_SEMI": 4.8,
+    "SARFI50": 3.3
+   },
+   "depth_bins_rate_per_year": {
+    "0.70-0.80pu": 3.2,
+    "0.50-0.70pu": 2.5,
+    "<0.50pu": 3.3
+   },
+   "itic_site_quartiles": [
+    3.5,
+    6.3,
+    10.7
+   ],
+   "site_rate_lognormal_sigma": 0.828,
+   "note": "medians (not means: mean 31-115% above median per EPRI); sag counts exclude events > 1 min"
+  },
+  "substation": {
+   "site_median_events_per_year": {
+    "SARFI80": 20.8,
+    "SARFI_ITIC": 12.6,
+    "SARFI70": 10.3,
+    "SARFI_SEMI": 8.4,
+    "SARFI50": 3.8
+   },
+   "depth_bins_rate_per_year": {
+    "0.70-0.80pu": 10.5,
+    "0.50-0.70pu": 6.5,
+    "<0.50pu": 3.8
+   },
+   "itic_site_quartiles": [
+    5.7,
+    9.4,
+    16.1
+   ],
+   "site_rate_lognormal_sigma": 0.77,
+   "note": "medians (not means: mean 31-115% above median per EPRI); sag counts exclude events > 1 min"
+  },
+  "feeder": {
+   "site_median_events_per_year": {
+    "SARFI80": 30.8,
+    "SARFI_ITIC": 21.5,
+    "SARFI70": 20.4,
+    "SARFI_SEMI": 16.1,
+    "SARFI50": 10.9
+   },
+   "depth_bins_rate_per_year": {
+    "0.70-0.80pu": 10.4,
+    "0.50-0.70pu": 9.5,
+    "<0.50pu": 10.9
+   },
+   "itic_site_quartiles": [
+    14.4,
+    22.1,
+    35.9
+   ],
+   "site_rate_lognormal_sigma": 0.677,
+   "note": "medians (not means: mean 31-115% above median per EPRI); sag counts exclude events > 1 min"
+  }
+ },
+ "sampling": {
+  "method": "site rate multiplier m ~ LogNormal(0, sigma); annual count per bin ~ Poisson(m * bin_rate); depth uniform within bin (assumption)",
+  "depth_within_bin": "uniform (assumption)"
+ },
+ "assumptions_not_from_data": {
+  "duration": "NOT IN EPRI REPORT (EPRI: duration follows protective-device clearing). Grounded on ERCOT evidence (PDCWG Nov 2024 large-load deck): normal clearing 3-4 cycles; delayed clearing from breaker failure 10-19 cycles. Default mixture (weights ASSUMED): 90% normal clearing 3-5 cycles, 10% delayed clearing 10-20 cycles. ITIC/SEMI vs SARFI80 gap is the only duration signal in the data (transmission: 30% of sags below 80% fall inside the ITIC envelope).",
+  "phases": "NOT IN EPRI REPORT. Phase count (1 vs 3) must be assumed; ERCOT 2024 large-load deck reports SLG faults causing larger load reductions than modeled for shallow positive-sequence dips.",
+  "transfer": "EPRI sites are US distribution-system sites; ERCOT/Texas lightning, line length and local grid strength not represented (EPRI prediction equations need site parameters not available here)."
+ },
+ "limitations": [
+  "Aggregate site statistics, not raw events; no joint depth-duration-phase distribution",
+  "Dataset from early-2000s DPQ II monitoring; grid and loads have changed",
+  "Transmission group has N=53 sites; Texas not isolated",
+  "Depth bins derived by differencing cumulative SARFI medians (medians do not strictly add)"
+ ]
+}

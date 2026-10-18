@@ -1,0 +1,7 @@
+from_factor,to_factor,mechanism,when,source_or_equation,where_it_belongs
+dclink_capacitance_factor,converter_overload_s,"Aged electrolytics have higher ESR (up to 3x at end of life per TDK), so more ripple heating and less thermal headroom",event start,TDK p. 3: ESR <= 3 times initial limit at EOL; heating = I^2 x ESR (physics),simulator pre-event steady state
+converter_loading,converter_overload_s,A pre-loaded converter starts hotter and has less overload time,event start,physics; no published numbers,simulator pre-event steady state
+storage_resistance_pu,usable_energy_factor,"Higher resistance means more voltage sag at high current, reaching cut-off sooner",during event,V = OCV - I x R (physics),simulator
+load_fraction (discharge rate),usable_energy_factor,"Higher discharge rate gives less capacity (Sandia: 10 Ah at 0.25C, 9 Ah at 1C)",during event,Sandia SAND2008-5583 Table 1,simulator
+soc_estimate_error,usable_energy_factor,Operators hold back a margin when state of charge is uncertain,event start,operating policy; no numbers found,"network equation, if a margin rule is chosen"
+outdoor_temp_c x equipment_age_years,"capacity_age_factor, storage_resistance_pu","Aging is faster at higher temperature (driver interaction, not a factor link)",accumulated before event,"Sui et al. 2021 Tables 3, 5 (faster fade at 40-55 C)",S matrix interaction term (not modeled yet)

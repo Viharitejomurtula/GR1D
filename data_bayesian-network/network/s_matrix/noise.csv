@@ -1,0 +1,14 @@
+factor,sd,sd_unit,basis,calc,evidence,source_url,page_or_table,quote,notes
+dclink_capacitance_factor,0.115,fraction of nominal (per capacitor),initial tolerance -10%/+30%,uniform over a 40% span: 0.40/sqrt(12) = 0.115,datasheet-proxy,https://www.mouser.co.uk/datasheet/2/136/B41694__B41794-45962.pdf,p. 3,Capacitance tolerance -10/+30%,A bank of n independent capacitors has sd/sqrt(n) (assumption). Tolerance sign was garbled in extraction; -10/+30 is the likely reading.
+capacity_age_factor,0.0028,fraction (relative),"cell-to-cell variation, 1100 new LFP cells",,measured,https://portal.fis.tum.de/en/publications/experimental-investigation-of-parametric-cell-to-cell-variation-a/,Abstract,0.28% and 0.72% respectively,"Rumpf, Naumann, Jossen, J. Energy Storage 14 (2017) 224-243. The abstract does not say whether 0.28% is a standard deviation or coefficient of variation. New cells only; aging spread grows over life (not found)."
+storage_resistance_pu,0.0072,fraction (relative),"cell-to-cell impedance variation, same study",,measured,https://portal.fis.tum.de/en/publications/experimental-investigation-of-parametric-cell-to-cell-variation-a/,Abstract,0.28% and 0.72% respectively,Same caveats.
+usable_energy_factor,,,not found,,,,,,Use the node's own master.csv spread ((high-low)/6) as its unexplained variance; flag as assumed.
+soc_estimate_error,,,not found,,,,,,Use the node's own master.csv spread ((high-low)/6) as its unexplained variance; flag as assumed.
+converter_current_limit_pu,,,not found,,,,,,Use the node's own master.csv spread ((high-low)/6) as its unexplained variance; flag as assumed.
+converter_overload_s,,,not found,,,,,,Use the node's own master.csv spread ((high-low)/6) as its unexplained variance; flag as assumed.
+relay_accuracy_pct,,,not found,,,,,,Use the node's own master.csv spread ((high-low)/6) as its unexplained variance; flag as assumed.
+psu_holdup_ms,,,not found,,,,,,Use the node's own master.csv spread ((high-low)/6) as its unexplained variance; flag as assumed.
+compressor_trip_pct,,,not found,,,,,,Use the node's own master.csv spread ((high-low)/6) as its unexplained variance; flag as assumed.
+compressor_restart_s,,,not found,,,,,,Use the node's own master.csv spread ((high-low)/6) as its unexplained variance; flag as assumed.
+osc_amp,,,not found,,,,,,Use the node's own master.csv spread ((high-low)/6) as its unexplained variance; flag as assumed.
+osc_freq_hz,,,not found,,,,,,Use the node's own master.csv spread ((high-low)/6) as its unexplained variance; flag as assumed.

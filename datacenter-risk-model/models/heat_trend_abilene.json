@@ -1,0 +1,106 @@
+{
+ "source_id": "F1c",
+ "kind": "DERIVED from observed KABI hourly data; trend model",
+ "years": [
+  1932,
+  2026
+ ],
+ "n_years": 95,
+ "stationary": {
+  "shape_xi": -0.24855988684875413,
+  "loc": 39.160982044453476,
+  "scale": 1.591385442127105,
+  "aic": 366.3801004591859
+ },
+ "trend": {
+  "mu0_at_2000": 39.68643669158739,
+  "mu1_per_year": 0.02005354247297625,
+  "mu1_ci95": [
+   0.009,
+   0.034
+  ],
+  "scale": 1.6022962397506548,
+  "shape_xi": -0.3583776841887761,
+  "aic": 358.38282662583975,
+  "note": "lower AIC is better; a trend of mu1 C/yr in the annual-maximum location"
+ },
+ "return_levels_c": {
+  "10y_in_2026": {
+   "est": 42.7,
+   "ci95": [
+    42.0,
+    43.4
+   ]
+  },
+  "50y_in_2026": {
+   "est": 43.6,
+   "ci95": [
+    42.9,
+    44.1
+   ]
+  },
+  "100y_in_2026": {
+   "est": 43.8,
+   "ci95": [
+    43.1,
+    44.4
+   ]
+  },
+  "10y_in_2040": {
+   "est": 43.0,
+   "ci95": [
+    42.1,
+    43.9
+   ]
+  },
+  "50y_in_2040": {
+   "est": 43.9,
+   "ci95": [
+    43.1,
+    44.5
+   ]
+  },
+  "100y_in_2040": {
+   "est": 44.1,
+   "ci95": [
+    43.3,
+    44.7
+   ]
+  }
+ },
+ "hours_above_dry_bulb": {
+  "35": {
+   "trend_per_year": 8.293333333333333,
+   "p": 0.0812285045915166,
+   "fitted_2026": 370.4984615384601,
+   "mean_last_5": 397.4,
+   "max_2000_2025": 723
+  },
+  "38": {
+   "trend_per_year": 4.583589743589743,
+   "p": 0.036595270550118505,
+   "fitted_2026": 122.30153846153735,
+   "mean_last_5": 148.2,
+   "max_2000_2025": 304
+  },
+  "40": {
+   "trend_per_year": 1.3514529914529916,
+   "p": 0.030093437896235004,
+   "fitted_2026": 30.667692307692505,
+   "mean_last_5": 40.6,
+   "max_2000_2025": 104
+  },
+  "42": {
+   "trend_per_year": 0.2256410256410257,
+   "p": 0.022229128136684193,
+   "fitted_2026": 4.738461538461536,
+   "mean_last_5": 6.8,
+   "max_2000_2025": 16
+  }
+ },
+ "limitations": [
+  "Trend extrapolation to 2040 is a projection, not data; 2026 values are near the end of the observed record",
+  "Airport station, not the campus; hours above thresholds are linear trends over 26 years",
+  "Dry-bulb only; coincident humidity/wind/grid stress not modelled"
+ ]
+}

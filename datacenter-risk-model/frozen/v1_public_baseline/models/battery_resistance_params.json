@@ -1,0 +1,35 @@
+{
+ "source_id": "F2e",
+ "kind": "observed fit (NASA PCoE EIS Re+Rct), small Li-ion cells",
+ "units": {
+  "R": "ohm per cell (EIS-derived)",
+  "g": "1/discharge cycle"
+ },
+ "groups": {
+  "warm_20_44C": {
+   "n_cells": 7,
+   "cells": [
+    "B0005",
+    "B0006",
+    "B0007",
+    "B0034",
+    "B0042",
+    "B0043",
+    "B0044"
+   ],
+   "r0_median": 0.15287880449169267,
+   "r0_log_mu": -1.8682325383093819,
+   "r0_log_sigma": 0.33387787643917366,
+   "g_log_mu": -5.998753111118016,
+   "g_log_sigma": 1.0938910814978458,
+   "g_median": 0.002481844832895284,
+   "pct_growth_at_100_cycles": 28.16963619457098
+  }
+ },
+ "limitations": [
+  "Not conditioned on SOC: EIS sweeps are not tied to a state of charge in this dataset",
+  "EIS Re+Rct is not DC/pulse resistance; map to DC resistance is an assumption",
+  "Small 18650 cells, ~100-200 cycle lives; pack-level resistance requires scaling assumption",
+  "Invalid EIS fits dropped (Re/Rct outside 0-1 ohm or complex); cells with poor log-linear fit excluded"
+ ]
+}

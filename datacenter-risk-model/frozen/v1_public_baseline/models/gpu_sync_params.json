@@ -1,0 +1,95 @@
+{
+ "source_id": "F2b",
+ "kind": "observed job sizes (Alibaba) + observed within-job lockstep (NLR) + ASSUMED cross-job phase sharing",
+ "units": "MW",
+ "facility": {
+  "gpus": 10000,
+  "training_share_assumed": 0.2,
+  "gpus_per_node": 4,
+  "training_nodes": 500
+ },
+ "assumptions": {
+  "within_job": "full lockstep at any size (measured corr 0.97-0.98 up to 16 nodes; extrapolated beyond)",
+  "cross_job": "rho = fraction of training jobs sharing one phase; rho unknown - bounds only (0 = independent random phase, 1 = all aligned)"
+ },
+ "results_by_rho": {
+  "rho_0.0": {
+   "std_mw_mean": 0.09242988928492483,
+   "range_p99_p1_mw_mean": 0.3513320632009331,
+   "range_p99_p1_mw_p5_p95": [
+    0.22,
+    0.51
+   ],
+   "mean_training_power_mw": 0.9596085578622765,
+   "jobs_per_facility_mean": 74.06,
+   "largest_job_nodes_mean": 46.91
+  },
+  "rho_0.25": {
+   "std_mw_mean": 0.14650073629889296,
+   "range_p99_p1_mw_mean": 0.5052675994491815,
+   "range_p99_p1_mw_p5_p95": [
+    0.31,
+    0.72
+   ],
+   "mean_training_power_mw": 0.9600429295943524,
+   "jobs_per_facility_mean": 74.075,
+   "largest_job_nodes_mean": 47.865
+  },
+  "rho_0.5": {
+   "std_mw_mean": 0.24341096278860927,
+   "range_p99_p1_mw_mean": 0.7285788161317274,
+   "range_p99_p1_mw_p5_p95": [
+    0.53,
+    0.94
+   ],
+   "mean_training_power_mw": 0.9585792143491545,
+   "jobs_per_facility_mean": 74.97,
+   "largest_job_nodes_mean": 48.03
+  },
+  "rho_1.0": {
+   "std_mw_mean": 0.46161737577196005,
+   "range_p99_p1_mw_mean": 1.16192971834686,
+   "range_p99_p1_mw_p5_p95": [
+    1.0,
+    1.3
+   ],
+   "mean_training_power_mw": 0.9742222021402293,
+   "jobs_per_facility_mean": 75.415,
+   "largest_job_nodes_mean": 47.815
+  }
+ },
+ "group_size_quantiles": {
+  "q": [
+   0.0,
+   0.01,
+   0.05,
+   0.1,
+   0.25,
+   0.5,
+   0.75,
+   0.9,
+   0.95,
+   0.99,
+   0.999
+  ],
+  "gpus": [
+   0.0,
+   0.1,
+   0.3,
+   1.0,
+   2.0,
+   8.0,
+   26.0,
+   64.0,
+   128.0,
+   176.0,
+   256.0
+  ]
+ },
+ "limitations": [
+  "Cross-job synchronization is NOT observable in either dataset: rho is a free scenario parameter",
+  "Job sizes from Alibaba (workload_id groups, ~42% of GPU pods); NLR trajectories are 2-16 node research runs",
+  "Aggregated per-node trajectories already average over nodes in a run; treated as one job-level power shape",
+  "Facility size and training share are placeholders; scale results linearly with training GPUs"
+ ]
+}

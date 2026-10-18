@@ -1,0 +1,123 @@
+{
+ "source_id": "F2f",
+ "kind": "observed fit (NASA electrolytic capacitors, accelerated electrical stress); transfer to film is an ASSUMPTION",
+ "units": "relative capacitance loss (fraction of initial Cs at 100 Hz)",
+ "groups": {
+  "10V": {
+   "n_caps": 8,
+   "loss_1000h_mean": 0.0745008783308356,
+   "loss_1000h_sd": 0.012850381558507007,
+   "loss_5000h_mean": 0.06782905101060202,
+   "loss_5000h_sd": 0.010364719354264997,
+   "loss_5000h_range": [
+    0.047564408377441185,
+    0.07607235132360314
+   ],
+   "linf_mean": 0.08234248587803995,
+   "linf_sd": 0.014973944851577235,
+   "k_per_1000h_mean": 5.619247582252175e-24,
+   "k_per_1000h_sd": 1.5893630055758872e-23,
+   "n_reached_20pct": 0,
+   "t20_h_observed": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "tau_h_median": 1.0000000001837028,
+   "tau_h_range": [
+    1.000000000000015,
+    25.688964493120654
+   ],
+   "frac_reaching_20pct": 0.0
+  },
+  "12V": {
+   "n_caps": 8,
+   "loss_1000h_mean": 0.1404566371430493,
+   "loss_1000h_sd": 0.012696851179591614,
+   "loss_5000h_mean": 0.13722173951102964,
+   "loss_5000h_sd": 0.014931525423698603,
+   "loss_5000h_range": [
+    0.11400402967209691,
+    0.1567545466124929
+   ],
+   "linf_mean": 0.15090226594436446,
+   "linf_sd": 0.011580655106109448,
+   "k_per_1000h_mean": 2.8673991711635207e-21,
+   "k_per_1000h_sd": 6.200881484619477e-21,
+   "n_reached_20pct": 0,
+   "t20_h_observed": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "tau_h_median": 2.084043328562241,
+   "tau_h_range": [
+    1.9465711646610484,
+    2.53125064575144
+   ],
+   "frac_reaching_20pct": 0.0
+  },
+  "14V": {
+   "n_caps": 8,
+   "loss_1000h_mean": 0.1836877528357806,
+   "loss_1000h_sd": 0.034647847952122515,
+   "loss_5000h_mean": 0.23034882192802955,
+   "loss_5000h_sd": 0.058272317754982685,
+   "loss_5000h_range": [
+    0.1683228191737833,
+    0.3048364687657793
+   ],
+   "linf_mean": 0.18184909468704724,
+   "linf_sd": 0.024063370483995684,
+   "k_per_1000h_mean": 0.009145832531119216,
+   "k_per_1000h_sd": 0.009678736916617723,
+   "n_reached_20pct": 6,
+   "t20_h_observed": [
+    23.0,
+    null,
+    317.0,
+    38.3333,
+    1258.0,
+    23.0,
+    null,
+    1341.0
+   ],
+   "tau_h_median": 2.2554020933319867,
+   "tau_h_range": [
+    1.9094848240669622,
+    2.4237855395131733
+   ],
+   "frac_reaching_20pct": 0.75
+  }
+ },
+ "time_horizon_h": 5105.5,
+ "stress_dependence": {
+  "loss_5000h_per_volt": 0.040629942729356876,
+  "p": 4.386108327123751e-09,
+  "r": 0.8930059274286198,
+  "n_caps": 24,
+  "voltages": [
+   10,
+   12,
+   14
+  ]
+ },
+ "limitations": [
+  "Electrolytic capacitors (liquid electrolyte), not film; film DC-link caps age far more slowly and by different mechanisms",
+  "Accelerated stress (voltage at/above rating); not operating conditions; no temperature or ripple-current dependence",
+  "5105 h horizon; at 14 V 6 of 8 capacitors reached 20% loss within 5105 h, none at 10-12 V (see n_reached_20pct); end-of-life times are right-censored for lower stress",
+  "Loss saturates within ~100-300 h at these stresses; early dip near ~280 h and later partial recovery in Cs suggest measurement/conditioning effects not removed",
+  "8 capacitors per stress group",
+  "t20_h_observed first-crossing times below ~300 h at 14 V (23-317 h) coincide with the early conditioning dip and are NOT reliable end-of-life times; use n_reached_20pct and loss_5000h instead"
+ ]
+}

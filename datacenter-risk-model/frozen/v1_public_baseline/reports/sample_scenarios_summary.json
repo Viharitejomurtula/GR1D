@@ -1,0 +1,82 @@
+{
+ "temp_aug_15h_c": [
+  28.0,
+  35.9,
+  39.2
+ ],
+ "temp_annual_max_c": [
+  36.8,
+  39.2,
+  42.2
+ ],
+ "freq_dev_mhz_1s_p1_p99": [
+  -37.4,
+  26.5
+ ],
+ "freq_rocof_mhz_s_p1_p99": [
+  -3.47,
+  3.5
+ ],
+ "freq_event_nadir_hz_p50_p1": [
+  59.936,
+  59.85
+ ],
+ "freq_annual_min_nadir_hz_p50_p5_p1_with_systemic": [
+  59.863,
+  59.404,
+  59.321
+ ],
+ "freq_p_year_nadir_below_59.7_with_systemic": 0.148,
+ "battery_soh_100cycles_p5_p50_p95": [
+  0.692,
+  0.796,
+  0.869
+ ],
+ "battery_R_growth_100cycles_p5_p50_p95": [
+  1.042,
+  1.288,
+  5.103
+ ],
+ "voltage_dips_per_year_p5_p50_p95": [
+  1.950000000000001,
+  9.0,
+  35.0
+ ],
+ "ai_swing_w_per_node_5s_p50_p99": [
+  665.0,
+  1432.0
+ ],
+ "capacitor_loss_14V_5000h_p5_p50_p95": [
+  0.164,
+  0.229,
+  0.317
+ ],
+ "dc_sm_util_p5_p50_p95": [
+  0.176,
+  0.219,
+  0.246
+ ],
+ "dc_node_power_kw_p50": 1.13,
+ "gpu_group_training_p50_p99": [
+  9.0,
+  168.0
+ ],
+ "battery_dc_R_mohm_25C_50soc_100cycles_p5_p50_p95": [
+  75.1,
+  92.4,
+  325.1
+ ],
+ "battery_dc_R_mohm_0C_vs_25C_fresh": [
+  100.6,
+  71.6
+ ],
+ "wetbulb_aug_15h_c_p5_p50_p95": [
+  22.5,
+  24.5,
+  26.1
+ ],
+ "gpu_sync_facility_swing_mw_rho0_rho1": [
+  0.35,
+  1.16
+ ]
+}

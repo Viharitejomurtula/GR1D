@@ -1,6 +1,11 @@
 __pycache__/
 *.py[cod]
+.pytest_cache/
 .venv/
 venv/
+.env/
+.DS_Store
+
+# OpenModelica build output: compiled binaries, generated C, object files
 build/
 *.o

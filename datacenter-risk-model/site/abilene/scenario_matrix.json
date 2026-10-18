@@ -1,0 +1,128 @@
+{
+ "ai_swing": {
+  "200MW_low": {
+   "swing_p99_p1_mw": 8.6,
+   "std_mw": 2.2,
+   "ramp_1s_p99_mw_per_s": 1.2,
+   "ramp_1s_p999_mw_per_s": 1.7,
+   "mean_training_mw": 160.0,
+   "n_jobs": 3571
+  },
+  "200MW_mid": {
+   "swing_p99_p1_mw": 51.8,
+   "std_mw": 20.0,
+   "ramp_1s_p99_mw_per_s": 9.4,
+   "ramp_1s_p999_mw_per_s": 24.1,
+   "mean_training_mw": 160.0,
+   "n_jobs": 3592
+  },
+  "200MW_high": {
+   "swing_p99_p1_mw": 201.1,
+   "std_mw": 78.8,
+   "ramp_1s_p99_mw_per_s": 48.0,
+   "ramp_1s_p999_mw_per_s": 95.9,
+   "mean_training_mw": 160.0,
+   "n_jobs": 3662
+  },
+  "600MW_low": {
+   "swing_p99_p1_mw": 18.0,
+   "std_mw": 4.9,
+   "ramp_1s_p99_mw_per_s": 2.1,
+   "ramp_1s_p999_mw_per_s": 2.7,
+   "mean_training_mw": 480.0,
+   "n_jobs": 10831
+  },
+  "600MW_mid": {
+   "swing_p99_p1_mw": 146.9,
+   "std_mw": 57.2,
+   "ramp_1s_p99_mw_per_s": 25.1,
+   "ramp_1s_p999_mw_per_s": 66.7,
+   "mean_training_mw": 480.0,
+   "n_jobs": 10702
+  },
+  "600MW_high": {
+   "swing_p99_p1_mw": 601.0,
+   "std_mw": 243.4,
+   "ramp_1s_p99_mw_per_s": 138.1,
+   "ramp_1s_p999_mw_per_s": 297.6,
+   "mean_training_mw": 480.0,
+   "n_jobs": 10839
+  },
+  "1200MW_low": {
+   "swing_p99_p1_mw": 21.9,
+   "std_mw": 5.6,
+   "ramp_1s_p99_mw_per_s": 3.0,
+   "ramp_1s_p999_mw_per_s": 4.0,
+   "mean_training_mw": 960.0,
+   "n_jobs": 21558
+  },
+  "1200MW_mid": {
+   "swing_p99_p1_mw": 312.0,
+   "std_mw": 122.6,
+   "ramp_1s_p99_mw_per_s": 74.6,
+   "ramp_1s_p999_mw_per_s": 164.8,
+   "mean_training_mw": 960.0,
+   "n_jobs": 21535
+  },
+  "1200MW_high": {
+   "swing_p99_p1_mw": 1234.2,
+   "std_mw": 505.0,
+   "ramp_1s_p99_mw_per_s": 269.8,
+   "ramp_1s_p999_mw_per_s": 597.4,
+   "mean_training_mw": 960.0,
+   "n_jobs": 21442
+  }
+ },
+ "systemic": {
+  "low": {
+   "rate": 0.028,
+   "p59_7": 0.02761163319875315,
+   "p59_5": 0.019665839472493382,
+   "p59_4": 0.009733597314668321,
+   "annual_min_p50_p5_p1": [
+    59.866,
+    59.777,
+    59.41
+   ]
+  },
+  "mid": {
+   "rate": 0.148,
+   "p59_7": 0.1375688850579545,
+   "p59_5": 0.09798071669595387,
+   "p59_4": 0.04849550624345131,
+   "annual_min_p50_p5_p1": [
+    59.861,
+    59.391,
+    59.326
+   ]
+  },
+  "high": {
+   "rate": 0.435,
+   "p59_7": 0.35273533292196535,
+   "p59_5": 0.251228762296941,
+   "p59_4": 0.12434554901565613,
+   "annual_min_p50_p5_p1": [
+    59.847,
+    59.347,
+    59.313
+   ]
+  }
+ },
+ "dips": {
+  "low": [
+   1.0,
+   9.0,
+   37.0
+  ],
+  "mid": [
+   3.0,
+   14.0,
+   56.049999999999955
+  ],
+  "high": [
+   4.0,
+   18.0,
+   70.0
+  ]
+ }
+}

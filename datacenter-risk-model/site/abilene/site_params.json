@@ -1,0 +1,10 @@
+{
+ "site": "Reference campus (Abilene, TX): a public-information proxy, NOT the operator's actual equipment or design",
+ "baseline": "frozen/v1_public_baseline",
+ "weather_params": "models/temperature_params_abilene.json, models/wetbulb_params_abilene.json",
+ "gpu_sync_site": "site/abilene/gpu_sync_site.json",
+ "voltage_dip_rate_multiplier_scenario": [
+  1.0,
+  2.0
+ ]
+}

@@ -1,0 +1,369 @@
+{
+ "source_id": "F2c/F2b",
+ "kind": "observed (Alibaba ASI GPU trace v2026) + EXPLICIT power-mapping assumption",
+ "pod_gpu_request_by_type": {
+  "dev": {
+   "n": 31708,
+   "frac_multi_gpu": 0.4300176611580674,
+   "frac_fractional": 0.018796518228838148,
+   "gpu_request_q": [
+    0.07,
+    0.31,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    4.0,
+    8.0,
+    8.0,
+    16.0,
+    16.0
+   ],
+   "max": 16.0,
+   "duration_h_q": [
+    0.01,
+    0.01,
+    0.06,
+    0.15,
+    0.98,
+    11.0,
+    51.69,
+    264.0,
+    503.99,
+    1332.28,
+    1823.98
+   ]
+  },
+  "offline_inference": {
+   "n": 32194936,
+   "frac_multi_gpu": 0.09970915922926513,
+   "frac_fractional": 0.008105405148188522,
+   "gpu_request_q": [
+    0.16,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    2.0,
+    4.0,
+    8.0
+   ],
+   "max": 16.0,
+   "duration_h_q": [
+    0.01,
+    0.01,
+    0.03,
+    0.06,
+    0.12,
+    0.32,
+    1.08,
+    3.16,
+    5.37,
+    15.76,
+    57.92
+   ]
+  },
+  "online_inference": {
+   "n": 5054990,
+   "frac_multi_gpu": 0.04062045622246532,
+   "frac_fractional": 0.6628614497753704,
+   "gpu_request_q": [
+    0.01,
+    0.07,
+    0.07,
+    0.07,
+    0.11,
+    0.11,
+    1.0,
+    1.0,
+    1.0,
+    16.0,
+    16.0
+   ],
+   "max": 16.0,
+   "duration_h_q": [
+    0.01,
+    0.02,
+    0.04,
+    0.09,
+    0.34,
+    1.21,
+    5.41,
+    23.99,
+    120.0,
+    671.98,
+    1697.14
+   ]
+  },
+  "other": {
+   "n": 70130,
+   "frac_multi_gpu": 0.8881933551974903,
+   "frac_fractional": 0.0,
+   "gpu_request_q": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    8.0,
+    8.0,
+    16.0,
+    16.0,
+    16.0,
+    16.0,
+    16.0
+   ],
+   "max": 16.0,
+   "duration_h_q": [
+    0.01,
+    0.03,
+    0.06,
+    0.09,
+    0.21,
+    0.49,
+    1.49,
+    6.09,
+    12.13,
+    49.98,
+    312.0
+   ]
+  },
+  "training": {
+   "n": 2999580,
+   "frac_multi_gpu": 0.17922775855286407,
+   "frac_fractional": 0.3507427706545583,
+   "gpu_request_q": [
+    0.25,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    1.0,
+    1.0,
+    8.0,
+    16.0,
+    16.0,
+    16.0
+   ],
+   "max": 16.0,
+   "duration_h_q": [
+    0.01,
+    0.03,
+    0.06,
+    0.12,
+    0.46,
+    1.0,
+    4.0,
+    10.76,
+    17.33,
+    42.81,
+    179.72
+   ]
+  },
+  "unknown": {
+   "n": 170977,
+   "frac_multi_gpu": 0.09932914953473274,
+   "frac_fractional": 0.19234750872924428,
+   "gpu_request_q": [
+    0.01,
+    0.07,
+    0.11,
+    0.11,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    4.0,
+    8.0,
+    16.0
+   ],
+   "max": 16.0,
+   "duration_h_q": [
+    0.01,
+    0.01,
+    0.02,
+    0.03,
+    0.09,
+    0.22,
+    0.54,
+    0.88,
+    1.23,
+    72.0,
+    917.46
+   ]
+  }
+ },
+ "concurrent_workload_gpu_footprint": {
+  "dev": {
+   "n": 168577,
+   "gpus_q": [
+    0.0,
+    0.3,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    4.0,
+    8.0,
+    8.0,
+    16.0,
+    24.0
+   ],
+   "max": 32.0,
+   "frac_ge8": 0.1885310570243865
+  },
+  "offline_inference": {
+   "n": 107529,
+   "gpus_q": [
+    0.0,
+    0.0,
+    0.0,
+    0.1,
+    0.5,
+    1.0,
+    2.0,
+    7.6,
+    8.0,
+    64.0,
+    198.5
+   ],
+   "max": 451.3888888888889,
+   "frac_ge8": 0.0982060653405128
+  },
+  "online_inference": {
+   "n": 936074,
+   "gpus_q": [
+    0.0,
+    0.5,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    2.0,
+    8.0,
+    17.0,
+    91.0,
+    214.0
+   ],
+   "max": 805.3277777777778,
+   "frac_ge8": 0.10681206827665334
+  },
+  "other": {
+   "n": 6749,
+   "gpus_q": [
+    0.0,
+    0.1,
+    0.3,
+    0.7,
+    1.0,
+    8.0,
+    16.0,
+    40.0,
+    64.0,
+    128.0,
+    373.1
+   ],
+   "max": 475.55555555555554,
+   "frac_ge8": 0.5455623055267447
+  },
+  "training": {
+   "n": 154978,
+   "gpus_q": [
+    0.0,
+    0.1,
+    0.3,
+    1.0,
+    2.0,
+    8.0,
+    26.0,
+    64.0,
+    128.0,
+    176.0,
+    256.0
+   ],
+   "max": 799.9111111111112,
+   "frac_ge8": 0.6091058085663772
+  },
+  "unknown": {
+   "n": 3490,
+   "gpus_q": [
+    0.0,
+    0.0,
+    0.0,
+    0.1,
+    0.3,
+    1.5,
+    8.0,
+    8.0,
+    8.0,
+    12.6,
+    43.5
+   ],
+   "max": 47.82222222222222,
+   "frac_ge8": 0.25730659025787966
+  }
+ },
+ "hourly": {
+  "n_hours": 144,
+  "days": [
+   15,
+   30,
+   60,
+   100,
+   140,
+   165
+  ],
+  "alloc_frac_q": [
+   0.958,
+   0.969,
+   1.028
+  ],
+  "sm_util_frac_q": [
+   0.176,
+   0.219,
+   0.246
+  ],
+  "sm_util_frac_by_hour_of_day": {
+   "0": 0.201,
+   "1": 0.221,
+   "2": 0.228,
+   "3": 0.212,
+   "4": 0.208,
+   "5": 0.212,
+   "6": 0.217,
+   "7": 0.203,
+   "8": 0.2,
+   "9": 0.213,
+   "10": 0.224,
+   "11": 0.227,
+   "12": 0.22,
+   "13": 0.219,
+   "14": 0.223,
+   "15": 0.222,
+   "16": 0.223,
+   "17": 0.226,
+   "18": 0.219,
+   "19": 0.215,
+   "20": 0.219,
+   "21": 0.218,
+   "22": 0.217,
+   "23": 0.205
+  }
+ },
+ "power_mapping_assumption": {
+  "form": "P_node = P_idle + (P_peak - P_idle) * sm_util",
+  "p_idle_kw": 0.6,
+  "p_peak_kw": 3.0,
+  "gpus_per_node": 4,
+  "basis": "NLR 4-GPU H100 node: training low state ~0.6 kW, high state ~3.0 kW. Alibaba fleet is mixed GPUs (H20, L20, A10, XPU...), so absolute power is NOT transferable; use fractions."
+ },
+ "limitations": [
+  "Only 6 day(s) / 144 hours of the 185-day hourly table sampled via HTTP range extraction",
+  "Hourly averages hide sub-hour dynamics; SM utilization != power draw",
+  "avg_gpu_sm_util missing for fractional-GPU pods; scaled assuming same util as reporting pods",
+  "Concurrent group sizes only for pods with workload_id (~42%); 'workload' may not equal one synchronous job",
+  "Single Chinese hyperscaler cluster mix; not representative of a Texas facility"
+ ]
+}
