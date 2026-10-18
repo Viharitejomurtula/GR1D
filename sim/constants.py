@@ -203,8 +203,20 @@ RECOVERY_DEADLINE_S = 2.0  # the only recovery deadline in the rule
 FLOOR_V_LOW_PU = 0.50
 FLOOR_V_HIGH_PU = 0.80
 
-CURRENT_CAP_PU = 1.25  # Section 2.14(2)(d)
-CURRENT_CAP_DURATION_S = 0.5  # March 2026 revision
+# Section 2.14(2)(d), PUCT report 2026-07-09 (ERCOT files/docs/2026/07/11/282NOGRR-45-PUCT-Report-070926.docx): consumption "shall not exceed
+# 150% of its maximum electric current consumption during normal operations. The allowable overcurrent up to 150% shall only persist during
+# the voltage transient with a duration not to exceed 0.5 seconds." (The earlier text said 125% with no duration.) "Normal operations"
+# is the facility's own pre-disturbance maximum, so current is normalised to that, not to the nameplate rating.
+CURRENT_CAP_PU = 1.5
+CURRENT_CAP_DURATION_S = 0.5
+CURRENT_OVERCURRENT_TOL = 0.01   # current within 1% of the normal maximum is not 'overcurrent'
+# Section 2.14(2)(c): cooling or mechanical load may trip below 0.35 pu, and if it does its pre-disturbance power is subtracted from the
+# reference consumption used for the recovery and floor checks.
+COOLING_EXEMPT_BELOW_PU = 0.35
+# Section 2.14(2)(e): a facility that uses a load-transfer scheme for undervoltage below 0.8 pu must begin returning within 0.25 s of
+# voltage rising above 0.9 pu and be back to 90% within 0.5 s (versus 2.0 s otherwise).
+TRANSFER_BEGIN_RETURN_S = 0.25
+TRANSFER_RECOVERY_DEADLINE_S = 0.5
 
 FREQ_CONTINUOUS_LOW_HZ = 58.8
 FREQ_CONTINUOUS_HIGH_HZ = 61.2

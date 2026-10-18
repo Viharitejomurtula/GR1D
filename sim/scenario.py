@@ -87,8 +87,10 @@ class Scenario:
 
     # Installed transformer capacity vs facility load (G). Converts the summed own-base %Z to the facility base.
     chain_loading_frac: float = 0.75
-    psu_uv_delay_s: float = 1.0 / 60.0   # lockout debounce (G, ~1 cycle: the value at which BOTH facility A (1.60 pu) and B (1.50 pu) peak currents are
-                                         # reproduced -- inferred from the validation data, so NOT independent evidence; see validation/psu_delay_sweep.py)
+    # PSU AC-loss validation delay: 4-5 ms (Advanced Energy 5.5 kW ORv3 HPR datasheet, PSU-BBU transition: "Upon detection of AC loss, the PSUs should
+    # assert the AC_LOSS_L signal after a validation delay of 4-5 ms"). Used as the lockout debounce; the earlier default (1 cycle) was INFERRED from the
+    # validation facilities' peak currents and has been withdrawn.
+    psu_uv_delay_s: float = 0.0045
     legacy_open_delay_s: float = 0.05   # breaker/contactor opening time after the relay operates (G: 2-5 cycles)
     ramp_on_grid_only: bool = field(default=True, metadata={"vector": False})   # False = old behaviour (servers' demand fell with the ramp gate)
     psu_cap_datasheet: bool = field(default=True, metadata={"vector": False})   # False reproduces the old per-unit scaling (ablation only)
@@ -373,8 +375,8 @@ def sample(
         n_groups=int(rng.choice([1, 3, 6])),
         grp_load_cv=float(rng.uniform(0.0, 0.4)), grp_holdup_cv=float(rng.uniform(0.0, 0.4)),
         grp_bbu_cv=float(rng.uniform(0.0, 0.4)), grp_trip_cv=float(rng.uniform(0.0, 0.4)),
-        legacy_open_delay_s=float(rng.uniform(2.0, 5.0) / 60.0),
-        psu_uv_delay_s=float(np.exp(rng.uniform(np.log(0.001), np.log(0.025)))),   # G: ~1 ms to 1.5 cycles
+        legacy_open_delay_s=float(rng.uniform(3.0, 5.0) / 60.0),   # 3-5 cycle breakers (50-83 ms)
+        psu_uv_delay_s=float(rng.uniform(0.004, 0.005)),   # AE ORv3 HPR datasheet: AC-loss validation delay 4-5 ms
         x_over_r=float(rng.uniform(5.0, 20.0)),
         transfer_threshold_pu=float(rng.uniform(0.75, 0.90)),
         # Fixed at the BBU's 200 ms busbar confirmation (Analog Devices Part 1).

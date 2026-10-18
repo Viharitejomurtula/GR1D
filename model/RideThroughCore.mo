@@ -240,11 +240,15 @@ equation
                       (if psu_cap_datasheet then 1.0 else max(v_sdp_pu, 0.0))))
             * (if ramp_on_grid_only then ramp_gate else 1.0);
 
+  // The store cannot go below empty: once spent, a shortfall no longer drains it (the servers-lost logic below handles the consequence).
+  // Unclamped, it ran negative (seen in a random 6-group run), an impossible state that also corrupted the busbar-voltage estimate.
   der(e_holdup_j) =
     if psu_enabled and (bbu_active or p_psu_w >= p_server_w) then
       max(0.0, (e_holdup_max_j - e_holdup_j) / 0.05)
+    elseif e_holdup_j > 1.0e-6 then
+      -(p_server_w - p_psu_w - p_bbu_w)
     else
-      -(p_server_w - p_psu_w - p_bbu_w);
+      max(0.0, -(p_server_w - p_psu_w - p_bbu_w));
 
   // The BBU clamps the busbar only if it can carry the whole demand; an undersized or empty battery leaves the shortfall to drain the
   // hold-up store and the busbar sags (the old model pinned the bus at 48 V whatever the battery could actually deliver).

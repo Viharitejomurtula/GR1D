@@ -29,3 +29,15 @@ Image: openmodelica/openmodelica:v1.27.1-ompython (the pinned one). Earlier numb
 - Transformer %Z were summed on each unit's own base. Added chain_loading_frac (G, 0.5-1.0, default 0.75).
 - Voltage solution: `v_disc` / `v_branch_margin` signals; the runner marks a run invalid on a collapsed root or no operating point. A plain-Python
   closed-form solution of the constant-power quadratic matches the Modelica trace within 2e-3 at four dip depths.
+
+## Items 1-3 (priority list)
+1. Invariants: hold-up energy is clamped at zero; the runner marks a run INVALID (numerics_ok False, mode "invalid: ...") on non-finite values,
+   negative hold-up, state of charge outside [0,1], voltage outside [0,2] pu or negative grid power. 60 random scenarios: 0 invalid (was 1).
+2. Grader now follows the primary text (PUCT report 2026-07-09, 282NOGRR-45): current <= 150% of the facility's own pre-event maximum and
+   overcurrent <= 0.5 s (was 125%, nameplate-normalised, no duration); cooling that trips below 0.35 pu is removed from the reference;
+   a load-transfer scheme below 0.8 pu is held to 0.5 s recovery (2.0 s otherwise). NOT implemented: "begins returning within 0.25 s".
+   Table A (voltage envelope) was not re-checked against this text.
+3. PSU debounce now 4.5 ms (AE ORv3 HPR datasheet: AC_LOSS_L validation delay 4-5 ms); the 1-cycle value was inferred from the validation data and is
+   withdrawn. Breaker opening 3-5 cycles. Result: peak current is UNDER-predicted for the ERCOT crypto facilities (A 1.08 vs 1.60, B 1.26 vs 1.50) and
+   reaching the real values needs >= ~16 ms. The ORv3 value may simply not apply to those facilities' (crypto) power supplies. Breaker opening time
+   has no effect on current in these cases (PSUs lock out first).

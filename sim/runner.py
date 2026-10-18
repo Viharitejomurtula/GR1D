@@ -202,6 +202,9 @@ def grade_trace(d) -> Grade:
             psu_restart_s = float(d["time"][up[-1] + 1] - d["time"][down[0] + 1])
 
     g = _grade_run(d, storage_left, psu_restart_s)
+    bad = _invariants(d)
+    if bad:
+        g.numerics_ok = False; g.numerics_note = "; ".join(bad[:3]); g.passed = False; g.failure_mode = "invalid: " + bad[0]
     if "v_disc" in d:
         # Voltage solution check (see the model): the physical root of the constant-power quadratic is the larger one, and a
         # negative discriminant means no operating point exists at all.
@@ -215,15 +218,29 @@ def grade_trace(d) -> Grade:
     return g
 
 
+def _invariants(d) -> list[str]:
+    """Physical-state checks on a finished run. Anything listed makes the run INVALID (not a pass, not a failure)."""
+    bad = []
+    for k, v in d.items():
+        if not np.isfinite(v).all(): bad.append(f"non-finite {k}"); break
+    for k in d:
+        if k.endswith("e_holdup_j") and d[k].min() < -1e-3 * max(abs(d[k]).max(), 1.0): bad.append(f"negative hold-up energy ({k})")
+        if k.endswith(".soc") or k == "soc":
+            if d[k].min() < -1e-6 or d[k].max() > 1.0 + 1e-6: bad.append(f"state of charge outside [0,1] ({k})")
+    if "v_sdp_pu" in d and (d["v_sdp_pu"].min() < -1e-6 or d["v_sdp_pu"].max() > 2.0): bad.append("voltage outside [0, 2] pu")
+    if "p_grid_w" in d and d["p_grid_w"].min() < -1e-3 * max(abs(d["p_grid_w"]).max(), 1.0): bad.append("negative grid power")
+    return bad
+
+
 def _grade_run(d, storage_left, psu_restart_s) -> Grade:
+    used_transfer = bool(("transfer_demanded" in d and d["transfer_demanded"].max() > 0.5) or ("count_transfer" in d and d["count_transfer"].max() > 0.5))
     return grade(
-        d["time"],
-        d["v_sdp_pu"],
-        d["p_grid_w"],
-        d["i_grid_pu"],
-        # The envelope check grades whether the facility stayed *connected to the grid*,
-        # which is the relay state -- not whether the servers kept power (a facility can be
-        # connected while its servers ride on battery).
+        p_cooling=d.get("p_cooling_w"),
+        used_load_transfer=used_transfer,
+        t=d["time"],
+        v_pu=d["v_sdp_pu"],
+        p_grid=d["p_grid_w"],
+        i_pu=d["i_grid_pu"],
         connected=None if "facility_connected" not in d else (d["facility_connected"] > 0.5),
         storage_left=storage_left,
         psu_restart_s=psu_restart_s,
