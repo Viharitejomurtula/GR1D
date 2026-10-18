@@ -10,6 +10,6 @@ season->outdoor_temp_c,DJF,9.1,degC,3,data-fit,"Mean of the three monthly normal
 season->outdoor_temp_c,MAM,18.9,degC,3,data-fit,"Mean of the three monthly normal mean temperatures (Mar, Apr, May) from NWS DFW 1991-2020; seasons are my grouping (label inferred)",3
 season->outdoor_temp_c,JJA,29.1,degC,3,data-fit,"Mean of the three monthly normal mean temperatures (Jun, Jul, Aug) from NWS DFW 1991-2020; seasons are my grouping (label inferred)",3
 season->outdoor_temp_c,SON,19.7,degC,3,data-fit,"Mean of the three monthly normal mean temperatures (Sep, Oct, Nov) from NWS DFW 1991-2020; seasons are my grouping (label inferred)",3
-workload_type->osc_amp,training,0.375,fraction of provisioned power,1,expert-range,"Largest 2 s spike, Microsoft production clusters (row level); one operator, so 2 categories only",2
-workload_type->osc_amp,inference,0.09,fraction of provisioned power,1,expert-range,Same source,2
-workload_type->osc_amp,mixed,0.2325,fraction of provisioned power,0,placeholder,No source defines or measures a mixed workload; set to the midpoint of training and inference,2
+workload_type->osc_amp,training,0.473,fraction of run peak power,41,data-fit,"99th percentile of the 2 s swing, mean of 41 measured NLR GenAI training runs (sd 0.211); replaces Microsoft 0.375. See master.csv osc_amp",2
+workload_type->osc_amp,inference,0.196,fraction of run peak power,2205,data-fit,"Mean of 2205 measured NLR GenAI Llama3-70B inference runs (sd 0.135); replaces Microsoft 0.09",2
+workload_type->osc_amp,mixed,0.334,fraction of run peak power,0,placeholder,No source defines or measures a mixed workload; set to the midpoint of training and inference,2

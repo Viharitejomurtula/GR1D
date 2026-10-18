@@ -1,6 +1,11 @@
-numpy
-scipy
-pandas
-pyyaml
-networkx
-pytest
+# Pinned to the versions the tests were run with (Python 3.12). tests/test_implied.py::test_written_nominal_correlation_matches
+# fails for 3 of 5 groups at these versions and at numpy 2.4.6 / pandas 3.0.2: see CHANGELOG in data_bayesian-network/network/drivers.
+numpy==2.5.4
+scipy==1.18.1
+pandas==3.0.6
+pyyaml==6.0.3
+networkx==3.7
+holidays==0.106
+matplotlib==3.11.2
+pytest==9.1.1
+pyarrow==26.0.0
