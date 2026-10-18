@@ -41,11 +41,24 @@ class Grade:
     storage_left: float = float("nan")
     psu_restart_s: float | None = None
     trips: list[str] = field(default_factory=list)
+    # False when the voltage solution left the physical branch or had no real solution; such a run is not gradable.
+    numerics_ok: bool = True
+    numerics_note: str = ""
+    peak_current_raw_pu: float = float("nan")   # instantaneous maximum, for reference; peak_current_pu is the one-cycle average
 
     def summary(self) -> dict:
         d = self.__dict__.copy()
         d["passed"] = bool(self.passed)
         return d
+
+
+def _cycle_average(t: np.ndarray, x: np.ndarray, window_s: float = 1.0 / C.NOMINAL_FREQ_HZ) -> np.ndarray:
+    """Trailing moving average over one cycle, by time (trapezoid-integrated), valid for non-uniform sampling."""
+    cum = np.concatenate([[0.0], np.cumsum(0.5 * (x[1:] + x[:-1]) * np.diff(t))])
+    start = np.searchsorted(t, t - window_s, side="left")
+    span = np.maximum(t - t[np.minimum(start, t.size - 1)], 1e-12)
+    out = (cum - cum[np.minimum(start, t.size - 1)]) / span
+    return np.where(t - t[0] < window_s, x, out)
 
 
 def _disturbance_mask(v_pu: np.ndarray) -> np.ndarray:
@@ -168,7 +181,11 @@ def grade(
     # qualifier, but only a secondary source describes it and the semantics are ambiguous
     # (a 0.80 pu sag held for the required 2.0 s draws 1.25 pu throughout, which a naive
     # duration limit would fail). Gating on magnitude alone until the primary text is read.
-    peak_current_pu = float(np.max(i_pu)) if i_pu.size else 0.0
+    # Current is an RMS quantity: a sub-cycle spike (the 1-3 ms between voltage collapse and the protection acting, plus the
+    # event-instant sample of the solver) is not resolvable by an averaged model and is not what a cycle-based meter reports.
+    # Grade the one-cycle trailing average; the raw instantaneous maximum is kept for reference.
+    peak_current_raw_pu = float(np.max(i_pu)) if i_pu.size else 0.0
+    peak_current_pu = float(np.max(_cycle_average(t, i_pu))) if i_pu.size else 0.0
     current_violation = peak_current_pu > C.CURRENT_CAP_PU
 
     failures = []
@@ -199,6 +216,7 @@ def grade(
         storage_left=storage_left,
         psu_restart_s=psu_restart_s,
         trips=trips,
+        peak_current_raw_pu=peak_current_raw_pu,
     )
 
 

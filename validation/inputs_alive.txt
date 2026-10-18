@@ -1,0 +1,45 @@
+dip_depth_pu                 alive
+dip_duration_s               alive
+dip_start_s                  alive
+recovery_tau_s               alive
+overshoot_pu                 alive
+second_dip                   alive
+reclose_gap_s                DEAD in all contexts
+outdoor_temp_c               alive
+battery_temp_c               DEAD in all contexts
+battery_age_yr               DEAD in all contexts
+battery_soc0                 DEAD in all contexts
+workload                     alive
+swing_size_frac              alive
+swing_freq_hz                alive
+swing_phase                  alive
+restart_surge_x              DEAD in all contexts
+restart_surge_s              DEAD in all contexts
+supply_voltage_v             alive
+shelves_per_rack             DEAD in all contexts
+bbu_modules_per_rack         DEAD in all contexts
+cooling_share_25c            alive
+cooling_compressor_frac      alive
+cooling_fan_frac             alive
+z_total_pct                  alive
+x_over_r                     alive
+transfer_threshold_pu        alive
+handback_delay_s             alive
+ramp_back_s                  alive
+relay_pickup_pu              alive
+relay_delay_s                alive
+cooling_ride_through_s       DEAD in all contexts
+vfd_dc_uv_trip_pu            alive
+psu_restart_delay_s          alive
+psu_trip_spread_frac         alive
+faulted_phase_frac           alive
+legacy_load_frac             alive
+cooling_vfd_frac             alive
+vfd_kinetic                  alive
+drive_restart_s              DEAD in all contexts
+compressor_restart_s         alive
+count_n                      alive
+count_threshold_pu           alive
+count_min_dur_s              DEAD in all contexts
+count_window_s               DEAD in all contexts
+DEAD: ['reclose_gap_s', 'battery_temp_c', 'battery_age_yr', 'battery_soc0', 'restart_surge_x', 'restart_surge_s', 'shelves_per_rack', 'bbu_modules_per_rack', 'cooling_ride_through_s', 'drive_restart_s', 'count_min_dur_s', 'count_window_s']

@@ -1,3 +1,99 @@
+model VfdClass
+  "Aggregate of identical VFD-driven motors in one cooling class (compressor, fan or pump).
+
+   Physics: a diode rectifier feeds a DC link that carries the motor load. While the AC peak is
+   above the DC bus the rectifier conducts and the link tracks the AC; below it the link
+   discharges at the load power (energy balance on a capacitor). If the bus reaches the drive's
+   undervoltage level the drive either keeps running by decelerating the motor (kinetic
+   ride-through, only if configured: ATV320 'UnderV. prevention = DC Maintain', factory default
+   OFF) or stops its output and coasts. A drive that coasts resumes after a flying-restart delay
+   once the bus recovers; if it coasts longer than hold_s it declares a fault and restarts only
+   after fault_restart_s (auto-restart ladder) or never (manual reset). Compressors also respect
+   an anti-short-cycle off-time (min_off_s). Averaged model: ripple, harmonics and the motor's
+   electrical transient are not resolved."
+  parameter Real p_rated_w = 1.0e6 "Class rating on the drive input side";
+  parameter Real h_s = 0.5 "Inertia constant of motor plus driven load";
+  parameter Real uv_trip_pu = 0.70 "DC-bus undervoltage level, fraction of nominal DC";
+  parameter Real hold_s = 0.2 "Coast time before the drive declares a fault";
+  parameter Real resume_s = 0.5 "Flying-restart delay once the bus has recovered";
+  parameter Real fault_restart_s = 1.0 "Wait before restarting after a fault (large = manual reset)";
+  parameter Real min_off_s = 0.0 "Anti-short-cycle: minimum time stopped before any restart";
+  parameter Boolean kinetic = false "Configured to ride through on motor inertia";
+  parameter Real c_uf_per_kw = 130.0 "DC-link capacitance per kW (G: unsourced)";
+  parameter Real v_ll_v = 480.0 "Line-to-line supply";
+  constant Real PEAK_OVER_RMS = 1.41421356;
+  constant Real VDC_OVER_VLL = 1.35 "Ideal diode-rectifier DC / line-to-line RMS";
+  constant Real F_KIN_USE = 0.3 "Usable fraction of H*S before the load collapses (speed to ~84%)";
+  constant Real KRES_TAU_S = 1.0 "Re-acceleration time constant of the kinetic reserve";
+  constant Real P_IDLE = 0.02 "Recharge draw while stopped, fraction of rated";
+  constant Real GAP_NOM = PEAK_OVER_RMS / VDC_OVER_VLL - 1.0 "AC-peak headroom over the DC bus at nominal";
+  final parameter Real uv2 = uv_trip_pu * uv_trip_pu;
+  final parameter Real e_nom_j = 0.5 * c_uf_per_kw * 1.0e-6 * (p_rated_w / 1000.0) * (VDC_OVER_VLL * v_ll_v) ^ 2;
+  final parameter Real e_kin_j = max(h_s * p_rated_w * F_KIN_USE, 1.0);
+
+  input Real v_sense_pu "Filtered supply voltage";
+  output Real p_grid_w "Active power drawn from the supply";
+  output Real run_frac "1 while the drive is delivering";
+  output Boolean stopped "Not running (coasting or faulted)";
+  output Boolean faulted "Declared a fault";
+
+  Real w(start = 1.0, fixed = true) "DC-link energy, fraction of nominal (= DC voltage squared)";
+  Real kres(start = 1.0, fixed = true) "Kinetic reserve remaining";
+  Integer mode(start = 0, fixed = true) "0 run, 1 coast, 2 faulted";
+  Real t_coast(start = 0, fixed = true);
+  Real t_off(start = 0, fixed = true);
+  Real v_dc "DC voltage, fraction of nominal";
+  Real f_in "Rectifier conduction factor";
+  Real p_load_w;
+  Real p_in_w;
+  Boolean bus_low "Bus at or below the undervoltage level while load exceeds input";
+  Boolean resumable "Bus recovered enough to restart";
+
+equation
+  v_dc = sqrt(max(w, 1.0e-6));
+  f_in = max(0.0, min(3.0, (PEAK_OVER_RMS * v_sense_pu / VDC_OVER_VLL - v_dc) / GAP_NOM));
+  p_load_w = if mode == 0 then p_rated_w else 0.0;
+  p_in_w = f_in * max(p_load_w, P_IDLE * p_rated_w);
+  bus_low = w <= uv2 + 1.0e-9 and p_in_w < p_load_w;
+  resumable = v_dc >= uv_trip_pu + 0.05;
+
+  der(w) = if w > uv2 + 1.0e-9 or p_in_w > p_load_w then (p_in_w - p_load_w) / e_nom_j else 0.0;
+  der(kres) = if mode == 0 and kinetic and bus_low and kres > 0.0 then -(p_load_w - p_in_w) / e_kin_j
+              elseif kres < 1.0 and w > uv2 + 0.01 then (1.0 - kres) / KRES_TAU_S
+              else 0.0;
+
+  der(t_coast) = if mode == 1 then 1.0 else 0.0;
+  der(t_off) = if mode <> 0 then 1.0 else 0.0;
+  when pre(mode) == 0 and mode <> 0 then
+    reinit(t_off, 0);
+  end when;
+  when pre(mode) <> 1 and mode == 1 then
+    reinit(t_coast, 0);
+  end when;
+
+  when {bus_low and (not kinetic or kres <= 0.0),
+        t_coast >= hold_s and not resumable,
+        resumable and t_off >= max(resume_s, min_off_s),
+        v_sense_pu > 0.9 and resumable and t_off >= max(fault_restart_s, min_off_s)} then
+    if pre(mode) == 0 and bus_low and (not kinetic or kres <= 0.0) then
+      mode = 1;
+    elseif pre(mode) == 1 and t_coast >= hold_s and not resumable then
+      mode = 2;   // a drive whose bus has recovered is only waiting out its interlocks, not faulted
+    elseif pre(mode) == 1 and resumable and t_off >= max(resume_s, min_off_s) then
+      mode = 0;
+    elseif pre(mode) == 2 and v_sense_pu > 0.9 and resumable and t_off >= max(fault_restart_s, min_off_s) then
+      mode = 0;
+    else
+      mode = pre(mode);
+    end if;
+  end when;
+
+  run_frac = if mode == 0 then 1.0 else 0.0;
+  stopped = mode <> 0;
+  faulted = mode == 2;
+  p_grid_w = p_in_w;
+end VfdClass;
+
 model RideThroughCore
   "Rack-level data center ride-through: grid -> PSU -> 48 V busbar -> servers, with BBU
    backup and staged cooling trips. Averaged (RMS) power-balance model; see
@@ -23,16 +119,32 @@ model RideThroughCore
   parameter Real swing_phase = 0.0;
 
   parameter Real supply_voltage_v = 277.0 "PSU input, line-to-neutral";
-  parameter Real z_total_pu = 0.1975 "Transformer chain impedance";
+  parameter Real z_total_pu = 0.1975 "Sum of the chain's transformer impedances, each on its OWN rating";
+  // A transformer's %Z is on its own MVA. Converting to the facility's load base multiplies by (facility load / installed
+  // transformer capacity), i.e. by how heavily the chain is loaded; summing own-base percentages implicitly assumes 100%
+  // loading and overstates the voltage drop. Installed capacity is not public: G, 0.5-1.0.
+  parameter Real chain_loading_frac = 0.75 "Facility load / installed transformer capacity";
+  parameter Boolean psu_cap_datasheet = true "PSU delivers rated power until lockout (false = old per-unit-voltage scaling, kept for ablation)";
 
   parameter Real cooling_share_25c = 0.30;
   parameter Real outdoor_temp_c = 38.0;
   parameter Real cooling_compressor_frac = 0.40 "Compressor share of cooling load";
   parameter Real cooling_fan_frac = 0.35;
+  // Cooling drives. A share of each class is VFD-driven (DC-link physics, VfdClass); the rest is
+  // direct-on-line behind contactors, which follow the NERC staged-trip table.
+  parameter Real cooling_vfd_frac = 0.5 "Share of each cooling class on VFDs";
+  parameter Real cooling_ll_v = 480.0 "Cooling plant line-to-line voltage";
+  parameter Real vfd_dc_uv_trip_pu = 0.70 "Drive DC-bus undervoltage level, fraction of nominal";
+  parameter Real cooling_ride_through_s = 0.2 "Coast time before a drive declares a fault (ATV320 undervolt time-out)";
+  parameter Boolean vfd_kinetic = false "Drives configured to ride through on motor inertia (ATV320 DC Maintain; factory default off)";
+  parameter Real drive_restart_s = 1.0 "Restart wait after a drive fault (auto-restart ladder starts at 1 s; large = manual reset)";
+  parameter Real compressor_restart_s = 180.0 "Compressor anti-short-cycle off-time (G: ~100 s to several minutes, OEM-set)";
+  parameter Real vfd_c_uf_per_kw = 130.0 "DC-link capacitance per kW (G)";
+  parameter Real x_over_r = 10.0 "Transformer-chain X/R";
+  parameter Real load_pf = 0.9 "Facility power factor, sets how much of |Z| becomes real voltage drop";
 
   parameter Real battery_soc0 = 0.95;
   parameter Real battery_age_yr = 3.0;
-  parameter Real bbu_backup_s = 240.0 "Rated backup time at module rating";
 
   parameter Real psu_restart_delay_s = 0.0 "Sampled, not drawn internally (see scenario.py)";
   parameter Real handback_delay_s = 0.2;
@@ -62,6 +174,7 @@ model RideThroughCore
 
   parameter Real relay_pickup_pu = 0.15;
   parameter Real relay_delay_s = 0.5;
+  parameter Real legacy_open_delay_s = 0.05 "Breaker/contactor opening time after the relay operates (G: 2-5 cycles; 3 cycles = 50 ms)";
 
   parameter Real restart_surge_x = 1.15 "Peak server draw on restart, times pre-fault";
   parameter Real restart_surge_s = 0.5 "Decay time constant of the restart surge";
@@ -70,6 +183,7 @@ model RideThroughCore
   // per-rack feeder differences and (in reality) unbalanced faults mean the fleet sheds
   // progressively. Unsourced -- sampled so sensitivity analysis can judge whether it matters.
   parameter Real psu_trip_spread_frac = 0.04 "Half-width of the fleet trip threshold spread";
+  parameter Real psu_uv_delay_s = 0.0 "Undervoltage must persist this long before a PSU latches off (G: not in the datasheet; 0 = trips as fast as the 1 ms sense filter)";
 
   // Fraction of facility load sitting on phases that actually dip. ORv3 PSUs connect
   // line-to-neutral, so a single-phase fault leaves two thirds of the fleet at nominal
@@ -138,6 +252,17 @@ model RideThroughCore
     n_racks * bbu_modules_per_rack * BBU_MODULE_WH * 3600.0 * bat_derate;
   final parameter Real cooling_pump_frac = max(0.0, 1.0 - cooling_compressor_frac - cooling_fan_frac);
 
+  // VFD-driven share of each cooling class. Inertia constants: NERC Dynamic Load Modeling Table 5.1.
+  VfdClass vfd_comp(p_rated_w = p_cooling_rated_w * cooling_compressor_frac * cooling_vfd_frac, h_s = 0.10,
+                    uv_trip_pu = vfd_dc_uv_trip_pu, hold_s = cooling_ride_through_s, fault_restart_s = drive_restart_s,
+                    min_off_s = compressor_restart_s, kinetic = vfd_kinetic, c_uf_per_kw = vfd_c_uf_per_kw, v_ll_v = cooling_ll_v);
+  VfdClass vfd_fan(p_rated_w = p_cooling_rated_w * cooling_fan_frac * cooling_vfd_frac, h_s = 0.50,
+                   uv_trip_pu = vfd_dc_uv_trip_pu, hold_s = cooling_ride_through_s, fault_restart_s = drive_restart_s,
+                   min_off_s = 0.0, kinetic = vfd_kinetic, c_uf_per_kw = vfd_c_uf_per_kw, v_ll_v = cooling_ll_v);
+  VfdClass vfd_pump(p_rated_w = p_cooling_rated_w * cooling_pump_frac * cooling_vfd_frac, h_s = 0.15,
+                    uv_trip_pu = vfd_dc_uv_trip_pu, hold_s = cooling_ride_through_s, fault_restart_s = drive_restart_s,
+                    min_off_s = 0.0, kinetic = vfd_kinetic, c_uf_per_kw = vfd_c_uf_per_kw, v_ll_v = cooling_ll_v);
+
   // Busbar voltage is an exact algebraic function of the hold-up energy state, so the
   // busbar-side thresholds can be expressed against that state directly. This keeps the BBU
   // and server-power-loss decisions out of the grid-side algebraic loop entirely.
@@ -145,8 +270,8 @@ model RideThroughCore
   final parameter Real E_FRAC_IT_FLOOR = 1.0 - (BUS_PSU_V - IT_FLOOR_V) / BUS_DROOP_FULL_V;
 
   constant Real SENSE_TAU_S = 0.001 "Protection sensing lag";
-  // R/|Z|*cos(phi) + X/|Z|*sin(phi) at X/R = 10, pf = 0.9.
-  constant Real Z_EFF_FACTOR = 0.523 "Fraction of |Z| that becomes real voltage drop";
+  // Fraction of |Z| that becomes real voltage drop: R/|Z|*cos(phi) + X/|Z|*sin(phi); 0.523 at X/R = 10, pf = 0.9.
+  final parameter Real Z_EFF_FACTOR = (load_pf + x_over_r * sqrt(1.0 - load_pf * load_pf)) / sqrt(1.0 + x_over_r * x_over_r);
   constant Real OVERSHOOT_PEAK_X = 4.0 "Overshoot peaks this many recovery time constants after clearing";
 
   // ===================== Variables =====================
@@ -162,6 +287,9 @@ model RideThroughCore
   // collapsed-voltage branch, which looks plausible but inverts the physics entirely.
   Real v_sdp_pu(start = 1.0) "Voltage at the Service Delivery Point";
   Real v_psu_in_v "PSU input voltage";
+  Real z_drop_pu "Chain impedance on the facility base, real part";
+  Real v_disc "Discriminant of the voltage quadratic; negative = no operating point";
+  Real v_branch_margin "Voltage above the quadratic's midpoint; negative = on the collapsed root";
   // Protection senses a filtered voltage, not an instantaneous one. This is required by
   // NOGRR 282 2.14(5) ("filtered quantities or time delays to prevent misoperation") and is
   // also what breaks the grid-side algebraic loop: a when-equation cannot sit inside a
@@ -171,10 +299,14 @@ model RideThroughCore
   Real e_frac "Hold-up energy remaining, fraction";
   Real p_surge_w "Restart surge above baseline";
   Real psu_trip_demand "Fraction of the fleet below its own trip threshold right now";
+  Real psu_trip_demand_eff "Trip demand after the lockout debounce";
+  Real t_psu_uv(start = 0, fixed = true) "Time undervoltage has persisted";
   Real psu_tripped_frac(start = 0, fixed = true) "Fraction latched off";
   Real psu_online_frac "Fraction still supplying";
   Real ramp_gate "Ramp-back gate, 0 to 1, after the PSUs restart";
   Boolean facility_connected(start = true, fixed = true) "False only if the whole facility is off";
+  Boolean legacy_cmd(start = false, fixed = true) "Relay has issued its trip command";
+  Real t_open(start = 0, fixed = true) "Time since the trip command";
   Boolean legacy_tripped(start = false, fixed = true) "Legacy portion latched off";
   Real facility_available_frac "Fraction of facility load still able to draw";
   Boolean transfer_demanded(start = false, fixed = true) "Grid-side transfer to backup";
@@ -220,6 +352,12 @@ model RideThroughCore
   Real t_cool_s1(start = 0, fixed = true);
   Real t_cool_s2(start = 0, fixed = true);
   Real t_cool_ok(start = 0, fixed = true);
+  Real t_dol_off(start = 0, fixed = true) "Time the contactor-driven loads have been tripped";
+  Real v_rect_pu "Effective drive-rectifier supply voltage under an unbalanced dip";
+  Real p_dol_w "Contactor-driven cooling demand";
+  Real p_vfd_w "VFD-driven cooling demand";
+  Boolean vfd_stopped_any;
+  Boolean vfd_faulted_any;
   Real t_psu_down(start = 0, fixed = true);
 
 initial equation
@@ -280,7 +418,13 @@ equation
   //
   // Note the summed transformer percentages are each on their own MVA base; converting them
   // to a common facility base is still open (Parameter_Table.md, open item 8).
-  v_sdp_pu = v_source_pu - Z_EFF_FACTOR * z_total_pu * (i_grid_pu - 1.0) * v_source_pu;
+  v_sdp_pu = v_source_pu - z_drop_pu * (i_grid_pu - 1.0) * v_source_pu;
+  z_drop_pu = Z_EFF_FACTOR * z_total_pu * chain_loading_frac;
+  // Constant-power load behind a series impedance: v^2 - vs(1+k)v + k vs p = 0 has two roots (k = z_drop_pu, p = grid power in
+  // per unit). Only the larger is physical. These two signals let the runner reject a run whose solver sat on the collapsed
+  // root or lost the real solution altogether (no operating point: voltage collapse), instead of grading it as if valid.
+  v_disc = v_source_pu * v_source_pu * (1.0 + z_drop_pu) ^ 2 - 4.0 * z_drop_pu * v_source_pu * (p_grid_w / p_total_rated_w);
+  v_branch_margin = v_sdp_pu - 0.5 * v_source_pu * (1.0 + z_drop_pu);
   v_psu_in_v = supply_voltage_v * max(v_sdp_pu, 0.0);
   der(v_sense_pu) = (v_sdp_pu - v_sense_pu) / SENSE_TAU_S;
   e_frac = max(0.0, min(1.0, e_holdup_j / e_holdup_max_j));
@@ -330,14 +474,25 @@ equation
     reinit(t_cool_ok, 0);
   end when;
 
+  // Contactor-driven loads (the NERC staged-trip table). A tripped class comes back when its own
+  // restart rule allows: fans and pumps once voltage has held above the reconnect level, compressors
+  // only after the anti-short-cycle off-time AND recovered voltage. Both flags clear together so a
+  // later dip in a reclose sequence can trip them again (they used to latch for the whole run).
+  der(t_dol_off) = if cool_s1_tripped or cool_s2_tripped then 1.0 else 0.0;
+  when not (cool_s1_tripped or cool_s2_tripped) then
+    reinit(t_dol_off, 0);
+  end when;
   when t_cool_s1 > COOL_S1_DELAY_S then
     cool_s1_tripped = true;
+  elsewhen t_dol_off > compressor_restart_s and v_sense_pu > 0.9 then   // timer only runs while tripped
+    cool_s1_tripped = false;
   end when;
   when t_cool_s2 > COOL_S2_DELAY_S then
     cool_s2_tripped = true;
+  elsewhen t_dol_off > compressor_restart_s and v_sense_pu > 0.9 then   // timer only runs while tripped
+    cool_s2_tripped = false;
   end when;
 
-  // Fans and pumps reconnect once voltage recovers; compressors stay off for the run.
   cooling_available =
     (if cool_s2_tripped then (1.0 - COOL_S2_FRAC_COMP)
      elseif cool_s1_tripped then (1.0 - COOL_S1_FRAC)
@@ -346,7 +501,23 @@ equation
        elseif cool_s1_tripped and t_cool_ok < COOL_RECONNECT_S then (1.0 - COOL_S1_FRAC)
        else 1.0) * (cooling_fan_frac + cooling_pump_frac);
 
-  p_cooling_w = p_cooling_rated_w * cooling_available * facility_available_frac;
+  p_dol_w = p_cooling_rated_w * (1.0 - cooling_vfd_frac) * cooling_available;
+  // A three-phase diode rectifier's DC bus follows the envelope of its line-to-line voltages, so an
+  // unbalanced dip is far milder for a drive than the positive-sequence voltage suggests: with one
+  // phase down, one line-to-line pair is untouched; with two down, the other two pairs sit at about
+  // (1 + v)/2. The PSU path already accounts for unbalance (faulted_phase_frac); the first draft of
+  // the drive model did not, which made facility B (one phase at 0.67 pu) lose all its drives.
+  v_rect_pu = if faulted_phase_frac < 0.5 then max(v_sense_pu, 1.0)
+              elseif faulted_phase_frac < 0.9 then 0.5 * (1.0 + v_sense_pu)
+              else v_sense_pu;
+  vfd_comp.v_sense_pu = v_rect_pu;
+  vfd_fan.v_sense_pu = v_rect_pu;
+  vfd_pump.v_sense_pu = v_rect_pu;
+  p_vfd_w = vfd_comp.p_grid_w + vfd_fan.p_grid_w + vfd_pump.p_grid_w;
+  vfd_stopped_any = vfd_comp.stopped or vfd_fan.stopped or vfd_pump.stopped;
+  vfd_faulted_any = vfd_comp.faulted or vfd_fan.faulted or vfd_pump.faulted;
+
+  p_cooling_w = (p_dol_w + p_vfd_w) * facility_available_frac;
 
   // ---------------- Facility relay and grid-side transfer ----------------
   der(t_relay) = if v_sense_pu < relay_pickup_pu then 1.0 else 0.0;
@@ -356,7 +527,15 @@ equation
   // Latching: a tripped facility stays disconnected for the rest of the run, which is what
   // NOGRR 2.14(6) is about -- no automatic re-closure on a sag count.
   // The relay protects the legacy portion only; the modern portion rides through.
-  when t_relay > relay_delay_s then
+  // The relay's operate delay and the breaker's mechanical opening time are separate. Once the relay has operated, its trip
+  // command seals in (voltage recovering does not recall it); the load stays connected, drawing from the depressed grid, until the
+  // contacts open. Opening time of 2-5 cycles is standard breaker/contactor practice. The first version opened the load the
+  // instant the relay operated, which removed the facility's sustained overcurrent during the dip.
+  when t_relay > relay_delay_s + 1.0e-6 then
+    legacy_cmd = true;
+  end when;
+  der(t_open) = if legacy_cmd then 1.0 else 0.0;
+  when t_open > legacy_open_delay_s + 1.0e-6 then
     legacy_tripped = true;
   end when;
   facility_available_frac =
@@ -416,7 +595,14 @@ equation
 
   // Ratchets up only: a tripped PSU stays off until the restart conditions are met, so the
   // fleet does not follow voltage back up instantaneously.
-  der(psu_tripped_frac) = max(0.0, (psu_trip_demand - psu_tripped_frac) / TRIP_TAU_S);
+  // Real PSUs keep drawing constant power from the AC until their lockout debounce expires, which is what produces the 150-160%
+  // facility current seen in the ERCOT events; a model that sheds load within the 1 ms sense filter cannot show it.
+  der(t_psu_uv) = if psu_trip_demand > 0.0 then 1.0 else 0.0;
+  when psu_trip_demand <= 0.0 then
+    reinit(t_psu_uv, 0);
+  end when;
+  psu_trip_demand_eff = if t_psu_uv > psu_uv_delay_s + 1.0e-6 then psu_trip_demand else 0.0;
+  der(psu_tripped_frac) = max(0.0, (psu_trip_demand_eff - psu_tripped_frac) / TRIP_TAU_S);
   // Only the faulted-phase portion of the fleet can trip; the rest never sees the dip.
   psu_online_frac = (1.0 - faulted_phase_frac) + faulted_phase_frac * (1.0 - psu_tripped_frac);
   psu_enabled = psu_online_frac > 0.5;
@@ -433,7 +619,12 @@ equation
   // could not express it: the BBU only filled the shortfall when PSUs could not supply, so
   // a transfer left grid draw unchanged.
   p_psu_w = if bbu_active and soc > 0 then 0.0
-            else min(p_server_w, psu_online_frac * n_psu * PSU_RATED_W * max(v_sdp_pu, 0.0));
+            else min(p_server_w, psu_online_frac * n_psu * PSU_RATED_W *
+                   (if psu_cap_datasheet then 1.0 else max(v_sdp_pu, 0.0)));
+  // psu_cap_datasheet: the Advanced Energy ORv3 3 kW datasheet rates the unit at 3 kW over the whole 180-305 VAC input range and
+  // specifies an undervoltage lockout at 172 VAC -- full power down to the lockout, then shutdown, which the trip logic above
+  // already models. The old per-unit scaling (0.8 pu -> 80% capability) had no source. No derating between 172 and 180 V is
+  // documented, so none is applied.
 
   der(e_holdup_j) =
     if psu_enabled and (bbu_active or p_psu_w >= p_server_w) then

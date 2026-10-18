@@ -1,3 +1,4 @@
+import pytest
 import numpy as np
 from sim import grader
 
@@ -19,3 +20,15 @@ def test_missed_recovery_after_middle_dip_is_caught():
 
 def test_dip_cut_short_by_next_dip_is_not_graded():
     t, v, p, i = _trace([(2.0, 0.1, 0.0), (2.6, 0.1, 0.5)]); g = grader.grade(t, v, p, i); assert g.recovery_margin_s > 0
+
+
+def test_subcycle_current_spike_is_not_graded_as_a_cycle_rms_peak():
+    t = np.arange(0, 5.0, 1e-3); v = np.ones_like(t); v[(t > 1) & (t < 1.05)] = 0.5
+    p = np.ones_like(t); i = np.ones_like(t); i[(t >= 1.0) & (t < 1.002)] = 3.0      # 2 ms spike at the dip onset
+    g = grader.grade(t, v, p, i)
+    assert g.peak_current_raw_pu == 3.0 and g.peak_current_pu < 1.3                  # 2 ms of 3.0 inside a 16.7 ms window -> ~1.24
+
+def test_sustained_overcurrent_is_still_graded():
+    t = np.arange(0, 5.0, 1e-3); v = np.ones_like(t); v[(t > 1) & (t < 1.05)] = 0.5
+    p = np.ones_like(t); i = np.ones_like(t); i[(t >= 1.0) & (t < 1.05)] = 1.6
+    assert grader.grade(t, v, p, i).peak_current_pu == pytest.approx(1.6, abs=1e-6)

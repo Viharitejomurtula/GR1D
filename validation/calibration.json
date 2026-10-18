@@ -1,0 +1,102 @@
+{
+ "identifiability": {
+  "facility_A": [
+   [
+    0.0,
+    -0.027
+   ],
+   [
+    0.2,
+    0.178
+   ],
+   [
+    0.4,
+    0.383
+   ],
+   [
+    0.6000000000000001,
+    0.589
+   ],
+   [
+    0.8,
+    0.794
+   ],
+   [
+    1.0,
+    1.0
+   ]
+  ],
+  "facility_B": [
+   [
+    0.0,
+    0.63
+   ],
+   [
+    0.2,
+    0.704
+   ],
+   [
+    0.4,
+    0.353
+   ],
+   [
+    0.6000000000000001,
+    0.568
+   ],
+   [
+    0.8,
+    0.784
+   ],
+   [
+    1.0,
+    1.0
+   ]
+  ]
+ },
+ "fit": {
+  "facility_A": {
+   "inferred_frac": 0.477,
+   "achievable": true,
+   "fitted_loss": 0.462,
+   "target_loss": 0.46
+  },
+  "facility_B": {
+   "inferred_frac": 0.0,
+   "achievable": false,
+   "fitted_loss": 0.63,
+   "target_loss": 0.24
+  }
+ },
+ "unfitted": {
+  "facility_A": {
+   "peak_current_pu": 1.696,
+   "target_peak": 1.6,
+   "error_pct": 6.0
+  },
+  "facility_B": {
+   "peak_current_pu": 1.486,
+   "target_peak": 1.5,
+   "error_pct": -0.9
+  }
+ },
+ "leave_one_out": {
+  "fit_on_facility_A_predict_facility_B": {
+   "frac": 0.477,
+   "predicted_loss": 0.436,
+   "real_loss": 0.24,
+   "error_pts": 19.6
+  },
+  "fit_on_facility_B_predict_facility_A": {
+   "frac": 0.0,
+   "predicted_loss": -0.027,
+   "real_loss": 0.46,
+   "error_pts": -48.7
+  },
+  "fit_on_B_predict_0p844": {
+   "frac": 0.0,
+   "predicted_loss": 0.63,
+   "real_loss": 0.19,
+   "error_pts": 44.0
+  }
+ }
+}

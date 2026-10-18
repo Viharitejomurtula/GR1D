@@ -1,0 +1,50 @@
+{
+ "cases": {
+  "facility_A": {
+   "loss_frac": 0.545,
+   "peak_current_pu": 1.48,
+   "passed": false,
+   "mode": "cooling tripped",
+   "recovery_margin_s": -11.944,
+   "target": {
+    "loss_frac": 0.46,
+    "peak_current_pu": 1.6,
+    "recovers": false
+   }
+  },
+  "facility_B": {
+   "loss_frac": 0.374,
+   "peak_current_pu": 1.333,
+   "passed": false,
+   "mode": "cooling tripped",
+   "recovery_margin_s": -11.962,
+   "target": {
+    "loss_frac": 0.24,
+    "peak_current_pu": 1.5,
+    "recovers": true
+   }
+  },
+  "shallow_0p844": {
+   "loss_frac": 0.245,
+   "peak_current_pu": 1.135,
+   "passed": false,
+   "mode": "storage hand-back too slow",
+   "recovery_margin_s": -12.029,
+   "target": {
+    "loss_frac": 0.19
+   }
+  }
+ },
+ "product": {
+  "n": 70,
+  "never_disconnected": true,
+  "median_recovery_s": 0.4,
+  "worst_recovery_s": 13.953,
+  "inside_rule_frac": 0.986,
+  "target": {
+   "median_recovery_s": 0.41,
+   "worst_recovery_s": 0.49,
+   "never_disconnected": true
+  }
+ }
+}

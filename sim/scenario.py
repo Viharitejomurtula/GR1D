@@ -82,6 +82,19 @@ class Scenario:
     # would actually ask: how much of the floor needs upgrading?
     legacy_load_frac: float
 
+    # Installed transformer capacity vs facility load (G). Converts the summed own-base %Z to the facility base.
+    chain_loading_frac: float = 0.75
+    psu_uv_delay_s: float = 1.0 / 60.0   # lockout debounce (G, ~1 cycle: the value at which BOTH facility A (1.60 pu) and B (1.50 pu) peak currents are
+                                         # reproduced -- inferred from the validation data, so NOT independent evidence; see validation/psu_delay_sweep.py)
+    legacy_open_delay_s: float = 0.05   # breaker/contactor opening time after the relay operates (G: 2-5 cycles)
+    psu_cap_datasheet: bool = field(default=True, metadata={"vector": False})   # False reproduces the old per-unit scaling (ablation only)
+
+    # --- Cooling drives (see VfdClass in the model). Defaults keep the factory ATV320 behaviour.
+    cooling_vfd_frac: float = 0.5
+    vfd_kinetic: bool = False       # ATV320 'UnderV. prevention = DC Maintain'; factory default off
+    drive_restart_s: float = 1.0    # 1 s = auto-restart ladder's first retry; use ~600 for manual reset (Atr factory default is off)
+    compressor_restart_s: float = 180.0
+
     # --- Sag-counting transfer (NERC: sites moved to backup on "N sags in T seconds" and stayed
     # off until manual reset; count_n = 0 disables it, so existing scenarios are unchanged) ---
     count_n: int = 0
@@ -95,6 +108,9 @@ class Scenario:
     # of the surrogate's input vector: a variable-length sequence is not a fixed-width feature
     # (summarise it as n_dips / total span if the surrogate needs it).
     extra_dips: tuple = field(default=(), metadata={"vector": False})
+    # Explicit simulation window; 0 = automatic (last clear + settle). Needed to see cooling restart
+    # (compressor anti-short-cycle is 100 s or more, far past the standard window).
+    horizon_s: float = field(default=0.0, metadata={"vector": False})
 
     def dip_sequence(self) -> list[tuple[float, float, float]]:
         """[(start_s, duration_s, retained_pu), ...] in time order, non-overlapping."""
@@ -110,7 +126,8 @@ class Scenario:
     def window_s(self) -> float:
         """Simulation window: default settle time after the last dip clears, never shorter than the base window."""
         start, dur, _ = self.dip_sequence()[-1]
-        return max(C.WINDOW_S, start + dur + C.POST_EVENT_SETTLE_S)
+        auto = max(C.WINDOW_S, start + dur + C.POST_EVENT_SETTLE_S)
+        return self.horizon_s if self.horizon_s > 0 else auto
 
     def to_vector(self) -> np.ndarray:
         return np.array([float(getattr(self, f.name)) for f in fields(self) if f.metadata.get("vector", True)])
@@ -201,7 +218,10 @@ def sample(rng: np.random.Generator | None = None, *, dip_start_s: float = 1.0) 
         # Unsourced split; sampled wide until the compressor/fan/pump breakdown is found.
         cooling_compressor_frac=float(rng.uniform(0.2, 0.6)),
         cooling_fan_frac=float(rng.uniform(0.2, 0.5)),
-        z_total_pct=float(rng.uniform(15.0, 23.0)),  # substation + distribution + PDU
+        z_total_pct=float(rng.uniform(15.0, 23.0)),  # substation + distribution + PDU, summed on each unit's own base
+        chain_loading_frac=float(rng.uniform(0.5, 1.0)),
+        legacy_open_delay_s=float(rng.uniform(2.0, 5.0) / 60.0),
+        psu_uv_delay_s=float(np.exp(rng.uniform(np.log(0.001), np.log(0.025)))),   # G: ~1 ms to 1.5 cycles
         x_over_r=float(rng.uniform(5.0, 20.0)),
         transfer_threshold_pu=float(rng.uniform(0.75, 0.90)),
         handback_delay_s=float(rng.uniform(0.2, 10.0)),
@@ -210,6 +230,11 @@ def sample(rng: np.random.Generator | None = None, *, dip_start_s: float = 1.0) 
         relay_delay_s=float(rng.uniform(0.0, 2.0)),
         cooling_ride_through_s=float(rng.uniform(0.02, 5.0)),
         vfd_dc_uv_trip_pu=float(rng.uniform(0.65, 0.75)),
+        # Cooling drive population: all four are unsourced (G) except the factory defaults noted in the model.
+        cooling_vfd_frac=float(rng.uniform(0.2, 0.9)),
+        vfd_kinetic=bool(rng.random() < 0.2),
+        drive_restart_s=float(rng.uniform(1.0, 10.0) if rng.random() < 0.3 else rng.uniform(120.0, 1800.0)),
+        compressor_restart_s=float(rng.uniform(100.0, 600.0)),
         psu_restart_delay_s=float(rng.uniform(0.0, 5.5)),
         psu_trip_spread_frac=float(rng.uniform(0.01, 0.08)),
         faulted_phase_frac=float(rng.choice([1/3, 2/3, 1.0])),
@@ -265,6 +290,8 @@ GRID_FRIENDLY = Scenario(
     relay_pickup_pu=0.15,
     relay_delay_s=0.5,
     cooling_ride_through_s=3.0,
+    vfd_kinetic=True,          # drives configured for DC Maintain ride-through
+    drive_restart_s=1.0,       # auto-restart enabled
     psu_restart_delay_s=0.0,
     psu_trip_spread_frac=0.04,
     faulted_phase_frac=1.0,
@@ -278,6 +305,8 @@ LEGACY_UPS = Scenario(
     relay_pickup_pu=0.85,
     relay_delay_s=0.0,
     cooling_ride_through_s=0.02,  # unprotected contactor
+    vfd_kinetic=False,         # factory default
+    drive_restart_s=600.0,     # auto-restart off (factory default): waits for an operator
     psu_restart_delay_s=5.5,
     psu_trip_spread_frac=0.04,
     faulted_phase_frac=1.0,
