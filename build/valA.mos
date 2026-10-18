@@ -1,0 +1,5 @@
+loadFile("/work/model/RideThroughCore.mo"); getErrorString();
+simulate(RideThroughCore, startTime=0, stopTime=15, numberOfIntervals=15000, method="dassl", tolerance=1e-6,
+  outputFormat="csv", fileNamePrefix="facA",
+  simflags="-override dip_depth_pu=0.535,dip_duration_s=0.1,p_it_rated_w=112.3e6");
+getErrorString();

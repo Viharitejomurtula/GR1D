@@ -19,7 +19,11 @@ model ToolchainCheck
   // --- Algebraic ---
   Real ocv_V "Open-circuit voltage";
   Real current_A "Discharge current, positive out";
-  Real terminal_V "Terminal voltage under load";
+  // A constant-power load across a series resistance gives V^2 - ocv*V + P*R0 = 0, which has
+  // two real roots: the physical high-voltage one and a spurious low-voltage/high-current one.
+  // Without a start value near the physical root the solver converges to the wrong branch
+  // (4.2 V and 710 A instead of 39 V and 77 A, with voltage rising as the pack drains).
+  Real terminal_V(start = ocv_full_V) "Terminal voltage under load";
   Real power_W "Power actually delivered";
   Boolean tripped(start = false, fixed = true);
 

@@ -1,0 +1,3 @@
+loadFile("/work/model/ToolchainCheck.mo"); getErrorString();
+checkModel(ToolchainCheck); getErrorString();
+simulate(ToolchainCheck, stopTime=15, numberOfIntervals=1500, outputFormat="csv", fileNamePrefix="smoke"); getErrorString();

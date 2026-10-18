@@ -1,0 +1,2 @@
+loadFile("/work/model/RideThroughCore.mo"); getErrorString();
+simulate(RideThroughCore, startTime=0, stopTime=15, numberOfIntervals=15000, method="dassl", tolerance=1e-6, outputFormat="csv", fileNamePrefix="core"); getErrorString();

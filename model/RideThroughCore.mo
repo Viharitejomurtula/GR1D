@@ -69,10 +69,30 @@ model RideThroughCore
     * max(0.5, 1.0 - 0.025 * battery_age_yr) "Capacity fade with age";
   final parameter Real cooling_pump_frac = max(0.0, 1.0 - cooling_compressor_frac - cooling_fan_frac);
 
+  // Busbar voltage is an exact algebraic function of the hold-up energy state, so the
+  // busbar-side thresholds can be expressed against that state directly. This keeps the BBU
+  // and server-power-loss decisions out of the grid-side algebraic loop entirely.
+  final parameter Real E_FRAC_BBU = 1.0 - (BUS_PSU_V - BBU_TAKEOVER_V) / BUS_DROOP_FULL_V;
+  final parameter Real E_FRAC_IT_FLOOR = 1.0 - (BUS_PSU_V - IT_FLOOR_V) / BUS_DROOP_FULL_V;
+
+  constant Real SENSE_TAU_S = 0.001 "Protection sensing lag";
+  // R/|Z|*cos(phi) + X/|Z|*sin(phi) at X/R = 10, pf = 0.9.
+  constant Real Z_EFF_FACTOR = 0.523 "Fraction of |Z| that becomes real voltage drop";
+
   // ===================== Variables =====================
   Real v_source_pu "Source voltage, before facility impedance";
-  Real v_sdp_pu "Voltage at the Service Delivery Point";
+  // Constant-power load behind a series impedance gives a quadratic in voltage with two real
+  // roots. Start near the physical (high-voltage) root or the solver latches onto the spurious
+  // collapsed-voltage branch, which looks plausible but inverts the physics entirely.
+  Real v_sdp_pu(start = 1.0) "Voltage at the Service Delivery Point";
   Real v_psu_in_v "PSU input voltage";
+  // Protection senses a filtered voltage, not an instantaneous one. This is required by
+  // NOGRR 282 2.14(5) ("filtered quantities or time delays to prevent misoperation") and is
+  // also what breaks the grid-side algebraic loop: a when-equation cannot sit inside a
+  // nonlinear system, but it can act on a state. Decisions faster than SENSE_TAU_S are not
+  // resolved by this model, which is inherent to the averaged-RMS approach.
+  Real v_sense_pu(start = 1.0) "Filtered Service Delivery Point voltage, for protection";
+  Real e_frac "Hold-up energy remaining, fraction";
 
   Real p_server_w "Server/IT demand";
   Real p_swing_w(start = 0, fixed = true);
@@ -117,10 +137,22 @@ equation
       and time < dip_start_s + 2 * dip_duration_s + reclose_gap_s then dip_depth_pu
     else 1.0;
 
-  // Averaged model: the facility draws roughly constant power, so the voltage drop across
-  // the transformer chain scales with the current it pulls.
-  v_sdp_pu = v_source_pu - z_total_pu * i_grid_pu * v_source_pu;
+  // Voltage drop across the transformer chain, referenced to the rated operating point.
+  //
+  // Two corrections over a naive v = v_src - Z*i*v_src:
+  //  1. Drop is taken against (i - 1), not i. Real facilities tap-regulate so that nominal
+  //     voltage appears at the PSU at rated load; the impedance governs the *change* when
+  //     current departs from rated, which is what a dip causes.
+  //  2. Z_EFF_FACTOR converts |Z| into an actual voltage drop. The chain is mostly reactive
+  //     (X/R ~ 10) against a ~0.9 pf load, so drop ~ I*(R*cos(phi) + X*sin(phi)) is roughly
+  //     half of I*|Z|. Without this the model showed a 25% drop at idle.
+  //
+  // Note the summed transformer percentages are each on their own MVA base; converting them
+  // to a common facility base is still open (Parameter_Table.md, open item 8).
+  v_sdp_pu = v_source_pu - Z_EFF_FACTOR * z_total_pu * (i_grid_pu - 1.0) * v_source_pu;
   v_psu_in_v = supply_voltage_v * max(v_sdp_pu, 0.0);
+  der(v_sense_pu) = (v_sdp_pu - v_sense_pu) / SENSE_TAU_S;
+  e_frac = max(0.0, min(1.0, e_holdup_j / e_holdup_max_j));
 
   // ---------------- Server / AI load ----------------
   // Slew-limited square wave: periodic 0.2-3 Hz synchronised swing, 1.9 pu/s ramp.
@@ -134,17 +166,17 @@ equation
                else workload * p_it_rated_w + p_swing_w;
 
   // ---------------- Cooling, staged NERC Table 5.1 trips ----------------
-  der(t_cool_s1) = if v_sdp_pu < COOL_S1_V then 1.0 else 0.0;
-  der(t_cool_s2) = if v_sdp_pu < COOL_S2_V then 1.0 else 0.0;
-  der(t_cool_ok) = if v_sdp_pu > COOL_RECONNECT_V then 1.0 else 0.0;
+  der(t_cool_s1) = if v_sense_pu < COOL_S1_V then 1.0 else 0.0;
+  der(t_cool_s2) = if v_sense_pu < COOL_S2_V then 1.0 else 0.0;
+  der(t_cool_ok) = if v_sense_pu > COOL_RECONNECT_V then 1.0 else 0.0;
 
-  when v_sdp_pu >= COOL_S1_V then
+  when v_sense_pu >= COOL_S1_V then
     reinit(t_cool_s1, 0);
   end when;
-  when v_sdp_pu >= COOL_S2_V then
+  when v_sense_pu >= COOL_S2_V then
     reinit(t_cool_s2, 0);
   end when;
-  when v_sdp_pu <= COOL_RECONNECT_V then
+  when v_sense_pu <= COOL_RECONNECT_V then
     reinit(t_cool_ok, 0);
   end when;
 
@@ -169,10 +201,10 @@ equation
   // ---------------- PSU ----------------
   der(t_psu_down) = if psu_enabled then 0.0 else 1.0;
 
-  when v_psu_in_v < PSU_UV_V then
+  when supply_voltage_v * v_sense_pu < PSU_UV_V then
     psu_enabled = false;
     reinit(t_psu_down, 0);
-  elsewhen v_psu_in_v > PSU_RESTART_V
+  elsewhen supply_voltage_v * v_sense_pu > PSU_RESTART_V
       and t_psu_down > PSU_TON_BBU_S + psu_restart_delay_s then
     psu_enabled = true;
   end when;
@@ -191,13 +223,16 @@ equation
             else BUS_PSU_V - BUS_DROOP_FULL_V * (1.0 - max(0.0, min(1.0, e_holdup_j / e_holdup_max_j)));
 
   // ---------------- BBU ----------------
-  der(t_bus_low) = if v_bus_v < BBU_TAKEOVER_V then 1.0 else 0.0;
-  der(t_bus_ok) = if v_bus_v > BBU_TAKEOVER_V then 1.0 else 0.0;
+  der(t_bus_low) = if e_frac < E_FRAC_BBU then 1.0 else 0.0;
+  // Hand back only once the PSUs are actually supplying the busbar again. Ticking this
+  // while the BBU is carrying the load hands back to nothing during the PSU restart
+  // delay, which dropped the servers after the dip had already cleared.
+  der(t_bus_ok) = if psu_enabled and e_frac > E_FRAC_BBU then 1.0 else 0.0;
 
-  when v_bus_v >= BBU_TAKEOVER_V then
+  when e_frac >= E_FRAC_BBU then
     reinit(t_bus_low, 0);
   end when;
-  when v_bus_v <= BBU_TAKEOVER_V then
+  when e_frac <= E_FRAC_BBU or not psu_enabled then
     reinit(t_bus_ok, 0);
   end when;
 
@@ -210,9 +245,9 @@ equation
   p_bbu_w = if bbu_active and soc > 0 then max(0.0, p_server_w - p_psu_w) else 0.0;
   der(soc) = -p_bbu_w / bbu_energy_j;
 
-  when v_bus_v < IT_FLOOR_V then
+  when e_frac < E_FRAC_IT_FLOOR and not bbu_active then
     servers_lost_power = true;
-  elsewhen v_bus_v > BBU_TAKEOVER_V and psu_enabled then
+  elsewhen e_frac > E_FRAC_BBU and psu_enabled then
     servers_lost_power = false;
   end when;
 
