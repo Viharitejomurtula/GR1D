@@ -33,7 +33,8 @@ ERCOT's large-load queue is ~410 GW, ~87% data centers, <6 GW energized (RTO Ins
 | Name | Value | Range | Status | Source | Notes |
 |---|---|---|---|---|---|
 | dip_depth_pu | sampled | 0.70-0.90: **69%** · 0.10-0.70: **27%** · 0-0.10: **4%** | ✅ | [EPRI DPQS 1993-95 via Eaton](https://www.eaton.com/content/dam/eaton/products/backup-power-ups-surge-it-power-distribution/power-conditioners/sag-ride-through/voltage-sag-white-paper.PDF) | Rescaled from 66/26/4% (excludes 4% "other events"). Distribution-level, 30 yrs old |
-| dip_duration_s | lognormal median 0.1, σ≈1.0 | truncated 0.02-1.0 | Dv | Eaton + GE Vernova clearing times | most sags < 0.5 s |
+| dip_duration_s | sampled: normal 3-4 cycles, delayed 10-19 cycles at 60 Hz; **P(delayed) = 2/18** | 0.050-0.0667 s normal · 0.1667-0.3167 s delayed | ✅ | [ERCOT Large Load Events, OWG Nov 21 2024](https://www.ercot.com/files/docs/2024/11/19/ERCOT%20Large%20Load%20Events_OWG_21Nov2024.pdf), slides 4, 5, 9 | Slide 5 "normal 3-cycle clearing", "normal 4-cycle clearing"; slide 9 "3-4 cycle clearing times"; slide 4 "delayed ~10 cycle clearing due to breaker misoperation"; slide 5 "delayed 19-cycle clearing due to [breaker] failure". 16 normal, 2 delayed of 18 events with clearing reported; 95% exact CI on P(delayed) 0.014-0.347. Small sample, only events where load was lost. `DELAYED_CLEARING_P` in sim/constants.py can be swept. **Was lognormal median 0.1 s, truncated 0.02-1.0** |
+| faulted_phase_frac | sampled: 1/3, 2/3, 1.0 with p = 0.703 / 0.260 / 0.036 | stress option `fault_mix="loss_events"`: 13/19, 1/19, 5/19 | ⚠️ | ERCOT SPWG, "Review of Ground Fault Protection Methods for Transmission Lines" (2017), p. 8 table; loss events: [ERCOT Large Load Events, OWG Nov 21 2024](https://www.ercot.com/files/docs/2024/11/19/ERCOT%20Large%20Load%20Events_OWG_21Nov2024.pdf) | SPWG: "L-G 65-70%, L-L-G 15-20%, L-L 5-10%, 3LG 2-5%". Midpoints 67.5/17.5/7.5/3.5 normalized; 1 phase = L-G, 2 phases = L-L-G + L-L, 3 phases = 3LG. The document does not cite its own source. Loss-events mix is from the 19 OWG events with a known fault type: outcome-selected, worst-case runs only. Loss-events counts checked against OWG slides 4, 5, 8, 9 (Dec 7 2022 multiple SLG + 3LG counted as 3 phases; Aug 1 2024 BG + BC counted as 2 phases); **SPWG table not yet re-checked against the document**. **Was equal weights** |
 | fault_clear_s | 0.083 | 0.067-0.10 | ☑️ | GE Vernova | 4 cycles (500 kV), 5 (230 kV), 6 (138 kV) |
 | fault_clear_breaker_fail_s | 0.20 | 0.15-0.25 | ☑️ | GE Vernova | 9-15 cycles |
 | second_dip | false | true ~20% | ☑️ | Khan et al. 2019 | >80% of faults are temporary → reclose |
@@ -91,6 +92,7 @@ facilities. ✅ [NERC Incident Review: Voltage-Sensitive Crypto Load Reductions,
 | psu_ton_bbu_s | **1.0-8.5** | max **10-11.5** | ✅ | ORv3 power system | turn-on **after BBU discharge** |
 | psu_restart_delay_s | sampled | 0-5.5 (0-2.0 without BBU) | ✅ | ORv3 power system | Deliberate randomized delay, prevents synchronized inrush |
 | bbu_module | 3 kW, 4 min | 6/shelf (5+1) | ☑️ | Analog Devices Pt 1 | |
+| bbu_modules_per_rack | 6 × shelves_per_rack | 5 × shelves_per_rack as named design scenario `bbu_module_out=True` | ☑️ | [Analog Devices Smart BBU Pt 4](https://www.analog.com/en/analog-dialogue/articles/smart-battery-backup-for-uninterrupted-energy-part4.html) | "The BBU shelf will contain six BBU modules with 5+1 redundancy." One module out is a design scenario, not a random draw: no source gives how often a module is out. Quote not yet re-checked against the page (analog.com unreachable). **Was 6-40, drawn independently of shelves** |
 | bbu_cells | 18650, 11S6P, ≥1.5 Ah | pack 30-44 V | ☑️ | Analog Devices Pt 1 | |
 | bbu_takeover | busbar <48.5 V for >2 ms → takeover within 2 ms; never <46 V | - | ☑️ | Analog Devices Pt 1 | |
 | bbu_handback_s | 0.2 | 0.2-0.5 | ☑️ | Analog Devices Pt 1 | busbar >48.5 V for 200 ms |
@@ -120,7 +122,7 @@ facilities. ✅ [NERC Incident Review: Voltage-Sensitive Crypto Load Reductions,
 | battery_age_yr | 3 | 0-10 | ☑️ | Li-ion life 8-15 yr | |
 | bat_eol_capacity | 0.80 | - | G | industry convention | |
 | bat_soc0 | 0.95 | 0.80-1.00 | ⚠️ | UPS float practice | |
-| bat_temp_c | 25 | 20-30 normal; to 40 if cooling already degraded | G | assumption | **Not outdoor temperature. Sample as an initial condition** — hall temperature cannot move meaningfully inside a 15 s window |
+| bat_temp_c | sampled U(18, 27) | stress: `hall_stress="A1"` → 32, `"A2"` → 35 | ✅ | [ASHRAE TC9.9 Thermal Guidelines, 5th ed., reference card, Table 2.1](https://www.ashrae.org/file%20library/technical%20resources/bookstore/supplemental%20files/therm-gdlns-5th-r-e-refcard.pdf) | Recommended 18-27 °C; allowable A1 15-32 °C, A2 10-35 °C. Stress values are the allowable upper limits. No source gives the distribution of hall temperatures across sites (uniform is an assumption). **Not outdoor temperature. Sample as an initial condition** — hall temperature cannot move meaningfully inside a 15 s window. **Was U(20, 40)** |
 
 > **Proxy caveat:** the Sandia data is **LFP**, while ORv3 BBUs use **NMC 18650** cells.
 > Fade and resistance-growth behaviour differ between chemistries. Treat as order-of-magnitude
@@ -136,7 +138,8 @@ facilities. ✅ [NERC Incident Review: Voltage-Sensitive Crypto Load Reductions,
 |---|---|---|---|---|---|
 | cooling_share | 0.30 × IT at 25 °C | 0.20-0.35 | Dv | Texas PUE 1.2-1.4 | 0.5 = legacy stress test |
 | cooling_temp_coeff | +0.04 /°C | 0.02-0.06 | Dv | heat-wave PUE rise 0.2-0.3 | winter floor 0.4× (G) |
-| outdoor_temp_c | Texas weather | ~0-42 | M | NOAA / Meteostat | Bayesian network root node |
+| outdoor_temp_c | sampled from DFW hourly temperatures (empirical) | empirical; 5.1% of hours ≥ 35 °C, 2.4% < 0 °C | ✅ | NOAA Local Climatological Data, DFW airport station 72259003927, 2021-01-01 to 2026-10-10 (`data_bayesian-network/dfw_hourly_temp_clean.csv`, rows with flag ≠ "missing") | Interim, until the Bayesian network's `sample_drivers()` supplies correlated temperature and load (root node). **Was U(0, 42)** |
+| cooling_compressor_frac / cooling_fan_frac | sampled: compressor U(0.46, 0.64), pump U(0.09, 0.17), fan = remainder, redrawn until 0.23-0.38 | compressor 0.46-0.64 · fan 0.23-0.38 · pump 0.09-0.17 | ✅ | [LBNL Data Center Energy Benchmarking, #21](https://www.osti.gov/servlets/purl/926298); [Iyengar & Schmidt (IBM), Electronics Cooling, Dec 2010](https://www.electronics-cooling.com/2010/12/energy-consumption-of-information-technology-data-centers/); arXiv 1804.00703 | LBNL #21: chillers 11%, air handlers 9%, pumps 4% of total power → 46/38/17% of cooling. IBM: chiller compressor "about half" of cooling, CRAC air movement "about one-third". arXiv 1804.00703 (simulation): chiller 28%, CRAH 12%, pumps ~4% of total at peak → 64/27/9% (the same paper's annual breakdown, chiller 15% and CRAH 12% of a 31% cooling total, gives about 48/39/13%, so 0.64 is a peak-hour figure). Pump share = 1 − compressor − fan in the model. Energy shares at older chilled-water sites, not AI liquid cooling; uniform shape is an assumption. **Was compressor U(0.2, 0.6), fan U(0.2, 0.5) independent (could sum past 1)** |
 | **motor_inertia_H_s** | **compressor 0.1 · fan 0.5 · pump 0.15** | - | ✅ | [NERC Dynamic Load Modeling Tech Ref, Table 5.1](https://www.nerc.com/globalassets/our-work/technical-reference-documents/dynamic-load-modeling-technical-reference.pdf) | **Was 0.8 (range 0.2-2.5) — 2-8× too high.** Much less kinetic ride-through than assumed |
 | motor_load_torque | T_rated·(ω/ω_rated)² | - | R | centrifugal affinity law | fans and pumps |
 | motor_locked_rotor_x | 6 | 5-6 | ☑️ | NERC large-load guideline | stalled-motor current |
@@ -203,7 +206,7 @@ P_server(t) = workload·P_rated + P_swing(t)
 | Name | Value | Range | Status | Source | Notes |
 |---|---|---|---|---|---|
 | transfer_threshold_pu | 0.85 | 0.75-0.90 | ☑️ | ERCOT LEL RT Criteria, LLWG Jul 2025 | |
-| handback_delay_s (product) | 0.2 | 0.2-0.5 | ☑️ | Analog Devices BBU | busbar >48.5 V for 200 ms |
+| handback_delay_s (product) | 0.2 (fixed in `sample()`) | - | ☑️ | [Analog Devices Smart BBU Pt 1](https://www.analog.com/en/analog-dialogue/articles/smart-battery-backup-for-uninterrupted-energy-part1.html) | Module exits discharge after the busbar is "more than 48.5 V for more than 200 ms". Quote not yet re-checked against the page (analog.com unreachable). **Was sampled U(0.2, 10)** |
 | handback_delay_s (legacy) | 3 | 2-10 | ⚠️ | [ERCOT LLWG Jul 2025](https://www.ercot.com/files/docs/2025/07/11/ERCOT-LEL-Ride-Through-Criteria_LLWG-final.pptx); ESIG 2026 | "several seconds" — no exact number published |
 | **legacy_count_scheme** | **3 disturbances in 1 min → transfer to backup, stay off until manual reset** | - | ☑️ | [NERC Incident Review: Large Load Loss, p.8](https://nerc.com/pa/rrm/ea/Documents/Incident_Review_Large_Load_Loss.pdf) | **Exactly what NOGRR §2.14(6) bans** — implement as the legacy preset |
 | ramp_back_s | 0.3 | 0.1-1.0 | G | team doc | shape unspecified; assume linear |

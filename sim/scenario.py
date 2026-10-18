@@ -10,8 +10,10 @@ not sampled here.
 from __future__ import annotations
 
 from dataclasses import dataclass, asdict, fields
+from functools import lru_cache
 
 import numpy as np
+import pandas as pd
 
 from . import constants as C
 
@@ -75,8 +77,9 @@ class Scenario:
     # Fleet spread of the 172 V trip threshold. Unsourced; sampled so sensitivity
     # analysis can judge whether it matters.
     psu_trip_spread_frac: float
-    # 1/3, 2/3 or 1.0 of load on faulted phases. ANDES gives balanced faults only, so this
-    # is the one place single-phase behaviour enters the model.
+    # 1/3, 2/3 or 1.0 of load on faulted phases (1, 2 or 3 phases; see
+    # sample_faulted_phase_frac). ANDES gives balanced faults only, so this is the one place
+    # single-phase behaviour enters the model.
     faulted_phase_frac: float
     # Fraction of load behind legacy latching protection. A retrofit question an operator
     # would actually ask: how much of the floor needs upgrading?
@@ -122,23 +125,122 @@ def sample_shape(rng: np.random.Generator, retained_pu: float) -> tuple[float, f
     return tau, overshoot
 
 
-def sample_dip_duration(rng: np.random.Generator) -> float:
-    """Lognormal, median 0.1 s, sigma 1.0, truncated to 0.02-1.0 s."""
-    for _ in range(100):
-        d = float(rng.lognormal(mean=np.log(0.1), sigma=1.0))
-        if 0.02 <= d <= 1.0:
-            return d
-    return 0.1
+def sample_dip_duration(rng: np.random.Generator, p_delayed: float | None = None) -> float:
+    """Fault clearing time in seconds, from the ERCOT OWG Large Load Events deck (Nov 2024).
+
+    With probability p_delayed the clearing is delayed, uniform 10-19 cycles; otherwise it
+    is normal, uniform 3-4 cycles. Cycles are converted at C.NOMINAL_FREQ_HZ (60 Hz), so the
+    ranges are 0.050-0.0667 s and 0.1667-0.3167 s. p_delayed defaults to
+    C.DELAYED_CLEARING_P (2/18), read at call time so it can be swept. Sources and caveats
+    are in constants.py.
+    """
+    p = C.DELAYED_CLEARING_P if p_delayed is None else p_delayed
+    lo, hi = C.DELAYED_CLEARING_CYCLES if rng.random() < p else C.NORMAL_CLEARING_CYCLES
+    return float(rng.uniform(lo, hi)) / C.NOMINAL_FREQ_HZ
 
 
-def sample(rng: np.random.Generator | None = None, *, dip_start_s: float = 1.0) -> Scenario:
-    """Draw one scenario from the ranges in Parameter_Table.md."""
+FAULT_MIXES = ("general", "loss_events")
+
+
+def faulted_phase_probs(fault_mix: str = "general") -> np.ndarray:
+    """Probabilities of 1, 2 and 3 faulted phases (faulted_phase_frac 1/3, 2/3, 1.0).
+
+    "general": ERCOT SPWG (2017) p. 8 range midpoints, with 1 phase = L-G,
+    2 phases = L-L-G + L-L, 3 phases = 3LG, normalized (0.703, 0.260, 0.036).
+    "loss_events": the 13/1/5 counts of the 19 ERCOT OWG events with a known fault type.
+    Outcome-selected, so for worst-case runs only. Sources are in constants.py.
+    """
+    if fault_mix == "general":
+        lg, llg, ll, three = C.FAULT_MIX_SPWG_MIDPOINTS_PCT
+        w = np.array([lg, llg + ll, three])
+    elif fault_mix == "loss_events":
+        w = np.array(C.FAULT_MIX_LOSS_EVENT_COUNTS, dtype=float)
+    else:
+        raise ValueError(f"fault_mix must be one of {FAULT_MIXES}, got {fault_mix!r}")
+    return w / w.sum()
+
+
+def sample_faulted_phase_frac(rng: np.random.Generator, fault_mix: str = "general") -> float:
+    """Share of load on faulted phases: 1/3, 2/3 or 1.0, weighted by faulted_phase_probs."""
+    return float(rng.choice([1 / 3, 2 / 3, 1.0], p=faulted_phase_probs(fault_mix)))
+
+
+def sample_cooling_split(rng: np.random.Generator) -> tuple[float, float]:
+    """(compressor, fan) shares of cooling power; pump is the remainder 1 - compressor - fan.
+
+    Compressor and pump are uniform within C.COOLING_COMPRESSOR_FRAC_RANGE and
+    C.COOLING_PUMP_FRAC_RANGE; fan = 1 - compressor - pump, and the pair is redrawn until fan
+    lies in C.COOLING_FAN_FRAC_RANGE. So the three shares always sum to 1 and each stays in
+    its sourced range (LBNL, IBM 2010, arXiv 1804.00703; see constants.py). The uniform
+    shape is an assumption.
+    """
+    fan_lo, fan_hi = C.COOLING_FAN_FRAC_RANGE
+    while True:
+        compressor = float(rng.uniform(*C.COOLING_COMPRESSOR_FRAC_RANGE))
+        pump = float(rng.uniform(*C.COOLING_PUMP_FRAC_RANGE))
+        fan = 1.0 - compressor - pump
+        if fan_lo <= fan <= fan_hi:
+            return compressor, fan
+
+
+HALL_STRESS = (None, "A1", "A2")
+
+
+def sample_battery_temp(rng: np.random.Generator, hall_stress: str | None = None) -> float:
+    """Battery hall air temperature, degC.
+
+    Default: uniform over the ASHRAE recommended range C.HALL_TEMP_RECOMMENDED_C (18-27).
+    hall_stress "A1" or "A2" returns the allowable upper limit for that class (32.0 or
+    35.0) without a draw. No source gives the spread of hall temperatures across sites, so
+    the uniform shape is an assumption.
+    """
+    if hall_stress is None:
+        return float(rng.uniform(*C.HALL_TEMP_RECOMMENDED_C))
+    if hall_stress not in C.HALL_TEMP_ALLOWABLE_MAX_C:
+        raise ValueError(f"hall_stress must be one of {HALL_STRESS}, got {hall_stress!r}")
+    return C.HALL_TEMP_ALLOWABLE_MAX_C[hall_stress]
+
+
+@lru_cache(maxsize=1)
+def outdoor_temps() -> np.ndarray:
+    """Empirical DFW hourly outdoor temperatures (degC), loaded once and cached.
+
+    Column temp_c of C.OUTDOOR_TEMP_CSV (NOAA LCD, DFW 72259003927, 2021-01-01 to
+    2026-10-10), rows with flag != "missing". The file is read, never written. Interim
+    until ridethrough.drivers.sample.sample_drivers() supplies correlated temperature and
+    load.
+    """
+    d = pd.read_csv(C.OUTDOOR_TEMP_CSV, usecols=["temp_c", "flag"])
+    return d.loc[d["flag"] != "missing", "temp_c"].to_numpy(dtype=float)
+
+
+def sample(
+    rng: np.random.Generator | None = None,
+    *,
+    dip_start_s: float = 1.0,
+    fault_mix: str = "general",
+    bbu_module_out: bool = False,
+    hall_stress: str | None = None,
+) -> Scenario:
+    """Draw one scenario from the ranges in Parameter_Table.md.
+
+    fault_mix: "general" (default) or "loss_events" (worst case); see faulted_phase_probs.
+    bbu_module_out: named design scenario with one BBU module out on every shelf
+        (5 x shelves instead of 6 x shelves). Not a random draw: no source gives how often a
+        module is out.
+    hall_stress: None (default, ASHRAE recommended range), "A1" or "A2"; see
+        sample_battery_temp.
+    """
     rng = rng or np.random.default_rng()
 
     second_dip = bool(rng.random() < 0.20)  # >80% of faults are temporary -> reclose
     high_speed_reclose = rng.random() < 0.5
     depth = sample_dip_depth(rng)
     tau, overshoot = sample_shape(rng, depth)
+    shelves = int(rng.integers(1, C.MAX_SHELVES_PER_RACK + 1))
+    # Analog Devices Part 4: six modules per shelf, 5+1 redundant (see constants.py).
+    modules_per_shelf = C.BBU_MODULES_PER_SHELF - (C.BBU_REDUNDANT_MODULES if bbu_module_out else 0)
+    compressor_frac, fan_frac = sample_cooling_split(rng)
 
     return Scenario(
         dip_depth_pu=depth,
@@ -150,10 +252,10 @@ def sample(rng: np.random.Generator | None = None, *, dip_start_s: float = 1.0) 
         reclose_gap_s=float(
             rng.uniform(0.25, 0.6) if high_speed_reclose else rng.uniform(1.0, 5.0)
         ),
-        outdoor_temp_c=float(rng.uniform(0.0, 42.0)),
+        outdoor_temp_c=float(rng.choice(outdoor_temps())),
         # Hall temperature cannot change meaningfully inside a 15 s window, so this is an
         # initial condition (a facility that is already hot), not something the run evolves.
-        battery_temp_c=float(rng.uniform(20.0, 40.0)),
+        battery_temp_c=sample_battery_temp(rng, hall_stress),
         battery_age_yr=float(rng.uniform(0.0, 10.0)),
         battery_soc0=float(rng.uniform(0.80, 1.00)),
         workload=float(rng.uniform(0.50, 1.00)),
@@ -163,18 +265,16 @@ def sample(rng: np.random.Generator | None = None, *, dip_start_s: float = 1.0) 
         restart_surge_x=float(rng.uniform(1.0, 1.3)),
         restart_surge_s=float(rng.uniform(0.1, 2.0)),
         supply_voltage_v=float(rng.choice(SUPPLY_VOLTAGES)),
-        shelves_per_rack=int(rng.integers(1, C.MAX_SHELVES_PER_RACK + 1)),
-        # Spans undersized to sufficient: at 6 shelves and 85% load, roughly 31 modules
-        # per rack are needed to carry the load, so below that the BBU cannot hold the busbar.
-        bbu_modules_per_rack=int(rng.integers(6, 41)),
+        shelves_per_rack=shelves,
+        bbu_modules_per_rack=modules_per_shelf * shelves,
         cooling_share_25c=float(rng.uniform(0.20, 0.35)),
-        # Unsourced split; sampled wide until the compressor/fan/pump breakdown is found.
-        cooling_compressor_frac=float(rng.uniform(0.2, 0.6)),
-        cooling_fan_frac=float(rng.uniform(0.2, 0.5)),
+        cooling_compressor_frac=compressor_frac,
+        cooling_fan_frac=fan_frac,
         z_total_pct=float(rng.uniform(15.0, 23.0)),  # substation + distribution + PDU
         x_over_r=float(rng.uniform(5.0, 20.0)),
         transfer_threshold_pu=float(rng.uniform(0.75, 0.90)),
-        handback_delay_s=float(rng.uniform(0.2, 10.0)),
+        # Fixed at the BBU's 200 ms busbar confirmation (Analog Devices Part 1).
+        handback_delay_s=C.BBU_HANDBACK_CONFIRM_S,
         ramp_back_s=float(rng.uniform(0.1, 1.0)),
         relay_pickup_pu=float(rng.uniform(0.02, 0.90)),
         relay_delay_s=float(rng.uniform(0.0, 2.0)),
@@ -182,14 +282,16 @@ def sample(rng: np.random.Generator | None = None, *, dip_start_s: float = 1.0) 
         vfd_dc_uv_trip_pu=float(rng.uniform(0.65, 0.75)),
         psu_restart_delay_s=float(rng.uniform(0.0, 5.5)),
         psu_trip_spread_frac=float(rng.uniform(0.01, 0.08)),
-        faulted_phase_frac=float(rng.choice([1/3, 2/3, 1.0])),
+        faulted_phase_frac=sample_faulted_phase_frac(rng, fault_mix),
         legacy_load_frac=float(rng.uniform(0.0, 1.0)),
     )
 
 
-def sample_many(n: int, seed: int | None = None) -> list[Scenario]:
+def sample_many(n: int, seed: int | None = None, **kwargs) -> list[Scenario]:
+    """n scenarios from one seeded generator; kwargs (fault_mix, bbu_module_out, hall_stress,
+    dip_start_s) are passed to sample()."""
     rng = np.random.default_rng(seed)
-    return [sample(rng) for _ in range(n)]
+    return [sample(rng, **kwargs) for _ in range(n)]
 
 
 # --- Presets -----------------------------------------------------------------

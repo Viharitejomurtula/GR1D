@@ -4,6 +4,8 @@ Nothing here is sampled per scenario. Values that vary run-to-run live in scenar
 Sources are tracked in Parameter_Table.md.
 """
 
+from pathlib import Path
+
 # --- Simulation ---------------------------------------------------------------
 WINDOW_S = 15.0
 DT_S = 1e-4
@@ -68,6 +70,9 @@ SERVER_POWER_LOSS_V = IT_GEAR_MIN_V
 # --- Battery backup unit ------------------------------------------------------
 BBU_MODULE_W = 3000.0
 BBU_MODULE_ENERGY_WH = 200.0  # 3 kW x 4 min; see Parameter_Table.md on the 333 Wh discrepancy
+# Analog Devices, Smart Battery Backup Part 4: "The BBU shelf will contain six BBU modules
+# with 5+1 redundancy."
+# https://www.analog.com/en/analog-dialogue/articles/smart-battery-backup-for-uninterrupted-energy-part4.html
 BBU_MODULES_PER_SHELF = 6
 BBU_REDUNDANT_MODULES = 1  # 5+1
 
@@ -75,6 +80,9 @@ BBU_TAKEOVER_V = 48.5
 BBU_TAKEOVER_DETECT_S = 0.002
 BBU_TAKEOVER_ACT_S = 0.002
 BBU_BUSBAR_FLOOR_V = 46.0
+# Analog Devices, Smart Battery Backup Part 1: the module exits discharge once the busbar is
+# "more than 48.5 V for more than 200 ms". Also the sampled handback_delay_s (scenario.py).
+# https://www.analog.com/en/analog-dialogue/articles/smart-battery-backup-for-uninterrupted-energy-part1.html
 BBU_HANDBACK_CONFIRM_S = 0.200
 
 CELLS_SERIES = 11
@@ -224,3 +232,63 @@ def required_ride_through_s(v_pu: float) -> float | None:
         if v_low <= v_pu < v_high:
             return hold_s
     return None
+
+
+# --- Sourced scenario distributions -------------------------------------------
+# Inputs to scenario.sample(). Each value is quoted from the source named beside it.
+
+# Fault clearing time in cycles at NOMINAL_FREQ_HZ. ERCOT, "Large Load Events", OWG,
+# Nov 21 2024:
+# https://www.ercot.com/files/docs/2024/11/19/ERCOT%20Large%20Load%20Events_OWG_21Nov2024.pdf
+#   normal:  slide 5 "normal 3-cycle clearing", "normal 4-cycle clearing"; slide 9 "3-4 cycle
+#            clearing times"
+#   delayed: slide 4 "delayed ~10 cycle clearing due to breaker misoperation"; slide 5
+#            "delayed 19-cycle clearing due to [breaker] failure"
+NORMAL_CLEARING_CYCLES = (3, 4)
+DELAYED_CLEARING_CYCLES = (10, 19)
+
+# Probability that clearing is delayed: 2 of the 18 events in the same deck that report a
+# clearing time (16 normal, 2 delayed). 95% exact (Clopper-Pearson) CI (0.014, 0.347).
+# Caveat: small sample, and only events in which load was lost. Read by
+# scenario.sample_dip_duration at call time, so it can be swept.
+DELAYED_CLEARING_P = 2 / 18
+
+# Fault-type shares for transmission lines, ERCOT SPWG, "Review of Ground Fault Protection
+# Methods for Transmission Lines" (2017), p. 8 table: L-G 65-70%, L-L-G 15-20%, L-L 5-10%,
+# 3LG 2-5%. Range midpoints in percent, order (L-G, L-L-G, L-L, 3LG). The document does not
+# cite its own source. scenario.py maps 1 phase = L-G, 2 phases = L-L-G + L-L, 3 phases = 3LG
+# and normalizes.
+FAULT_MIX_SPWG_MIDPOINTS_PCT = (67.5, 17.5, 7.5, 3.5)
+
+# Faulted-phase counts (1, 2, 3 phases) among the 19 events with a known fault type in the
+# ERCOT OWG deck above. Outcome-selected (only events where load was lost): use for worst-case
+# runs only (scenario.sample(fault_mix="loss_events")).
+FAULT_MIX_LOSS_EVENT_COUNTS = (13, 1, 5)
+
+# Component shares of cooling power (compressor, pump, fan), as (low, high).
+#   LBNL Data Center Energy Benchmarking, data center #21: chillers 11%, air handlers 9%,
+#     pumps 4% of total power -> 46/38/17% of cooling. https://www.osti.gov/servlets/purl/926298
+#   Iyengar & Schmidt (IBM), Electronics Cooling, Dec 2010: chiller compressor "about half" of
+#     cooling, CRAC air movement "about one-third".
+#     https://www.electronics-cooling.com/2010/12/energy-consumption-of-information-technology-data-centers/
+#   arXiv 1804.00703 (simulation): chiller 28%, CRAH 12%, pumps ~4% of total at peak
+#     -> 64/27/9%.
+# These are energy shares at older chilled-water sites, not AI liquid cooling. The uniform
+# shape within the sourced ranges is an assumption.
+COOLING_COMPRESSOR_FRAC_RANGE = (0.46, 0.64)
+COOLING_PUMP_FRAC_RANGE = (0.09, 0.17)
+COOLING_FAN_FRAC_RANGE = (0.23, 0.38)
+
+# Battery hall air temperature, degC. ASHRAE TC9.9 Thermal Guidelines, 5th ed., reference
+# card, Table 2.1: recommended 18-27 degC; allowable A1 15-32 degC, A2 10-35 degC.
+# https://www.ashrae.org/file%20library/technical%20resources/bookstore/supplemental%20files/therm-gdlns-5th-r-e-refcard.pdf
+# No source gives the distribution of hall temperatures across sites; the stress values are
+# the allowable upper limits.
+HALL_TEMP_RECOMMENDED_C = (18.0, 27.0)
+HALL_TEMP_ALLOWABLE_MAX_C = {"A1": 32.0, "A2": 35.0}
+
+# Empirical DFW hourly outdoor temperature (column temp_c; rows with flag != "missing").
+# NOAA Local Climatological Data, DFW airport station 72259003927, 2021-01-01 to 2026-10-10,
+# cleaned file in the repo (read-only). Interim, until the Bayesian network's
+# ridethrough.drivers.sample.sample_drivers() supplies correlated temperature and load.
+OUTDOOR_TEMP_CSV = Path(__file__).resolve().parents[1] / "data_bayesian-network" / "dfw_hourly_temp_clean.csv"
