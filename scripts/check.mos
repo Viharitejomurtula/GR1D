@@ -1,0 +1,39 @@
+// Load, check and run the ride-through model, writing a CSV trace.
+//
+// Run from the repository root:
+//     omc scripts/check.mos
+//
+// Produces build/ridethrough_res.csv and prints any compile errors.
+// If the model fails to compile, the getErrorString() output below is what to send back.
+
+loadFile("model/RideThroughCore.mo");
+getErrorString();
+
+// Structural check: does the equation count match the variable count?
+checkModel(RideThroughCore);
+getErrorString();
+
+// Default scenario: a 0.60 pu dip for 83 ms starting at t = 1 s.
+simulate(RideThroughCore,
+         startTime = 0,
+         stopTime = 15,
+         numberOfIntervals = 15000,
+         method = "dassl",
+         tolerance = 1e-6,
+         outputFormat = "csv",
+         fileNamePrefix = "ridethrough");
+getErrorString();
+
+// Validation run: ERCOT crypto facility A. Real event drew 160% current and lost 46%
+// of load at 0.535 pu retained voltage (NERC incident review, Jan 2026). If our model
+// is right, i_grid_pu should peak near 1.6 and p_grid_w should drop by roughly half.
+simulate(RideThroughCore,
+         startTime = 0,
+         stopTime = 15,
+         numberOfIntervals = 15000,
+         method = "dassl",
+         tolerance = 1e-6,
+         outputFormat = "csv",
+         fileNamePrefix = "facility_a",
+         simflags = "-override dip_depth_pu=0.535,dip_duration_s=0.1,p_it_rated_w=112.3e6");
+getErrorString();

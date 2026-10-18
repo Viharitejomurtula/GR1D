@@ -11,7 +11,7 @@ set -euo pipefail
 
 MO_FILE="${1:?usage: build_fmu.sh <path/to/Model.mo> <ModelName>}"
 MODEL_NAME="${2:?usage: build_fmu.sh <path/to/Model.mo> <ModelName>}"
-IMAGE="${OM_IMAGE:-openmodelica/openmodelica:v1.25.0-ompython}"
+IMAGE="${OM_IMAGE:-openmodelica/openmodelica:v1.27.1-ompython}"
 OUT_DIR="build"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
