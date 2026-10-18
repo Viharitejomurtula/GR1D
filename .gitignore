@@ -10,7 +10,8 @@ venv/
 build/
 *.o
 data/runs*.csv
-frontend/public/data/surrogate.json
+# frontend/public/data/surrogate.json is tracked: it is the deployed model (python -m surrogate.web exports it
+# from surrogate/models/v1), loaded by the browser and by the API's POST /predict.
 frontend/public/data/grid.json
 
 # downloaded datasets (see data_bayesian-network/network/responses/sources.csv)

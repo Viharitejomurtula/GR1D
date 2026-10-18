@@ -5,6 +5,10 @@ the container image at build time; compiling per request would take tens of seco
 
 The frontend falls back to the precomputed grid when this is unreachable, so an outage
 degrades the demo rather than ending it.
+
+POST /predict answers instantly from the neural surrogate (surrogate/models/v1, exported to
+frontend/public/data/surrogate.json and evaluated here in numpy: the same file and arithmetic as the
+browser). It is an estimate with uncertainty, not a simulation; /simulate stays the ground truth.
 """
 
 from __future__ import annotations
@@ -26,6 +30,21 @@ from sim import constants as C  # noqa: E402
 from sim import runner  # noqa: E402
 from sim.grader import grade  # noqa: E402
 from sim.scenario import FIELD_ORDER, GRID_FRIENDLY, LEGACY_UPS  # noqa: E402
+from surrogate.web import DEFAULT_JSON, WebSurrogate  # noqa: E402  (numpy only: the image has no PyTorch)
+
+SURROGATE_JSON = pathlib.Path(os.environ.get("SURROGATE_JSON", DEFAULT_JSON))
+_surrogate: WebSurrogate | None = None
+
+
+def surrogate() -> WebSurrogate:
+    """The exported surrogate, loaded on first use. 503 when the file is missing or unreadable."""
+    global _surrogate
+    if _surrogate is None:
+        try:
+            _surrogate = WebSurrogate(SURROGATE_JSON)
+        except Exception as exc:  # noqa: BLE001
+            raise HTTPException(503, f"surrogate unavailable ({SURROGATE_JSON}): {exc}") from exc
+    return _surrogate
 
 app = FastAPI(title="GR1D ride-through simulator", version="1.0")
 
@@ -100,7 +119,73 @@ class SimulateResponse(BaseModel):
 
 @app.get("/health")
 def health() -> dict:
-    return {"ok": True, "model": runner.MODEL, "window_s": C.WINDOW_S}
+    try:
+        prov = surrogate().spec["provenance"]
+        sur = {"loaded": True, "simulator_commit": prov.get("simulator_commit"), "rows": prov.get("rows")}
+    except HTTPException as exc:
+        sur = {"loaded": False, "error": exc.detail}
+    return {"ok": True, "model": runner.MODEL, "window_s": C.WINDOW_S, "surrogate": sur}
+
+
+class Estimate(BaseModel):
+    mean: float
+    std: float = Field(description="calibrated: about 95% of test errors fall within +/- 2 std")
+
+
+class PredictRequest(BaseModel):
+    preset: str = Field("grid_friendly", description="grid_friendly or legacy_ups; supplies every input not overridden")
+    overrides: dict[str, float] = Field(default_factory=dict)
+
+
+class PredictResponse(BaseModel):
+    pass_probability: float
+    pass_probability_std: float = Field(description="spread across ensemble members; high means guessing")
+    recovery_margin_s: Estimate
+    min_power: Estimate
+    peak_current_pu: Estimate
+    floor_violation_s: Estimate
+    failure_mode: str
+    failure_mode_probs: dict[str, float]
+    outside_training: list[str] = Field(description="inputs beyond the training data: the answer is an extrapolation")
+    scenario: dict[str, float]
+    source: str = "surrogate"
+    model: dict
+
+
+def _clean_overrides(base, overrides: dict[str, float]) -> dict[str, float]:
+    """Validate and clamp overrides exactly as /simulate does (unknown input -> 400; LIMITS clamp)."""
+    clean: dict[str, float] = {}
+    for key, value in overrides.items():
+        if key not in FIELD_ORDER:
+            raise HTTPException(400, f"unknown input {key!r}")
+        lo, hi = LIMITS.get(key, (None, None))
+        if lo is not None:
+            value = max(lo, min(hi, value))
+        clean[key] = int(value) if isinstance(getattr(base, key), int) else float(value)
+    return clean
+
+
+@app.post("/predict", response_model=PredictResponse)
+def predict(req: PredictRequest) -> PredictResponse:
+    """Instant surrogate estimate for the preset plus overrides (the same scenario /simulate would run)."""
+    base = PRESETS.get(req.preset)
+    if base is None:
+        raise HTTPException(400, f"unknown preset {req.preset!r}; expected one of {list(PRESETS)}")
+    scenario = dataclasses.replace(base, **_clean_overrides(base, req.overrides))
+    values = {k: float(getattr(scenario, k)) for k in FIELD_ORDER}
+    sur = surrogate()
+    p = sur.predict(values, req.preset)
+    est = lambda t: Estimate(mean=p[f"{t}_mean"], std=p[f"{t}_std"])  # noqa: E731
+    spec = sur.spec
+    return PredictResponse(
+        pass_probability=p["p_pass_mean"], pass_probability_std=p["p_pass_std"],
+        recovery_margin_s=est("recovery_margin_s"), min_power=est("min_power"),
+        peak_current_pu=est("peak_current_pu"), floor_violation_s=est("floor_violation_s"),
+        failure_mode=p["failure_mode"], failure_mode_probs=p["failure_mode_probs"],
+        outside_training=p["outside_training"], scenario=values,
+        model={**spec["provenance"], "test_accuracy": spec["metrics"]["test"].get("passed_accuracy"),
+               "test_auc": spec["metrics"]["test"].get("passed_auc")},
+    )
 
 
 @app.get("/schema")
@@ -120,16 +205,7 @@ def simulate(req: SimulateRequest) -> SimulateResponse:
     if base is None:
         raise HTTPException(400, f"unknown preset {req.preset!r}; expected one of {list(PRESETS)}")
 
-    clean: dict[str, float] = {}
-    for key, value in req.overrides.items():
-        if key not in FIELD_ORDER:
-            raise HTTPException(400, f"unknown input {key!r}")
-        lo, hi = LIMITS.get(key, (None, None))
-        if lo is not None:
-            value = max(lo, min(hi, value))
-        clean[key] = int(value) if isinstance(getattr(base, key), int) else float(value)
-
-    scenario = dataclasses.replace(base, **clean)
+    scenario = dataclasses.replace(base, **_clean_overrides(base, req.overrides))
     res = runner.BUILD / "unset"
 
     try:

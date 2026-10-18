@@ -11,6 +11,9 @@ RUN pip install --no-cache-dir --break-system-packages \
 COPY sim/ /app/sim/
 COPY model/ /app/model/
 COPY api/ /app/api/
+# The surrogate for POST /predict: numpy-only evaluator plus the exported weights (no PyTorch needed).
+COPY surrogate/__init__.py surrogate/web.py /app/surrogate/
+COPY frontend/public/data/surrogate.json /app/frontend/public/data/surrogate.json
 
 # Compile once, into the image.
 RUN mkdir -p /app/build && cd /app/build && \

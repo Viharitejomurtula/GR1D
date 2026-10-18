@@ -1,0 +1,36 @@
+{
+  "n_members": 5,
+  "hidden_sizes": [
+    128,
+    128,
+    128
+  ],
+  "dropout": 0.1,
+  "lr": 0.001,
+  "weight_decay": 0.01,
+  "batch_size": 256,
+  "patience": 20,
+  "max_epochs": 500,
+  "huber_delta": 1.0,
+  "loss_weights": {
+    "passed": 1.0,
+    "recovery_margin_s": 1.0,
+    "min_power": 1.0,
+    "peak_current_pu": 1.0,
+    "floor_violation_s": 1.0,
+    "failure_mode": 1.0
+  },
+  "split": {
+    "train": 0.7,
+    "val": 0.15,
+    "test": 0.15
+  },
+  "split_seed_offset": 0,
+  "edge_band_s": 0.25,
+  "predict_batch": 65536,
+  "onnx_opset": 17,
+  "onnx_parity_atol": 0.0001,
+  "uncertainty_k": 2.0,
+  "calibrate_std": true,
+  "min_class_rows": 3
+}

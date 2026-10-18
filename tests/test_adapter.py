@@ -67,19 +67,40 @@ def test_resistance_without_temperature_effect():
     np.testing.assert_allclose(A.battery_resistance_pu([0, 10, 15], [-20, 25, 45], 0.0), [1.0, 1.52, 1.78])
 
 
+def _res_curve():
+    """The storage_resistance_pu vs outdoor_temp_c curve, read directly from s_matrix_long.csv."""
+    row = _row("s_matrix/s_matrix_long.csv", None, factor="storage_resistance_pu", driver="outdoor_temp_c")
+    return [float(v) for v in row["x_points"].split(";")], [float(v) for v in row["y_points"].split(";")]
+
+
 def test_resistance_cold_room_follows_the_curve():
-    """Attenuation 1 and age 0: R = 1 at 25 C rising to the P3 point (5 pu) at -20 C; flat above 25 C and below -20 C."""
+    """Attenuation 1 and age 0: R follows the S-matrix curve (1 at 25 C, the measured ratio at -20 C), flat
+    above 25 C and below -20 C, linear between measured points; attenuation scales the rise above 1."""
+    xs, ys = _res_curve()
     r = lambda t, a=1.0: A.battery_resistance_pu(0.0, t, a)
     assert r(25) == pytest.approx(1.0) and r(40) == pytest.approx(1.0)
-    assert r(-20) == pytest.approx(5.0, abs=1e-3) and r(-40) == pytest.approx(r(-20))
-    assert r(2.5) == pytest.approx(3.0, abs=1e-2)                            # midpoint of the linear interpolation
-    assert r(-20, 0.284) == pytest.approx(1 + 0.284 * 4.0, abs=1e-2)         # upper-bound room attenuation
+    assert r(-20) == pytest.approx(ys[0]) and r(-40) == pytest.approx(r(-20))
+    mid = (xs[1] + xs[2]) / 2
+    assert r(mid) == pytest.approx((ys[1] + ys[2]) / 2)                      # linear between measured points
+    assert r(-20, 0.284) == pytest.approx(1 + 0.284 * (ys[0] - 1))          # upper-bound room attenuation
     t = np.linspace(-20, 45, 40)
     assert (np.diff(A.battery_resistance_pu(5.0, t, 0.284)) <= 1e-12).all()  # colder is never lower
 
 
 def test_resistance_clipped_to_master_range():
-    assert A.battery_resistance_pu(15.0, -20.0, 1.0) == pytest.approx(5.0)
+    """Over the full age and temperature range the result stays inside master.csv's low-high. With the measured
+    curve the worst case (15 years, -20 C, unconditioned room) is 1 + 15 x age slope + (ratio at -20 C - 1),
+    below the 5 pu high, so the clip does not bind there."""
+    m = _row("master.csv", None, node="storage_resistance_pu")
+    lo, hi = float(m["low"]), float(m["high"])
+    age_slope = float(_row("s_matrix/s_matrix_long.csv", None, factor="storage_resistance_pu",
+                           driver="equipment_age_years")["slope_at_typical_nominal"])
+    xs, ys = _res_curve()
+    worst = 1 + age_slope * 15.0 + (ys[0] - 1)
+    assert A.battery_resistance_pu(15.0, -20.0, 1.0) == pytest.approx(min(worst, hi))
+    ages, temps = np.meshgrid(np.linspace(0, 15, 16), np.linspace(-40, 45, 18))
+    r = A.battery_resistance_pu(ages, temps, 1.0)
+    assert (r >= lo).all() and (r <= hi).all()
 
 
 def test_converter_derate_follows_the_sma_curve():

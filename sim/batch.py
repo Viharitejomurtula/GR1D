@@ -88,6 +88,10 @@ def run_batch(
             "peak_current_pu": g.peak_current_pu,
             "envelope_violation_s": g.envelope_violation_s,
             "storage_left": g.storage_left,
+            # grade_trace's voltage-solution check: 0 marks a run whose solution is invalid, so
+            # downstream users (surrogate.data.load) can drop it instead of learning it as a failure.
+            "numerics_ok": int(g.numerics_ok),
+            "numerics_note": g.numerics_note,
             "n_trips": len(g.trips),
         }
         rows.append(row)

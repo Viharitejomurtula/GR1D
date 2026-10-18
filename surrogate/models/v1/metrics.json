@@ -1,0 +1,114 @@
+{
+  "data": {
+    "rows_read": 20000,
+    "dropped_numerics": 91,
+    "dropped_crash": 2266,
+    "dropped_non_finite": 0,
+    "kept": 17643,
+    "censored": 3436,
+    "missing_inputs": []
+  },
+  "seed": 0,
+  "warnings": [
+    "dataset was generated with uncommitted changes in model/ or sim/",
+    "failure_mode 'missed 2.0 s recovery' has fewer than 3 rows in val, test"
+  ],
+  "class_counts": {
+    "train": {
+      "exceeded 125% current cap": 4399,
+      "cooling tripped": 2867,
+      "below power floor": 2562,
+      "storage hand-back too slow": 1113,
+      "passed": 904,
+      "PSU shutdown and restart delay": 502,
+      "missed 2.0 s recovery": 2
+    },
+    "val": {
+      "exceeded 125% current cap": 942,
+      "cooling tripped": 615,
+      "below power floor": 549,
+      "storage hand-back too slow": 239,
+      "passed": 194,
+      "PSU shutdown and restart delay": 108
+    },
+    "test": {
+      "exceeded 125% current cap": 942,
+      "cooling tripped": 615,
+      "below power floor": 549,
+      "storage hand-back too slow": 239,
+      "passed": 194,
+      "PSU shutdown and restart delay": 108
+    }
+  },
+  "std_scale": {
+    "recovery_margin_s": 2.7962838285769887,
+    "min_power": 4.975482526116176,
+    "peak_current_pu": 5.324720536683419,
+    "floor_violation_s": 6.569027416696337
+  },
+  "members": [
+    {
+      "epochs": 68,
+      "best_epoch": 48,
+      "best_val_loss": 1.6001582145690918
+    },
+    {
+      "epochs": 75,
+      "best_epoch": 55,
+      "best_val_loss": 1.6248270273208618
+    },
+    {
+      "epochs": 87,
+      "best_epoch": 67,
+      "best_val_loss": 1.616835355758667
+    },
+    {
+      "epochs": 81,
+      "best_epoch": 61,
+      "best_val_loss": 1.6168296337127686
+    },
+    {
+      "epochs": 69,
+      "best_epoch": 49,
+      "best_val_loss": 1.6441850662231445
+    }
+  ],
+  "test": {
+    "n": 2647,
+    "passed_accuracy": 0.9429542878730639,
+    "passed_auc": 0.9543395211417957,
+    "passed_brier": 0.04002154444101555,
+    "failure_mode_accuracy": 0.7680392897619948,
+    "recovery_margin_s_mae": 1.1963524305799091,
+    "recovery_margin_s_within_2std": 0.943466172381835,
+    "recovery_margin_s_n": 2158,
+    "min_power_mae": 0.08636543702452008,
+    "min_power_within_2std": 0.9353985644125425,
+    "min_power_n": 2647,
+    "peak_current_pu_mae": 0.1548465198654838,
+    "peak_current_pu_within_2std": 0.9471099357763506,
+    "peak_current_pu_n": 2647,
+    "floor_violation_s_mae": 0.0927617827497214,
+    "floor_violation_s_within_2std": 0.9803551190026445,
+    "floor_violation_s_n": 2647
+  },
+  "edge": {
+    "n": 33,
+    "passed_accuracy": 1.0,
+    "passed_auc": NaN,
+    "passed_brier": 0.009742924881245094,
+    "failure_mode_accuracy": 0.7878787878787878,
+    "recovery_margin_s_mae": 2.0476852952453277,
+    "recovery_margin_s_within_2std": 0.8275862068965517,
+    "recovery_margin_s_n": 29,
+    "min_power_mae": 0.05252582567930703,
+    "min_power_within_2std": 0.9696969696969697,
+    "min_power_n": 33,
+    "peak_current_pu_mae": 0.14817165843655625,
+    "peak_current_pu_within_2std": 0.9090909090909091,
+    "peak_current_pu_n": 33,
+    "floor_violation_s_mae": 0.4341357264342436,
+    "floor_violation_s_within_2std": 0.9393939393939394,
+    "floor_violation_s_n": 33
+  }
+}
