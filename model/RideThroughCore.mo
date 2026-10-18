@@ -43,6 +43,14 @@ model RideThroughCore
   parameter Real transfer_threshold_pu = 0.85;
   parameter Real transfer_delay_s = 0.02;
 
+  // Sag-counting transfer (NERC Large Load Loss review: sites transferred to backup on "N sags
+  // in T seconds" and stayed off until manual reset; after the 2024 event some sites lengthened
+  // the time a dip must last to be counted and raised N). count_n = 0 disables it.
+  parameter Integer count_n = 0 "Counted sags within the window that trigger transfer (0 = off, max 5)";
+  parameter Real count_threshold_pu = 0.90 "Voltage below which a sag is being timed";
+  parameter Real count_min_dur_s = 0.0 "A sag counts only once it has lasted this long";
+  parameter Real count_window_s = 60.0 "Sliding window the counted sags must fall inside";
+
   // Facility undervoltage relay. NOGRR 2.14(4) requires protection be set to equipment
   // tolerance rather than to the envelope edge, so a compliant design picks up below
   // 0.20 pu while a legacy one sits at 0.85 and disconnects inside the envelope.
@@ -170,6 +178,14 @@ model RideThroughCore
   Boolean legacy_tripped(start = false, fixed = true) "Legacy portion latched off";
   Real facility_available_frac "Fraction of facility load still able to draw";
   Boolean transfer_demanded(start = false, fixed = true) "Grid-side transfer to backup";
+  Real t_sag(start = 0, fixed = true) "Time the present sag has lasted";
+  Real count_t1(start = -1.0e9, fixed = true) "Times of the five most recent counted sags, newest first";
+  Real count_t2(start = -1.0e9, fixed = true);
+  Real count_t3(start = -1.0e9, fixed = true);
+  Real count_t4(start = -1.0e9, fixed = true);
+  Real count_t5(start = -1.0e9, fixed = true);
+  Integer n_in_window "Counted sags inside the sliding window";
+  Boolean count_transfer(start = false, fixed = true) "Latched: sag count reached, stays on backup until manual reset";
   Real t_relay(start = 0, fixed = true);
   Real t_transfer(start = 0, fixed = true);
   Real t_restore(start = -1, fixed = true);
@@ -353,9 +369,38 @@ equation
   when v_sense_pu >= transfer_threshold_pu then
     reinit(t_transfer, 0);
   end when;
-  when t_transfer > transfer_delay_s then
+
+  // Sag counter. A sag is timed while the sensed voltage is below the counting threshold and
+  // counted once, the instant it has lasted count_min_dur_s; the timer restarts when voltage
+  // returns. Counted-sag times shift through five slots, and the count inside the sliding
+  // window is read directly from them.
+  der(t_sag) = if v_sense_pu < count_threshold_pu then 1.0 else 0.0;
+  when v_sense_pu >= count_threshold_pu then
+    reinit(t_sag, 0);
+  end when;
+  // The epsilon matters: with count_min_dur_s = 0 the timer restarts at exactly 0, and a
+  // threshold crossing that starts on the threshold is not detected, so only the first sag counted.
+  when t_sag > count_min_dur_s + 1.0e-6 then
+    count_t1 = time;
+    count_t2 = pre(count_t1);
+    count_t3 = pre(count_t2);
+    count_t4 = pre(count_t3);
+    count_t5 = pre(count_t4);
+  end when;
+  n_in_window = (if time - count_t1 <= count_window_s then 1 else 0)
+              + (if time - count_t2 <= count_window_s then 1 else 0)
+              + (if time - count_t3 <= count_window_s then 1 else 0)
+              + (if time - count_t4 <= count_window_s then 1 else 0)
+              + (if time - count_t5 <= count_window_s then 1 else 0);
+  when count_n > 0 and n_in_window >= count_n then
+    count_transfer = true;
+  end when;
+
+  // Transfer is demanded by either element. The count element latches: NOGRR 282 2.14(6) is
+  // about exactly this -- no automatic re-closure on a sag count -- so it holds for the run.
+  when t_transfer > transfer_delay_s or count_transfer then
     transfer_demanded = true;
-  elsewhen v_sense_pu > transfer_threshold_pu and psu_enabled then
+  elsewhen v_sense_pu > transfer_threshold_pu and psu_enabled and not count_transfer then
     transfer_demanded = false;
   end when;
 

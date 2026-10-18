@@ -207,6 +207,8 @@ def _classify(failures: list[str], trips: list[str]) -> str:
     if not failures:
         return "passed"
     joined = " ".join(trips)
+    if "sag_count_transfer" in joined:
+        return "sag-count transfer (latched)"
     if "cooling" in joined or "vfd" in joined:
         return "cooling tripped"
     if "psu" in joined:

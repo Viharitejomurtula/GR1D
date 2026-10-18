@@ -60,10 +60,13 @@ PARAM_MAP = {
     "battery_temp_c": "battery_temp_c",
     "psu_trip_spread_frac": "psu_trip_spread_frac",
     "faulted_phase_frac": "faulted_phase_frac",
+    "count_threshold_pu": "count_threshold_pu",
+    "count_min_dur_s": "count_min_dur_s",
+    "count_window_s": "count_window_s",
     "legacy_load_frac": "legacy_load_frac",
 }
 
-INT_PARAMS = {"shelves_per_rack": "shelves_per_rack", "bbu_modules_per_rack": "bbu_modules_per_rack"}
+INT_PARAMS = {"shelves_per_rack": "shelves_per_rack", "bbu_modules_per_rack": "bbu_modules_per_rack", "count_n": "count_n"}
 
 TRIP_SIGNALS = {
     "psu_enabled": ("psu_shutdown", False),
@@ -72,6 +75,7 @@ TRIP_SIGNALS = {
     "cool_s2_tripped": ("cooling_stage2", True),
     "servers_lost_power": ("servers_lost", True),
     "facility_connected": ("facility_disconnect", False),
+    "count_transfer": ("sag_count_transfer", True),
 }
 
 

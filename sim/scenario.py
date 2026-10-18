@@ -82,6 +82,13 @@ class Scenario:
     # would actually ask: how much of the floor needs upgrading?
     legacy_load_frac: float
 
+    # --- Sag-counting transfer (NERC: sites moved to backup on "N sags in T seconds" and stayed
+    # off until manual reset; count_n = 0 disables it, so existing scenarios are unchanged) ---
+    count_n: int = 0
+    count_threshold_pu: float = 0.90
+    count_min_dur_s: float = 0.0
+    count_window_s: float = 60.0
+
     # --- Reclose sequence beyond the first dip (and beyond the simple `second_dip`) ---
     # Each entry is (gap_after_previous_clear_s, duration_s, depth_pu). Real events had 4-6
     # faults over up to 82 s (NERC 2024, PJM 2026), which `second_dip` cannot express. Kept out
