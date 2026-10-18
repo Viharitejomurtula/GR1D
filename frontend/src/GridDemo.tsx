@@ -109,9 +109,13 @@ type DemoProps = {
   rideThrough?: boolean // the site rides through the dip instead of dropping off the grid
   hold?: number; zoom?: number
   onClock?: (secondsSinceDipArrived: number, active: boolean) => void
+  // Driven by simulator output instead of the scripted event (Results tab): the parent maps the clock to a simulated
+  // trace and passes the state for this frame. s: share of the site's pre-fault load off the grid; r: grid strain;
+  // bbu: battery output, 0-1. Held after the event ends, so the final state stays on screen.
+  drive?: { s: number; r: number; bbu: number; dcText: string; status: string; strained: boolean }
 }
 
-export default function GridDemo({ onFinished, onNext, embedded, trigger, rideThrough, hold = HOLD, zoom, onClock }: DemoProps) {
+export default function GridDemo({ onFinished, onNext, embedded, trigger, rideThrough, hold = HOLD, zoom, onClock, drive }: DemoProps) {
   const [grid, setGrid] = useState<Grid>()
   const [now, setNow] = useState(0)
   const [startedAt, setStartedAt] = useState<number | null>(null)
@@ -160,11 +164,13 @@ export default function GridDemo({ onFinished, onNext, embedded, trigger, rideTh
   const active = e >= 0 && e < end
   useEffect(() => { onClock?.(e - tHit, active) }, [now]) // eslint-disable-line react-hooks/exhaustive-deps
   const ev = eventState(active ? e : -1, tHit, hold)
-  const s = rideThrough ? 0 : ev.s, r = rideThrough ? 0 : ev.r, dropAge = rideThrough ? -1 : ev.dropAge
+  const s = drive ? drive.s : rideThrough ? 0 : ev.s, r = drive ? drive.r : rideThrough ? 0 : ev.r
+  const dropAge = drive ? (active && e > tHit && drive.s > 0.5 ? e - tHit : -1) : rideThrough ? -1 : ev.dropAge
   // the recession: after the drop, a dark zone spreads out from the data center. Nothing flows inside it.
   const back = e - (tHit + hold)
-  const sFlow = clamp01((dropAge - 0.4) / 1.4) * (1 - clamp01(back / 1.8))
-  const deadR = active && dropAge > 0 ? DEAD_R * (1 - Math.pow(1 - clamp01(dropAge / 2.4), 3)) * (1 - clamp01(back / 1.8)) : 0
+  const sFlow = drive ? drive.s : clamp01((dropAge - 0.4) / 1.4) * (1 - clamp01(back / 1.8))
+  const deadR = drive ? DEAD_R * clamp01((drive.s - 0.2) / 0.8)
+    : active && dropAge > 0 ? DEAD_R * (1 - Math.pow(1 - clamp01(dropAge / 2.4), 3)) * (1 - clamp01(back / 1.8)) : 0
   const cometTime = now % PERIOD
   const wasActive = useRef(false)
   const ran = useRef(false)
@@ -173,7 +179,8 @@ export default function GridDemo({ onFinished, onNext, embedded, trigger, rideTh
     if (wasActive.current && !active && fixed === null) { const t = setTimeout(() => onFinished?.(), 900); return () => clearTimeout(t) }
     wasActive.current = active
   }, [active]) // eslint-disable-line react-hooks/exhaustive-deps
-  const onBattery = s > 0.5
+  const onBattery = drive ? drive.bbu > 0.5 : s > 0.5
+  const bbuGlow = drive ? drive.bbu : s
 
   const trip = (id: string, data: Comet[], widthMul: number, alpha: number, trail: number, color: RGB, opacity: number, blend = false) =>
     new TripsLayer<Comet>({
@@ -197,7 +204,7 @@ export default function GridDemo({ onFinished, onNext, embedded, trigger, rideTh
   const pulse = (e * 2.2) % 1
   const waveR = e * WAVE_KM_S * 1000 // metres: the dip travelling out from the fault
 
-  const dcText = rideThrough && active && e > tHit ? `DATA CENTER\nRIDING THROUGH  ·  ${dc?.mw} MW` : onBattery ? 'DATA CENTER\n0 MW FROM GRID  ·  ON BATTERY' : s > 0 ? 'DATA CENTER\nRECONNECTING' : `DATA CENTER\n${dc?.mw} MW`
+  const dcText = drive ? drive.dcText : rideThrough && active && e > tHit ? `DATA CENTER\nRIDING THROUGH  ·  ${dc?.mw} MW` : onBattery ? 'DATA CENTER\n0 MW FROM GRID  ·  ON BATTERY' : s > 0 ? 'DATA CENTER\nRECONNECTING' : `DATA CENTER\n${dc?.mw} MW`
 
   const layers = [
     // the wires, dim; the current is what glows
@@ -218,9 +225,9 @@ export default function GridDemo({ onFinished, onNext, embedded, trigger, rideTh
     }),
     ...gold('normal', cometsNormal, 1 - sFlow),
     ...red('post', cometsPost, sFlow),
-    trip('battery-glow', cometsBattery, 2.8, 90, TRAIL, CYAN, s, true),
-    trip('battery', cometsBattery, 1, 240, TRAIL, CYAN, s),
-    trip('battery-core', cometsBattery, 0.38, 255, TRAIL * 0.4, [235, 250, 255], s),
+    trip('battery-glow', cometsBattery, 2.8, 90, TRAIL, CYAN, bbuGlow, true),
+    trip('battery', cometsBattery, 1, 240, TRAIL, CYAN, bbuGlow),
+    trip('battery-core', cometsBattery, 0.38, 255, TRAIL * 0.4, [235, 250, 255], bbuGlow),
     new ScatterplotLayer<Substation>({
       id: 'substations', data: grid?.substations.filter((d) => hv(d.kv) || d.deg >= 3), parameters: { depthCompare: 'always' },
       getPosition: (d) => d.p, radiusUnits: 'pixels', getRadius: (d) => (hv(d.kv) ? 5 : 3),
@@ -278,9 +285,9 @@ export default function GridDemo({ onFinished, onNext, embedded, trigger, rideTh
     }),
     new PolygonLayer<{ polygon: number[][] }>({
       id: 'battery-block', data: battery ? [{ polygon: box(battery[0], battery[1], 0.05, 0.03) }] : [], getPolygon: (d) => d.polygon as never,
-      extruded: true, wireframe: true, getElevation: 6000, getFillColor: (s > 0.5 ? [52, 98, 118, 255] : [70, 80, 90, 255]) as never, lineWidthMinPixels: 2,
+      extruded: true, wireframe: true, getElevation: 6000, getFillColor: (bbuGlow > 0.5 ? [52, 98, 118, 255] : [70, 80, 90, 255]) as never, lineWidthMinPixels: 2,
       material: { ambient: 0.55, diffuse: 0.75, shininess: 24, specularColor: [200, 230, 255] },
-      getLineColor: (s > 0.05 ? [...CYAN, 150 + 105 * s] : [130, 160, 175, 220]) as never, updateTriggers: { getLineColor: s, getFillColor: s > 0.5 },
+      getLineColor: (bbuGlow > 0.05 ? [...CYAN, 150 + 105 * bbuGlow] : [130, 160, 175, 220]) as never, updateTriggers: { getLineColor: bbuGlow, getFillColor: bbuGlow > 0.5 },
     }),
     new TextLayer<{ p: number[]; t: string; c: RGB; size: number }>({
       id: `dc-label${fk}`, data: dc ? [{ p: dc.p, t: dcText, c: onBattery ? CYAN : [255, 232, 170], size: 18 }] : [],
@@ -291,9 +298,9 @@ export default function GridDemo({ onFinished, onNext, embedded, trigger, rideTh
     }),
     new TextLayer<{ p: number[] }>({
       id: `battery-label${fk}`, data: battery ? [{ p: battery }] : [], getPosition: (d) => [d.p[0], d.p[1], 9000] as never,
-      getText: () => 'ON-SITE BATTERY + GENERATION', getSize: 13, getColor: s > 0.05 ? (CYAN as never) : ([150, 160, 168] as never),
+      getText: () => 'ON-SITE BATTERY + GENERATION', getSize: 13, getColor: bbuGlow > 0.05 ? (CYAN as never) : ([150, 160, 168] as never),
       getPixelOffset: [0, 30], characterSet: 'auto', fontFamily: FONT, parameters: { depthCompare: 'always' },
-      updateTriggers: { getColor: s > 0.05 },
+      updateTriggers: { getColor: bbuGlow > 0.05 },
     }),
     // the fault, and the voltage dip travelling out from it
     new ScatterplotLayer({
@@ -317,8 +324,8 @@ export default function GridDemo({ onFinished, onNext, embedded, trigger, rideTh
     }),
   ]
 
-  const strained = s > 0.5
-  const status = !active ? 'NORMAL OPERATION'
+  const strained = drive ? drive.strained : s > 0.5
+  const status = drive ? drive.status : !active ? 'NORMAL OPERATION'
     : e < tHit ? 'GRID FAULT  ·  DIP TRAVELLING TO THE DATA CENTER'
     : rideThrough ? 'DATA CENTER RIDES THROUGH THE DIP'
     : strained ? 'NO CURRENT REACHES THE DATA CENTER  ·  GRID STRAINED'
