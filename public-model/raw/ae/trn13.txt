@@ -1,0 +1,2709 @@
+©2026 Advanced Energy Industries, Inc.
+Total Power
+PSU: 3 kW
+Shelf: 18 kW
+Input Voltage
+PSU: 180 to 305 Vac
+Shelf: 346 to 480 Vac 3 phase 5
+wire Wye (3ph + N + E)
+200 to 277 Vac 3 phase 4 wire
+Delta (3ph + E)
+Output Voltage1
+51.0V (no load)
+50.5V (full load)
+ARTESYN
+Open Rack V3 Power
+System
+15 kW (N+1) and 9 kW (N+N)
+SPECIAL FEATURES
+PSU
+Peak efficiency 97.5%
+Efficiency greater than 96.5% for
+230 to 277 Vac and 30% to
+100% load range
+Active + Droop current sharing
+Hot swappable
+Cooling via internal fan with speed
+control
+Modbus/PMBus communications
+Interface for monitoring and
+control
+Black box fault logging
+Shelf
+15 kW at 50 V with N + 1
+redundancy or 9 kW at 50 V with
+N + N redundancy (dual feed shelf)
+Highly accurate droop + active
+current sharing
+Houses 6 x 3000 W power
+modules and a removable shelf
+controller
+Very high efficiency
+Accepts 3 types of input
+configurations (3P Delta 4 W, 3P
+Wye 5 W, 3 x of 1P)
+EMC/SAFETY
+IEC EN 61000-4-5 CAT A surges
+EN 61000-3-2 Class A harmonics
+CISPR and FCC Part A EMC
+UL 60950
+IEC 60950
+IEC/EN/UL 62368-1
+PRODUCT DESCRIPTION
+Advanced Energy's Artesyn introduces the Open Rack V3 (ORV3)
+3 kW PSU for use in the ORV3 Power System. The PSU is a single-
+phase AC to DC power supply that operates from nominal input
+voltages from 200 to 277 Vac and produces 50 V, 60 A (3 kW) DC
+output. Within the ORV3 1OU Power Shelf, six of the ORV3 PSUs
+operate in parallel, current sharing mode to produce 15 kW of N+1
+redundant power. Power Shelf input(s) are universal 7 pin
+connector which can be configured as star, delta or single phase. It
+includes a hot-pluggable Shelf Controller for monitoring and
+control over Ethernet (DMTF Redfish® compatible) management
+networks.
+The ORV3 Power System features a narrow DC Voltage range to
+eliminate oversize design and enable high efficiency, fixed ratio
+downstream DC to DC conversion. The ORV3 Power System is
+typically used for compute and storage applications which require
+reliable power and optional battery backup.
+TECHNICAL REFERENCE NOTE
+AT A GLANCE
+Note 1: The output voltage range shown on the
+Label of ORV3 PSU is "47.5 to 50.5V". 47.5V is to
+reference the 47.5V set point feature that triggers
+the BBU shelf in the ORV3 power system. It is also
+a requirement of the OCP ORV3 specification.
+
+<<P>>
+ORV3 Power System
+2
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Options
+None
+Standard
+Input Voltage
+Output Voltage
+Output Current
+Description
+700-015234-0100
+1 Phase AC, 180 to 305 Vac,
+50 to 60 Hz
+50 V
+60 A
+ORV3 PSU
+700-015746-0100
+3 Phase AC, 200/480 Vac,
+50 to 60 Hz
+50 V
+300 A
+1OU-18 kW, ORV3 Power Shelf
+Single Whip
+700-015235-0100
+3 Phase AC, 200/480 Vac,
+50 to 60 Hz
+50 V
+300 A
+1OU-18 kW, ORV3 Power Shelf
+Dual Whip
+700-015718-0100
+-
+-
+-
+Power Monitor Interface (PMI)
+700-015798-0000
+-
+-
+-
+Shelf Management Controller(PMC)
+MODEL NUMBERS
+
+<<P>>
+ORV3 Power System
+3
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Absolute Maximum Ratings
+Stress in excess of those listed in the “Absolute Maximum Ratings” may cause permanent damage to the power supply. These are
+stress ratings only and functional operation of the unit is not implied at these or any other conditions above those given in the
+operational sections of this TRN. Exposure to any absolute maximum rated condition for extended periods may adversely affect
+the power supply’s reliability.
+Table 1. Absolute Maximum Ratings
+Parameter
+Models
+Symbol
+Min
+Typ
+Max
+Unit
+Input Voltage
+AC continuous operation
+PSU
+VIN,DC
+180
+-
+305
+Vac
+Maximum Output Power
+PSU
+Shelf
+PO,max
+-
+-
+-
+-
+3
+18
+kW
+kW
+Ambient Operating Temperature
+All models
+TA
+-5
+-
+45
+OC
+Storage Temperature
+All models
+TSTG
+-40
+-
+85
+OC
+Humidity (non–condensing)
+Operating
+Non-operating
+All models
+All models
+10
+5
+-
+-
+90
+93
+%
+%
+Altitude
+Operating
+Non-operating
+All models
+All models
+0
+0
+-
+-
+3050
+12000
+Meters
+Meters
+ELECTRICAL SPECIFICATIONS
+
+<<P>>
+ORV3 Power System
+4
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Input Specifications
+Table 2. Input Specifications – PSU
+Parameter
+Condition
+Symbol
+Min
+Typ
+Max
+Unit
+Operating Input Voltage, AC
+All
+VIN,AC
+180
+200/277
+305
+Vac
+Input AC Frequency
+All
+fIN,AC
+47
+50/60
+63
+Hz
+Input AC Start-up Voltage
+All
+VIN,AC
+-
+178
+-
+Vac
+Input AC Undervoltage Lockout Voltage
+All
+VIN,AC
+-
+172
+-
+Vac
+Input Fuse
+Phase and return lines
+UL approved
+25
+-
+-
+kA
+TON_noBBU
+All
+1
+-
+4.5
+s
+TON_BBU
+All
+1
+-
+8.0
+s
+T-Max_ON_noBBU
+All
+6
+-
+7.5
+s
+T-Max_ON_BBU
+All
+9.5
+-
+11.0
+s
+Startup Surge Current (Inrush)
+All
+IIN,surge
+-
+-
+30
+A
+Hold Up Time1
+200 to 277 Vac input
+100% Load
+-
+20
+-
+ms
+Input iTHD
+5% to 10% load
+10% to 30% load
+30% to 100% load
+iTHD
+-
+-
+-
+-
+-
+-
+15
+10
+5
+%
+%
+%
+Power Factor
+10% to 30% load Vin<250V
+10% to 30% load Vin>250V
+30% to 100% load
+PF
+0.95
+0.90
+0.98
+-
+-
+-
+-
+-
+-
+-
+-
+-
+Operating Efficiency @ 25OC
+Note 2
+
+97.5
+96.5
+96.5
+95.5
+94.0
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+%
+%
+%
+%
+%
+Table 3. Input Specifications – Shelf
+Parameter
+Condition
+Symbol
+Min
+Typ
+Max
+Unit
+Input Voltage (3 phase Delta 4 wire)
+All
+VIN,AC
+180
+200/277
+305
+Vac
+Input Voltage (3 phase Wye 5 wire)
+All
+VIN,AC
+360
+380/480
+528
+Vac
+Input Voltage (3 x of 1 phase )
+All
+VIN,AC
+180
+200/277
+305
+Vac
+Note 1 - Refer to PSU-BBU Transition.
+Note 2 - At 30% to 100% load, peak 230, 240, 277 Vac input, the minimum efficiency is 97.5%.
+At 30% to 100% load, 230, 240, 277 Vac input, the minimum efficiency is 96.5%.
+At 30% to 100% load, peak 208Vac input, the minimum efficiency is 96.5%.
+At 30% to 100% load, 208Vac input, the minimum efficiency is 95.5%.
+At 10% to 30% load, 208 to 277 Vac input, the minimum efficiency is 94%.
+ELECTRICAL SPECIFICATIONS
+
+<<P>>
+ORV3 Power System
+5
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Output Specifications
+Table 4. Output Specifications – PSU
+Parameter
+Condition
+Symbol
+Min
+Typ
+Max
+Unit
+Factory Set Voltage
+Half load
+VO
+50.625
+50.750
+50.875
+Vdc
+Output Current1
+PSU
+Shelf
+IO
+0
+0
+-
+-
+60
+300
+A
+A
+Output Ripple, pk-pk
+Compliance will be
+verified using a 0.1uF
+capacitor connected
+locally to the oscilloscope
+probe tips during this
+measurement
+VO
+-
+-
+500
+mVPK–PK
+VO Dynamic Response
+Peak Deviation
+10% min load
+0 to 10 mF output cap.
+Dynamic load @ 20Hz
+Slew rate 1A/usec
+50% step load
+90% step load
+140% step load2
+VO
+-
+-
+-
+-
+-
+-
+0.5
+1.0
+1.5
+V
+V
+V
+VO Dynamic Response
+Settling Time
+All
+ts
+-
+3
+-
+ms
+Regulation and Droop Characteristics
+All
+VO
+0.375
+0.500
+0.625
+Vdc
+Output Rise Time
+All
+-
+60
+-
+ms
+Current Sharing Accuracy
+20 to 50% load
+50 to 100% load
+-5
+-2
+-
+-
++5
++2
+%
+%
+Note 1 – For surge current capabilities, see Pulse Load Operation on page 17.
+Note 2 – Refer to “Allowable peak power step” curve on page 17 for the duration of pulse load.
+ELECTRICAL SPECIFICATIONS
+
+<<P>>
+ORV3 Power System
+6
+advancedenergy.com
+Rev. 02.09.26_#1.3
+System Timing Specifications
+Random Timer and Synchronization Requirements
+Under any conditions of dissipative load, capacitive load, temperature, with or without backup voltage connected to the PSU, max
+time for PSU to be “power-up ready” after AC voltage starts is 3.0 s.
+After “power-up ready”:
+•
+When there is no DC voltage on the bus (first AC turn on) the power shelf will be randomized with 0 to 2 s window to give
+each power shelf a random turn-on time (six PSU turn-on is synchronized).
+•
+When there is DC voltage on the bus higher than 44 V for 0.1 s (BBU is discharging), the power shelf will be randomized with
+0 to 5.5 s window to give each power shelf a random turn-on time (six PSU turn-on is synchronized).
+The power shelf will turn on with only 1 PSU inserted into any slot.
+Note: The random numbers above will be dynamically generated immediately after each AC recycle, and not generated one time
+and then stored in the EEPROM for future usages.
+Table 5. System Timing Specifications
+Legend
+Item
+Parameter
+Min
+Max
+Unit
+T1
+T_power-up_ready
+Time for PSU to be power-up ready
+1.0
+3.0
+s
+T2
+T_random_noBBU
+0-2 second initial turn on random delay without BBU discharging
+0
+2.0
+s
+T3
+TON_noBBU
+Time 51Vdc turns on after shelf receives AC input without BBU discharging.
+1.0
+5.0
+s
+T4
+T_random_BBU
+0-5.5 second turn on random delay after BBU discharging
+0
+5.5
+s
+T5
+TON_BBU
+Time 51Vdc turns on after shelf receives AC input with BBU discharging.
+1.0
+8.5
+s
+T6
+TSYNC
+After all PSUs in the shelf are ready to start till when 51Vdc will start
+2.0
+5.0
+ms
+T7
+T-Max_ON_noBBU
+Max PSU turn-on time without BBU in case of sync failure
+6.5
+8.0
+s
+T8
+T-Max_ON_BBU
+Max PSU turn-on time with BBU in case of sync failure
+10
+11.5
+s
+ELECTRICAL SPECIFICATIONS
+
+<<P>>
+ORV3 Power System
+7
+advancedenergy.com
+Rev. 02.09.26_#1.3
+System Timing Diagram
+Normal Turn On (no bus)
+ELECTRICAL SPECIFICATIONS
+
+<<P>>
+ORV3 Power System
+8
+advancedenergy.com
+Rev. 02.09.26_#1.3
+System Timing Diagram
+Normal Turn On (with bus)
+ELECTRICAL SPECIFICATIONS
+
+<<P>>
+ORV3 Power System
+9
+advancedenergy.com
+Rev. 02.09.26_#1.3
+System Timing Diagram
+Normal Turn On (no bus, single fault SYNC_START pulled low)
+ELECTRICAL SPECIFICATIONS
+
+<<P>>
+ORV3 Power System
+10
+advancedenergy.com
+Rev. 02.09.26_#1.3
+System Timing Diagram
+Normal Turn On (with bus, single fault SYNC_START pulled low)
+ELECTRICAL SPECIFICATIONS
+
+<<P>>
+ORV3 Power System
+11
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Transition And Synchronization Requirements
+Start-up (0 V to 51 V) Transition Procedure
+Each PSU has a small circuit as shown below and the circuit output (called SYNC_START) of all PSUs are connected together on
+the power shelf backplane.
+1) Each PSU sets its uC Digital output signal (Do_SyncReady_L) to low when the PSU is ready to turn on the output.
+2) Only PSU in SLOT #1 generates random timer and set Do_SyncReady_L to low when ready and random timer is finished.
+3) The PSUs will turn on the output when the uC Digital input sync signal (DI_Sync_H) is high.
+4) If DI_Sync_H kept stuck low for 3 s more than the max random timer limit (which is 2 s without BBU and 5.5 s with BBU), the
+PSU will turn on immediately.
+5) If PSU1 is not installed or its Do_SyncReady_L stuck low, the other PSUs shall turn on when the DI_Sync_H is high. In this case
+random timer doesn't exist.
+Please refer to section "Pulse Load Operation" on page 17 for the timing and constant current value requirements during the cold
+startup.
+48 V to 51 V Transition Procedure
+The same SYNC_START circuit as shown above is used here.
+1) When PSU enters 48V output mode, it sets “Do_SyncReady_L” signal to HIGH.
+2) If there is no over power or over current condition for 5 s, each PSU sets “Do_SyncReady_L” signal to LOW.
+3) If signal “DI_Sync_H” is HIGH (HIGH when all PSUs in parallel ready to adjust), then change constant current level to 120% and
+adjust output from 48 V to 51 V.
+4) If the signal “DI_Sync_H” is stuck LOW for 5 s, the PSU shall adjust its output from 48 V to 51 V.
+5) If the PSU output did not reach 51 V in 5 s, then it return to 48 V mode, set constant current level to 155%, and go to step 1.
+Refer to diagram below that covers both 48 V to 51 V and 51 V to 48 V transitions.
+ELECTRICAL SPECIFICATIONS
+PSU1
+DI_Sync_H
+Do_SyncReady_L
+High@PSU not ready
+High @start-up
+PSUx
+DI_Sync_H
+Do_SyncReady_L
+High@PSU not ready
+High @start-up
+
+<<P>>
+ORV3 Power System
+12
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Transition And Synchronization Requirements
+51 V to 48 V Transition Procedure
+This transition and conditions associated with it was explained in section "over power/current protection" on page 20 and section
+"PSU-BBU transition“ on page 18. No synchronization is needed in this case. Refer to diagram above that covers both 48 V to 51 V
+and 51 V to 48 V transitions.
+ELECTRICAL SPECIFICATIONS
+
+<<P>>
+ORV3 Power System
+13
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Performance Curves (Single PSU)
+ELECTRICAL SPECIFICATIONS
+Figure 1:
+ORV3 PSU Turn-on Delay
+Vin = 180Vac (L-N)
+Io = 60A
+Ch 1: VIN
+Ch 4: Vo
+Figure 2:
+ORV3 PSU Ripple and Noise Measurement
+Vin = 180Vac (L-N)
+Io = 60A
+Ch 4: Vo
+Figure 4:
+ORV3 PSU Transient Response (10mF Output Cap)
+Vin = 200Vac(L-L)
+Io = 6A to 60A (10% to 100%), 1A/ės
+Ch 1: Vo
+Ch 2: Io
+Figure 5:
+ORV3 PSU Transient Response (10mF Output Cap)
+Vin = 200Vac(L-L)
+Io = 60A to 6A (10% to 100%), 1A/ės
+Ch 1: Vo
+Ch 2: Io
+Figure 6:
+ORV3 PSU Hold-up Time
+Vin = 200Vac (L-N)
+Io = 60A
+Ch 1: Vo
+Ch 3: VIN
+Figure 3:
+ORV3 PSU Output Voltage Startup Characteristic
+Vin = 180Vac (L-N)
+Io = 60A
+Ch 1: Vo
+
+<<P>>
+ORV3 Power System
+14
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Performance Curves (Shelf)
+ELECTRICAL SPECIFICATIONS
+Figure 7:
+ORV3 Shelf Ride Through Test (6 PSUs in the shelf)
+Vin = 230Vac to 0V (20ms) to 230Vac (L-N)
+Io = 300A
+Ch 1: Vin (L1-N)
+Ch 2: Vin (L2-N)
+Ch3: Vin (L3-N)
+Ch4:Vo
+Figure 8:
+ORV3 Shelf Ride Through Test (5 PSUs in the shelf)
+Vin = 230Vac to 0V (20ms) to 230Vac (L-N)
+Io = 300A
+Ch 1: Vin (L1-N)
+Ch 2: Vin (L2-N)
+Ch3: Vin (L3-N)
+Ch4:Vo
+Figure 10:
+ORV3 Shelf Ride Through Test (5 PSUs in the shelf)
+Vin = 230Vac to 140V (500ms) to 230Vac (L-N)
+Io = 300A
+Ch 1: Vin (L1-N)
+Ch 2: Vin (L2-N)
+Ch3: Vin (L3-N)
+Ch4:Vo
+Figure 11:
+ORV3 Shelf Ride Through Test (6 PSUs in the shelf)
+Vin = 230Vac to 160V (1s) to 230Vac (L-N)
+Io = 300A
+Ch 1: Vin (L1-N)
+Ch 2: Vin (L2-N)
+Ch3: Vin (L3-N)
+Ch4:Vo
+Figure 12:
+ORV3 Shelf Ride Through Test (5 PSUs in the shelf)
+Vin = 230Vac to 160V (1s) to 230Vac (L-N)
+Io = 300A
+Ch 1: Vin (L1-N)
+Ch 2: Vin (L2-N)
+Ch3: Vin (L3-N)
+Ch4:Vo
+Figure 9:
+ORV3 Shelf Ride Through Test (6 PSUs in the shelf)
+Vin = 230Vac to 140V (500ms) to 230Vac (L-N)
+Io = 300A
+Ch 1: Vin (L1-N)
+Ch 2: Vin (L2-N)
+Ch3: Vin (L3-N)
+Ch4:Vo
+
+<<P>>
+ORV3 Power System
+15
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Performance Curves (Shelf)
+ELECTRICAL SPECIFICATIONS
+Figure 13:
+ORV3 Shelf Pulse Load (6 PSUs in the shelf)
+Vin = 400Vac(L-L)
+Io = 60A(3.75ms) to 450A (6ms) repetitive
+Ch 1:Vo
+Ch 2: Io (slew rate: 5A/us)
+Figure 14:
+ORV3 Shelf Pulse Load (5 PSUs in the shelf)
+Vin = 400Vac(L-L)
+Io = 60A(3.75ms) to 450A (6ms) repetitive
+Ch 1:Vo
+Ch 2: Io (slew rate: 5A/us)
+Figure 16:
+ORV3 Shelf Pulse Load (5 PSUs in the shelf)
+Vin = 400Vac(L-L)
+Io = 300A to 450A (16ms) single pulse
+Ch 1:Vo
+Ch 2: Io (slew rate: 5A/us)
+Figure 17:
+ORV3 Shelf Pulse Load (6 PSUs in the shelf)
+Vin = 400Vac(L-L)
+Io = 150A(8ms) to 450A (8ms) repetitive
+Ch 1:Vo
+Ch 2: Io (slew rate: 5A/us)
+Figure 18:
+ORV3 Shelf Pulse Load (5 PSUs in the shelf)
+Vin = 400Vac(L-L)
+Io = 150A(8ms) to 450A (8ms) repetitive
+Ch 1:Vo
+Ch 2: Io (slew rate: 5A/us)
+Figure 15:
+ORV3 Shelf Pulse Load (6 PSUs in the shelf)
+Vin = 400Vac(L-L)
+Io = 300A to 450A (16ms) single pulse
+Ch 1:Vo
+Ch 2: Io (slew rate: 5A/us)
+
+<<P>>
+ORV3 Power System
+16
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Performance Curves (Shelf)
+ELECTRICAL SPECIFICATIONS
+Figure 19:
+ORV3 Shelf Inrush Current
+Vin = 230Vac(L-N) (3 phases drop for 20ms)
+Io = 150A
+Ch 1: Vin (L1-N)
+Ch 2: Vin (L2-N)
+Ch3: Vin (L3-N)
+Ch4:Iin
+Figure 20:
+ORV3 Shelf Inrush Current
+Vin = 230Vac(L-N) (3 phases drop for 20ms)
+Io = 300A
+Ch 1: Vin (L1-N)
+Ch 2: Vin (L2-N)
+Ch3: Vin (L3-N)
+Ch4:Iin
+Figure 21:
+ORV3 Shelf Over Power/Current Protection
+Vin = 400Vac(L-L)
+Io = 432A(100ms) to 396A(9.9s) to 40A(1.14s)
+Ch 1:Vin
+Ch 2: Iin
+Ch3:Vo
+Ch4:Io
+Figure 22:
+ORV3 PSU Efficiency Curves (with Fan Loss Included)
+Vin = 230/240/277Vac
+Load: Io = 0% to 100% (% load based on 3000W full load)
+Figure 23:
+ORV3 Hot Swap Peak Deviation (Extract the 6th PSU)
+Vin = 400Vac (L-L)
+Io = 300A
+Ch 3: VO (100mV/div, 100ms/div)
+Figure 24:
+ORV3 Hot Swap Peak Deviation (Insert the 6th PSU)
+Vin = 400Vac (L-L)
+Io = 300A
+Ch 4: VO (100mV/div, 100ms/div)
+
+<<P>>
+ORV3 Power System
+17
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Pulse Load Operation
+PSU voltage will drop by 3 V after its holdup energy is lost by 50% or 30J. Here, 24J or 40% of holdup energy is allocated for pulse
+power. As the result, PSU will meet the following pulse power envelope shown below without triggering BBU (reducing voltage by
+3 V, which happens when holdup energy is reduced by 50%).
+In order to meet the pulse power requirements as the graph above, the DC to DC converter will meet the following absolute pulse
+power requirement as shown below. This graph comes from the worst case of Pstart as 100%.
+ELECTRICAL SPECIFICATIONS
+DC-DC converter pulse power requirement
+Allowable peak power step
+
+<<P>>
+ORV3 Power System
+18
+advancedenergy.com
+Rev. 02.09.26_#1.3
+PSU-BBU Transition
+Graph below shows the PSU requirement to transition to BBU in case of AC outage. PSU voltage will drop by 3 V after its holdup
+energy is lost by 50% or 30 J.
+Per the scheme above, for the worst case that AC outage and pulse power happens at the same time (and pulse power remains
+constantly), PSU will transition to BBU seamlessly as calculated in the table below.
+In case that AC voltage is available, but constant overload of up to 150% happens, PSUs will drop voltage by 3 V per the scheme
+above and share power with BBUs. PSUs will retry to sync together and increase the voltage once every 5 s.
+ELECTRICAL SPECIFICATIONS
+Load Power
+Holdup Time (ms)
+Time Before 3 V Drop (ms)
+Remaining Time After 3 V Drop (ms)
+100%
+20.00
+10.0
+9.0
+110%
+18.18
+9.1
+8.1
+120%
+16.67
+8.3
+7.3
+130%
+15.38
+7.7
+6.7
+140%
+14.29
+7.1
+6.1
+150%
+13.33
+6.7
+5.7
+
+<<P>>
+ORV3 Power System
+19
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Protection Function Specifications
+Input Over-Current Protection
+The PSU incorporate primary fusing on both phase and return lines for input over-current protection to meet product safety
+requirements. Fuses are selected to prevent nuisance trips. AC inrush current will not cause the fuse to blow under any conditions.
+No PSU operating condition will cause the fuse to blow unless a component in the PSU has failed. This includes DC output
+overload and short-circuit conditions. Fuse is approved by UL for an interrupt rating of at least 25 kA for 10 ms..
+PSU fuse is in coordination with Datacenter Tapbox breaker curve as given below.
+NEC breakers are 20 A and 30 A (two AC feeds go to the power shelf – one PSU per input AC phase feed).
+IEC breaker is normally 32 A (one AC feed goes to the power shelf – two PSUs per input AC phase feed).
+(Ignore 16 A breaker)
+ELECTRICAL SPECIFICATIONS
+
+<<P>>
+ORV3 Power System
+20
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Input Over Voltage and Under Voltage Protection
+The rectifier contain protection circuitry such that application of an input voltage below the minimum specified in section "Input
+Specification" on page 4 will not cause any damage to the rectifier and “softly shuts down” while operating. The rectifier will
+“softly shut down” if the input voltage is over 345 V for 20 ms or 309 V for 50 ms as shown in the graph below.
+Output Over Voltage Protection (OVP)
+The PSU will shut down for DC output voltage exceeding 52.5 V and the reacting time will not exceed 200 ms. DC output voltage
+will never exceed 54 V (fast OVP).
+Over Power/Current Protection
+If a PSU is overloaded higher than the values listed below, it will “softly shut down”, meaning reduce its voltage by 3 V and wait for
+6 ms (to give enough time for BBU to take over and then turn off output.). If overload is still there, PSU will shut down. After an
+overload fault or in case of 3 V drop if there is no overload, PSUs will retry to sync together and turn on once every 5 s.
+•
+Average power more than 3.45 kW for 10 s.
+•
+Average power more than 3.6 kW for 100 ms.
+•
+Repetitive pulse power more than the pulse power envelope specified (up to 150% load).
+Constant Current mode will be triggered at 155% load. Output reduce voltage by 3 V if any of the conditions below are met:
+•
+Constant current mode dwell for 10 ms.
+•
+Output droops < 48.5 V due to constant current mode.
+Output Short-circuit Protection
+The PSU includes short-circuit protection to protect the rectifier and attached load in the case of an output short-circuit or other
+output overload condition.
+If the PSU voltage is lower than 10 V (short circuit condition), the rectifier shuts off immediately. No component damage. The
+protection will be implemented with a hiccup mode. it tries to restart 5 times every 5 s and then locks out. PSUs will sync using
+sync_start after shut down to power up together.
+Over Temperature Protection (OTP)
+The PSU employ over temperature protection for both ambient over temperature and internal thermal temperature to protect the
+rectifier. The rectifier will “softly shut down” under over temperature condition and recover after certain period after the over
+temperature condition is removed.
+The OTP circuit incorporate built in hysteresis such that the power supply does not oscillate on and off due to temperature
+recovering condition. The OTP event will be reported as a fault condition.
+ELECTRICAL SPECIFICATIONS
+
+<<P>>
+ORV3 Power System
+21
+advancedenergy.com
+Rev. 02.09.26_#1.3
+PMI Overview
+PMI is an extension module, which brings Modbus of the PSUs/BBUs directly out for upstream communication. PMI sits on ORV3
+Power and Battery Shelves. On one end, it has communication with the PSUs or BBUs – through sliver straddle connector. On the
+other end, it interacts with centralized system through the use of RJ45 connectors. Please refer to page 32 for RJ45 connectors
+location and pinout definitions. Please refer to "ARTESYN ORV3 PMI" datasheet for more details of PMI module.
+MONITORING & CONTROL INTERFACE
+
+<<P>>
+ORV3 Power System
+22
+advancedenergy.com
+Rev. 02.09.26_#1.3
+PMC Overview
+The Power shelf includes a slot for a shelf management controller (PMC) to monitor and control various power supply parameters
+(The slot is the same one for PMI module). The PMC is connected to rack management controller or facility level monitoring
+through a monitoring & control interface.
+The PMC is a hot-pluggable controller that monitors and facilitates the power supply units through a 10/100/1000 MB base
+Ethernet port and can be connected directly to the rack switch.
+The PMC communicates with PSUs in the shelf through the backplane connector. The front connector provides one Ethernet port
+and one RS232 port for debugging.
+If the PMC fails or is not provided, the power system is able to operate normally. The PMC is powered from the 48 V bus directly.
+Power Shelf Deployment
+The PMC is connected via Ethernet to a switch (normally the top of rack controller/switch) and up to 6 PSUs are monitored. See
+page 34 for PMC connectors.
+MONITORING & CONTROL INTERFACE
+
+<<P>>
+ORV3 Power System
+23
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Mechanical Drawing (unit: mm)
+ORV3 PSU (PN: 700-015234-0100)
+MECHANICAL SPECIFICATIONS – PSU
+
+<<P>>
+ORV3 Power System
+24
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Connector Definitions
+Input Connector
+LP1
+–
+Earth
+LP2
+–
+AC phase
+LP3
+–
+AC phase
+Output Connector – Power Blades
+P1 & P2
+–
+48 V output positive
+P3 & P4
+–
+48 V output return
+Output Connector – Control Signals
+MECHANICAL SPECIFICATIONS – PSU
+Input
+Output
+Power
+Blades
+Output
+Control
+Signals
+PSU Connector Pinout
+Pin
+Name
+Type
+Bus
+Description
+P1
+PSU_A0
+Input
+Address 0 – PSU ID A0, Internal pull up 10 k to 3.3 V.
+P2
+PSU_A1
+Input
+Address 1 – PSU ID A1, Internal pull up 10 k to 3.3 V.
+P3
+PSU_A2
+Input
+Address 2 – PSU ID A2, Internal pull up 10 k to 3.3 V.
+P4
+PSU_A3
+Input
+Address 3 – PSU ID A3, Internal pull up 10 k to 3.3 V.
+P5
+Spare
+Q1
+Ground
+Ground
+Q2
+Alert
+Output/
+Active Low
+Individual
+Logic "Low“ = Fault or Warning, Logic "High“ = OK.
+Internal pull up 10 k to 3.3 V PSU Alert.
+Q3
+Reset_Latch_
+Fault
+Input/
+Active high
+Individual
+Logic "high" for 1 to 2 s = clear faults and start PSU to operate if not working
+due to a fault. Internal pull down 10k resistor. Will be enabled by SW.
+Q4
+RS485_addr0
+Input
+Share bus
+Rack address pin. Internal pull up 100 k to 3.3 V.
+Q5
+RS485_addr1
+Input
+Share bus
+Rack address pin. Internal pull up 100 k to 3.3 V.
+U1
+RS485_addr2
+Input
+Share bus
+Rack address pin. Internal pull up 100 k to 3.3 V.
+U2
+BKP
+Output/
+Active Low
+Share bus
+No pull up or pull down, Open collector output. All PSUs Ored together.
+U3
+PSKILL
+(Short Pin)
+Input/
+Active High
+Logic "Low“ = Output Turn on, Logic "High“ = Output Turn off.
+Quick shut down Output, mitigate hot unplug arcing.
+Internal pull up 10 k to 3.3 V.
+U4
+RS485A
+BI
+Share bus
+U5
+RS485B
+BI
+Share bus
+V1
+Ground
+Ground
+V2
+I2C_SDA
+BI
+Share bus
+I2C Data
+V3
+I2C_SCL
+BI
+Share bus
+I2C Clock
+V4
+Ground
+Ground
+Share bus
+I2C ground
+V5
+PLS (power
+loss siren)
+Output/
+Active low
+Share bus
+Logic "Low"= Input is not OK for 45Sec, Logic "High"= Input is OK.
+No pull up or pull down, Open collector output. All PSUs Ored together.
+Y1
+ISHARE
+Analog
+Share bus
+Main output current share bus.
+Y2
+SYNC_STOP
+Synchronizing turn off main output. Internal pull up 10k to 3.3V
+Y3
+SYNC_START
+BI
+Share bus
+Synchronizing turn-on main output Internal pull up 10 k to 3.3 V.
+Y4
+VOUT_SEL
+Input
+Share bus
+Logic "Low“ = Set Output 48 V, Logic "High“ = Set Output 51 V.
+Internal pull up 10 k to 3.3 V, Default Output is 51 V.
+Y5
+Ground
+Ground
+Note: P3, P4 (48 V return), and LP1 (Earth) connect first. U3 (PSKILL) is short pin.
+
+<<P>>
+ORV3 Power System
+25
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Mating Connector – PSU
+LED Indicator Definitions – PSU
+The PSU has a single blue and single amber LED mounted near the PSU handle for accessibility. Following are power supply LED
+states:
+Table 6. Mating Connector for ORV3 PSU
+Connector
+Mating Connector
+Description
+FCI: 10127396-01U1520LF (PwrBlade
+ULTRA HD)
+FCI: 1027400-01U1520LF (PwrBlade
+ULTRA HD)
+I/O Connector
+MECHANICAL SPECIFICATIONS – PSU
+Table 7. LED Indicator Definitions – PSU
+LED
+Status
+Description
+Blue
+LED
+Blinking Blue
+Sync Start State, PSU is ready to turn on its output and awaiting the sync start signal
+Solid Blue
+DC output is on and available
+Off
+DC output is off
+Amber
+LED
+Blinking Amber
+Bootloading
+Solid Amber
+Primary/Secondary/Fan/bootloading failure, and/or loss of DC output (refer to PSU PMBus
+registers for specific failures)
+Off
+fault NOT present/condition 1 and 2 are false
+Note 1 – Toggling AC input power will reset the solid/blinking amber fault light but will come up again if faults re-occur.
+Note 2 – Only one of the 3 conditions per LED will be applied at all time.
+
+<<P>>
+ORV3 Power System
+26
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Mechanical Drawing (unit: mm)
+ORV3 Power Shelf Dual Whip (PN: 700-015235-0100)
+MECHANICAL SPECIFICATIONS – SHELF
+
+<<P>>
+ORV3 Power System
+27
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Power Shelf Option
+Power Shelf Option 1 – 6 x 3 kW PSU with dual cord (2 x 20 A NEC breaker upstream) – 700-015235-0100
+1OU shelf with two AC power input
+6 x 3 kW PSU slots
+Output power: 15 kW with N + 1 and dual cords or 9 kW N + N
+Direct connect to tap-boxes/facility – no intermediate PDU
+Power Shelf Option 2 – 6 x 3 kW PSU with single cord (32 A IEC breaker upstream) – 700-015746-0100
+1OU shelf with one AC power input
+6 x 3 kW PSU slots
+Output power: 15 kW with N + 1 and single cord
+Direct connect to tap-box/facility – no intermediate PDU
+MECHANICAL SPECIFICATIONS – SHELF
+
+<<P>>
+ORV3 Power System
+28
+advancedenergy.com
+Rev. 02.09.26_#1.3
+ORV3 Rack Mounting Features
+ORV3 power shelves are designed for front mounting into ORV3 racks on OU pitch rails (please refer to the ORV3 specifications
+on more details for the design of these). The design of the 48 V output connector allows it to be placed in any location in the rack.
+Rack mounting features are of particular importance in the power shelf design since they assist in constraining the power shelf in
+X, Y, and Z directions and promote solid electrical contact with the 48 V busbar.
+Front Latch & Bumper
+Please refer to the mechanical CAD for the locations of the front latch and bumper. Note that these serve separate functions and
+should not be a single part.
+Rear Stop
+Please refer to the mechanical CAD for the geometry of the rear stop. This is required to interface properly with the ORV3 rack
+MECHANICAL SPECIFICATIONS – SHELF
+
+<<P>>
+ORV3 Power System
+29
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Connector Definitions
+AC Input Connector
+The power shelf has either one or two AC input connectors right only in the case of the single whip shelf (PN: 700-015746-0100),
+or left and right in the case of the dual whip shelf (PN: 700-015235-0100).
+AC Input Connector Wiring
+MECHANICAL SPECIFICATIONS – SHELF
+
+<<P>>
+ORV3 Power System
+30
+advancedenergy.com
+Rev. 02.09.26_#1.3
+DC Output Connector
+The shelf DC output connector is a floating blind mate connector that mates with ORV3 busbars in an ORV3 rack. This gives the
+flexibility for:
+•
+Placing power and battery shelves any desirable location on the rack
+•
+Increasing power and energy by adding more power and/or battery shelves in the rack
+Power Supply Connector
+The shelf contains the 6 blind mate mating connectors for the 6 ORV3 PSUs. Amphenol 10127400-01U1520LF or equivalent. This
+is a R/A receptacle, PwrBlade ULTRA HD connector with 3 low power pins, 25 signal pins, and 4 high power pins.
+PSUs plug into the power shelf directly, and they are hot swappable while the rack is powered. Please refer to page 24 for pinout
+details.
+PMC/PMIConnector
+The shelf contains a blind mate mating connector for PMC or PMI module. The PMC or PMI module plugs into the power shelf
+directly, and is hot swappable while the rack is powered. Please refer to “ARTESYN ORV3 PMI” or “ARTESYN ORV3 PMC”
+datasheet for pinout details.
+Mating Connector
+MECHANICAL SPECIFICATIONS – SHELF
+Table 8. Mating Connector for ORV3 Shelf
+Device
+Connector
+Mating Connector
+Shelf
+Input Connector:
+POSITRONIC
+SP10RSSS48RM220A1-AA-2269
+SP10RSSS48M220A1-AA-2269
+POSITRONIC
+SP10RSSS1F0W01/AA-2268
+Output Connector:
+FCI BarKlip BK500 Cable
+10156914-3D6077HF
+ORV3 Busbars
+
+<<P>>
+ORV3 Power System
+31
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Mechanical Drawing (unit: mm)
+MECHANICAL SPECIFICATIONS – PMI
+
+<<P>>
+ORV3 Power System
+32
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Connector Definitions
+The PMI contain four RJ45 connectors located on the bulkhead of the assembly. The pinouts of the four connectors are shown
+below. Looking from the front, Top left RJ45 is #1, Top right is #2, bottom left is #3, bottom right is #4.
+MECHANICAL SPECIFICATIONS – PMI
+RJ45 #1
+Pin
+Wire color
+Function
+1
+White/Orange
+GND
+2
+Orange
+PLS (PSU/BBU Power
+Loss Siren)
+3
+White/Green
+BKP
+4
+Blue
+RS485A
+5
+White/Blue
+RS485B
+6
+Green
+RS485_Addr2
+7
+White/Brown
+RS485_Addr1
+8
+Brown
+RS485_Addr0
+RJ45 #2
+Pin
+Wire color
+Function
+1
+White/Orange
+GND
+2
+Orange
+PLS (PSU/BBU Power
+Loss Siren)
+3
+White/Green
+BKP
+4
+Blue
+RS485A
+5
+White/Blue
+RS485B
+6
+Green
+GND
+7
+White/Brown
+RS485_Addr1
+8
+Brown
+RS485_Addr0
+RJ45 #3 & 4
+Pin
+Wire color
+Function
+1
+White/Orange
+ISHARE
+2
+Orange
+GND
+3
+White/Green
+SYNC_START_L
+4
+Blue
+VOUT_SEL
+5
+White/Blue
+SYNC_STOP_L
+6
+Green
+RSVD
+7
+White/Brown
+CAN_H
+8
+Brown
+CAN_L
+
+<<P>>
+ORV3 Power System
+33
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Mechanical Drawing (unit: mm)
+MECHANICAL SPECIFICATIONS – PMC
+
+<<P>>
+ORV3 Power System
+34
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Connector Definitions
+The PMC contain four RJ45 connectors located on the bulkhead of the assembly. The pinouts of the four connectors are shown
+below. Looking from the front, Top left RJ45 is #1, Top right is #2, bottom left is #3, bottom right is #4.
+RJ45 #1 – Ethernet (10/100/1000MB Base-T) and Power over Ethernet (PoE)
+Please note this will also require external magnetics on the carrier as they are not included in the RJ45 2x2 block as they’re not
+needed for the other connections.
+This pinout is Power over Ethernet “mode B” (PoE on pins 4, 5, 7, 8), ideally it would be possible to support “mode A” (PoE on pins
+1, 2, 3, 6) either as part of a single hardware solution or as hardware configuration.
+MECHANICAL SPECIFICATIONS – PMC
+Pin
+Wire Color
+Signal
+I/O
+Function
+1
+White/Orange
+TRD_D1+
+I/O
+Bi-directional Data +
+2
+Orange
+TRD_D1-
+I/O
+Bi-directional Data -
+3
+White/Green
+TRD_D2+
+I/O
+Bi-directional Data +
+4
+Blue
+TRD_D3+
+I/O
+Bi-directional Data + / PoE DC +
+5
+White/Blue
+TRD_D3-
+I/O
+Bi-directional Data - / PoE DC +
+6
+Green
+TRD_D2-
+I/O
+Bi-directional Data -
+7
+White/Brown
+TRD_D4+
+I/O
+Bi-directional Data + / PoE DC -
+8
+Brown
+TRD_D4-
+I/O
+Bi-directional Data - / PoE DC -
+
+<<P>>
+ORV3 Power System
+35
+advancedenergy.com
+Rev. 02.09.26_#1.3
+RJ45 #2 – Modbus Shelf Master (For Internal Use)
+RJ45 #3 –RS232 Debug
+This pinout provides a serial debug connection to the command line of the PMC.
+RJ45 #4 – CAN and Signals (For Internal Use)
+This pinout provides a serial debug connection to the command line of the PMC, useful to recover the PMC if network is not
+available. Other signals are reserved for future use.
+MECHANICAL SPECIFICATIONS – PMC
+Pin
+Wire Color
+Signal
+I/O
+Function
+1
+White/Orange
+GND
+-
+GND
+2
+Orange
+DEBUG_RX
+I/O
+Debug receive data
+3
+White/Green
+-
+-
+(For Internal Use)
+4
+Blue
+-
+-
+(For Internal Use)
+5
+White/Blue
+-
+-
+(For Internal Use)
+6
+Green
+DEBUG_TX
+I/O
+-
+7
+White/Brown
+CAN_H
+I/O
+(For Internal Use)
+8
+Brown
+CAN_L
+I/O
+(For Internal Use)
+Pin
+Wire Color
+Signal
+I/O
+Function
+1
+White/Orange
+GND
+I
+(For Internal Use)
+2
+Orange
+PLS
+O
+This is a pass through from the PSUs for alerts.
+3
+White/Green
+BKP
+O
+This is a pass through from the PSUs for alerts.
+4
+Blue
+RS485A
+I/O
+(For Internal Use)
+5
+White/Blue
+RS485B
+I/O
+(For Internal Use)
+6
+Green
+RS485_Addr2
+O
+(For Internal Use)
+7
+White/Brown
+RS485_Addr1
+O
+(For Internal Use)
+8
+Brown
+RS485_Addr0
+O
+(For Internal Use)
+Pin
+Wire Color
+Signal
+I/O
+Function
+1
+White/Orange
+ISHARE
+A
+(For Internal Use)
+2
+Orange
+GND
+-
+(For Internal Use)
+3
+White/Green
+SYNC_START_L
+I/O
+(For Internal Use)
+4
+Blue
+VOUT_SEL
+O
+(For Internal Use)
+5
+White/Blue
+SYNC_STOP_L
+I/O
+(For Internal Use)
+6
+Green
+RSVD
+-
+(For Internal Use)
+7
+White/Brown
+CAN_H
+I/O
+(For Internal Use)
+8
+Brown
+CAN_L
+I/O
+(For Internal Use)
+
+<<P>>
+ORV3 Power System
+36
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Weight
+ORV3 PSU weight is 2.21 kg.
+ORV3 Power Shelf (Single Whip or Dual Whip) weight is 11.57 kg.
+PMI weight is 0.27 kg.
+MECHANICAL SPECIFICATIONS
+
+<<P>>
+ORV3 Power System
+37
+advancedenergy.com
+Rev. 02.09.26_#1.3
+EMC Immunity
+The ORV3 power system is designed to meet the following EMC immunity specifications.
+Table 9. Environmental Specifications
+Document
+Description
+Class A of EN55032 and FCC CFR 47 Part
+15 Subpart B
+Conducted and Radiated EMI Limits
+EN61000-4-2
+Electromagnetic Compatibility (EMC) – Testing and measurement techniques –
+Electrostatic discharge immunity test: 11.2 KV air, 5.6 KV contact discharge.
+Performance – Criteria A
+EN61000-4-3
+Electromagnetic Compatibility (EMC) – Testing and measurement techniques –
+Radiated, radio–frequency, electromagnetic field immunity test: 3 V/m.
+Performance – Criteria A
+EN61000-4-4
+Electromagnetic Compatibility (EMC) – Testing and measurement techniques –
+Electrical fast transient/burst immunity test: >1 KV for AC power line. >0.5 kV for
+signal line. Performance – Criteria A
+EN61000-4-5
+Electromagnetic Compatibility (EMC) – Testing and measurement techniques –
+Surge test: >4 KV common mode and >2 KV differential mode for AC power line.
+Signal port: >1 kV. Performance – Criteria A
+EN61000-4-6
+Electromagnetic Compatibility (EMC) – Testing and measurement techniques –
+Conducted Immunity 3 Vrms.
+Performance – Criteria A.
+EN61000-4-8
+Power frequency magnetic field immunity, when applicable, >1 A/m
+IEC61000-4-11
+Voltage dip and sag
+Notes: Performance Criteria as defined by EN300386.
+Performance Criteria A: The apparatus shall continue to operate as intended after the test. No degradation of performance or loss of function is
+allowed below specified performance level during intended use of operation.
+Performance Criteria B: The apparatus shall continue to operate as intended after the test. No degradation of performance or loss of function is
+allowed below specified performance level during intended use of operation. Degradation of performance is allowed during the exposure to an
+electromagnetic phenomenon but no change of actual operating state is allowed.
+Performance Criteria C: Temporary loss of function is allowed, provided the function is self–recoverable or can be restored by the operation of the
+controls.
+ENVIRONMENTAL SPECIFICATIONS
+
+<<P>>
+ORV3 Power System
+38
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Safety Certifications
+The ORV3 power system is designed to meet the following safety standards.
+Table 10. Safety Standards for ORV3 Power System
+Standard
+Agency
+Description
+UL 60950
+UL
+US Requirements
+IEC 60950
+IEC
+International Requirements
+IEC/EN/UL 62368-1
+UL
+International Requirements
+CB
+TUV
+European Requirements
+CE Marking
+CE
+European Requirements
+ENVIRONMENTAL SPECIFICATIONS
+
+<<P>>
+ORV3 Power System
+39
+advancedenergy.com
+Rev. 02.09.26_#1.3
+EMI Emissions
+The ORV3 power system has been designed to comply with the Class A limits of EMI requirements of FCC CFR 47 Part 15
+Subpart B and the limits specified in CISPR22 / EN55032, with 6dB margin.
+Conducted Emissions
+The applicable standard for conducted emissions is EN55032 (FCC Part 15). Conducted noise can appear as both
+differential mode and common mode noise currents. Differential mode noise is measured between the two input lines,
+with the major components occurring at the supply fundamental switching frequency and its harmonics. Common mode
+noise, a contributor to both radiated emissions and input conducted emissions, is measured between the input lines and
+system ground and can be broadband in nature.
+The ORV3 power system has EMI filters to ensure the system conducted EMI levels comply with EN55032 (FCC Part 15)
+Class A limits. The EMI measurements are performed with resistive loads at maximum rated loading.
+Sample of EN55032 Conducted EMI Measurement at 230Vac (L-N) (3Phase 5 wire).
+Conducted EMI emissions specifications of the ORV3 power system:
+Radiated Emissions
+Unlike conducted EMI, radiated EMI performance in a system environment may differ drastically from that in a stand-alone
+power supply. The shielding effect provided by the system enclosure may bring the EMI level from Class A to Class B. It is
+thus recommended that radiated EMI be evaluated in a system environment. The applicable standard is EN55032 Class A
+(FCC Part 15). Testing DC-DC converters as a stand-alone component to the exact requirements of EN55032 can be
+difficult because the standard calls for 1m lead to be attached to the input and outputs and aligned such as to maximize
+the disturbance. In such a set-up, it is possible to form a perfect dipole antenna that very few DC-DC converters could
+pass. However, the standard also states that an attempt will be made to maximize the disturbance consistent with the
+typical application by varying the configuration of the test sample.
+Parameter
+Model
+Symbol
+Min
+Typ
+Max
+Unit
+FCC Part 15, class A
+All
+Margin
+6
+–
+–
+dB
+CISPR 32 (EN55032), class A
+All
+Margin
+6
+–
+–
+dB
+ENVIRONMENTAL SPECIFICATIONS
+
+<<P>>
+ORV3 Power System
+40
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Operating Temperature
+The ORV3 power systems starts and operates with full rated power at an ambient temperature from -5OC to 45OC.
+Storage and Shipping Temperature
+The ORV3 power systems can be stored at temperatures between -40OC and +70OC. It can be shipped at temperatures between
+-55OC and +85OC (short-term storage).
+Fan Cooling
+Fan was sized to support operation across environmental and loading envelopes, with an adequate operating range (speed) to
+achieve requirements outlined in this document. The fan have adequate overhead to accommodate back-pressure resulting from
+.# '! .$")Ű-&ƅ' 1 ' ..*-$ .)/ )/ -*+ -/$*)ŵ
+)" ) -'Ű# -**(/**1 -*( &ƅ+- ..0- *!ơęŵĜ$)# .
+of water. When the rectifier is plugged in, the fan stays operational irrespective of load and will maintain front-to-back airflow
+direction (overcome potential back-pressure). Mounting of the fan meets any vibration and acoustic criteria and does not violate
+any physical constraints outlined.
+ENVIRONMENTAL SPECIFICATIONS
+0.0
+1.0
+2.0
+3.0
+4.0
+5.0
+6.0
+7.0
+8.0
+0.0
+5.0
+10.0
+15.0
+20.0
+25.0
+30.0
+35.0
+40.0
+STATIC PRESSURE (in. w.g.)
+AIRFLOW (cfm)
+ORV3 PSU IMPEDANCE VS FAN PQ CURVES (ACTUAL MEASUREMENTS)
+ORV3 PSU IMPEDANCE
+SUNON (VF40284BX-1Q012-S9W) FAN PQ CURVE
+AVC (DBT0428B8SP008) FAN PQ CURVE
+
+<<P>>
+ORV3 Power System
+41
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Altitude
+The ORV3 power systems can operate with no de-ratings at altitudes of up to 3050 m (10,000 feet).
+Humidity
+The ORV3 power systems can operate within specifications and stored in a relative humidity from 5% to 93%
+non-condensing.
+Vibration and Shock (Non-packaged)
+The ORV3 power systems (power shelf with PSUs and PMI/PMC module inside) meet vibration and shock test per EN 60068-2-6
+and 60068-2-27, respectively, for both non-operating and operating condition, with the specifications listed below.
+During operating vibration and shock tests, the PSU will exhibit full compliance to the specification without any electrical
+discontinuities.
+During the non-operating tests, no damages of any kinds (included physical damages) should occur and they should not corrupt
+the functionalities of the PSU per the specifications.
+Non-Operating Vibration
+Operating Vibration
+ENVIRONMENTAL SPECIFICATIONS
+Excitation Mode
+Sinusoidal
+Amplitude
+1g
+Frequency Range
+5 to 500 Hz
+5 to 9 Hz: 6 mm peak to peak
+9 to 500 Hz: 1 g
+Frequency Change Rate
+1 octave/min
+Duration
+10 sweep cycles for each direction (2 hours 13 minutes)
+Test Direction
+3 mutually perpendicular axis
+Test Temperature
+Room temperature
+Electrical Work
+None
+Excitation Mode
+Sinusoidal
+Amplitude
+0.5g
+Frequency Range
+5 to 500 Hz
+5 to 9 Hz: 6 mm peak to peak
+9 to 500 Hz: 1 g
+Frequency Change Rate
+1 octave/min
+Duration
+10 sweep cycles for each direction (2 hours 13 minutes)
+Test Direction
+3 mutually perpendicular axis
+Test Temperature
+Room temperature
+Electrical Work
+Power supply in operation
+
+<<P>>
+ORV3 Power System
+42
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Non-Operating Shock
+Operating Shock
+Package Vibration, Drop and Compression
+The power shelves (without PSUs) in their shipping package meet the following requirements:
+ENVIRONMENTAL SPECIFICATIONS
+Shock Pulse
+Half sinusoidal
+Shock Duration
+11ms
+Shock Amplitude
+12g
+Test Directions
+6 directions
+Number of Shocks
+60 (10 per each direction)
+Test Temperature
+Room temperature
+Electrical Work
+None
+Shock Pulse
+Half sinusoidal
+Shock Duration
+11ms
+Shock Amplitude
+6g
+Test Directions
+6 directions
+Number of Shocks
+30 (5 per each direction)
+Test Temperature
+Room temperature
+Electrical Work
+Power supply in operation
+Package Vibration
+1.146 g, 2 to 200 to 2 Hz, all three axes, random vibe
+ISTA 3E 06-06
+Package Drop
+8 inch drop
+ISTA 3E 06-06
+Package Compression
+Maximum compression loading on a bulk pack
+ASTM D 642-94
+
+<<P>>
+ORV3 Power System
+43
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Communication Overview
+The PSU can communicate on PMBus (up to 100 kbps) and Modbus (up to 115 kbps). At default, Modbus is active and PMBus is
+hardware only. Contact Advanced Energy to switch to PMBus communication.
+The software interface is operational when the AC is present or when the DC output bus is powered up by other power sources.
+The software provide below functions:
+Fault conditions:
+•
+Last power failure event
+•
+PSU failure
+Read:
+•
+Voltage in
+•
+Current in
+•
+Voltage out
+•
+Current out
+•
+Temperatures
+•
+Fan speeds
+•
+Power out
+•
+Power in
+•
+Position
+•
+Serial Number
+•
+Manufacturer part number
+•
+Hardware revision
+•
+Firmware revision
+Write:
+•
+Clear faults
+Upgrades:
+•
+Upgrade firmware image (s)
+Firmware Upgrade
+The interface allow the user to re-flash firmware on the device. Firmware upgrade result in no power interruption on the shelf level
+(the unit being upgrade can go offline). Upgrades can be done one PSU at a time.
+The PSU FW maintain regulation on the output during Send, Install and Verification of the new FW, and only require a soft reset
+(that may reset the output for a short period in a few seconds).
+PSU output voltage interruption due to FW upgrade will be less than 10 s.
+COMMUNICATION SPECIFICATIONS
+
+<<P>>
+ORV3 Power System
+44
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Reporting Accuracy
+Accurate reporting of input power (power factor, input current, input current harmonics and voltage) and output power (output
+current and voltage) readings will be reported via communication system at all rated voltage.
+The accuracy will be maintained across the operating temperature range and between 200 Vac and 305 Vac.
+COMMUNICATION SPECIFICATIONS
+Table 11. Communication Reporting Accuracy
+Parameter
+Loading
+Reporting Accuracy
+AC Input Power
+<10%
+±25W
+10% to 20%
+±5%
+20% to 100%
+±3%
+AC Input Current
+<10%
+±0.5A
+10% to 20%
+±2%
+20% to 100%
+±1%
+AC Input Current iTHD
+(Error difference not %)
+<10%
+±10%
+10% to 20%
+±2%
+20% to 100%
+±1%
+Power Factor
+(Error difference not %)
+<10%
+±0.1
+10% to 20%
+±0.025
+20% to 100%
+±0.01
+AC Input Voltage
+0 to 100%
+±1%
+Output Voltage
+0 to 100%
+±0.5%
+Output Current
+10% to 20%
+±10%
+20% to 50%
+±5%
+50% to 100%
+±1%
+Output Power
+<10%
+±25W
+10% to 20%
+±4%
+20% to 100%
+±2%
+
+<<P>>
+ORV3 Power System
+45
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Black Box Function
+The black box function store key important data to be used when a fault occurs.
+•
+Store data in memory and can withstand several read/write cycles.
+•
+PSU can store failure data before the PSU turns off/fails even in catastrophic failure events both on primary and secondary
+side. Hold up time of the black box microcontroller can store all the information and then shutdown.
+•
+Last 4 events stored in memory.
+•
+AC input current, AC input voltage, input power, power factor, iTHD, DC output voltage, DC output current.
+•
+Temperature readings, fan speed, input voltage, output voltage, bulk voltage, various error codes from all the different
+converters (OTP, OVP, OCP, UVP), and warnings.
+•
+BBU signals at time of failure (fail, charge_enable, BBU voltage, etc).
+•
+Total run time of PSU.
+•
+Run time since last turn on.
+•
+Real time stamping.
+•
+Number of AC power cycles.
+•
+Number of AC outages (can be determined by going into backup without counting the battery test conditions).
+Power supply event data is saved to the black box for the following events.
+Any events that caused the main output to shut down:
+•
+Main output over voltage fault
+•
+Main output under voltage fault
+•
+Main output over current fault
+•
+Main output short circuit fault
+•
+Fan failure
+•
+Over temperature fault
+Any events that caused the AC input to be bad:
+•
+AC input under voltage fault
+•
+AC input over voltage fault
+•
+AC input out of range frequency fault
+Contact Advanced Energy for more details about the black box function.
+COMMUNICATION SPECIFICATIONS
+
+<<P>>
+ORV3 Power System
+46
+advancedenergy.com
+Rev. 02.09.26_#1.3
+PMC Boot and Software / Firmware Update
+Update via RedFish
+The PMC software allow update of all images in the system via the RedFish Update Service. These images include, but not limited
+to:
+•
+uBoot images and other code in SPI flash
+•
+Kernel and filesystem in eMMC
+•
+PSU firmware images
+It is possible to download the new image while maintaining full functionality of the shelf. It is permissible to reboot into the newly
+downloaded image - i.e. no ‘live’ update required.
+Update via Command Line / Debug
+It is possible to update all the same images via command line over the SSH or debug UART connection.
+Firmware Rollback
+After updating the PMC firmware, it must be possible to rollback to the previous version easily, without downloading more images.
+This should be done automatically if the new images fail to boot. It must also be possible to trigger this rollback manually. Ideally
+via Redfish but certainly via the command line.
+More details please refer to application note “AN10371 - ORV3 - PMC and PSU Update Guide Using Redfish (090223)”. (Contact
+Advanced Energy technical support for the application note).
+COMMUNICATION SPECIFICATIONS
+
+<<P>>
+ORV3 Power System
+47
+advancedenergy.com
+Rev. 02.09.26_#1.3
+Device Addressing
+The ORV3 power system will respond to supported commands on the Modbus that are addressed according to PSU_A2, PSU_A1,
+PSU_A0, RS485_addr2, RS485_addr1, RS485_addr0 pins of PSU output connector (refer to page 24 for PSU output connector
+details).
+Address pins are held HIGH by default via pulled up to internal 3.3 V supply. To set the address as “0”, the corresponding address
+line needs be pulled down to logic ground level. Modbus address range from 0xC0 (11000000b) to 0xFF (11111111b).
+Default Device Address
+Serial Configuration
+CRC Checking
+The PSU includes an error-checking field that is based on a Cyclical Redundancy Checking (CRC) method performed on the
+message contents. Details please refer to “MODBUS over Serial Line Specification and Implementation Guide” V1.02 document
+section 2.5.1.2 CRC Checking.
+Error Handling
+The PSU will report MODBUS error codes if the request command is invalid. Details please refer to “MODBUS over Serial Line
+Specification and Implementation Guide” V1.02 document section 7 MODBUS Exception Responses.
+COMMUNICATION SPECIFICATIONS
+Fixed
+Address Pins
+RS485_addr2
+RS485_addr1
+RS485_addr0
+PSU_A2
+PSU_A1
+PSU_A0
+1
+1
+X
+X
+X
+X
+X
+X
+Note: X = 0 or 1.
+Power Shelf 1
+Communication Address
+PSU1
+F8
+PSU2
+F9
+PSU3
+FA
+PSU4
+FB
+PSU5
+FC
+PSU6
+FD
+Parameter
+Settings
+Data Rate
+19200 to 115200
+19200 (default)
+Data Bits
+8
+Parity
+Even
+Stop Bits
+1
+
+<<P>>
+ORV3 Power System
+48
+advancedenergy.com
+Rev. 02.09.26_#1.3
+ORV3 power system supported Modbus Registers which can be read by either Read Holding Register (function code 03h) or Read
+Input Register (function code 04h), and can be write by Write Single Register (function code 06h) or Write Multiple Registers
+(function code 10h).
+COMMUNICATION SPECIFICATIONS
+Command
+Code
+Command Name
+Default Value
+Access
+Type
+Data Size
+in word
+Data Format
+Description
+00h
+PSU part#
+"00-000000”
+R
+8
+ASCII
+08h
+PSU_MFR_MODEL
+“700-015234-
+XXXX”
+R
+8
+ASCII
+10h
+PSU_MFR_DATE
+R
+8
+ASCII
+Format: “WW/YYYY”
+18h
+PSU_MFR_SERIAL
+R
+16
+ASCII
+Format:
+“WWYYP1V3AELXXXXX”
+28h
+PSU_Workorder #
+“XXXXXXXX”
+R
+4
+ASCII
+2Ch
+PSU_HW Revision
+R
+4
+ASCII
+Format: “ZZZ”
+30h
+PSU_FW Revision
+R
+4
+ASCII
+Format: “0000”
+34h
+TOTAL_UP_TIME
+R
+2
+Decimal
+Seconds
+36h
+TIME_SINCE_LAST_ON
+R
+2
+Decimal
+Seconds
+38h
+AC_Power_Cycle_Counter
+R
+1
+Decimal
+39h
+AC_Outage_counter
+R
+1
+Decimal
+3Ch
+General Alarm Signal Register
+R
+1
+Bitmapped
+High Byte
+b3 - Fan Alarm
+A bit is set in Fan alarm register
+(Bit 8 of 0x3F)
+b2 - Temp Alarm
+Alarm set at shutdown temp
+(0x3F)
+b1 - Main Converter Fail
+A bit is set in DCDC alarm
+register (0x3E)
+b0 - PFC Converter Fail
+A bit is set in PFC alarm
+register (0x3D)
+Low Byte
+b3 - Communication
+A bit is set in Communication
+alarm register (0x40)
+b2 - Temperature
+A bit is set in Temperature
+alarm register (0x3F)
+b1 - DCDC
+A bit is set in DCDC alarm
+register (0x3E)
+b0 - PFC
+A bit is set in PFC alarm
+register (0x3D)
+3Dh
+PFC Alarm Status Register
+R
+1
+Bitmapped
+High Byte
+b3 - PFC_Fail
+Bulk Voltage > 517.5V for 160us
+or No Bulk Voltage Detected
+b2 - Input relay off
+b1 - Bulk ok
+Bulk Voltage < 425V for 1ms
+b0 - AC_OK
+Low Byte
+b5 - AC_FREQ_GOOD_HIGH
+AC frequency > 66Hz for 500ms
+b4 - AC_FREQ_GOOD_LOW
+AC frequency < 44Hz for 500ms
+b1 - AC_OVP
+AC Input > 315Vac for 250ms
+b0 - AC_UVP
+AC Input < 172Vac for 15ms
+
+<<P>>
+ORV3 Power System
+49
+advancedenergy.com
+Rev. 02.09.26_#1.3
+ORV3 power system supported Modbus Registers which can be read by either Read Holding Register (function code 03h) or Read
+Input Register (function code 04h), and can be write by Write Single Register (function code 06h) or Write Multiple Registers
+(function code 10h).
+COMMUNICATION SPECIFICATIONS
+Command
+Code
+Command Name
+Default Value
+Access
+Type
+Data Size
+in word
+Data Format
+Description
+3Eh
+DCDC Alarm Status Register
+R
+1
+Bitmapped
+High Byte
+b2 - Oring Fail
+ORing Temp triggered
+Low Byte
+b3 - MAIN_SCKT
+Vout < 30V and
+Iout > 30A for 37us
+Retry after 2s, max 5 times
+b2 - MAIN_OCP/OPP
+Pout > 3300W for 10s
+b1 - MAIN_OVP
+Vout > 52.5V for 15ms
+LATCH
+b0 - MAIN_UVP
+Vout < 44V for 200ms
+3Fh
+Temperature Alarm Status
+Register
+R
+1
+Bitmapped
+High Byte
+b0 - Fan Failure
+Fan Speed < 500rpm for 5s
+Low Byte
+b5 - PFC temp alarm
+PFC FET 2 and 1
+PFC Temp > 110 degC for
+500ms
+b4 - LLC temp alarm
+Bridge and Buck
+LLC Temp > 110 degC for
+500ms
+b3 - Sync temp alarm
+SYNC Temp > 110 degC for
+500ms
+b2 - Oring temp alarm
+ORing Temp > 110 degC for
+500ms
+b1 - Inlet temp alarm
+Inlet Temp > 60 degC for
+500ms
+b0 - Outlet temp alarm
+Outlet Temp > 85 degC for
+500ms
+40h
+Communication Alarm Status
+Register
+R
+1
+Bitmapped
+High Byte
+b0 - Modbus active
+No comms for 30s
+Low Byte
+b1 - Secondary – Logic MCU
+Fault
+b0 - Primary – Secondary MCU
+Fault
+43h
+PSU RPM fan0
+R
+1
+Decimal
+44h
+PSU RPM fan1
+R
+1
+Decimal
+No Fan 1, default 0
+45h
+PSU_Temp0 - Inlet
+R
+1
+2’s comp+sign
+N=7
+46h
+PSU_Temp1 - Outlet
+R
+1
+2’s comp+sign
+N=7
+47h
+PSU_Max_Temp
+R
+1
+2’s comp+sign
+N=7
+
+<<P>>
+ORV3 Power System
+50
+advancedenergy.com
+Rev. 02.09.26_#1.3
+ORV3 power system supported Modbus Registers which can be read by either Read Holding Register (function code 03h) or Read
+Input Register (function code 04h), and can be write by Write Single Register (function code 06h) or Write Multiple Registers
+(function code 10h).
+COMMUNICATION SPECIFICATIONS
+Command
+Code
+Command Name
+Default Value
+Access
+Type
+Data Size
+in word
+Data Format
+Description
+48h
+PSU_Min_Temp
+R
+1
+2’s comp+sign
+N=7
+49h
+PSU_Position_number
+R
+2
+Decimal
+Based on the Modbus
+Address
+4Bh
+CRC_error_counter
+R
+2
+Decimal
+Increment if Modbus CRC
+computed is incorrect
+4Dh
+Timeout_error_counter
+R
+2
+Decimal
+Increment if no Modbus
+communication for 30s.
+4Fh
+PSU_Output Voltage
+R
+1
+2's comp+sign
+N=10
+50h
+PSU_Output Current
+R
+1
+2’s comp+sign
+N=6
+51h
+I_share current value
+R
+1
+2’s comp+sign
+N=6
+52h
+PSU_Output Power
+R
+1
+2’s comp+sign
+N=3
+53h
+PSU_Bulk Cap Voltage
+R
+1
+2’s comp+sign
+N=6
+54h
+PSU_Input Frequency AC
+R
+1
+2’s comp+sign
+N=0
+55h
+PSU iTHD
+R
+1
+2’s comp+sign
+N=9
+Percentage format (%)
+56h
+PSU Power Factor
+R
+1
+2’s comp+sign
+N=9
+Decimal format (0.00)
+57h
+PSU_Input Power
+R
+1
+2’s comp+sign
+N=3
+58h
+PSU_Input Voltage AC
+R
+1
+2's comp+sign
+N=6
+59h
+PSU_Input Current AC
+R
+1
+2's comp+sign
+N=10
+5Ah
+PSU_Fault_Counter
+R
+1
+Unsigned 16
+bit
+Increment when there is a
+fault
+5Ch
+Power_Cycle Unix Time
+Default: 0
+R/W
+2
+Decimal
+5Eh
+PSU_setting register
+R/W
+1
+Bitmapped
+5Fh
+Communication baud rate
+Default: 1
+(19200)
+R/W
+1
+Hex
+Default: 1 (19200)
+Range: 1 (19200), 2 (38400), 3
+(57600), 4 (115200)
+60h
+Fan Duty Cycle Override
+R/W
+1
+Default: 0%
+Range: 0 to 100%
+61h
+LED Override
+R/W
+1
+Bitmapped
+Low Byte
+b6 - Amber LED
+0 = off (default)
+1 = on
+b5 - Blue LED
+0 = off (default)
+1 = on
+b0 - LED Override
+0 = disabled (default)
+1 = enabled
+
+<<P>>
+ORV3 Power System
+51
+advancedenergy.com
+Rev. 02.09.26_#1.3
+ORV3 power system supported Modbus Registers which can be read by either Read Holding Register (function code 03h) or Read
+Input Register (function code 04h), and can be write by Write Single Register (function code 06h) or Write Multiple Registers
+(function code 10h).
+COMMUNICATION SPECIFICATIONS
+Command
+Code
+Command Name
+Default Value
+Access
+Type
+Data Size
+in word
+Data Format
+Description
+62h
+Real Date/Time
+R/W
+2
+Unix Format
+64h
+Configurable PLS Timing
+45 sec
+R/W
+1
+Range: 1 to 300 s
+65h
+Vin_min
+180 Vac
+R/W
+1
+2’s comp+sign
+N=6
+Range: 180 to 250 Vac
+66h
+Vin_max
+305 Vac
+R/W
+1
+2’s comp+sign
+N=6
+Range: 250 to 305 Vac
+67h
+Vout_setpoint_H
+51 V
+R/W
+1
+2’s comp+sign
+N=10
+Range: 50.75 to 51.25 V
+68h
+Vout_setpoint_L
+48V
+R/W
+1
+2’s comp+sign
+N=10
+Range: 47.75 to 48.25 V
+69h
+Vout_change_timer
+R/W
+1
+Second
+6Ah
+PSU FBL FW Revision
+R
+4
+ASCII
+Format: “01.00.00”
+6Eh
+For AEI Use
+R
+
+<<P>>
+ORV3 Power System
+52
+advancedenergy.com
+Rev. 02.09.26_#1.3
+RECORD OF REVISION AND CHANGES
+Issue
+Date
+Description
+Originators
+1.0
+08.30.2023
+First issue
+E. Wang
+1.1
+03.31.2025
+Remove “SEMI F47 compliant”
+E. Wang
+1.2
+08.04.2025
+Add Vo droop voltage description on page 1
+E. Wang
+1.3
+02.09.2026
+Update T_power-up_ready max value
+E. Wang
+
+<<P>>
+ORV3 Power System
+ORV3 Power System – Rev. 02.09.26_#1.3
+For international contact information,
+visit advancedenergy.com.
+powersales@aei.com (Sales Support)
+productsupport.ep@aei.com (Technical Support)
++1 888 412 7832
+ABOUT ADVANCED ENERGY
+Advanced Energy (AE) has devoted more than three
+decades to perfecting power for its global customers. AE
+designs and manufactures highly engineered, precision
+power conversion, measurement and control solutions for
+mission-critical applications and processes.
+Our products enable customer innovation in complex
+applications for a wide range of industries including
+semiconductor equipment, industrial, manufacturing,
+telecommunications, data center computing, and medical.
+With deep applications know-how and responsive service
+and support across the globe, we build collaborative
+partnerships to meet rapid technological developments,
+propel growth for our customers, and innovate the future
+of power.
+Specifications are subject to change without notice. Not responsible
+for errors or omissions. ©2020 Advanced Energy Industries, Inc. All rights
+reserved. Advanced Energy®, and AE® are U.S. trademarks
+of Advanced Energy Industries, Inc.

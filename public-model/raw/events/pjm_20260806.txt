@@ -1,0 +1,813 @@
+<<p1>>
+PJM © 2026
+www.pjm.com | Public
+July 22, 2026
+Dominion Load Transfer Event
+Matthew Wharton,
+Manager, Reliability Engineering
+Operating Committee
+August 6, 2026
+
+<<p2>>
+PJM © 2026
+2
+www.pjm.com | Public
+Event Summary
+• On Wednesday, July 22, at 07:56 approximately 3,800 MW of load 
+transferred to back-up power when a 230 kV transmission line fault 
+occurred within the Dominion zone
+• This event was the largest load transfer PJM has experienced
+– Similar events within PJM occurred on July 10, 2024, and February 17, 
+2025
+ESIG – Large Load Workshop
+NERC Incident Review – Considering Simultaneous Voltage-Sensitive Load 
+Reductions
+• The load transfer is likely due to voltage ride-through performance 
+
+<<p3>>
+PJM © 2026
+3
+www.pjm.com | Public
+Sequence of Events
+• 07:56 Fault occurred on a 230 kV line in Dominion
+– Load transferred to back-up generation
+– The load transfer caused high voltage conditions and triggered the transfer 
+of additional load to back-up generation
+– In total, approximately 3,800 MW of load transferred to back-up generation
+– Fault cleared properly
+There were no relay misoperations or stuck breakers
+• 07:56 Reporting ACE reached +3,928 MWs
+• 07:56 Frequency reached 60.092 Hz
+• 08:06 Balancing Authority ACE Limit (BAAL) excursion recovered 
+within 9 minutes 
+– BAL-001-2 R2 requires recovery within 30 minutes
+
+<<p4>>
+PJM © 2026
+4
+www.pjm.com | Public
+RTO Load vs. ACE
+7:55:40 AM, 99,984 MW
+7:56:45 AM, 96,205 MW
+7:55:45 AM, -246 MW
+7:56:45 AM, 3,928 MW
+-1,000
+-500
+0
+500
+1,000
+1,500
+2,000
+2,500
+3,000
+3,500
+4,000
+4,500
+94,000
+95,000
+96,000
+97,000
+98,000
+99,000
+100,000
+101,000
+7:45:00 AM
+7:45:40 AM
+7:46:20 AM
+7:47:00 AM
+7:47:40 AM
+7:48:20 AM
+7:49:00 AM
+7:49:40 AM
+7:50:20 AM
+7:51:00 AM
+7:51:40 AM
+7:52:20 AM
+7:53:00 AM
+7:53:40 AM
+7:54:20 AM
+7:55:00 AM
+7:55:40 AM
+7:56:20 AM
+7:57:00 AM
+7:57:40 AM
+7:58:20 AM
+7:59:00 AM
+7:59:40 AM
+8:00:20 AM
+8:01:00 AM
+8:01:40 AM
+8:02:20 AM
+8:03:00 AM
+8:03:40 AM
+8:04:20 AM
+8:05:00 AM
+8:05:40 AM
+8:06:20 AM
+8:07:00 AM
+8:07:40 AM
+8:08:20 AM
+8:09:00 AM
+8:09:40 AM
+8:10:20 AM
+8:11:00 AM
+8:11:40 AM
+8:12:20 AM
+8:13:00 AM
+8:13:40 AM
+8:14:20 AM
+8:15:00 AM
+RTO Load (MW)
+ACE (MW)
+RTO Load (MW)
+ACE (MW)
+
+<<p5>>
+PJM © 2026
+5
+www.pjm.com | Public
+July 22, 2026 – Frequency
+59.96
+59.98
+60.00
+60.02
+60.04
+60.06
+60.08
+60.10
+7:45:00 AM
+7:45:45 AM
+7:46:30 AM
+7:47:15 AM
+7:48:00 AM
+7:48:45 AM
+7:49:30 AM
+7:50:15 AM
+7:51:00 AM
+7:51:45 AM
+7:52:30 AM
+7:53:15 AM
+7:54:00 AM
+7:54:45 AM
+7:55:30 AM
+7:56:15 AM
+7:57:00 AM
+7:57:45 AM
+7:58:30 AM
+7:59:15 AM
+8:00:00 AM
+8:00:45 AM
+8:01:30 AM
+8:02:15 AM
+8:03:00 AM
+8:03:45 AM
+8:04:30 AM
+8:05:15 AM
+8:06:00 AM
+8:06:45 AM
+8:07:30 AM
+8:08:15 AM
+8:09:00 AM
+8:09:45 AM
+8:10:30 AM
+8:11:15 AM
+8:12:00 AM
+8:12:45 AM
+8:13:30 AM
+8:14:15 AM
+8:15:00 AM
+Frequency (Hz)
+60.092 Hz
+
+<<p6>>
+PJM © 2026
+6
+www.pjm.com | Public
+RTO Tie Flows vs. RTO Schedule
+7:56:15 AM, -2,119 MW
+7:56:45 AM, -5,304 MW
+-5,500
+-4,500
+-3,500
+-2,500
+-1,500
+-500
+500
+7:45:00 AM
+7:45:35 AM
+7:46:10 AM
+7:46:45 AM
+7:47:20 AM
+7:47:55 AM
+7:48:30 AM
+7:49:05 AM
+7:49:40 AM
+7:50:15 AM
+7:50:50 AM
+7:51:25 AM
+7:52:00 AM
+7:52:35 AM
+7:53:10 AM
+7:53:45 AM
+7:54:20 AM
+7:54:55 AM
+7:55:30 AM
+7:56:05 AM
+7:56:40 AM
+7:57:15 AM
+7:57:50 AM
+7:58:25 AM
+7:59:00 AM
+7:59:35 AM
+8:00:10 AM
+8:00:45 AM
+8:01:20 AM
+8:01:55 AM
+8:02:30 AM
+8:03:05 AM
+8:03:40 AM
+8:04:15 AM
+8:04:50 AM
+8:05:25 AM
+8:06:00 AM
+8:06:35 AM
+8:07:10 AM
+8:07:45 AM
+8:08:20 AM
+8:08:55 AM
+8:09:30 AM
+8:10:05 AM
+8:10:40 AM
+8:11:15 AM
+8:11:50 AM
+8:12:25 AM
+8:13:00 AM
+8:13:35 AM
+8:14:10 AM
+8:14:45 AM
+RTO Tie Flows
+RTO Tie Schedule
+Load (MW)
+
+<<p7>>
+PJM © 2026
+7
+www.pjm.com | Public
+230 kV Voltages
+230
+232
+234
+236
+238
+240
+242
+244
+7:45:00 AM
+7:45:35 AM
+7:46:10 AM
+7:46:45 AM
+7:47:20 AM
+7:47:55 AM
+7:48:30 AM
+7:49:05 AM
+7:49:40 AM
+7:50:15 AM
+7:50:50 AM
+7:51:25 AM
+7:52:00 AM
+7:52:35 AM
+7:53:10 AM
+7:53:45 AM
+7:54:20 AM
+7:54:55 AM
+7:55:30 AM
+7:56:05 AM
+7:56:40 AM
+7:57:15 AM
+7:57:50 AM
+7:58:25 AM
+7:59:00 AM
+7:59:35 AM
+8:00:10 AM
+8:00:45 AM
+8:01:20 AM
+8:01:55 AM
+8:02:30 AM
+8:03:05 AM
+8:03:40 AM
+8:04:15 AM
+8:04:50 AM
+8:05:25 AM
+8:06:00 AM
+8:06:35 AM
+8:07:10 AM
+8:07:45 AM
+8:08:20 AM
+8:08:55 AM
+8:09:30 AM
+8:10:05 AM
+8:10:40 AM
+8:11:15 AM
+8:11:50 AM
+8:12:25 AM
+8:13:00 AM
+8:13:35 AM
+8:14:10 AM
+8:14:45 AM
+Brandon Shores
+Waugh Chapel
+Dickerson
+Marsh Run
+Chesterfield
+Ox
+Voltage (kV)
+
+<<p8>>
+PJM © 2026
+8
+www.pjm.com | Public
+500 kV Voltage
+515
+520
+525
+530
+535
+540
+545
+550
+555
+7:45:00 AM
+7:45:35 AM
+7:46:10 AM
+7:46:45 AM
+7:47:20 AM
+7:47:55 AM
+7:48:30 AM
+7:49:05 AM
+7:49:40 AM
+7:50:15 AM
+7:50:50 AM
+7:51:25 AM
+7:52:00 AM
+7:52:35 AM
+7:53:10 AM
+7:53:45 AM
+7:54:20 AM
+7:54:55 AM
+7:55:30 AM
+7:56:05 AM
+7:56:40 AM
+7:57:15 AM
+7:57:50 AM
+7:58:25 AM
+7:59:00 AM
+7:59:35 AM
+8:00:10 AM
+8:00:45 AM
+8:01:20 AM
+8:01:55 AM
+8:02:30 AM
+8:03:05 AM
+8:03:40 AM
+8:04:15 AM
+8:04:50 AM
+8:05:25 AM
+8:06:00 AM
+8:06:35 AM
+8:07:10 AM
+8:07:45 AM
+8:08:20 AM
+8:08:55 AM
+8:09:30 AM
+8:10:05 AM
+8:10:40 AM
+8:11:15 AM
+8:11:50 AM
+8:12:25 AM
+8:13:00 AM
+8:13:35 AM
+8:14:10 AM
+8:14:45 AM
+Meadow Brook
+Doubs
+Mt Storm
+Black Oak
+Pruntytown
+Surry
+Loudoun
+Limerick
+Conastone
+Voltage (kV)
+
+<<p9>>
+PJM © 2026
+9
+www.pjm.com | Public
+765 kV Voltage
+740
+745
+750
+755
+760
+765
+770
+775
+780
+785
+790
+7:45:00 AM
+7:45:40 AM
+7:46:20 AM
+7:47:00 AM
+7:47:40 AM
+7:48:20 AM
+7:49:00 AM
+7:49:40 AM
+7:50:20 AM
+7:51:00 AM
+7:51:40 AM
+7:52:20 AM
+7:53:00 AM
+7:53:40 AM
+7:54:20 AM
+7:55:00 AM
+7:55:40 AM
+7:56:20 AM
+7:57:00 AM
+7:57:40 AM
+7:58:20 AM
+7:59:00 AM
+7:59:40 AM
+8:00:20 AM
+8:01:00 AM
+8:01:40 AM
+8:02:20 AM
+8:03:00 AM
+8:03:40 AM
+8:04:20 AM
+8:05:00 AM
+8:05:40 AM
+8:06:20 AM
+8:07:00 AM
+8:07:40 AM
+8:08:20 AM
+8:09:00 AM
+8:09:40 AM
+8:10:20 AM
+8:11:00 AM
+8:11:40 AM
+8:12:20 AM
+8:13:00 AM
+8:13:40 AM
+8:14:20 AM
+8:15:00 AM
+Amos
+Baker
+Jefferson
+Cloverdale
+Dumont
+Marysville
+Rockport
+Voltage (kV)
+
+<<p10>>
+PJM © 2026
+www.pjm.com | Public
+NERC Reliability Standards
+Project 2026-02 Computational Loads
+
+<<p11>>
+PJM © 2026
+11
+www.pjm.com | Public
+Project 2026-02 Goals
+• Project Goals include developing:
+• “This drafting team will develop one or more Reliability Standard(s) 
+to address in the near-term essential actions entities must take to 
+assure the reliable integration of large loads into the BPS.”
+• NERC/SDT is on-track to file with FERC by December 31, 2026
+– FERC Docket RD26-7-000 directing NERC to file by December 31, 2026
+Requirements to address 
+integration of 
+Computational Loads onto 
+the BPS
+Changes to NERC Glossary 
+to align with Rules of 
+Procedure modifications
+1
+2
+
+<<p12>>
+PJM © 2026
+12
+www.pjm.com | Public
+NERC Project 2026-02 Computational Loads 
+• Draft Standards expected to address foundational essential actions: 
+– TOs and DPs to have Computational Load Site* interconnection 
+requirements (Similar to FAC-001-4 R1)
+– PCs and TPs to develop steady-state, dynamics, and short circuit 
+modeling data requirements (Similar to MOD-032-1 R1)
+Data necessary for capabilities related to tripping, ride-through, and 
+Disturbance recovery
+• Phase 1 will not address the minimum voltage or frequency ride-
+through
+
+<<p13>>
+PJM © 2026
+13
+www.pjm.com | Public
+NERC Draft Rules of Procedures
+• Computational Load Site - One or more buildings, structures, or installations that:
+– primarily contains information technology infrastructure used for:
+creating, executing, and delivering software applications and services;
+artificial intelligences training, deployment, and delivery;
+cryptocurrency mining; or
+other computational activities at a data center; and
+– is supplied through electrical equipment that is connected to the Bulk Power System.
+• Computational Load Owner (CLO)* - The entity that owns and maintains a Computational 
+Load Site.
+• Computational Load Operator (CLOP)* - The entity that operates a Computational Load Site.
+• *Registration only applicable for Computational Load Sites greater than or equal to 50 MW that 
+is connected at a voltage greater than or equal to 100 kV from one or more points of 
+connection.
+
+<<p14>>
+PJM © 2026
+14
+www.pjm.com | Public
+NERC – Minimum Ride-Through Requirements
+• NERC Large Load Working Group (LLWG) has developed a draft 
+whitepaper on Large Load Disturbance Performance
+– Posted for industry comment on July 30 
+30-day comment period
+• Defines a minimum technical capability floor for computational load 
+voltage ride-through and Post Fault Active Power Recovery 
+– Allows regional or local modification where system-specific 
+analysis demonstrates a need for more stringent requirements
+• Expected to become part of a Reliability Standard in 2027
+
+<<p15>>
+PJM © 2026
+15
+www.pjm.com | Public
+NERC LLWG – Standard Authorization Request Roadmap
+Protection, Disturbance 
+Performance, Stability 
+Requirements
+• Establish definition of 
+minimum voltage and 
+frequency disturbance 
+performance 
+requirements for 
+computational loads
+
+<<p16>>
+PJM © 2026
+16
+www.pjm.com | Public
+ERCOT Voltage Ride-Through Requirements
+
+<<p17>>
+PJM © 2026
+17
+www.pjm.com | Public
+Next Steps
+• PJM and Dominion continue to jointly review the event and its 
+system impacts.
+• PJM is evaluating potential enhancements to reliability 
+requirements, including consideration of existing and future industry 
+ride-through standards and practices.
+• Additional findings and lessons learned from the joint PJM-
+Dominion review will be presented at the August 6 Operations 
+Committee Meeting.
+
+<<p18>>
+PJM © 2026
+18
+www.pjm.com | Public
+Contact
+Presenter: 
+Matthew Wharton, 
+Matthew.Wharton@pjm.com
+Dominion Load Transfer Event
+Member Hotline
+(610) 666 – 8980
+(866) 400 – 8980
+custsvc@pjm.com
+
+<<p19>>
+PJM © 2026
+19
+www.pjm.com | Public
+
+<<p20>>
+Dominion Energy Large Load 
+Transfer Event
+7/22/2026
+Preliminary Findings
+
+<<p21>>
+Presentation Disclaimer
+•
+The conclusions, observations, and recommendations presented herein are preliminary in nature and are 
+based on information available at the time of preparation. Additional data, analysis, and stakeholder input 
+may result in modifications to these findings. As such, the content of this presentation represents our current 
+understanding and should be considered subject to change without notice. No significant business, 
+operational, financial, or strategic decisions should be made solely on the basis of the information contained 
+in this presentation. Independent review and validation of relevant facts and assumptions are recommended 
+prior to taking action.
+Preliminary Findings
+
+<<p22>>
+Presentation Agenda
+• Dominion’s Data Center Growth and Challenges
+• Overview of the failed equipment
+• Overview of the protection operation
+• System Response when large loads transferred to backup generation when 
+still energized
+• Voltage and Frequency Response
+• Close by Generation AVR Response
+Preliminary Findings
+
+<<p23>>
+August 5, 2026
+4
+Year-over-year PJM DOM Zone forecast
+2022 Winter Peak 
+22,189 MW
+(+1,853)
+2023 Summer Peak
+21,993 MW
+(+526 MW)
+2024 Summer Peak
+23,127 MW
+(+674 MW)
+2025 Winter Peak
+24,678 MW
+(+1,313)
+Peak
+Temp
+Date
+No.
+25192
+100
+7/3/2026
+1
+25168
+13
+2/9/2026
+2
+25159
+96
+7/2/2026
+3
+24846
+99
+7/4/2026
+4
+24678
+9
+1/23/2025
+5
+24557
+93
+7/1/2026
+6
+24198
+10
+2/8/2026
+7
+24196
+11
+1/29/2026
+8
+24162
+13
+1/30/2026
+9
+24157
+15
+12/15/2025
+10
+2026 Summer Peak
+25192 MW
+(+2)
+Preliminary Findings
+
+<<p24>>
+Data Center Load Pockets
+Data Center Load represents 27% of 
+the previous peak load record.
+•
+The two data centers pockets in 
+northern VA, process 70% of the 
+world’s internet traffic.
+•
+Loudoun County Pocket has a 
+maximum load of 4247.6MW.
+•
+Prince William Pocket has a 
+maximum load of 2186.2MW.
+Not Shown in the image:
+•
+East Richmond Pocket has a 
+maximum of 383.8MW
+•
+Mecklenburg Pocket has a peak 
+load of 519MW.
+•
+Data Centers exist outside of these 
+pockets.
+•
+These loads are no co-incidental.
+Preliminary Findings
+
+<<p25>>
+230kV Transmission Line 
+Experienced a Mechanical Failure
+• At 07:56 a single sub conductor of a double 
+bundle pulled free from its mechanical 
+compression sleeve on a dead end structure.
+• The apparent cause was over-heating on the 
+sleeve due to improperly torqued bolts on the 
+pad to pad connection.
+• The remaining bolts on the line were 
+inspected with no issues found.  The 
+sleeves on the remaining phases were X-
+Rayed to confirm proper installation
+• A formal RCA will be completed in 
+September of 2026.
+Preliminary Findings
+
+<<p26>>
+Protection Analysis
+Initial Fault and all reclose attempts 
+cleared in 2-3 cycles as designed.
+Close end tripped on Zone 1, Remote 
+end tripped on Zone 2.
+Fault currents 28.8kA.
+Reclosing operated as designed.  Each 
+terminal reclosed high speed, then time 
+delayed as per designed.
+One data center back fed the fault 
+during the event, 3 attempts.
+Preliminary Findings
+
+<<p27>>
+Timeline of Events
+• 07:56:09 – 2031 line opened and initiated instantaneous reclose and retripped
+• 07:56:10 – Shellhorn SC 5 and 6, and Liberty SC1
+• 07:56:15 – Received Abnormal Voltage alarms
+• 07:56:25 – Round Table 2031 circuit breaker reclosed and opened
+• 07:56:30 – Enterprise 2031 circuit breaker reclosed and opened
+• 07:56:33 – Initial Load Loss [2,970 MW]
+• 07:57:25 – Round Table 2031 circuit breaker reclosed and locked out
+• 07:57:30 – Enterprise 2031 circuit breaker reclosed and locked out
+• 07:57:40 – Ashburn SC3 opened
+• 07:57:40 – Secondary Load Loss [1,099 MW]
+• 07:57:54 – Dranesville SC5 opened
+• 07:58:14 – Clifton SC1 opened
+• 07:59:05 – Valley Reactor #1 closed
+• 07:59:55 – Dooms Reactor #1 closed
+Preliminary Findings
+
+<<p28>>
+Load Transfer Approximation (MW)
+7/22/2026 07:56 – 17,448 MW
+7/22/2026 07:57 – 13,579 MW
+Approximate Load Transferred: 3,869 MW
+Preliminary Findings
+
+<<p29>>
+Load Drop off and Recovery (MW)
+Preliminary Findings
+
+<<p30>>
+Frequency (Hz) and Voltage Profile (kV)
+Preliminary Findings
+
+<<p31>>
+Voltage Profile
+0.9 pu
+1.1 pu
+Preliminary Findings
+
+<<p32>>
+Generator Response Examples:
+Close by generation
+(-266 MVAR)
+Generation further away
+(-150 MVAR)
+Preliminary Findings
+
+<<p33>>
+• At 07:56 a phase to phase fault occurred on line 2031 right outside of 
+Roundtable substation.
+• All protection systems worked as designed, isolating the faulted line.
+• Data Center load transferred away from the grid during the reclosing events in 
+both Loudoun and Prince William load pockets.
+• The high voltage caused by the large load transfer was corrected via 
+overvoltage capacitor bank tripping and operator action.
+• Load transferred back to the grid by the customers within 30 minutes.
+Preliminary Conclusions
+Preliminary Findings
