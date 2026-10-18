@@ -13,7 +13,6 @@ from dataclasses import dataclass, asdict, field, fields
 from functools import lru_cache
 
 import numpy as np
-import pandas as pd
 
 from . import constants as C
 
@@ -302,6 +301,10 @@ def outdoor_temps() -> np.ndarray:
     Interim until ridethrough.drivers.sample.sample_drivers() supplies correlated
     temperature and load.
     """
+    # Imported here, not at module level: only sampling needs pandas, and the API (api/Dockerfile) imports this
+    # module without it.
+    import pandas as pd
+
     d = pd.read_csv(C.OUTDOOR_TEMP_CSV, usecols=["hour_lst", "temp_c", "flag"])
     year = d["hour_lst"].str[:4].astype(int)
     first, last = C.OUTDOOR_TEMP_YEARS

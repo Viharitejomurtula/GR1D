@@ -1,0 +1,11 @@
+# Build context for api/Dockerfile (built from the repo root). Allow-list: send only what the image copies,
+# so builds do not upload the virtualenv (~1 GB), frontend/node_modules (~0.8 GB) or the datasets.
+*
+!sim/
+!model/
+!api/
+!surrogate/__init__.py
+!surrogate/web.py
+!frontend/public/data/surrogate.json
+**/__pycache__
+**/*.pyc

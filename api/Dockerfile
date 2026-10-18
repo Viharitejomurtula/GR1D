@@ -5,7 +5,9 @@ FROM openmodelica/openmodelica:v1.27.1-ompython
 
 WORKDIR /app
 
-RUN pip install --no-cache-dir --break-system-packages \
+# The base image is Ubuntu 22.04 (Python 3.10, pip 22): pip predates --break-system-packages and the system
+# Python is not marked externally managed, so a plain install is correct here.
+RUN pip install --no-cache-dir \
       fastapi==0.136.3 uvicorn[standard]==0.41.0 numpy
 
 COPY sim/ /app/sim/
