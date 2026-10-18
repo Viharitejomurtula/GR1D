@@ -59,6 +59,26 @@ LIMITS = {
 class SimulateRequest(BaseModel):
     preset: str = Field("grid_friendly", description="grid_friendly or legacy_ups")
     overrides: dict[str, float] = Field(default_factory=dict)
+    include_trace: bool = Field(False, description="return the time series for the replay panel")
+    trace_points: int = Field(300, ge=50, le=2000, description="downsample target")
+
+
+class Trace(BaseModel):
+    """Time series plus the markers the replay panel draws.
+
+    Downsampled: a 15 s run at the 2 ms output step is ~7,500 samples per channel, which
+    is far more than a chart needs and too much to ship on every slider move.
+    """
+    t: list[float]
+    voltage_pu: list[float]
+    facility_pct: list[float]        # grid draw as % of pre-disturbance
+    battery_pct: list[float]         # BBU output as % of pre-disturbance facility power
+    t0: float                        # dip start
+    t1: float                        # dip clears
+    back: float | None               # voltage back above 0.90 pu
+    deadline: float | None           # back + 2.0 s, the NOGRR recovery deadline
+    reached90: float | None          # when draw regained 90% of pre-disturbance
+    min_pct: float
 
 
 class SimulateResponse(BaseModel):
@@ -75,6 +95,7 @@ class SimulateResponse(BaseModel):
     trips: list[str]
     scenario: dict[str, float]
     source: str = "simulator"
+    trace: Trace | None = None
 
 
 @app.get("/health")
@@ -157,6 +178,8 @@ def simulate(req: SimulateRequest) -> SimulateResponse:
     finally:
         res.unlink(missing_ok=True)
 
+    trace = _build_trace(d, scenario, req.trace_points) if req.include_trace else None
+
     return SimulateResponse(
         passed=g.passed,
         passed_pre2028=g.passed_pre2028,
@@ -170,4 +193,48 @@ def simulate(req: SimulateRequest) -> SimulateResponse:
         storage_left=g.storage_left,
         trips=g.trips,
         scenario={k: float(getattr(scenario, k)) for k in FIELD_ORDER},
+        trace=trace,
+    )
+
+
+def _build_trace(d, scenario, n_points: int) -> Trace:
+    import numpy as np
+
+    t = d["time"]
+    v = d["v_sdp_pu"]
+    p = d["p_grid_w"]
+
+    t0 = float(scenario.dip_start_s)
+    t1 = t0 + float(scenario.dip_duration_s)
+
+    pre = p[t < t0 - 0.01]
+    p_pre = float(pre.mean()) if pre.size else float(p.max() or 1.0)
+    pct = 100.0 * p / (p_pre or 1.0)
+
+    bat = d.get("p_bbu_w")
+    bat_pct = 100.0 * bat / (p_pre or 1.0) if bat is not None else np.zeros_like(t)
+
+    # Voltage back above 0.90 pu after the dip: where the NOGRR recovery clock starts.
+    after = np.nonzero((t > t1) & (v >= C.RECOVERY_TRIGGER_V_PU))[0]
+    back = float(t[after[0]]) if after.size else None
+    deadline = back + C.RECOVERY_DEADLINE_S if back is not None else None
+
+    reached = None
+    if back is not None:
+        got = np.nonzero((t >= back) & (pct >= 100.0 * C.RECOVERY_FRACTION))[0]
+        reached = float(t[got[0]]) if got.size else None
+
+    # Even downsample; the charts do not need every solver sample.
+    step = max(1, len(t) // n_points)
+    sl = slice(None, None, step)
+    r3 = lambda a: [round(float(x), 3) for x in a[sl]]
+
+    dip = (t >= t0) & (t <= t1 + 1.0)
+    return Trace(
+        t=r3(t),
+        voltage_pu=r3(v),
+        facility_pct=r3(pct),
+        battery_pct=r3(bat_pct),
+        t0=t0, t1=t1, back=back, deadline=deadline, reached90=reached,
+        min_pct=round(float(pct[dip].min()) if dip.any() else float(pct.min()), 2),
     )
