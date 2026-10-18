@@ -6,7 +6,7 @@ What this file is
     real simulator (surrogate.verify.simulate; needs OpenModelica via Docker or GR1D_NATIVE=1) and reports
     agreement overall and for rows the surrogate flags as outside its training range.
 
-Inputs: n, seed, model_dir. Output: dict (also printed as JSON by `python -m ridethrough.pipeline.check`).
+Inputs: n, seed, model_dir (name or path; default the active surrogate, see surrogate.registry). Output: dict (also printed as JSON by `python -m ridethrough.pipeline.check`).
 """
 from __future__ import annotations
 
@@ -17,14 +17,12 @@ import numpy as np
 
 from ridethrough.pipeline import joint
 from surrogate import verify
-from surrogate.predict import Surrogate
-
-MODEL_DIR = "surrogate/models/v1"
+from surrogate import registry
 
 
-def check(n: int = 300, seed: int = 12345, model_dir: str = MODEL_DIR) -> dict:
+def check(n: int = 300, seed: int = 12345, model_dir: str | None = None) -> dict:
     sc, _ = joint.sample_joint(n, seed)
-    sur = Surrogate.load(model_dir)
+    sur = registry.load_active(model_dir)     # None = GR1D_SURROGATE, else surrogate/models/ACTIVE
     pred = sur.predict(sc)
     truth = verify.simulate(joint.to_scenarios(sc)).set_index("index")
     keep = [i for i in truth.index if truth.loc[i, "numerics_ok"]]

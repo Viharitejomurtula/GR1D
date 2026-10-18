@@ -24,6 +24,8 @@ Assumptions (each is a modelling choice, not a measured fact)
       or 317 ms by the same classes, so this keeps its conditioning and adds within-class spread.
     - dip depth, shape, battery temperature and state of charge come from the sim.scenario marginals: the
       network's dip_depth_pct takes two values (47.2 and 51.4) and its own notes call that placeholder.
+      Depth is conditioned on the simulator's valid band C.VALID_DIP_DEPTH_PU (scope limitation: deeper sags
+      are not assessed).
     - site load_fraction (network range 0.20-0.85) -> workload (Scenario range 0.50-1.00) by a linear
       rescale. They are not the same quantity (site load vs IT utilisation); the rescale keeps the ordering
       and the link to temperature.
@@ -47,6 +49,15 @@ from sim.scenario import FIELD_ORDER, GRID_FRIENDLY, Scenario
 LOAD_LOW, LOAD_HIGH = 0.20, 0.85          # network load_fraction range, rescaled onto WORKLOAD_RANGE
 WORKLOAD_RANGE = (0.50, 1.00)
 PHASE_FRAC = {"SLG": 1 / 3, "LLG": 2 / 3, "LL": 2 / 3, "3LG": 1.0}
+
+
+def scope() -> dict:
+    """What sample_joint covers: only dips whose retained voltage lies in C.VALID_DIP_DEPTH_PU (read at call time)."""
+    lo, hi = C.VALID_DIP_DEPTH_PU
+    return {"dip_depth_pu": [lo, hi], "share_of_sags": C.IN_SCOPE_SAG_SHARE,
+            "note": (f"Results cover only grid dips retaining {lo:.2f}-{hi:.2f} pu (about {C.IN_SCOPE_SAG_SHARE:.0%} of sags, "
+                     "Eaton/EPRI); every figure is conditional on that. Deeper sags are out of scope: unassessed, "
+                     "neither pass nor fail (the simulator's deep-sag voltage-collapse problem is open; validation/CROSSCHECK.md).")}
 
 
 @dataclass(frozen=True)
@@ -95,7 +106,9 @@ def sample_joint(n: int, seed: int = 0, design: Scenario = GRID_FRIENDLY) -> tup
     base = design.to_vector()
     sc = pd.DataFrame(np.tile(base, (n, 1)), columns=list(FIELD_ORDER))
 
-    depth = np.array([S.sample_dip_depth(rng) for _ in range(n)])
+    # In scope only: the simulator (and so the surrogate) is trusted only for dips retaining C.VALID_DIP_DEPTH_PU,
+    # so depths come from the Eaton/EPRI distribution conditioned on that band. The second dip reuses this depth.
+    depth = np.array([S.sample_dip_depth_in_scope(rng) for _ in range(n)])
     shape = np.array([S.sample_shape(rng, d) for d in depth])
     delayed = (bn["protection_failure"] != "normal").to_numpy()
     lo = np.where(delayed, C.DELAYED_CLEARING_CYCLES[0], C.NORMAL_CLEARING_CYCLES[0])

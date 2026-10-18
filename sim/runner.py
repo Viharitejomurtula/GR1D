@@ -184,7 +184,9 @@ def run(sc: Scenario, tag: str = "run") -> Grade:
         if down.size and up.size and up[-1] > down[0]:
             psu_restart_s = float(d["time"][up[-1] + 1] - d["time"][down[0] + 1])
 
-    return grade_trace(d)
+    g = grade_trace(d)
+    g.in_scope = sc.in_scope()   # informational only: pass/fail is unchanged; out of scope = unassessed
+    return g
 
 
 def grade_trace(d) -> Grade:

@@ -48,6 +48,9 @@ class Grade:
     overcurrent_s: float = 0.0                   # longest stretch above the facility's normal maximum current
     cooling_exempted: bool = False               # cooling tripped below 0.35 pu and was removed from the reference (2.14(2)(c))
     recovery_deadline_s: float = 2.0             # 2.0 s, or 0.5 s when a load-transfer scheme was used below 0.8 pu (2.14(2)(e))
+    # Set by runner.run from Scenario.in_scope(): False when a dip retains less (or more) than C.VALID_DIP_DEPTH_PU. Informational
+    # only (the grade itself is unchanged): such a run is outside the simulator's trusted band, so its verdict is unassessed.
+    in_scope: bool = True
 
     def summary(self) -> dict:
         d = self.__dict__.copy()

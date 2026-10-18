@@ -31,6 +31,17 @@ BACKGROUND_N = 300    # scenarios from sim.scenario.sample_many shipped for marg
 BACKGROUND_SEED = 20261018
 
 
+def active_json() -> Path:
+    """The JSON the API should serve: <active model dir>/web.json (surrogate.registry: GR1D_SURROGATE, else
+    surrogate/models/ACTIVE) when it exists, else DEFAULT_JSON. Works without the registry (API image)."""
+    try:
+        from surrogate import registry
+        p = registry.web_json()
+    except Exception:  # noqa: BLE001  (registry or model dir absent, e.g. in the API image)
+        p = None
+    return p or DEFAULT_JSON
+
+
 def export_web(model_dir: str | Path = DEFAULT_MODEL, out: str | Path = DEFAULT_JSON) -> Path:
     """Write the browser/API JSON for the ensemble in model_dir. Needs PyTorch (reads member_<i>.pt)."""
     import torch
@@ -78,7 +89,7 @@ def export_web(model_dir: str | Path = DEFAULT_MODEL, out: str | Path = DEFAULT_
         "members": members,
         "metrics": {"test": metrics["test"], "edge": metrics["edge"], "n_rows": metrics["data"]["kept"]},
         "provenance": {"simulator_commit": prov.get("simulator_commit"), "dirty": prov.get("dirty"),
-                       "rows": prov.get("n"), "model_dir": str(d.relative_to(REPO_ROOT)) if d.is_relative_to(REPO_ROOT) else str(d)},
+                       "rows": prov.get("n"), "name": d.resolve().name, "model_dir": str(d.relative_to(REPO_ROOT)) if d.is_relative_to(REPO_ROOT) else str(d)},
     }
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -216,7 +227,19 @@ def parity(model_dir: str | Path = DEFAULT_MODEL, path: str | Path = DEFAULT_JSO
 
 
 if __name__ == "__main__":
+    # python -m surrogate.web [model_dir [out]]. With no arguments: export the active model (surrogate.registry)
+    # to <model dir>/web.json (what the API serves) and to DEFAULT_JSON (what the browser loads).
+    import shutil
     import sys
-    p = export_web(*(sys.argv[1:3]))
+    if len(sys.argv) > 1:
+        args = sys.argv[1:3]
+    else:
+        from surrogate import registry
+        d = registry.resolve()
+        args = [d, d / "web.json"]
+    p = export_web(*args)
     print(f"exported -> {p} ({p.stat().st_size / 1024:.0f} KB)")
-    print("parity vs PyTorch:", json.dumps(parity(*(sys.argv[1:3])), indent=1))
+    if len(sys.argv) == 1:
+        shutil.copyfile(p, DEFAULT_JSON)
+        print(f"copied -> {DEFAULT_JSON}")
+    print("parity vs PyTorch:", json.dumps(parity(*args), indent=1))

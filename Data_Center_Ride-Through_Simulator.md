@@ -27,6 +27,8 @@ We are building a crash tester for data center grid ride-through: a tool that hu
 
 ## What the simulator does
 
+**Scope (known limitation).** The simulator, and everything built on it (training data, surrogate, pipeline reports), is only trusted for grid dips whose **retained voltage is 0.70-0.90 pu** (`sim.constants.VALID_DIP_DEPTH_PU`), which covers about 69% of sags (Eaton/EPRI; `IN_SCOPE_SAG_SHARE`). Deeper sags hit an unresolved voltage-collapse / invalid-root problem in the voltage solution (see `validation/CROSSCHECK.md`), so they are out of scope for now: sampling stays inside the band by default (`sim.scenario.sample(..., in_scope_only=True)`), results are conditional on an in-band dip, and deeper sags are unassessed, neither pass nor fail.
+
 The simulator answers one question per scenario: when grid voltage dips, does this data center stay connected and restore consumption in time, or does it violate the ride-through rule?
 
 It steps forward in small time increments (about 0.1 ms) for **up to ~15 s** (see note below) and tracks voltage, power flows, stored energy and every piece of equipment's state, then grades the power the grid sees at the Service Delivery Point.

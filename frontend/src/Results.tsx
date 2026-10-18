@@ -4,9 +4,11 @@ import eventRuns from './data/events.json'
 import { simulate } from './simulate'
 import Demo from './Demo'
 import { loadSurrogate, marginal, type SurrogateModel } from './surrogate'
+import Pipeline from './Pipeline'
 
-// ILLUSTRATIVE VALUES: the pipeline does not produce these outputs yet. Every number on this tab comes from the
-// placeholder dataset below, so the header, map, report card and scenario estimate agree with each other.
+// The "Full pipeline" section (Pipeline.tsx) shows the real pipeline output: Bayesian-network scenarios run through the active
+// neural surrogate (python -m ridethrough.pipeline.run --design <d> --web). The header, map and report card below still come
+// from the sample dataset, so they agree with each other but not necessarily with that section.
 // Connected to the simulator. SAMPLE is real graded runs (scripts/export_sample.py from
 // data/runs.csv); EVENTS is six replays of the documented ERCOT dips
 // (scripts/export_events.py). Regenerate either and rebuild to refresh the page.
@@ -26,6 +28,7 @@ type Var = {
   low: string // plain words for the low end, used in the summary
   high: string
   bands?: { from: number; to: number; label: string }[] // where real data actually falls
+  bandCaption?: string // what the shading under the slider means
   marks?: { v: number; label: string }[]
 }
 
@@ -34,6 +37,8 @@ const VARS: Record<VarKey, Var> = {
     column: 'dip_depth_pu', label: 'Dip depth', help: 'Lowest voltage during the dip. Lower is deeper.', unit: 'pu',
     min: 0, max: 0.9, step: 0.01, ticks: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9], fmt: (v) => `${v.toFixed(2)} pu`,
     low: 'deep dips', high: 'shallow dips',
+    // sim/constants.py VALID_DIP_DEPTH_PU: the band the simulator is trusted for
+    bands: [{ from: 0.7, to: 0.9, label: 'in scope' }], bandCaption: 'shaded: in scope, 0.70–0.90 pu',
     marks: [{ v: 0.535, label: 'TX 0.535' }, { v: 0.67, label: 'TX 0.670' }, { v: 0.844, label: 'TX 0.844' }],
   },
   duration: {
@@ -41,7 +46,7 @@ const VARS: Record<VarKey, Var> = {
     column: 'dip_duration_s', label: 'Dip duration', help: 'How long the voltage stays low.', unit: 'ms',
     min: 50, max: 320, step: 1, ticks: [50, 100, 150, 200, 250, 300], fmt: (v) => `${Math.round(v)} ms`,
     low: 'short dips', high: 'long dips',
-    bands: [{ from: 50, to: 67, label: 'normal clearing' }, { from: 167, to: 317, label: 'delayed clearing' }],
+    bands: [{ from: 50, to: 67, label: 'normal clearing' }, { from: 167, to: 317, label: 'delayed clearing' }], bandCaption: 'shaded: real clearing times',
   },
   temp: {
     column: 'outdoor_temp_c', label: 'Outdoor temperature', help: 'Air temperature at the site when the dip hits.', unit: '°C',
@@ -317,7 +322,7 @@ function Slider({ k, value, prev, disabled, onChange }: { k: VarKey; value: numb
       <div className="mono mt-2 flex justify-between gap-3 text-[11px] text-[#8d8670]">
         <span>{V.fmt(V.min)}</span>
         <span className="truncate">
-          {V.bands ? 'shaded: real clearing times' : V.marks ? (V.marks.length > 1 ? `ticks: Texas events ${V.marks.map((m) => m.label.replace('TX ', '')).join(' · ')}` : `tick: ${V.marks[0].label}`) : ''}
+          {V.bandCaption ? V.bandCaption : V.marks ? (V.marks.length > 1 ? `ticks: Texas events ${V.marks.map((m) => m.label.replace('TX ', '')).join(' · ')}` : `tick: ${V.marks[0].label}`) : ''}
         </span>
         <span>{V.fmt(V.max)}</span>
       </div>
@@ -804,12 +809,17 @@ export default function Results() {
 
       <Demo runs={SAMPLE} modes={MODES} order={MODE_KEYS} />
 
-      <Section n="04" kicker="Report card" title="Five ways this design fails."
+      <Section n="04" kicker="Full pipeline · Bayesian network → neural surrogate" title="How this design performs across realistic grid events."
+        lede="Grid events, weather and site state are drawn together from the Bayesian network and run through the neural surrogate. This is how often an event fails, how it fails, and which conditions drive it.">
+        <Pipeline modes={MODES} />
+      </Section>
+
+      <Section n="05" kicker="Report card" title="Five ways this design fails."
         lede="Ranked by how often each one happens across the simulated runs, with a 95% band. Naming the smallest fix needs a search over the design space, which is not built yet.">
         <ReportCard />
       </Section>
 
-      <Section n="05" kicker="Legacy vs product · Texas events" title="Legacy equipment fails all three real dips. The product passes all three."
+      <Section n="06" kicker="Legacy vs product · Texas events" title="Legacy equipment fails all three real dips. The product passes all three."
         lede="Three recorded ERCOT voltage events replayed against the same reference campus, once with legacy double-conversion UPS and once with the product.">
         <Comparison />
       </Section>
@@ -826,12 +836,12 @@ export default function Results() {
         estimate={estimate}
       />
 
-      <Section n="06" kicker="Failure map" title="Pick two factors to see where the design breaks."
+      <Section n="07" kicker="Failure map" title="Pick two factors to see where the design breaks."
         lede="Each dot is one run. Green passed the ERCOT rule; the other colors mark how it failed. The map opens on the pair that separates the most failures, and the ring marks your scenario.">
         <FailureMap you={lastRun} />
       </Section>
 
-      <Section n="07" kicker="Your scenario, second by second"
+      <Section n="08" kicker="Your scenario, second by second"
         title={tr.passed
           ? `A ${VARS.depth.fmt(lastRun.depth)} dip at ${VARS.temp.fmt(lastRun.temp)}. Power is back ${Math.abs(late).toFixed(2)} s before the deadline.`
           : `A ${VARS.depth.fmt(lastRun.depth)} dip at ${VARS.temp.fmt(lastRun.temp)}. Power comes back ${late.toFixed(2)} s too late.`}
