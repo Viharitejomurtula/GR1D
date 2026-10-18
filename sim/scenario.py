@@ -78,6 +78,9 @@ class Scenario:
     # 1/3, 2/3 or 1.0 of load on faulted phases. ANDES gives balanced faults only, so this
     # is the one place single-phase behaviour enters the model.
     faulted_phase_frac: float
+    # Fraction of load behind legacy latching protection. A retrofit question an operator
+    # would actually ask: how much of the floor needs upgrading?
+    legacy_load_frac: float
 
     def to_vector(self) -> np.ndarray:
         return np.array([float(getattr(self, f.name)) for f in fields(self)])
@@ -180,6 +183,7 @@ def sample(rng: np.random.Generator | None = None, *, dip_start_s: float = 1.0) 
         psu_restart_delay_s=float(rng.uniform(0.0, 5.5)),
         psu_trip_spread_frac=float(rng.uniform(0.01, 0.08)),
         faulted_phase_frac=float(rng.choice([1/3, 2/3, 1.0])),
+        legacy_load_frac=float(rng.uniform(0.0, 1.0)),
     )
 
 
@@ -234,6 +238,7 @@ GRID_FRIENDLY = Scenario(
     psu_restart_delay_s=0.0,
     psu_trip_spread_frac=0.04,
     faulted_phase_frac=1.0,
+    legacy_load_frac=0.0,
 )
 
 LEGACY_UPS = Scenario(
@@ -246,4 +251,5 @@ LEGACY_UPS = Scenario(
     psu_restart_delay_s=5.5,
     psu_trip_spread_frac=0.04,
     faulted_phase_frac=1.0,
+    legacy_load_frac=1.0,
 )

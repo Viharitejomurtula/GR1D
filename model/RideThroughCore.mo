@@ -44,6 +44,12 @@ model RideThroughCore
   // Facility undervoltage relay. NOGRR 2.14(4) requires protection be set to equipment
   // tolerance rather than to the envelope edge, so a compliant design picks up below
   // 0.20 pu while a legacy one sits at 0.85 and disconnects inside the envelope.
+  // Fraction of facility load behind legacy latching protection. Real facilities run mixed
+  // equipment vintages: some racks on older gear that trips and needs a manual reset, some
+  // on modern ride-through capable gear. With this at 1.0 the whole facility trips together,
+  // which is the behaviour the model had before.
+  parameter Real legacy_load_frac = 1.0;
+
   parameter Real relay_pickup_pu = 0.15;
   parameter Real relay_delay_s = 0.5;
 
@@ -154,7 +160,9 @@ model RideThroughCore
   Real psu_tripped_frac(start = 0, fixed = true) "Fraction latched off";
   Real psu_online_frac "Fraction still supplying";
   Real ramp_gate "Ramp-back gate, 0 to 1, after the PSUs restart";
-  Boolean facility_connected(start = true, fixed = true) "False once the relay trips";
+  Boolean facility_connected(start = true, fixed = true) "False only if the whole facility is off";
+  Boolean legacy_tripped(start = false, fixed = true) "Legacy portion latched off";
+  Real facility_available_frac "Fraction of facility load still able to draw";
   Boolean transfer_demanded(start = false, fixed = true) "Grid-side transfer to backup";
   Real t_relay(start = 0, fixed = true);
   Real t_transfer(start = 0, fixed = true);
@@ -273,8 +281,9 @@ equation
   end when;
   ramp_gate = min(1.0, t_psu_up / max(ramp_back_s, 1e-3));
 
-  p_server_w = if servers_lost_power or not facility_connected then 0.0
-               else (workload * p_it_rated_w + p_swing_w) * ramp_gate + p_surge_w;
+  p_server_w = if servers_lost_power then 0.0
+               else ((workload * p_it_rated_w + p_swing_w) * ramp_gate + p_surge_w)
+                    * facility_available_frac;
 
   // ---------------- Cooling, staged NERC Table 5.1 trips ----------------
   der(t_cool_s1) = if v_sense_pu < COOL_S1_V then 1.0 else 0.0;
@@ -307,7 +316,7 @@ equation
        elseif cool_s1_tripped and t_cool_ok < COOL_RECONNECT_S then (1.0 - COOL_S1_FRAC)
        else 1.0) * (cooling_fan_frac + cooling_pump_frac);
 
-  p_cooling_w = if facility_connected then p_cooling_rated_w * cooling_available else 0.0;
+  p_cooling_w = p_cooling_rated_w * cooling_available * facility_available_frac;
 
   // ---------------- Facility relay and grid-side transfer ----------------
   der(t_relay) = if v_sense_pu < relay_pickup_pu then 1.0 else 0.0;
@@ -316,9 +325,15 @@ equation
   end when;
   // Latching: a tripped facility stays disconnected for the rest of the run, which is what
   // NOGRR 2.14(6) is about -- no automatic re-closure on a sag count.
+  // The relay protects the legacy portion only; the modern portion rides through.
   when t_relay > relay_delay_s then
-    facility_connected = false;
+    legacy_tripped = true;
   end when;
+  facility_available_frac =
+    (1.0 - legacy_load_frac) + legacy_load_frac * (if legacy_tripped then 0.0 else 1.0);
+  // NOGRR grades whether the LEL stayed *connected*. Partial load loss is not
+  // disconnection, so this is false only when nothing is left drawing.
+  facility_connected = facility_available_frac > 0.01;
 
   der(t_transfer) = if v_sense_pu < transfer_threshold_pu then 1.0 else 0.0;
   when v_sense_pu >= transfer_threshold_pu then

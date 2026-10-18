@@ -64,6 +64,7 @@ PARAM_MAP = {
     "battery_temp_c": "battery_temp_c",
     "psu_trip_spread_frac": "psu_trip_spread_frac",
     "faulted_phase_frac": "faulted_phase_frac",
+    "legacy_load_frac": "legacy_load_frac",
 }
 
 INT_PARAMS = {"shelves_per_rack": "shelves_per_rack", "bbu_modules_per_rack": "bbu_modules_per_rack"}

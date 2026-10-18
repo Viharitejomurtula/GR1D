@@ -286,6 +286,23 @@ Plus time series of V, I, P at SDP, transformer, PSUs, busbar, BBU, servers, coo
 | Eastern event | 3rd dip / 3rd reclose | ~1,260 MW did not return for hours | Validate legacy (fleet) | ☑️ NERC Large Load Loss p.9 — non-Texas |
 | ERCOT context | — | 26 large-load ride-through events in <3 yr | Pitch context | ✅ AionTracks slide 3 |
 
+### Validation status (2026-10-17)
+
+Method: one parameter is **inferred** per case (`legacy_load_frac`, the share of load behind
+legacy latching protection), then the model is checked against observables that were *not*
+fitted. Facilities run mixed equipment vintages, so this is a real design quantity, not a
+tuning knob — but a fitted number cannot also be a validation.
+
+| Case | Inferred legacy frac | Sustained loss (fitted) | Peak current (**not** fitted) | Recovery |
+|---|---|---|---|---|
+| Facility A | 0.46 | 45.6% vs real 46% | **1.48 vs 1.60 pu** (−7.5%) | does not recover ✓ matches ~2 h |
+| Facility B | 0.30 | 25.2% vs real 24% | **1.33 vs 1.50 pu** (−11%) | — |
+
+**Systematic finding:** peak current under-predicts in *both* cases, same direction, similar
+magnitude. That is a consistent model bias rather than scatter — the model is conservative on
+current draw, likely because load sheds sooner than real equipment does. State it; do not tune
+it away.
+
 **Counting caveat:** most validation comes from **one** report (NERC crypto incident review,
 Jan 2026). The "50 ms dip, 5 min-2 h recovery" case on AionTracks slide 3 is the **same event**
 as facilities A/B — count it once, not twice.
