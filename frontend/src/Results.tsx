@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import sampleRuns from './data/sample.json'
 import eventRuns from './data/events.json'
 import { simulate } from './simulate'
 import Demo from './Demo'
+import { loadSurrogate, marginal, type SurrogateModel } from './surrogate'
 
 // ILLUSTRATIVE VALUES: the pipeline does not produce these outputs yet. Every number on this tab comes from the
 // placeholder dataset below, so the header, map, report card and scenario estimate agree with each other.
@@ -142,6 +143,38 @@ function localEstimate(s: Scenario) {
     sparse: w < 3,
   }
 }
+
+// The slider estimate. With the neural surrogate loaded (public/data/surrogate.json, trained on 20,000
+// simulator runs) it holds the four sliders and averages the ensemble over 300 real sampler draws of
+// everything else; until then (or if it fails to load) it falls back to the sample-run neighbourhood above.
+type Estimate = {
+  pass: number
+  band: number | null // +/- 2 std across ensemble members; null for the sample fallback
+  mode: keyof typeof MODES | null
+  sparse: boolean // sample fallback: few runs nearby; surrogate: a slider is outside the training data
+  source: 'surrogate' | 'sample'
+  outside: string[]
+}
+
+function surrogateEstimate(model: SurrogateModel, s: Scenario): Estimate {
+  const m = marginal(model, {
+    dip_depth_pu: s.depth,
+    dip_duration_s: s.duration / 1000, // the page works in ms
+    outdoor_temp_c: s.temp,
+    battery_age_yr: s.age,
+  })
+  const outside = m.outsideTraining.map((f) => KEYS.find((k) => VARS[k].column === f) ?? f).map((k) => (k in VARS ? VARS[k as VarKey].label.toLowerCase() : k))
+  return {
+    pass: m.passRate,
+    band: 2 * m.passRateStd,
+    mode: m.mode && m.mode in MODES && m.modeShare > 0.02 ? (m.mode as keyof typeof MODES) : null,
+    sparse: outside.length > 0,
+    source: 'surrogate',
+    outside,
+  }
+}
+
+const sampleEstimate = (s: Scenario): Estimate => ({ ...localEstimate(s), band: null, source: 'sample', outside: [] })
 
 // which pair of factors best separates failures: bin the plane and count failures that land in fail-majority bins
 function separation(x: VarKey, y: VarKey) {
@@ -300,13 +333,15 @@ const STAGES = [
 ]
 const RUN_MS = 3200
 
-function ScenarioPanel({ values, lastRun, onChange, onRun, onReset }: {
+function ScenarioPanel({ values, lastRun, onChange, onRun, onReset, estimate }: {
   values: Scenario; lastRun: Scenario; onChange: (k: VarKey, v: number) => void; onRun: () => void; onReset: () => void
+  estimate: (s: Scenario) => Estimate
 }) {
   const [progress, setProgress] = useState<number | null>(null)
   const timer = useRef<number | null>(null)
   const changed = KEYS.filter((k) => values[k] !== lastRun[k])
-  const est = localEstimate(lastRun)
+  // Memoised on the slider values: the progress bar re-renders every frame and a surrogate estimate is ~30 ms.
+  const est = useMemo(() => estimate(lastRun), [estimate, lastRun])
 
   const stop = () => { if (timer.current) cancelAnimationFrame(timer.current); timer.current = null; setProgress(null) }
   const start = () => {
@@ -322,7 +357,10 @@ function ScenarioPanel({ values, lastRun, onChange, onRun, onReset }: {
   useEffect(() => () => { if (timer.current) cancelAnimationFrame(timer.current) }, [])
 
   const running = progress !== null
-  const live = localEstimate(values)
+  const live = useMemo(() => estimate(values), [estimate, values])
+  const sourceNote = est.source === 'surrogate'
+    ? `Neural surrogate estimate${est.band !== null ? ` (± ${(est.band * 100).toFixed(1)} points across the ensemble)` : ''}; the stress test runs the real simulator.`
+    : 'Estimated from nearby sample runs while the surrogate loads.'
   return (
     <section className="border-b border-[#2b2720] pb-10">
       <style>{`
@@ -365,10 +403,12 @@ function ScenarioPanel({ values, lastRun, onChange, onRun, onReset }: {
               <p className="mono text-[12px] text-[#c4bca7]">
                 Under these conditions about <span className="text-[#f6f1e2]">{pct(est.pass, 0)}</span> of runs pass
                 {est.mode ? `; the most likely failure is ${MODES[est.mode].name.toLowerCase()}.` : '.'}
-                {est.sparse && ' Few runs look like this, so treat it as rough.'}
+                {est.sparse && (est.source === 'surrogate'
+                  ? ` ${est.outside.join(' and ')} ${est.outside.length > 1 ? 'are' : 'is'} outside the training data, so treat it as rough.`
+                  : ' Few runs look like this, so treat it as rough.')}
               </p>
             )}
-            <p className="mono mt-1 text-[11.5px] text-[#8d8670]">Each run holds these four fixed and tests 1,000,000 variations of everything else.</p>
+            <p className="mono mt-1 text-[11.5px] text-[#8d8670]">Each run holds these four fixed and tests 1,000,000 variations of everything else. {sourceNote}</p>
           </div>
         </div>
       ) : (
@@ -420,6 +460,10 @@ function ScenarioPanel({ values, lastRun, onChange, onRun, onReset }: {
               </div>
               <p className="mt-4 text-[15px] leading-[1.55] text-[#d3ccb8]">
                 {live.mode ? `The most likely failure here is ${MODES[live.mode].name.toLowerCase()}.` : 'No failure mode stands out under these conditions.'}
+              </p>
+              <p className="mono mt-2 text-[11.5px] text-[#8d8670]">
+                {live.source === 'surrogate' ? 'Neural surrogate estimate.' : 'Sample-run estimate.'}
+                {live.sparse && live.source === 'surrogate' ? ` Outside the training data: ${live.outside.join(', ')}.` : ''}
               </p>
             </div>
           </div>
@@ -702,6 +746,18 @@ export default function Results() {
   const tr = simulated ?? illustrative
   const late = tr.reached90 - tr.deadline
 
+  // The neural surrogate for the slider estimate; the sample-run estimate stands in until it loads.
+  const [surrogate, setSurrogate] = useState<SurrogateModel | null>(null)
+  useEffect(() => {
+    loadSurrogate()
+      .then(setSurrogate)
+      .catch((err) => console.warn('surrogate failed to load, using the sample-run estimate:', err))
+  }, [])
+  const estimate = useCallback(
+    (s: Scenario): Estimate => (surrogate ? surrogateEstimate(surrogate, s) : sampleEstimate(s)),
+    [surrogate]
+  )
+
   const run = async (next: Scenario) => {
     setLastRun(next)
     setSimulated(null)
@@ -767,6 +823,7 @@ export default function Results() {
         onChange={(k, v) => setValues((s) => ({ ...s, [k]: v }))}
         onRun={() => { void run(values) }}
         onReset={() => { setValues(PRESET); setLastRun(PRESET); setSimulated(null) }}
+        estimate={estimate}
       />
 
       <Section n="06" kicker="Failure map" title="Pick two factors to see where the design breaks."

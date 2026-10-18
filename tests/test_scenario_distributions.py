@@ -135,27 +135,33 @@ def test_same_seed_same_scenarios():
     assert a != c
 
 
-# Preset values as on main before this change (GRID_FRIENDLY / LEGACY_UPS must not change).
+# Preset values after the simulator structure fixes (items 1-9, merged 2026-10-18): GRID_FRIENDLY and
+# LEGACY_UPS must not change unless a preset is changed on purpose (then update this snapshot).
 _BASE = dict(
-    dip_depth_pu=0.60, dip_duration_s=0.083, dip_start_s=1.0, recovery_tau_s=0.0658,
+    dip_depth_pu=0.6, dip_duration_s=0.083, dip_start_s=1.0, recovery_tau_s=0.0658,
     overshoot_pu=0.049, second_dip=False, reclose_gap_s=0.4, outdoor_temp_c=38.0,
-    battery_temp_c=25.0, battery_age_yr=3.0, battery_soc0=0.95, workload=0.85,
-    swing_size_frac=0.2, swing_freq_hz=1.0, swing_phase=0.0, restart_surge_x=1.15,
-    restart_surge_s=0.5, supply_voltage_v=277.0, shelves_per_rack=6, bbu_modules_per_rack=12,
-    cooling_share_25c=0.30, cooling_compressor_frac=0.4, cooling_fan_frac=0.35,
-    z_total_pct=19.75, x_over_r=10.0, ramp_back_s=0.3, vfd_dc_uv_trip_pu=0.70,
+    battery_temp_c=25.0, battery_age_yr=3.0, battery_soc0=0.95, workload=0.85, swing_size_frac=0.2,
+    swing_freq_hz=1.0, swing_phase=0.0, restart_surge_x=1.15, restart_surge_s=0.5,
+    supply_voltage_v=277.0, shelves_per_rack=6, bbu_modules_per_rack=36, cooling_share_25c=0.3,
+    cooling_compressor_frac=0.4, cooling_fan_frac=0.35, z_total_pct=19.75, x_over_r=10.0,
+    ramp_back_s=0.3, vfd_dc_uv_trip_pu=0.7, psu_trip_spread_frac=0.04, faulted_phase_frac=1.0,
+    chain_loading_frac=0.75, psu_uv_delay_s=0.016666666666666666, legacy_open_delay_s=0.05,
+    ramp_on_grid_only=True, psu_cap_datasheet=True, n_groups=1, grp_load_cv=0.0, grp_holdup_cv=0.0,
+    grp_bbu_cv=0.0, grp_trip_cv=0.0, cooling_vfd_frac=0.5, compressor_restart_s=180.0, count_n=0,
+    count_threshold_pu=0.9, count_min_dur_s=0.0, count_window_s=60.0, extra_dips=(), horizon_s=0.0,
 )
 _GRID_FRIENDLY = dict(
-    _BASE, transfer_threshold_pu=0.85, handback_delay_s=0.2, relay_pickup_pu=0.15,
-    relay_delay_s=0.5, cooling_ride_through_s=3.0, psu_restart_delay_s=0.0,
-    psu_trip_spread_frac=0.04, faulted_phase_frac=1.0, legacy_load_frac=0.0,
+    _BASE,
+    transfer_threshold_pu=0.85, handback_delay_s=0.2, relay_pickup_pu=0.15, relay_delay_s=0.5,
+    cooling_ride_through_s=3.0, psu_restart_delay_s=0.0, legacy_load_frac=0.0, vfd_kinetic=True,
+    drive_restart_s=1.0,
 )
 _LEGACY_UPS = dict(
-    _BASE, transfer_threshold_pu=0.90, handback_delay_s=3.0, relay_pickup_pu=0.85,
-    relay_delay_s=0.0, cooling_ride_through_s=0.02, psu_restart_delay_s=5.5,
-    psu_trip_spread_frac=0.04, faulted_phase_frac=1.0, legacy_load_frac=1.0,
+    _BASE,
+    transfer_threshold_pu=0.9, handback_delay_s=3.0, relay_pickup_pu=0.85, relay_delay_s=0.0,
+    cooling_ride_through_s=0.02, psu_restart_delay_s=5.5, legacy_load_frac=1.0, vfd_kinetic=False,
+    drive_restart_s=600.0,
 )
-
 
 @pytest.mark.parametrize("preset, expected", [
     (scenario.GRID_FRIENDLY, _GRID_FRIENDLY), (scenario.LEGACY_UPS, _LEGACY_UPS),

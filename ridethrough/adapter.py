@@ -69,8 +69,8 @@ class Constants:
     dip_depth_pct: tuple         # master.csv (low, typical, high), % of nominal voltage lost
     dclink_age_slope: float      # per year (negative)
     res_age_slope: float         # pu per year
-    res_temp_slope: float        # pu per degC, before room attenuation (negative)
-    res_temp_range: tuple        # degC range the slope was fitted on
+    res_curve_x: tuple           # R(T)/R(25 C) curve from the S matrix, cell temperature degC
+    res_curve_y: tuple           # ratio to R at 25 C (measured Panasonic medians, see s_matrix_long.csv)
     res_pu_range: tuple          # master.csv storage_resistance_pu (low, high)
     room_atten_range: tuple      # (nominal, upper) attenuation of outdoor temp into the battery room
     derate_x: tuple              # converter current-limit curve, degC
@@ -92,8 +92,7 @@ def load_constants() -> Constants:
         dip_depth_pct=(float(dip["low"]), float(dip["typical"]), float(dip["high"])),
         dclink_age_slope=float(cap["slope_at_typical_nominal"]),
         res_age_slope=float(res_age["slope_at_typical_nominal"]),
-        res_temp_slope=float(res_t["component_slope"]),
-        res_temp_range=(float(res_t["linear_range_low"]), float(res_t["linear_range_high"])),
+        res_curve_x=tuple(_floats(res_t["x_points"])), res_curve_y=tuple(_floats(res_t["y_points"])),
         res_pu_range=(float(m["storage_resistance_pu"]["low"]), float(m["storage_resistance_pu"]["high"])),
         room_atten_range=(float(res_t["attenuation_nominal"]), float(res_t["attenuation_upper"])),
         derate_x=tuple(_floats(conv["x_points"])), derate_y=tuple(_floats(conv["y_points"])),
@@ -141,14 +140,15 @@ def cap_loss_from_age(age_years, c: Constants | None = None) -> np.ndarray:
 def battery_resistance_pu(age_years, temp_c, room_atten, c: Constants | None = None) -> np.ndarray:
     """Storage resistance relative to new at room temperature.
 
-    Age term: S-matrix slope per year. Temperature term: S-matrix slope per degC below 25 C times
-    room_atten (0 = conditioned room holds the cells at setpoint; 0.284 = upper bound). Held flat
-    above the fitted range (25 C) and below -20 C (no extrapolation). Clipped to master.csv range.
+    Age term: S-matrix slope per year. Temperature term: the S-matrix curve R(T)/R(25 C) (x_points,
+    y_points; linear between measured points) minus 1, times room_atten (0 = conditioned room holds
+    the cells at setpoint; 0.284 = upper bound). Held flat beyond the curve's ends (no
+    extrapolation). Clipped to master.csv range. The curve replaced a single slope when the S row
+    moved from the P3 two-point value to measured data (the slope alone is valid only for 10-25 C).
     """
     c = c or load_constants()
-    lo, hi = c.res_temp_range
-    t = np.clip(np.asarray(temp_c, dtype=float), lo, hi)
-    r = 1.0 + c.res_age_slope * np.asarray(age_years, dtype=float) + np.asarray(room_atten) * c.res_temp_slope * (t - hi)
+    rise = np.interp(np.asarray(temp_c, dtype=float), c.res_curve_x, c.res_curve_y) - 1.0
+    r = 1.0 + c.res_age_slope * np.asarray(age_years, dtype=float) + np.asarray(room_atten) * rise
     return np.clip(r, *c.res_pu_range)
 
 
