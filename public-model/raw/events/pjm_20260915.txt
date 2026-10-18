@@ -1,0 +1,713 @@
+<<p1>>
+PJM © 2026
+www.pjm.com | Public
+PJM Large Computational Load (LCL)
+Operational Review
+Matthew Wharton, Manager – Reliability 
+Engineering
+Planning Committee Special Session
+Large Load Ride-Through Education Session
+September 15, 2026
+
+<<p2>>
+PJM © 2026
+2
+www.pjm.com | Public
+Agenda
+Discuss Operational Impetus for Large Load 
+Ride-Through Requirements
+Review PJM Customer-Initiated 
+Load Reduction (CILR) Events
+Review FERC & NERC Large 
+Load Efforts
+
+<<p3>>
+PJM © 2026
+3
+www.pjm.com | Public
+NERC 2026 State of Reliability 
+Customer-Initiated Load Reduction Events
+
+<<p4>>
+PJM © 2026
+4
+www.pjm.com | Public
+Forecasted Data Center Load Growth
+June 5, 2026 – Load Analysis Subcommittee
+Load Adjustment Accuracy Report 
+Actual July Peak
+from historical large load data
+Load Forecast July Peak from 
+2023 thru 2026 PJM Load Forecasts
+
+<<p5>>
+PJM © 2026
+5
+www.pjm.com | Public
+Large Load Ride-Through Impetus
+Large Load disconnections during and post normal cleared faults
+1.  July 10, 2024, approximately 1,500 MW of load transferred to backup generation.
+2.  February 17, 2025, approximately 1,800 MW of load transferred to backup generation.
+3.  July 22, 2026, approximately 3,900 MW of load transferred to backup generation.
+Events raising system reliability and regulatory concerns
+
+<<p6>>
+PJM © 2026
+6
+www.pjm.com | Public
+Large Computational Load (LCL) Load Transfer Event #1
+July 10, 2024 (Approximately 1,500 MW)
+• A permanent 230 kV transmission line fault due to a lightning arrestor failure
+• Three auto-reclosing attempts at each end of the line
+▫Resulted in six successive system faults within an 82-second period
+▫Fault cleared properly.
+• Frequency increased to 60.047 Hz. 
+• Voltage went to 1.07 per unit (p.u.). 
+▫Operators removed shunt capacitor banks to return voltages to normal operating values.
+
+<<p7>>
+PJM © 2026
+7
+www.pjm.com | Public
+LCL Load Transfer Event #2
+February 17, 2025 (Approximately 1,800 MW)
+• A sustained Single Line-to-Ground (SLG) 230 kV transmission line fault 
+• One terminal locked out immediately, and the opposite terminal completed its 
+auto-reclosing sequence.
+▫Four voltage sags across the area
+• Fault clearing time was 5.9 cycles (0.0983 seconds).  
+▫Fault cleared properly.
+• Frequency increased to ~60.042 Hz. 
+• Voltage increased to ~1.05 p.u.
+
+<<p8>>
+PJM © 2026
+8
+www.pjm.com | Public
+LCL Load Transfer Event #3
+July 22, 2026 (Approximately 3,900 MW)
+• This was the largest CILR event to date.
+• It was precipitated by a fault on a 230 kV transmission line following a mechanical failure.
+▫Fault cleared properly.
+• There were two stages to the load transfer with about ~2,900 MW transferring initially 
+followed by roughly ~1,000 MW of CILR a minute later.
+• Frequency in the Eastern Interconnection reached 60.092 Hz.
+• Voltages increased with a peak of ~1.138 p.u.
+
+<<p9>>
+PJM © 2026
+www.pjm.com | Public
+LCL Load Transfer Event #3
+July 22, 2026
+
+<<p10>>
+PJM © 2026
+10
+www.pjm.com | Public
+Event Summary
+On Wednesday, July 22, at 07:56, approximately 3,900 MW of load 
+transferred to backup power when a 230 kV transmission line fault 
+occurred within the Dominion zone.
+Load transferred to 
+backup generation.
+The load transfer caused high 
+voltage conditions and triggered 
+the transfer of additional load to 
+backup generation.
+Fault cleared properly.
+• There were no relay 
+misoperations or stuck 
+breakers.
+The load transfer is due to Large Load voltage ride-through performance.
+
+<<p11>>
+PJM © 2026
+11
+www.pjm.com | Public
+Impacts to the Grid
+1.
+Reporting ACE reached +3,928 MW.
+2.
+Frequency in the Eastern Interconnection reached 60.092 
+Hz.
+3.
+Highest voltage recorded was ~1.138 p.u. (~261.74 kV).
+4.
+Energy Management System (EMS) Alarms:
+• 655 Rate of change alarms (kV, MW and MVAR) 
+• 428 frequency alarms
+
+<<p12>>
+PJM © 2026
+12
+www.pjm.com | Public
+RTO Load vs. ACE
+7:45:00 AM
+7:45:40 AM
+7:46:19 AM
+7:47:00 AM
+7:47:40 AM
+7:48:19 AM
+7:48:59 AM
+7:49:40 AM
+7:50:19 AM
+7:50:59 AM
+7:51:40 AM
+7:52:20 AM
+7:52:59 AM
+7:53:40 AM
+7:54:20 AM
+7:54:59 AM
+7:55:39 AM
+7:56:20 AM
+7:57:00 AM
+7:57:39 AM
+7:58:20 AM
+7:59:00 AM
+7:59:39 AM
+8:00:19 AM
+8:01:00 AM
+8:01:39 AM
+8:02:19 AM
+8:03:00 AM
+8:03:40 AM
+8:04:19 AM
+8:05:00 AM
+8:05:40 AM
+8:06:19 AM
+8:06:59 AM
+8:07:40 AM
+8:08:19 AM
+8:08:59 AM
+8:09:40 AM
+8:10:20 AM
+8:10:59 AM
+8:11:40 AM
+8:12:20 AM
+8:12:59 AM
+8:13:39 AM
+8:14:20 AM
+8:15:00 AM
+94,000
+95,000
+96,000
+97,000
+98,000
+99,000
+100,000
+101,000
+0
+500
+1,000
+1,500
+2,000
+2,500
+3,000
+3,500
+4,000
+4,500
+-500
+-1,000
+46225.33032, 99,984 MW
+46225.33108, 96,205 MW
+46225.33038, -246 MW
+46225.33108, 3,928 MW
+RTO Load (MW)
+ACE (MW)
+RTO Load (MW)
+ACE (MW)
+
+<<p13>>
+PJM © 2026
+13
+www.pjm.com | Public
+July 22, 2026 – Frequency
+7:45:00 AM
+7:45:45 AM
+7:46:30 AM
+7:47:15 AM
+7:48:00 AM
+7:48:45 AM
+7:49:30 AM
+7:50:15 AM
+7:51:00 AM
+7:51:45 AM
+7:52:30 AM
+7:53:15 AM
+7:54:00 AM
+7:54:45 AM
+7:55:30 AM
+7:56:15 AM
+7:57:00 AM
+7:57:45 AM
+7:58:30 AM
+7:59:15 AM
+8:00:00 AM
+8:00:45 AM
+8:01:30 AM
+8:02:15 AM
+8:03:00 AM
+8:03:45 AM
+8:04:30 AM
+8:05:15 AM
+8:06:00 AM
+8:06:45 AM
+8:07:30 AM
+8:08:15 AM
+8:09:00 AM
+8:09:45 AM
+8:10:30 AM
+8:11:15 AM
+8:12:00 AM
+8:12:45 AM
+8:13:30 AM
+8:14:15 AM
+8:15:00 AM
+59.96
+59.98
+60.00
+60.02
+60.04
+60.06
+60.08
+60.10
+Frequency (Hz)
+60.092 Hz
+
+<<p14>>
+PJM © 2026
+14
+www.pjm.com | Public
+RTO Tie Flows vs. RTO Schedule
+7:45:00 AM
+7:45:35 AM
+7:46:10 AM
+7:46:45 AM
+7:47:20 AM
+7:47:55 AM
+7:48:30 AM
+7:49:05 AM
+7:49:40 AM
+7:50:15 AM
+7:50:50 AM
+7:51:25 AM
+7:52:00 AM
+7:52:35 AM
+7:53:10 AM
+7:53:45 AM
+7:54:20 AM
+7:54:55 AM
+7:55:30 AM
+7:56:05 AM
+7:56:40 AM
+7:57:15 AM
+7:57:50 AM
+7:58:25 AM
+7:59:00 AM
+7:59:35 AM
+8:00:10 AM
+8:00:45 AM
+8:01:20 AM
+8:01:55 AM
+8:02:30 AM
+8:03:05 AM
+8:03:40 AM
+8:04:15 AM
+8:04:50 AM
+8:05:25 AM
+8:06:00 AM
+8:06:35 AM
+8:07:10 AM
+8:07:45 AM
+8:08:20 AM
+8:08:55 AM
+8:09:30 AM
+8:10:05 AM
+8:10:40 AM
+8:11:15 AM
+8:11:50 AM
+8:12:25 AM
+8:13:00 AM
+8:13:35 AM
+8:14:10 AM
+8:14:45 AM
+-5,500
+-4,500
+-3,500
+-2,500
+-1,500
+-500
+500
+46225.3307291667, -2,119
+46225.3310763889, 
+RTO Tie Flows
+RTO Tie Schedule
+Load (MW)
+
+<<p15>>
+PJM © 2026
+15
+www.pjm.com | Public
+230 kV Voltages
+7:45:00 AM
+7:45:34 AM
+7:46:10 AM
+7:46:44 AM
+7:47:20 AM
+7:47:54 AM
+7:48:30 AM
+7:49:04 AM
+7:49:40 AM
+7:50:14 AM
+7:50:50 AM
+7:51:24 AM
+7:52:00 AM
+7:52:34 AM
+7:53:10 AM
+7:53:44 AM
+7:54:20 AM
+7:54:54 AM
+7:55:30 AM
+7:56:04 AM
+7:56:40 AM
+7:57:14 AM
+7:57:50 AM
+7:58:24 AM
+7:59:00 AM
+7:59:34 AM
+8:00:10 AM
+8:00:44 AM
+8:01:20 AM
+8:01:54 AM
+8:02:30 AM
+8:03:04 AM
+8:03:40 AM
+8:04:14 AM
+8:04:50 AM
+8:05:24 AM
+8:06:00 AM
+8:06:35 AM
+8:07:09 AM
+8:07:45 AM
+8:08:19 AM
+8:08:55 AM
+8:09:29 AM
+8:10:05 AM
+8:10:39 AM
+8:11:15 AM
+8:11:49 AM
+8:12:25 AM
+8:12:59 AM
+8:13:35 AM
+8:14:09 AM
+8:14:45 AM
+230
+232
+234
+236
+238
+240
+242
+244
+Brandon Shores
+Waugh Chapel
+Dickerson 
+Marsh Run
+Chesterfield
+Ox
+Voltage (kV)
+
+<<p16>>
+PJM © 2026
+16
+www.pjm.com | Public
+500 kV Voltage
+7:45:00 AM
+7:45:35 AM
+7:46:10 AM
+7:46:45 AM
+7:47:20 AM
+7:47:55 AM
+7:48:30 AM
+7:49:05 AM
+7:49:40 AM
+7:50:15 AM
+7:50:50 AM
+7:51:25 AM
+7:52:00 AM
+7:52:35 AM
+7:53:10 AM
+7:53:45 AM
+7:54:20 AM
+7:54:55 AM
+7:55:30 AM
+7:56:05 AM
+7:56:40 AM
+7:57:15 AM
+7:57:50 AM
+7:58:25 AM
+7:59:00 AM
+7:59:35 AM
+8:00:10 AM
+8:00:45 AM
+8:01:20 AM
+8:01:55 AM
+8:02:30 AM
+8:03:05 AM
+8:03:40 AM
+8:04:15 AM
+8:04:50 AM
+8:05:25 AM
+8:06:00 AM
+8:06:35 AM
+8:07:10 AM
+8:07:45 AM
+8:08:20 AM
+8:08:55 AM
+8:09:30 AM
+8:10:05 AM
+8:10:40 AM
+8:11:15 AM
+8:11:50 AM
+8:12:25 AM
+8:13:00 AM
+8:13:35 AM
+8:14:10 AM
+8:14:45 AM
+515
+520
+525
+530
+535
+540
+545
+550
+555
+Meadow Brook
+Doubs
+Mt Storm
+Black Oak
+Pruntytown
+Surry
+Loudoun
+Limerick
+Conastone
+Voltage (kV)
+
+<<p17>>
+PJM © 2026
+17
+www.pjm.com | Public
+765 kV Voltage
+7:45:00 AM
+7:45:40 AM
+7:46:20 AM
+7:47:00 AM
+7:47:40 AM
+7:48:20 AM
+7:49:00 AM
+7:49:40 AM
+7:50:20 AM
+7:51:00 AM
+7:51:40 AM
+7:52:20 AM
+7:53:00 AM
+7:53:40 AM
+7:54:20 AM
+7:55:00 AM
+7:55:40 AM
+7:56:20 AM
+7:57:00 AM
+7:57:40 AM
+7:58:20 AM
+7:59:00 AM
+7:59:40 AM
+8:00:20 AM
+8:01:00 AM
+8:01:40 AM
+8:02:20 AM
+8:03:00 AM
+8:03:40 AM
+8:04:20 AM
+8:05:00 AM
+8:05:40 AM
+8:06:20 AM
+8:07:00 AM
+8:07:40 AM
+8:08:20 AM
+8:09:00 AM
+8:09:40 AM
+8:10:20 AM
+8:11:00 AM
+8:11:40 AM
+8:12:20 AM
+8:13:00 AM
+8:13:40 AM
+8:14:20 AM
+8:15:00 AM
+740
+745
+750
+755
+760
+765
+770
+775
+780
+785
+790
+Amos
+Baker
+Jefferson
+Cloverdale
+Dumont
+Marysville
+Rockport
+Voltage (kV)
+
+<<p18>>
+PJM © 2026
+www.pjm.com | Public
+NERC & FERC
+
+<<p19>>
+PJM © 2026
+19
+www.pjm.com | Public
+NERC Large Load Action Plan
+1.
+NERC White Papers:
+• Characteristics and Risks of Emerging Large Loads (July 2025)
+• Assessment of Gaps in Existing Practices, Requirements, and Reliability Standards for Emerging Large Loads 
+(March 2026)
+• Large Load Disturbance Performance (Expected December 2026)
+▫SAR – Reliability Standards to Address Computational Load Disturbance Performance
+2.
+NERC issued a Level 3 Alert: Essential Actions to Industry: Computational Load Modeling, Studies, 
+Instrumentation, Commissioning, Operations, Protection and Control
+3.
+Proposed Reliability Standards: 
+• Project 2026-02 Computational Loads
+• FERC Docket RD26-7-000 directing NERC to file by Dec. 31, 2026
+4.
+Jim Robb Letter to CEOs outlines near-term actions on large loads and standards development process.
+5.
+NERC LLWG – Standard Authorization Request Road Map
+
+<<p20>>
+PJM © 2026
+20
+www.pjm.com | Public
+Proposed Foundational Reliability Standards 
+CLO-001-1
+Computational Load Interconnection, Studies, & Modeling Data addresses the 
+planning-facing integration work: interconnection requirements, studies, 
+commissioning, qualified changes and modeling data.
+CLO-002-1
+Computational Load Operational Data and Communications addresses the 
+operating-facing integration work: operational data, interpersonal communications, 
+Operating Instructions, and response to Operating Instructions. 
+CLO-003-1
+Computational Load Protection Coordination & Disturbance Monitoring 
+addresses protection and monitoring equipment integration work: protection 
+coordination and disturbance monitoring data needed for event analysis.
+
+<<p21>>
+PJM © 2026
+21
+www.pjm.com | Public
+Draft LLWG Recommendations
+Applicability and 
+Effective Dates
+• Develop criteria for applicability and implementation timelines, including 
+consideration of both new and existing computational load sites.
+• Ensure existing sites are addressed, requiring compliance unless technical 
+limitations are documented, since all observed Customer Initiated Load 
+Reduction (CILR) events have involved already operational facilities and 
+excluding them would leave the identified reliability risk unmitigated.
+Voltage Ride-
+Through 
+Requirements
+• Consider ERCOT’s Voltage Ride-Through (VRT) requirements as the minimum 
+baseline while extending ride-through obligations to cover the full duration of 
+credible disturbances and simplifying the voltage-time steps.
+• Address the applicability of VRT requirements to cooling load by providing some 
+flexibility to the extent practical (based on studies and reliability risk assessment).
+
+<<p22>>
+PJM © 2026
+22
+www.pjm.com | Public
+Draft LLWG Recommendations
+Post-Fault Active Power 
+Recovery (PFAPR)
+• A default recovery level of at least 90% of pre-disturbance consumption with 
+modification based on system studies
+Frequency Ride-Through 
+(FRT) and Rate of 
+Change of Frequency 
+(RoCoF ) Requirements
+• Establish minimum FRT and RoCoF withstand performance requirements at the 
+Interconnection level, considering the IEEE 2800-2022 and PRC-029-1 criteria.
+• Consider whether the duration associated with the high-frequency requirement 
+requires adjustment so that generation and load do not disconnect 
+simultaneously during an over-frequency excursion.
+• Consider existing under-frequency load shedding (UFLS) schemes to ensure 
+that FRT requirements do not interfere with UFLS schemes. 
+Current Consumption
+• Establish requirements for the maximum current consumption of the 
+computational load site during a disturbance.
+
+<<p23>>
+PJM © 2026
+23
+www.pjm.com | Public
+FERC EL26-67-000 (Large Load Show Cause Order)
+On June 18, 2026, FERC issued a Section 206 Show Cause 
+Order to determine whether PJM’s Tariff adequately addresses 
+Large Loads integration. *FERC News Release (Item E-7)
+Identifies gaps in processes for 
+evaluating reliability impacts and 
+transmission needs of Large 
+Loads
+Among other things, asks whether additional requirements are 
+needed for:
+• Ride-through performance during system disturbances
+• Ramp-rate limitations and load restoration behavior
+PJM plans to file revisions to address FERC's concerns (target: November 2026).
+
+<<p24>>
+PJM © 2026
+24
+www.pjm.com | Public
+Q and A
+
+<<p25>>
+PJM © 2026
+25
+www.pjm.com | Public
+Contact
+Presenter: 
+Matthew Wharton,
+Matthew.Wharton@pjm.com 
+PJM LCL Ride-Through Requirements
+Member Hotline
+(610) 666-8980
+(866) 400-8980
+custsvc@pjm.com
+
+<<p26>>
+PJM © 2026
+26
+www.pjm.com | Public
+
+<<p27>>
+PJM © 2026
+www.pjm.com | Public
+Appendix
+
+<<p28>>
+PJM © 2026
+28
+www.pjm.com | Public
+PJM Baseline Voltage Limits

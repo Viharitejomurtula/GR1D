@@ -1,0 +1,5443 @@
+TPS2663x 60V, 6A Power Limiting, Surge Protection Industrial eFuse
+1 Features
+•
+4.5V to 60V operating voltage, 67V absolute 
+maximum
+•
+Integrated 60V, 31mΩ RON hot-swap FET
+•
+Reverse polarity protection and reverse current 
+blocking support with an external N-channel FET
+•
+0.6A to 6A adjustable current limit (±7%)
+•
+Electrical fast transients (IEC61000-4-4) immunity 
+and load protection during surge (IEC 61000-4-5) 
+with Class-A system performance
+•
+Fast reverse current blocking (0.17µs)
+•
+Variants with adjustable output power limiting 
+(±6%)
+•
+Adjustable UVLO, OVP cutoff, output slew rate 
+control for inrush current limiting
+•
+Charges large and unknown capacitive loads 
+through thermal regulation during device power up
+•
+Variants with 35V and 39V maximum overvoltage 
+clamp
+•
+Power Good output (PGOOD)
+•
+Selectable overcurrent fault response options 
+between auto-retry and latch-off (MODE)
+•
+Variants with 2 times pulse overcurrent support
+•
+Analog current monitor (IMON) output (±6%)
+•
+UL 2367 recognized
+–
+File No. E169910
+–
+RILIM ≥ 3kΩ
+•
+IEC 62368-1 certified
+2 Applications
+•
+Factory automation and control – PLC, DCS, HMI, 
+I/O modules, sensor hubs
+•
+Motor drives – CNC, encoder supply
+•
+Electronic circuit breakers
+3 Description
+The TPS2663x devices are easy to use, positive 
+60V and 6A eFuse with a 31mΩ integrated FET. 
+The device features a B-FET driver to control 
+an external N-channel FET in the system designs 
+that require protection from input reverse polarity 
+faults and reverse current blocking. The device 
+incorporates robust protection features that simplify 
+system designs requiring protection during system 
+tests like IEC61000-4-5 industrial surge tests. The 
+device features an adjustable output power limiting 
+(PLIM) functionality that simplifies the system design 
+requiring compliance in accordance to the standards 
+like IEC61010-1 and UL1310. Additional protection 
+features include adjustable overcurrent protection, 
+fast short-circuit protection, output slew rate control, 
+overvoltage protection, and undervoltage lockout.
+For system status monitoring and downstream load 
+control, the device provides fault and a precise 
+current monitor output. PGOOD can be used for 
+enable and disable control of the downstream DC-
+DC converters. The MODE pin allows flexibility to 
+configure the device between the two current-limiting 
+fault responses (latch-off and auto-retry).
+Package Information
+PART NUMBER
+PACKAGE(1)
+PACKAGE SIZE(2)
+TPS26630
+TPS26631
+TPS26632
+TPS26633
+TPS26635
+TPS26637
+RGE (VQFN, 24)
+4.00mm × 4.00mm
+TPS26631
+TPS26633
+TPS26636
+TPS26637
+PWP (HTSSOP, 20) 6.50mm × 4.40mm
+(1)
+For all available packages, see Section 12.
+(2)
+The package size (length × width) is a nominal value and 
+includes pins, where applicable.
+D1*
+R1
+R2
+R3
+TPS26630/31
+CdVdT
+RILIM
+RILON
+R4
+R5
+Protected supply
+To Load
+Load Monitor
+ON/OFF Control
+IN
+B_GATE
+DRV
+IN_SYS
+UVLO
+OVP
+MODE
+GND
+OUT
+PGTH
+PGOOD
+FLT
+SHDN
+IMON
+ILIM
+dVdT
+4.5V-60V
+Optional components 
+for RCB and RPP
+* TVS for Surge Suppression Only
+COUT
+Simplified Schematic
+VIN_SYS
+VOUT
+ISURGE
+PGOOD
+IEC61000-4-5 Surge Performance at 24V Supply
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+An IMPORTANT NOTICE at the end of this data sheet addresses availability, warranty, changes, use in safety-critical applications, 
+intellectual property matters and other important disclaimers. PRODUCTION DATA.
+
+Table of Contents
+1 Features............................................................................1
+2 Applications.....................................................................1
+3 Description.......................................................................1
+4 Device Comparison Table...............................................2
+5 Pin Configuration and Functions...................................3
+6 Specifications.................................................................. 5
+6.1 Absolute Maximum Ratings........................................ 5
+6.2 ESD Ratings............................................................... 5
+6.3 Recommended Operating Conditions.........................5
+6.4 Thermal Information....................................................6
+6.5 Electrical Characteristics.............................................6
+6.6 Timing Requirements..................................................8
+6.7 Typical Characteristics..............................................10
+7 Parameter Measurement Information..........................13
+8 Detailed Description......................................................15
+8.1 Overview...................................................................15
+8.2 Functional Block Diagram.........................................16
+8.3 Feature Description...................................................17
+8.4 Device Functional Modes..........................................28
+9 Application and Implementation..................................29
+9.1 Application Information............................................. 29
+9.2 Typical Application: Power Path Protection in a 
+PLC System................................................................ 29
+9.3 System Examples..................................................... 35
+9.4 Dos and Do Nots.......................................................37
+9.5 Power Supply Recommendations.............................37
+9.6 Layout....................................................................... 38
+10 Device and Documentation Support..........................41
+10.1 Documentation Support.......................................... 41
+10.2 Receiving Notification of Documentation Updates..41
+10.3 Support Resources................................................. 41
+10.4 Trademarks.............................................................41
+10.5 Electrostatic Discharge Caution..............................41
+10.6 Glossary..................................................................41
+11 Revision History.......................................................... 41
+12 Mechanical, Packaging, and Orderable 
+Information.................................................................... 42
+4 Device Comparison Table
+PART NUMBER
+OVERVOLTAGE PROTECTION
+OVERLOAD FAULT RESPONSE
+ADJUSTABLE OUTPUT 
+POWER LIMITING
+TPS26630
+Overvoltage cutoff, adjustable
+Active current limiting (1x)
+No
+TPS26631
+Overvoltage cutoff, adjustable
+Active current limiting with pulse current support 
+(2x)
+No
+TPS26632
+Overvoltage clamp, fixed (35-V max)
+Active current limiting (1x)
+Yes
+TPS26633
+Overvoltage clamp, fixed (35-V max)
+Active current limiting with pulse current support 
+(2x)
+Yes
+TPS26635
+Overvoltage clamp, fixed (39-V max)
+Active current limiting with pulse current support 
+(2x)
+Yes
+TPS26636
+Overvoltage clamp, fixed (39-V max)
+Active current limiting (1x)
+Yes
+TPS26637
+—
+Active current limiting with pulse current support 
+(2x)
+Yes
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+2
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+5 Pin Configuration and Functions
+PowerPadTM
+1
+2
+IN
+5
+B_GATE
+IN
+3
+DRV
+4
+IN_SYS
+6
+7
+UVLO
+8
+9
+10
+11
+12
+18
+15
+17
+16
+14
+13
+MODE
+dVdT
+GND
+OVP
+ILIM
+PGOOD
+OUT
+IMON
+PGTH
+SHDN
+FLT
+N.C
+24
+23
+22
+21
+20
+19
+OUT
+N.C
+N.C
+N.C
+N.C
+N.C
+Figure 5-1. TPS26630, TPS26631 RGE Package; 24-
+Pin VQFN (Top View) 
+3RZHU3$'Œ
+1
+2
+3
+4
+5
+6
+7
+8
+10
+9
+16
+15
+14
+13
+12
+11
+OVP
+B_GATE
+IN
+IN_SYS
+IN
+SHDN
+OUT
+OUT
+GND
+PGTH
+ILIM
+dVdT
+PGOOD
+MODE
+IN
+DRV
+UVLO
+IMON
+FLT
+OUT
+20
+19
+18
+17
+Figure 5-2. TPS26631 PWP Package, 20-Pin 
+HTSSOP (Top View) 
+PowerPadTM
+1
+2
+IN
+5
+B_GATE
+IN
+3
+DRV
+4
+IN_SYS
+6
+7
+UVLO
+8
+9
+10
+11
+12
+18
+15
+17
+16
+14
+13
+MODE
+dVdT
+GND
+PLIM
+ILIM
+PGOOD
+OUT
+IMON
+PGTH
+SHDN
+FLT
+N.C
+24
+23
+22
+21
+20
+19
+OUT
+N.C
+N.C
+N.C
+N.C
+N.C
+Figure 5-3. TPS26632, TPS26633, TPS26635, 
+TPS26637 RGE Package; 24-Pin VQFN (Top View) 
+3RZHU3$'Œ
+1
+2
+3
+4
+5
+6
+7
+8
+10
+9
+16
+15
+14
+13
+12
+11
+PLIM
+B_GATE
+IN
+IN_SYS
+IN
+SHDN
+OUT
+OUT
+GND
+PGTH
+ILIM
+dVdT
+PGOOD
+MODE
+IN
+DRV
+UVLO
+IMON
+FLT
+OUT
+20
+19
+18
+17
+Figure 5-4. TPS26633, TPS26636, TPS26637 PWP 
+Package; 20-Pin HTSSOP (Top View) 
+Table 5-1. Pin Configuration and Functions
+PIN
+TYPE(1)
+DESCRIPTION
+NAME
+VQFN
+HTSSOP
+IN
+1
+1
+P
+Power input. Connects to the DRAIN of the internal FET.
+2
+2
+—
+3
+B_GATE
+3
+4
+O
+Blocking FET gate driver output. Connect B_GATE to GATE of the external 
+NFET. If external FET is not used then leave B_GATE pin floating. See the Input 
+Reverse Polarity Protection (B_GATE, DRV) section.
+DRV
+4
+5
+O
+Blocking FET fast pulldown switch drive. Connect DRV to the GATE of external 
+pulldown switch. Leave this pin floating if external N-FET is not used.
+IN_SYS
+5
+6
+P
+Power input and supply voltage of the device. When an external Blocking FET 
+is used then connect IN_SYS to source of the FET. Short IN_SYS to IN in case 
+blocking FET is not used.
+www.ti.com
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+Copyright © 2024 Texas Instruments Incorporated
+Submit Document Feedback
+3
+Product Folder Links: TPS2663
+
+Table 5-1. Pin Configuration and Functions (continued)
+PIN
+TYPE(1)
+DESCRIPTION
+NAME
+VQFN
+HTSSOP
+UVLO
+6
+7
+I
+Input for setting the programmable undervoltage lockout threshold. An 
+undervoltage event turns off the internal FET and asserts FLT to indicate the 
+power-failure. Connect UVLO pin to GND pin to select the internal default 
+threshold.
+OVP
+7
+8
+I
+Input for setting the programmable overvoltage protection threshold (For 
+TPS26630 and TPS26631 Only). An overvoltage event turns off the internal FET 
+and asserts FLT to indicate the overvoltage fault. Connect OVP pin to GND pin 
+externally to select the internal default threshold.
+PLIM
+7
+8
+I
+Input for setting the programmable output power limiting threshold (For 
+TPS26632, TPS26633, TPS26635,TPS26636 and TPS26637 Only). Connect a 
+resistor across PLIM to GND to set the output power limit. Connect PLIM to GND 
+if PLIM feature is not used. See the Output Power Limiting, PLIM (TPS26632, 
+TPS26633, TPS26635 and TPS26636 Only) section.
+GND
+8
+9
+—
+Connect GND to system ground.
+dVdT
+9
+10
+I/O
+A capacitor from this pin to GND sets output voltage slew rate. See the Hot 
+Plug-In and InRush Current Control section.
+ILIM
+10
+11
+I/O
+A resistor from this pin to GND sets the overload and short-circuit current limit. 
+See the Overload and Short-Circuit Protection section.
+MODE
+11
+12
+I
+Mode selection pin for overload fault response. See the Device Functional 
+Modes section.
+SHDN
+12
+13
+I
+Shutdown pin. Pulling SHDN low makes the device to enter into low power 
+shutdown mode. Cycling SHDN pin voltage resets the device that has latched off 
+due to a fault condition.
+IMON
+13
+14
+O
+Analog current monitor output. This pin sources a scaled down ratio of current 
+through the internal FET. A resistor from this pin to GND converts current to 
+proportional voltage. If unused, leave this pin floating.
+FLT
+14
+15
+O
+Fault event indicator. This pin is an open drain output. If unused, leave floating or 
+connect to GND.
+PGTH
+15
+16
+I
+PGOOD comparator input.
+PGOOD
+16
+17
+O
+Active High. A high indicates PGTH has crossed the V(PGTHR) threshold and 
+the internal FET is enhanced. PGOOD goes low when V(PGTH) hits V(PGTHF) 
+threshold. If PGOOD is unused then connect to GND or leave it floating.
+OUT
+17
+18
+P
+Power output of the device.
+18
+19
+—
+20
+N. C
+19
+—
+—
+No connect.
+20
+21
+22
+23
+24
+PowerPAD™
+integrated 
+circuit 
+package
+—
+—
+—
+Connect PowerPAD integrated circuit package to GND plane for heat sinking. Do 
+not use PowerPAD integrated circuit package as the only electrical connection to 
+GND.
+(1)
+I = input, O = output, I/O = input and output, P = power
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+4
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+6 Specifications
+6.1 Absolute Maximum Ratings
+over operating free-air temperature range (unless otherwise noted)(1)
+MIN
+MAX
+UNIT
+IN_SYS
+Input Voltage
+–60
+67
+V
+IN_SYS (10ms transient), TA = 25 ℃
+–60
+75
+V
+IN, OUT, UVLO, FLT, PGOOD, PGTH
+–0.3
+67
+V
+IN_SYS – OUT (10ms transient), with 
+a Blocking FET
+–85
+V
+IN (10ms transient), TA = 25 ℃
+–0.3
+75
+V
+BGATE
+–60
+81
+V
+BGATE – IN_SYS
+–0.3
+14
+V
+DRV
+–60
+72
+V
+DRV – IN_SYS
+–0.3
+20
+V
+OVP, dVdT, IMON, MODE, SHDN, 
+ILIM, PLIM
+–0.3
+5.5
+V
+IFLT, IdVdT, IPGOOD
+Sink current
+10
+mA
+IdVdT, IILIM, IPLIM, IMODE, ISHDN
+Source current
+Internally limited
+TJ
+Operating Junction temperature
+–40
+150
+°C
+Transient junction temperature
+–65
+T(TSD)
+Tstg
+Storage temperature
+–65
+150
+(1)
+Stresses beyond those listed under Absolute Maximum Rating may cause permanent damage to the device. These are stress 
+ratings only, which do not imply functional operation of the device at these or any other conditions beyond those indicated 
+under Recommended Operating Condition. Exposure to absolute-maximum-rated conditions for extended periods may affect device 
+reliability.
+6.2 ESD Ratings
+VALUE
+UNIT
+V(ESD)
+Electrostatic discharge
+Human body model (HBM), per ANSI/ESDA/
+JEDEC JS-001, all pins(1)
+±2000
+V
+Charged device model (CDM), per JEDEC 
+specification JESD22-C101, all pins(2)
+±1000
+(1)
+JEDEC document JEP155 states that 500-V HBM allows safe manufacturing with a standard ESD control process. 
+(2)
+JEDEC document JEP157 states that 250-V CDM allows safe manufacturing with a standard ESD control process.
+6.3 Recommended Operating Conditions
+over operating free-air temperature range (unless otherwise noted)
+MIN
+NOM
+MAX
+UNIT
+IN_SYS, IN
+Input Voltage
+4.5
+60
+V
+OUT, UVLO, PGTH, PGOOD, 
+FLT
+0
+60
+OVP, dVdT, IMON, MODE
+0
+4
+SHDN
+0
+5
+ILIM
+Resistance
+3
+30
+kΩ
+IMON
+Resistance
+1
+PLIM
+Resistance
+60.4
+150
+IN, IN_SYS, OUT
+External Capacitance
+0.1
+µF
+dVdT
+10
+nF
+www.ti.com
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+Copyright © 2024 Texas Instruments Incorporated
+Submit Document Feedback
+5
+Product Folder Links: TPS2663
+
+over operating free-air temperature range (unless otherwise noted)
+MIN
+NOM
+MAX
+UNIT
+TJ
+Operating Junction temperature
+–40
+25
+125
+°C
+6.4 Thermal Information
+THERMAL METRIC(1)
+TPS2663
+UNIT
+RGE (VSON)
+PWP (HTSSOP)
+24 PINS
+20 PINS
+RθJA 
+Junction-to-ambient thermal resistance
+31.4
+32.2
+°C/W
+RθJC(top)
+Junction-to-case (top) thermal resistance
+23.2
+23.4
+°C/W
+RθJB
+Junction-to-board thermal resistance
+10.2
+10
+°C/W
+ΨJT
+Junction-to-top characterization parameter
+0.3
+0.3
+°C/W
+ΨJB
+Junction-to-board characterization parameter
+10.2
+9.9
+°C/W
+RθJC(bot)
+Junction-to-case (bottom) thermal resistance
+2.8
+3.6
+°C/W
+(1)
+For more information about traditional and new thermal metrics, see the Semiconductor and IC Package Thermal Metrics application 
+report.
+6.5 Electrical Characteristics
+–40°C ≤ TA = TJ ≤ +125°C, 4.5 V < V(IN_SYS) = V(IN) < 60 V, V(SHDN) = 2 V, R(ILIM) = 30 kΩ, IMON = PGOOD = FLT = OPEN, 
+C(OUT) = 1 μF, C(dVdT) = OPEN. (All voltages referenced to GND, (unless otherwise noted))
+PARAMETER
+TEST CONDITIONS
+MIN
+TYP
+MAX
+UNIT
+SUPPLY VOLTAGE
+V(IN_SYS)
+Operating input voltage
+4.5
+60
+V
+IQ(ON)
+Supply current
+Enabled: V(SHDN) = 2 V
+1.38
+1.7
+mA
+IQ(OFF)
+V(SHDN) = 0 V
+21
+60
+µA
+I(GND)
+Ground current during reverse polarity
+V(IN_SYS) = –24V, V(IN) = Floating, 
+V(OUT) = 0 V
+144
+200
+µA
+V(OVC)
+Over voltage clamp
+TPS26632 and TPS26633, V(IN_SYS) > 
+35 V, I(OUT) = 1 mA
+32
+32.8
+35
+V
+TPS26635 and TPS26636, V(IN_SYS) > 
+40 V, I(OUT) = 1 mA
+35.7
+36.6
+39
+V
+UNDERVOLTAGE LOCKOUT (UVLO) INPUT
+V(INSYS_UVLO)
+Factory set V(IN_SYS) undervoltage trip 
+level trip level
+V(IN_SYS) rising, V(UVLO) = 0 V
+15.1
+15.46
+15.9
+V
+V(IN_SYS) falling, V(UVLO) = 0 V
+14
+14.47
+15.1
+V
+V(SEL_UVLO)
+Internal UVLO select threshold
+180
+210
+240
+mV
+V(UVLOR)
+UVLO threshold voltage, rising
+1.176
+1.2
+1.224
+V
+V(UVLOF)
+UVLO threshold voltage, falling
+1.09
+1.122
+1.15
+V
+I(UVLO)
+UVLO Input leakage current
+0 V ≤ V(UVLO) ≤ 60 V
+–150
+8
+150
+nA
+OVERVOLTAGE PROTECTION (OVP) INPUT
+V(IN_SYS_OVP)
+Factory set V(IN_SYS) overvoltage trip 
+level trip level
+V(IN_SYS) rising, V(OVP) = 0 V
+33.2
+34.33
+35.4
+V
+V(IN_SYS) falling, V(OVP) = 0 V
+32.7
+33.89
+35
+V
+V(SEL_OVP)
+Internal OVP select threshold
+180
+210
+240
+mV
+V(OVPR)
+over-voltage threshold voltage, rising
+1.176
+1.2
+1.224
+V
+V(OVPF)
+over-voltage threshold voltage, falling
+1.09
+1.122
+1.15
+V
+I(OVP)
+OVP Input leakage current
+0 V ≤ V(OVP) ≤ 4 V
+–150
+0
+150
+nA
+CURRENT LIMIT PROGRAMMING (ILIM)
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+6
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+–40°C ≤ TA = TJ ≤ +125°C, 4.5 V < V(IN_SYS) = V(IN) < 60 V, V(SHDN) = 2 V, R(ILIM) = 30 kΩ, IMON = PGOOD = FLT = OPEN, 
+C(OUT) = 1 μF, C(dVdT) = OPEN. (All voltages referenced to GND, (unless otherwise noted))
+PARAMETER
+TEST CONDITIONS
+MIN
+TYP
+MAX
+UNIT
+I(OL)
+Over Load current limit
+R(ILIM) = 30 kΩ, V(IN) – V(OUT) = 1 V
+0.54
+0.6
+0.66
+A
+R(ILIM) = 9 kΩ, V(IN) –  V(OUT) = 1 V
+1.84
+2
+2.16
+A
+R(ILIM) = 4.02 kΩ, V(IN) – V(OUT) = 1 V
+4.185
+4.5
+4.815
+A
+R(ILIM) = 3 kΩ, V(IN) – V(OUT) = 1 V
+5.58
+6
+6.42
+A
+I(OL_Pulse)
+Transient Pulse Over current limit
+3 kΩ < R(ILIM) < 30 kΩ, TPS26631, 
+TPS26633, TPS26635 and TPS26637 
+Only
+2xI(OL)
+A
+I(FASTRIP)
+Fast-trip comparator threshold
+TPS26630 and TPS26632 Only
+2xI(OL)
+A
+I(FASTRIP)
+Fast-trip comparator threshold
+TPS26631, TPS26633,TPS26635 and 
+TPS26637 Only
+3xI(OL)
+A
+I(SCP)
+Short Circuit Protect current
+45
+A
+OUTPUT POWER LIMITING CONTROL (PLIM) INPUT – TPS26632, TPS26633, TPS26635, TPS26636 and TPS26637 ONLY
+V(SEL_PLIM)
+Power Limit Feature select threshold
+160
+217
+240
+mV
+I(PLIM)
+PLIM sourcing current
+V(PLIM) = 0 V
+4.4
+5.02
+5.6
+µA
+P(PLIM)
+Max Output power
+R(PLIM) = 100 kΩ
+94
+100
+106
+W
+R(PLIM) = 150 kΩ (1)
+141.9
+151
+160.1
+W
+P(PLIM)
+Max Output power
+R(PLIM) = 100 kΩ, VIN  = 54 V, 
+TPS26637 only
+100
+W
+B_GATE (BLOCKING FET GATE DRIVER)
+V(B_GATE)
+B_GATE clamp voltage
+V(B_GATE) – V(IN_SYS)
+8.3
+10.23
+14
+V
+I(B_GATE)
+Blocking FET Gate drive current
+V(B_GATE) – V(IN_SYS) = 1 V
+16
+19.4
+23
+µA
+Rpd_BGATE
+B_GATE Pull down resistance
+800
+1010
+1200
+kΩ
+V(DRV_OH)
+DRV logic high level
+V(DRV) – V(IN_SYS), C(DRV) ≤ 50 pF
+3
+4.25
+5.2
+V
+PASS FET OUTPUT (OUT)
+RON
+IN to OUT total ON resistance
+0.6 A ≤ I(OUT) ≤ 6 A,TJ = 25°C
+26
+30.44
+34.5
+mΩ
+RON
+IN to OUT total ON resistance
+0.6 A ≤ I(OUT) ≤ 6 A,TJ = 85°C
+33
+45
+mΩ
+RON
+IN to OUT total ON resistance
+0.6 A ≤ I(OUT) ≤ 6 A, –40°C ≤ TJ ≤ 
++125°C
+19
+30.44
+53
+mΩ
+Ilkg(OUT)
+OUT leakage during input supply 
+brownout
+V(IN_SYS) = 0 V, V(OUT) = 24 V, V(IN) = 
+Floating, V(SHDN) = 2V, Sinking
+–100
+µA
+V(REVTH)
+V(IN_SYS) – V(OUT) threshold for reverse 
+protection comparator, rising
+–20
+–15
+–9
+mV
+V(FWDTH)
+V(IN_SYS) – V(OUT) threshold for reverse 
+protection comparator, falling
+45
+57
+67
+mV
+OUTPUT RAMP CONTROL (dVdT)
+I(dVdT)
+dVdT charging current
+V(dVdT) = 0 V
+1.775
+2
+2.225
+µA
+GAIN(dVdT)
+dVdT to OUT gain
+V(OUT) /V(dVdT)
+23.5
+25
+26
+V/V
+V(dVdTmax)
+dVdT maximum capacitor voltage
+3.8
+4.17
+4.75
+V
+R(dVdT)
+dVdT discharging resistance
+10
+16.6
+26.6
+Ω
+LOW IQ SHUTDOWN (SHDN) INPUT
+V(SHDN)
+Open circuit voltage
+I(SHDN) = 0.1 µA
+2.48
+2.7
+3.3
+V
+V(SHUTF)
+SHDN threshold voltage for low IQ 
+shutdown, falling
+0.8
+V
+V(SHUTR)
+SHDN threshold rising
+2
+V
+I(SHDN)
+Leakage current
+V(SHDN) = 0 V
+–10
+µA
+CURRENT MONITOR OUTPUT (IMON)
+GAIN(IMON)
+Gain factor I(IMON):I(OUT)
+0.6 A ≤ I(OUT) ≤ 2 A
+25.66
+27.9
+30.14
+µA/A
+www.ti.com
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+Copyright © 2024 Texas Instruments Incorporated
+Submit Document Feedback
+7
+Product Folder Links: TPS2663
+
+–40°C ≤ TA = TJ ≤ +125°C, 4.5 V < V(IN_SYS) = V(IN) < 60 V, V(SHDN) = 2 V, R(ILIM) = 30 kΩ, IMON = PGOOD = FLT = OPEN, 
+C(OUT) = 1 μF, C(dVdT) = OPEN. (All voltages referenced to GND, (unless otherwise noted))
+PARAMETER
+TEST CONDITIONS
+MIN
+TYP
+MAX
+UNIT
+2 A ≤ I(OUT) ≤ 6 A
+26.22
+27.9
+29.58
+µA/A
+FAULT FLAG (FLT): ACTIVE LOW
+R(FLT)
+FLT Pull-down resistance
+36
+70
+130
+Ω
+I(FLT)
+FLT Input leakage current
+0 V ≤ V(FLT) ≤ 60 V
+–150
+6
+150
+nA
+POWER GOOD (PGOOD)
+R(PGOOD)
+PGOOD Pull-down resistance
+36
+70
+130
+Ω
+I(PGOOD)
+PGOOD Input leakage current
+0 V ≤ V(PGOOD) ≤ 60 V
+–150
+150
+nA
+POSITIVE INPUT FOR POWER GOOD COMPARATOR (PGTH)
+V(PGTHR)
+PGTH threshold voltage, rising
+1.176
+1.2
+1.224
+V
+V(PGTHF)
+PGTH threshold voltage, falling
+1.09
+1.123
+1.15
+V
+I(PGOOD)
+PGTH input leakage current
+0 V ≤ V(PGTH) ≤ 60 V
+–150
+150
+nA
+THERMAL PROTECTION
+T(J_REG)
+Thermal regulation set point
+136
+145
+154
+ºC
+T(TSD)
+Thermal shutdown (TSD) threshold, 
+rising
+165
+ºC
+T(TSDhyst)
+TSD hysteresis
+11
+ºC
+MODE
+MODE_SEL
+Mode selection
+MODE = Open
+Latch
+MODE = Short to GND
+Auto – 
+Retry
+(1)
+Parameter guaranteed by design and characterization, not tested in production
+6.6 Timing Requirements
+–40°C ≤ TA = TJ ≤ +125°C, 4.5 V < V(IN_SYS) = V(IN) < 60 V, V(SHDN) = 2 V, R(ILIM) = 30 kΩ, IMON = PGOOD = FLT = OPEN, 
+C(OUT) = 1 μF, C(dVdT) = OPEN. (All voltages referenced to GND, (unless otherwise noted))
+PARAMETER
+TEST CONDITIONS
+MIN
+NOM
+MAX
+UNIT
+UVLO INPUT (UVLO)
+UVLO_ton(dly)
+UVLO switch turnon delay
+UVLO↑ (100 mV above V(UVLOR)) to 
+V(OUT) = 100 mV with V(PGTH  < 
+V(PGTHF), C(dVdT) ≥ 10 nF,  [C(dVdT) in 
+nF]
+742 + 
+49.5 x 
+C(dVdT)
+µs
+UVLO_ton(fast_dly)
+UVLO switch turnon delay (fast)
+UVLO↑  (100 mV above V(UVLOR)) to 
+FET ON with V(PGTH) > V(PGTHF)
+70
+150
+251
+µs
+UVLO_toff(dly)
+UVLO switch turnoff delay
+UVLO↓(20 mV below V(UVLOF)) to FLT↓
+9
+11
+16
+µs
+tUVLO_FLTdly)
+UVLO to fault de-assertion delay
+UVLO↑  to FLT ↑ delay
+500
+617
+700
+µs
+OVER VOLTAGE PROTECTION INPUT (OVP)
+OVP_tOFF(dly)
+OVP switch turnoff delay
+OVP↑ (20 mV above V(OVPR)) to FLT↓
+8.5
+11
+14
+µs
+OVP_ton(fast_dly)
+OVP switch turnon delay (fast)
+OVP↓ (100 mV below V(OVPF)) to FET 
+ON with V(PGTH ) > V(PGTHF)
+58
+129
+225
+µs
+OVP_ton(dly)
+OVP switch disable delay
+OVP↓ (100 mV below V(OVPF)) to FET 
+ON with V(PGTH ) < V(PGTHF), C(dVdT) ≥ 
+10 nF,  [C(dVdT) in nF]
+150 + 
+49.5 x 
+C(dVdT)
+µs
+tOVC(dly)
+Maximum duration in over voltage 
+clamp operation
+TPS26632, TPS26633,TPS26635 and 
+TPS26636 Only
+162
+ms
+OVC_tFLT(dly)
+FLT assertion delay in over voltage 
+clamp operation
+TPS26632, TPS26633,TPS26635 and 
+TPS26636 Only
+617
+µs
+SHUTDOWN CONTROL INPUT (SHDN)
+tSD(dly)
+SHUTDOWN entry delay
+SHDN↓ (below V(SHUTF)) to FET OFF
+0.8
+1
+1.5
+µs
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+8
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+–40°C ≤ TA = TJ ≤ +125°C, 4.5 V < V(IN_SYS) = V(IN) < 60 V, V(SHDN) = 2 V, R(ILIM) = 30 kΩ, IMON = PGOOD = FLT = OPEN, 
+C(OUT) = 1 μF, C(dVdT) = OPEN. (All voltages referenced to GND, (unless otherwise noted))
+PARAMETER
+TEST CONDITIONS
+MIN
+NOM
+MAX
+UNIT
+CURRENT LIMIT
+tFASTTRIP(dly)
+Hot-short response time
+I(OUT) > I(SCP)
+1
+µs
+Soft short response
+I(FASTTRIP) < I(OUT) < I(SCP)
+2.2
+3.2
+4.5
+µs
+tCL_PLIM(dly)
+Maximum duration in current 
+& (power limiting: TPS26632, 
+TPS26633, TPS26635, TPS26636 and 
+TPS26637)
+129
+162
+202
+ms
+tCB(dly)
+Maximum duration in 2x current 
+limiting 
+I(OL) < I(OUT) ≤ I(2xOL)
+20
+25.5
+31
+ms
+tCBRetry(dly)
+Retry delay in Pulse over current 
+limiting
+MODE = GND, TPS26631, 
+TPS26633,TPS26635 and TPS26636 
+Only
+550
+670
+800
+ms
+tCL_PLIM_FLT(dly)
+FLT delay in current & (power limiting: 
+TPS26632, TPS26633, TPS26635, 
+TPS26636 and TPS26637)
+1.09
+1.3
+1.6
+ms
+REVERSE CURRENT BLOCKING (RCB) COMPARATOR
+tRCB(fast_dly)
+Reverse protection comparator 
+dectection delay (reverse)
+(V(IN_SYS) – V(OUT))↓ (1 V overdrive 
+below V(REVTH)) to V(DRV) – V(IN_SYS) = 
+V(DRV_OH)
+0.17
+0.37
+µs
+tRCB(dly)
+(V(IN_SYS) – V(OUT))↓ (10 mV overdrive 
+below V(REVTH)) to V(DRV) – V(IN_SYS) = 
+V(DRV_OH)
+0.48
+3
+µs
+tRCB(flt_dly)
+Fault assertion Delay
+(V(IN_SYS) – V(OUT))↓ (10 mV overdrive 
+below V(REVTH)) to FLT↓
+500
+617
+800
+µs
+tFWD_FLT(dly)
+Reverse protection comparator 
+dectection delay (forward)
+(V(IN_SYS) – V(OUT))↑ (10 mV overdrive 
+above V(FWDTH)) to V(BGATE) – V(IN_SYS) 
+= 5 V, C(BFET-IN_SYS) = 4.7 nF
+0.87
+ms
+Fault de-assertion Delay
+(V(IN_SYS) – V(OUT))↑ (10 mV overdrive 
+above V(FWDTH)) to FLT↑
+434
+605
+800
+µs
+OUTPUT RAMP CONTROL (dVdT)
+t(FASTCHARGE)
+Output ramp time in fast charging
+C(dVdT) = Open, 10% to 90% 
+V(OUT), C(OUT) = 1 µF; V(IN) = 24V
+350
+495
+700
+µs
+t(dVdT)
+Output ramp time
+C(dVdT) = 22 nF, 10% to 90% 
+V(OUT), V(IN) = 24V
+8.35
+ms
+POWER GOOD (PGOOD)
+tPGOODR
+PGOOD delay (deglitch) time
+Rising edge
+1.07
+1.3
+1.6
+ms
+tPGOODF
+PGOOD delay (deglitch) time
+Falling edge, PGTH↓ (10mV below 
+V(PGTHF))
+1.3
+2.12
+4
+µs
+FAULT FLAG (FLT)
+tCB_FLT(dly)
+FLT assertion delay in Pulse over 
+current limiting
+Delay from I(OUT) > I(OL) to FLT↓. 
+TPS26631, TPS26633, TPS26635 and 
+TPS26636 Only
+22
+25.5
+30
+ms
+THERMAL PROTECTION
+t(TSD_retry)
+Retry delay in TSD
+MODE = GND
+500
+648
+800
+ms
+t(Treg_timeout)
+Thermal Regulation Timeout
+2.3
+2.54
+2.9
+s
+www.ti.com
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+Copyright © 2024 Texas Instruments Incorporated
+Submit Document Feedback
+9
+Product Folder Links: TPS2663
+
+6.7 Typical Characteristics
+–40°C ≤ TA = TJ ≤ +125°C, V(IN_SYS) = V(IN) = 24 V, V( SHDN) = 2 V, R(ILIM) = 30 kΩ, IMON = PGOOD =  FLT = OPEN, C(OUT) = 
+1 μF, C(dVdT) = OPEN. (Unless stated otherwise)
+Temperature (qC)
+On-Resistance (m:)
+-60
+-30
+0
+30
+60
+90
+120
+150
+0
+15
+30
+45
+60
+75
+D002
+ILOAD = 0.6 A
+ILOAD = 6 A
+Figure 6-1. On-Resistance vs Temperature Across Load Current
+Temperature (qC)
+Over Voltage Clamp Threshold (V)
+-50
+0
+50
+100
+150
+30
+32
+34
+36
+38
+40
+42
+D006
+TPS26632, TPS26633, TPS26636
+TPS26635
+Figure 6-2. Overvoltage Clamp Threshold vs Temperature
+Temperature (qC)
+B_GATE Drive Voltage (V)
+-50
+0
+50
+100
+150
+8.5
+9
+9.5
+10
+10.5
+11
+D014
+V(IN_SYS) = 4.5 V
+V(IN_SYS) = 24 V
+V(IN_SYS) = 60 V
+Figure 6-3. B_GATE Drive Voltage vs Temperature
+Temperature (qC)
+B_GATE Drive Current I(B_GATE) (PA)
+-50
+0
+50
+100
+150
+18.5
+19
+19.5
+20
+20.5
+D015
+V(IN_SYS) = 4.5 V
+V(IN_SYS) = 24 V
+V(IN_SYS) = 60 V
+Figure 6-4. B_GATE Drive Current vs Temperature
+Temperature (qC)
+B_GATE Pull Down Switch Drive Voltage VDRV_OH (V
+-50
+0
+50
+100
+150
+3.5
+3.75
+4
+4.25
+4.5
+4.75
+D016
+V(IN_SYS) = 4.5 V
+V(IN_SYS) = 24 V
+V(IN_SYS) = 60 V
+Figure 6-5. B_GATE Pulldown Drive Voltage vs Temperature
+Supply Voltage (V)
+Input Supply Current (PA)
+0
+5
+10
+15
+20
+25
+30
+35
+40
+45
+50
+55
+60
+6
+9
+12
+15
+18
+21
+24
+27
+30
+33
+36
+39
+42
+45
+48
+D023
+TA = 125qC
+TA = 85qC
+TA = 25qC
+TA = -40qC
+Figure 6-6. Input Supply Current vs Supply Voltage in Shutdown
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+10
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+6.7 Typical Characteristics (continued)
+–40°C ≤ TA = TJ ≤ +125°C, V(IN_SYS) = V(IN) = 24 V, V( SHDN) = 2 V, R(ILIM) = 30 kΩ, IMON = PGOOD =  FLT = OPEN, C(OUT) = 
+1 μF, C(dVdT) = OPEN. (Unless stated otherwise)
+Supply Voltage (V)
+Input Supply Current (PA)
+0
+5
+10
+15
+20
+25
+30
+35
+40
+45
+50
+55
+60
+65
+0
+200
+400
+600
+800
+1000
+1200
+1400
+1600
+D026
+TA = -40 qC
+TA = 25 qC
+TA = 85 qC
+TA = 125 qC
+Figure 6-7. Input Supply Current vs Supply Voltage During 
+Normal Operation
+Reverse Supply Voltage (V)
+Input Supply Current (PA)
+-65 -60 -55 -50 -45 -40 -35 -30 -25 -20 -15 -10
+-5
+0
+-160
+-140
+-120
+-100
+-80
+-60
+-40
+-20
+0
+D041
+TA = -40qC
+TA = 25qC
+TA = 85qC
+TA = 125qC
+V(OUT) = 0 V
+Figure 6-8. Input Supply Current vs Reverse Supply Voltage, 
+–V(IN_SYS) 
+Temperature (qC)
+Current Limit (A)
+-50
+0
+50
+100
+150
+0
+2.5
+5
+7.5
+10
+D020
+R(ILIM) = 9 k:
+R(ILIM) = 4.02 k:
+R(ILIM) = 3 k:
+Figure 6-9. Overload Current Limit vs Temperature
+Temperature (qC)
+Current Limit (A)
+-50
+0
+50
+100
+150
+0.5
+0.75
+1
+1.25
+D025
+R(ILIM) = 30 k:
+R(ILIM) = 18 k:
+Figure 6-10. Overload Current Limit vs Temperature
+PLIM (W)
+% Accuracy
+60
+80
+100
+120
+140
+160
+5
+6
+7
+8
+D042
+Figure 6-11. Output Power Limiting Accuracy vs PLIM
+Supply Voltage (V)
+Current Limit (A)
+Output Power Limit (W)
+0
+10
+20
+30
+40
+50
+60
+1
+0
+2
+25
+3
+50
+4
+75
+5
+100
+6
+125
+7
+150
+D052
+CURRENT LIMIT
+POWER LIMIT
+TPS26632
+R(PLIM) = 100 kΩ
+R(ILIM) = 3 kΩ
+Figure 6-12. Power Limit, Current limit vs Supply Voltage
+www.ti.com
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+Copyright © 2024 Texas Instruments Incorporated
+Submit Document Feedback
+11
+Product Folder Links: TPS2663
+
+6.7 Typical Characteristics (continued)
+–40°C ≤ TA = TJ ≤ +125°C, V(IN_SYS) = V(IN) = 24 V, V( SHDN) = 2 V, R(ILIM) = 30 kΩ, IMON = PGOOD =  FLT = OPEN, C(OUT) = 
+1 μF, C(dVdT) = OPEN. (Unless stated otherwise)
+Output Current (A)
+Current Monitor Output (PA)
+0
+0.6
+1.2
+1.8
+2.4
+3
+3.6
+4.2
+4.8
+5.4
+6
+6.6
+0
+20
+40
+60
+80
+100
+120
+140
+160
+D021
+TA = 125qC
+TA = 85qC
+TA = 25qC
+TA = -40qC
+Figure 6-13. Current Monitor Output vs Output Current
+Output Current (A)
+GAIN(IMON), (% Accuracy)
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0
+20
+40
+60
+80
+100
+120
+140
+160
+D033
+Figure 6-14. IMON Gain Accuracy at < 0.6-A Output Current
+Temperature (qC)
+UVLO, OVP Fast Turn ON Delay (Ps)
+-60
+-30
+0
+30
+60
+90
+120
+150
+80
+100
+120
+140
+160
+180
+D008
+tUVLO_ON(fast_dly)
+tOVP_ON(fast_dly)
+A.
+V(PGTH) > V(PGTHF)
+Figure 6-15. UVLO, OVP Fast Turn-ON Delay vs Temperature
+Temperature (qC)
+tCL_PLIM(dly) (msec)
+-50
+0
+50
+100
+150
+140
+150
+160
+170
+180
+190
+D029
+Figure 6-16. Maximum Duration in Current and Power Limiting 
+vs Temperature
+Temperature (qC)
+Reverse Current Blocking Fast Delay (ns)
+-50
+0
+50
+100
+150
+150
+160
+170
+180
+190
+200
+D019
+Figure 6-17. Reverse Current Blocking Response vs 
+Temperature
+Power Dissipation (W)
+Thermal Shutdown Time (msec)
+3
+4 5 6 7 8 10
+20
+30 4050 70 100
+200 300400
+0.1
+0.2
+0.5
+1
+2
+5
+10
+20
+50
+100
+200
+500
+1000
+2000
+3000
+D040
+TA = -40qC
+TA = 0qC
+TA = 25qC
+TA = 85qC
+TA = 125qC
+Taken on VQFN device on EVM Board
+Figure 6-18. Thermal Shutdown Time vs Power Dissipation
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+12
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+7 Parameter Measurement Information
+UVLO_tON(dly)
+time
+V(UVLOR)+0.1V
+0.1 V
+VUVLO
+V(OUT)
+0
+time
+10%
+VUVLO
+0
+V(UVLOF)-0.02 V
+UVLO_toff(dly)
+FLT
+OVP_tOFF(dly)
+time
+10%
+V(OVPR)+0.02V
+V(OVP)
+0
+FLT
+0.1 V
+VOVP
+V(OUT)
+0
+V(OVPF)-0.02 V
+time
+OVP_tON(dly)
+UVLO_tON(fast_dly)
+time
+V(UVLOR)
++0.1V
+VUVLO
+V(OUT)
+0
+VPGTH
+VPGTHF
+OVP_tON(fast_dly)
+time
+V(OVPF)
+-0.02V
+VUVLO
+V(OUT)
+0
+VPGTH
+VPGTHF
+Figure 7-1. Timing Waveforms
+www.ti.com
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+Copyright © 2024 Texas Instruments Incorporated
+Submit Document Feedback
+13
+Product Folder Links: TPS2663
+
+time
+I(OUT)
+0
+I(OL)
+I(FASTRIP)
+tFASTRIP(dly)
+time
+V(OUT)
+0
+tCL_PLIM(dly)
+I(OUT)
+tCL_PLIM(dly)
+P(OUT)
+P(PLIM)
+-1V
+tRCB(fast_dly)
+time
+0
+V(IN_SYS) -V(OUT)
+tFWD(dly)
+time
+90%
+67 mV
+V(IN_SYS) -V(OUT)
+0
+V(DRV) -V(IN_SYS)
+V(DRV_OH)
+V(B_GATE) -V(IN_SYS)
+time
+V(OUT)
+0
+tCL_PLIM(dly)
+I(OUT)
+tCB(dly)
+I(OL)
+time
+0
+tCL_PLIM(dly)
+tCB(dly)
+I(OL)
+V(OUT)
+I(OUT)
+2xI(OL)
+Figure 7-2. Timing Waveforms
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+14
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+8 Detailed Description
+8.1 Overview
+The TPS2663x devices are a family of 60-V industrial eFuses. The devices provides robust protection for all 
+systems and applications powered from 4.5 V to 60 V. With an external N-channel FET the devices can be 
+used to protect the loads from negative supply voltages down to –60 V. For hot-pluggable boards, the devices 
+provide hot-swap power management with inrush current control and programmable output voltage slew rate 
+features using the dVdT pin. Load, source, and device protections are provided with many programmable 
+features including overcurrent, overvoltage and undervoltage. The precision overcurrent limit (±7% at 6 A) helps 
+to minimize over design of the input power supply, while the fast response short-circuit protection 1-µs (typical) 
+immediately isolates the faulty load from the input supply when a short circuit is detected. The device features 
+fast reverse current blocking response (0.17 µs). The internal robust protection control blocks of the TPS2663x 
+along with its ±60-V rating, helps to simplify the system designs for the industrial surge compliance ensuring 
+complete protection of the load and the device. The 60-V maximum DC operating and 70-V absolute maximum 
+voltage rating enables system protection from 60-V DC input supply faults and from industrial SELV power 
+supplies.
+By monitoring the output (Load) voltage through the PGTH pin, the device distinguishes between real system 
+faults and system transients and the turn-ON delay during a fault recovery is controlled accordingly. The valid 
+load voltage detection threshold can be adjusted using a resistor ladder network from OUT, PGTH and GND. 
+This scheme ensures fast recovery during system tests like voltage interruption and brown-out tests, EMC 
+testing like Electrical Fast Transients (IEC61000-4-4) and Surge (IEC61000-4-5).
+The TPS26632, TPS26633, TPS26635 TPS26636 and TPS26637 devices integrate adjustable output power 
+limiting (PLIM) functionality that simplifies the system design requiring compliance in accordance to standards 
+like IEC61010-1 and UL1310.
+The devices provides precise monitoring of voltage bus for brown-out, overvoltage conditions and asserts fault 
+signal for the downstream system. The device overall threshold accuracy of 2% ensures tight supervision of bus, 
+eliminating the need for a separate supply voltage supervisor chip. The devices monitors V(IN_SYS) and V(OUT) to 
+provide true reverse current blocking when a reverse condition or input power failure condition is detected.
+Additional features of the TPS2663x devices include:
+•
+±6% current monitor output (IMON) for health monitoring of the system
+•
+A choice of latch-off or automatic restart mode response during current limit, power limit and thermal fault 
+using MODE pin
+•
+PGOOD indicator output with ±2% accurate adjustable valid load voltage detection threshold (PGTH)
+•
+Overtemperature protection to safely shutdown in the event of an overcurrent event
+•
+De-glitched fault reporting for supply brown-out and overvoltage faults
+•
+Enable and disable control from an MCU using the SHDN pin
+www.ti.com
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+Copyright © 2024 Texas Instruments Incorporated
+Submit Document Feedback
+15
+Product Folder Links: TPS2663
+
+8.2 Functional Block Diagram
+IMON
+OUT
+UVLO
++
+Current
+Sense
+4.3 V 
+4.2 V
++
+OVP
+2 µA
+PORb
+UVLOb
+SWEN
+25x
+14 Ÿ
+65 Ÿ
+ 
+X27.9 µ 
+xx
+ILIM
+1.2 V
+1.12 V
+Ramp Control
+Q
+Q
+SET
+CLR
+S
+R
+SHDNb
+Current Limit Amp
+PORb
+Gate Control Logic
+FLT
+Charge
+Pump (12 V)
+GND
+TSD
+PORb
+UVLOb
+SHDNb
+Thermal 
+Shutdown
+SHDN
+4.17V
+Fault Latch
+Open/ Short 
+detect
+2.7V
++
+0.8 V
+TSD
+OLR
+SWEN
+* Only for Latch Mode
+IN_SYS
+IN_SYS
+CP
+MODE
+OLR
+162 msec
+timer
+I(OUT) = I(OL)
+Timeout
+31 PŸ
+5 V
+Overload fault response 
+(Auto-Retry/Latch-off) 
+select detection
+3V
+Q
+Q
+SET
+CLR
+S
+R
+PGOOD
+65 Ÿ
+1 0HJŸ
+Fast-Trip Comp 
+(Threshold= 45A)
+IN
+ dVdT
++
++
+±
+-15mV
++57mV
+IN_SYS
+1.3msec
++
+PGTH
+1.2V
+1.12V
+2 µs
+Fast_Charge
+_EN
+SHDNb
+Gate Enhanced (HS_FET)
+1.2 0HJŸ
+B_GATE
+Power Limit Amp
+25.5 msec
+timer
+I(OUT) > I(CB)
+Timeout
+*TPS26631 
+Only
+REVERSE
+20 µA
+P(OUT) = P(LIM)
+SHDNb
+Fast_Charge
+_EN
+DRV
+TPS26630 & TPS26631
++
+OVP
+1.2 V
+I(OUT) = I(OL)
+VSEL_UVLO
++
+± 
+VSEL_OVP
++
+± 
+1.12 V
+Figure 8-1. TPS26630, TPS26631, Functional Block Diagram
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+16
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+IMON
+OUT
+UVLO
++
+Current
+Sense
+4.3 V  
+4.2 V
++
+PLIM
+2 µA
+PORb
+UVLOb
+SWEN
+25x
+14 
+  
+65    
+X27.9 µ  
+ILIM
+1.2 V
+1.12 V
+Ramp Control
+Q
+Q
+SET
+CLR
+S
+R
+SHDNb
+Current Limit Amp
+PORb
+Gate Control Logic
+FLT
+Charge
+Pump  
+GND
+TSD
+PORb
+UVLOb
+SHDNb
+Thermal 
+Shutdown
+SHDN
+4.17V
+Fault Latch
+Open/ Short 
+detect
+2.7 V
++
+0.8 V
+TSD
+OLR
+SWEN
+* Only for Latch Mode
+P_IN
+IN_SYS
+CP
+MODE
+OLR
+162 msec
+timer
+I(OUT) = I(OL)
+Timeout
+31 m  
+5 V
+Overload fault response 
+(Auto-Retry/Latch-off) 
+select detection
+3V
+Q
+Q
+SET
+CLR
+S
+R
+PGOOD
+65   
+1 Meg 
+
+Fast-Trip Comp 
+(Threshold= 45A)
+IN
+5 µA
+4.17V
+dVdT
++
++
+–
+-15mV
++57mV
+IN_SYS
+1.3 msec
++
+PGTH
+1.2V
+1.12V
+2 µs
+Fast_Charge
+_EN
+SHDNb
+Gate Enhanced (HS_FET)
+1.2 Meg 
+B_GATE
+Power Limit Amp
+25.5 msec
+timer
+I(OUT) > I(CB)
+Timeout
+*TPS26631, 
+TPS26633, TPS26635 
+,TPS26636 and 
+TPS26637 Only
+REVERSE
+20 µA
+P(OUT) = P(LIM)
+TPS26632, 
+TPS26633, 
+TPS26635, 
+TPS26636 and 
+TPS26637
+SHDNb
+Fast_Charge
+_EN
+DRV
+VSEL_UVLO
++
+– 
+Figure 8-2. TPS26632, TPS26633, TPS26635, TPS26636 and TPS26637 Functional Block Diagram
+8.3 Feature Description
+8.3.1 Hot Plug-In and Inrush Current Control
+The devices are designed to control the inrush current upon insertion of a card into a live backplane or 
+other "hot" power source. This design limits the voltage sag on the backplane supply voltage and prevents 
+unintended resets of the system power. The controlled start-up also helps to eliminate conductive and radiative 
+interferences. An external capacitor connected from the dVdT pin to GND defines the slew rate of the output 
+voltage at power on. The fastest output slew rate of 24 V/500 µs can be achieved by leaving dVdT pin floating. 
+Use Equation 1 to calculate the inrush current.
+ 
+u
+t
+ 
+u
+(IN)
+(INRUSH)
+(OUT)
+dVdT
+dV
+V
+I
+C
+I
+C
+dT
+t
+(1)
+where
+www.ti.com
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+Copyright © 2024 Texas Instruments Incorporated
+Submit Document Feedback
+17
+Product Folder Links: TPS2663
+
+tdVdT = 20.8 × 103 × V(IN) × C(dVdT)
+(2)
+Figure 8-1 illustrates inrush current control performance of the device during hot plug-In.
+VIN_SYS
+VOUT
+IIN
+PGOOD
+CdVdT = 100 nF
+COUT = 1000 µF
+RILIM = 4.02 kΩ
+Figure 8-3. Hot Plug-In and Inrush Current Control at 24-V Input
+8.3.1.1 Thermal Regulation Loop
+Use Equation 3 to calculate the average power dissipation within the eFuse during power up with a capacitive 
+load.
+ 
+u
+u
+D(INRUSH)
+(IN)
+(INRUSH)
+P
+0.5
+V
+I
+(3)
+System designs requiring to charge large output capacitors rapidly can result in an operating point that exceeds 
+the power dissipation versus time boundary limits of the device defined by Figure 6-18 characteristic curve. 
+This can result in increase in junction temperature beyond the device maximum allowed junction temperature. 
+To keep the junction temperature within the operating range, the thermal regulation control loop regulates the 
+junction temperature at T(J_REG), 145°C (typical) by controlling the inrush current profile and thereby limiting 
+the power dissipation within the device automatically. An internal 2.5 seconds (typical) timer starts from the 
+instance the thermal regulation operation kicks in. If the output does not power up within this time then the 
+internal FET is turned OFF. Subsequent operation of the device depends on the MODE configuration (auto-retry 
+or latch-off) setting as shown in Table 8-1. The maximum time-out of 1.25 seconds (typical) in thermal regulation 
+loop operation ensures that the device and the system board does not heat up during steady fault conditions 
+such as wake up with output short circuit. This scheme ensures reliable power-up operation.
+Thermal regulation control loop is internally enabled during power up by V(IN), UVLO cycling and turn-ON using 
+SHDN control. Figure 8-2 illustrates performance of the device operating in thermal regulation loop during power 
+up by V(IN) with a large output capacitor. The Thermal regulation loop gets disabled internally after the power-up 
+sequence when the internal FET gate gets fully enhanced or when the t(Treg_timeout) of 2.5 seconds (typical) time 
+is elapsed.
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+18
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+VIN_SYS
+VOUT
+IIN
+PGOOD
+CdVdT = Open
+COUT = 30 mF
+RILIM = 4.02 kΩ
+Figure 8-4. Thermal Regulation Loop Response During Power Up with Large Capacitive Load
+8.3.2 PGOOD and PGTH
+The devices feature an open drain Power good (PGOOD) indicator output. PGOOD can be used for enable and 
+disable of the downstream loads like DC-DC converters. Connect a resistor ladder network from VOUT, PGTH 
+and GND to set the PGOOD threshold level. PGOOD goes high when the internal FET gate is enhanced and 
+V(PGTH) is above V(PGTHR). PGOOD goes low when V(PGTH) goes below V(PGTHF). There is a deglitch of tPGOODR, 
+1.2 ms (typical) at the rising edge and tPGOODR, 2.1 μs (typical) deglitch on the falling edge of PGOOD indication. 
+PGOOD is a rated for 60 V and can be pulled to IN_SYS or OUT through a resistor. PGTH can be used for 
+setting downstream supply UVLO levels and PGOOD as enable and disable control.
+8.3.2.1 PGTH as VOUT Sensing Input
+The devices use PGTH as the output (Load) voltage monitor input and to set the down stream loads UVLO 
+threshold. To set the input PGTH threshold, connect a resistor divider network from VOUT to PGTH terminal to 
+GND as shown in Figure 3-1. During a system fault recovery (example: OVP high to low or UVLO low to high) 
+when the internal FET gate control is enabled, the device samples the PGTH information and decides whether to 
+turn ON the FET with fast slew rate or dVdT mode based on the sampled V(PGTH) information.
+Figure 7-1 shows the turn-ON behavior based on V(PGTH) information. During the fault recovery instance if 
+the V(PGTH) level is above(PGTHF) then the internal FET turns ON within a delay of tOVP(dly_fast) with fast slew 
+rate (ignores the capacitance connected at dVdT pin) with thermal regulation loop enabled for a duration of 
+tCL_PLIM(dly). Maximum current through the device during this operation is limited at I(OL) in TPS26630 and 
+TPS26632 devices and at 2 × I(OL) in TPS26631, TPS26633, TPS26635, TPS26636 and TPS26637 devices for 
+a maximum duration of tCB(dly). During the fault recovery instance, if the V(PGTH) level is below V(PGTHF), then the 
+device turns ON the internal FET in dVdT mode and the slew rate depends on the dVdT capacitor value and 
+maximum current through the devices is limited at I(OL). This way the device distinguishes between real system 
+faults and system transients and the turn-ON delay is controlled accordingly. This scheme ensures fast recovery 
+during system tests like voltage interruption and brown-out tests, EMC testing like Electrical Fast Transients 
+(IEC61000-4-4) and Surge (IEC61000-4-5). The fast turn-ON during transient recovery feature can be disabled 
+by connecting PGTH to GND. In this case, PGOOD is pulled low.
+8.3.3 Undervoltage Lockout (UVLO)
+The TPS2663x devices feature an accurate ±2% adjustable undervoltage lockout functionality. When the voltage 
+at UVLO pin falls below V(UVLOF) during input undervoltage fault, the internal FET quickly turns off and FLT is 
+asserted. The UVLO comparator has a hysteresis of 78 mV (typical). To set the input UVLO threshold, connect 
+a resistor divider network from IN supply to UVLO terminal to GND as shown in the Simplified Schematic. The 
+TPS2663x devices also features a factory set 15-V input supply undervoltage lockout V(IN_SYS_UVLO) threshold 
+with 1-V hysteresis. This feature can be enabled by connecting the UVLO terminal directly to the GND terminal. 
+www.ti.com
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+Copyright © 2024 Texas Instruments Incorporated
+Submit Document Feedback
+19
+Product Folder Links: TPS2663
+
+If the undervoltage lockout function is not needed, the UVLO terminal must be connected to the IN_SYS 
+terminal. UVLO terminal must not be left floating. In the applications where reverse polarity protection is required 
+connect a minimum of 300-kΩ resistor between UVLO and IN_SYS.
+Figure 7-1 shows the turn-ON behavior when UVLO pin voltage exceeds V(UVLOR) threshold.
+8.3.4 Overvoltage Protection (OVP)
+The TPS2663x devices incorporate circuitry to protect the system during overvoltage conditions. The TPS26630 
+and TPS26631 feature an accurate ±2% adjustable overvoltage cutoff functionality. A voltage more than V(OVPR) 
+on OVP pin turns off the internal FET and protects the downstream load. To program the OVP threshold 
+externally, connect a resistor divider from IN_SYS supply to OVP terminal to GND as shown in the Simplified 
+Schematic.
+The TPS26630 and TPS26631 also feature a factory set 34.3-V input overvoltage cutoff V(IN_SYS_OVP) threshold 
+with a 440-mV hysteresis. This feature can be enabled by connecting the OVP terminal directly to the GND 
+terminal. The TPS26632, TPS26633 and TPS26636 feature an internally fixed 35-V maximum overvoltage 
+clamp V(OVC) functionality. The TPS26632 and TPS26633 clamps the output voltage to V(OVC) when the input 
+voltage exceeds 35 V. TPS26635 features a fixed 39-V maximum overvoltage clamp level. During the output 
+voltage clamp operation, the power dissipation in the internal MOSFET is PD = (V(IN_SYS) – V(OVC)) × I(OUT). 
+Excess power dissipation for a prolonged period can increase the device temperature. To avoid this increase, 
+the internal FET is operated in overvoltage clamp for a maximum duration of tOVC(dly), 162 ms (typical). After 
+this duration, the internal FET is turned OFF and the subsequent operation of the device depends on the MODE 
+configuration (auto-retry or latch-off) setting as shown in Table 8-1.
+Figure 7-1 shows the turn-ON behavior when OVP pin voltage falls below V(OVPF) threshold.
+Figure 8-5 illustrates the overvoltage cutoff functionality and Figure 8-6 illustrates the overvoltage clamp 
+functionality. FLT is asserted after a delay of 617 µs (typical) after entering in overvoltage clamp mode and 
+remains asserted until the overvoltage fault is removed.
+TPS26630 and TPS26631
+Figure 8-5. Overvoltage Cutoff Response at 33-V 
+Level
+VIN_SYS
+FLTb
+IIN
+VOUT
+TPS26635
+RLOAD = 30 Ω, FLT 
+connected to VOUT
+Figure 8-6. Overvoltage Clamp Response With 
+TPS26635
+8.3.5 Input Reverse Polarity Protection (B_GATE, DRV)
+The TPS2663x devices support the reverse input polarity protection feature. Connect an N-channel power FET 
+(Q1) with the source to IN_SYS, drain to IN and GATE to B-GATE as shown in Figure 8-7. This action forms a 
+back to back FET topology in power path that is required to protect the load from input reverse polarity faults. 
+Connect an external signal FET (Q2) across BGATE, DRV and IN_SYS. Q2 acts as a pulldown gate switch 
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+20
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+for Q1. In the applications where reverse polarity protection and reverse current blocking is not required then 
+connect IN_SYS and IN together. Leave BGATE and DRV open as shown in Figure 8-8.
+Figure 8-9 illustrates the reverse input polarity protection functionality.
+The TPS2663x devices support a maximum differential voltage across V(IN_SYS) – V(OUT) up to –85 V. This high 
+voltage transients generally appear during the IEC61000-4-5 surge testing at the V(IN_SYS). This voltage stress 
+appears across the external N-channel FET. The TPS2663x provides a gate drive (B_GATE) of 10.2 V (typical). 
+The fast pulldown gate switch Q2 pulls down the GATE of the Q1 during reverse current and reverse polarity 
+fault events. Q2 must be at least 15-V, VDS rated FET with a maximum VGS rating of 20 V, Ciss ≤ 50 pF and 
+VGTH(min) ≤ 3 V.
+31PŸ
+IN
+OUT
+DRV
+TPS2663x
+IN_SYS
+GND
+B_GATE
+Q1
+Q2
+V(IN_SYS)
+V(OUT)
+N-FET
+Figure 8-7. Configuration for Input Reverse 
+Polarity Protection and Reverse Current Blocking
+TPS2663x
+IN
+B_GATE
+DRV
+IN_SYS
+GND
+OUT
+31 PŸ
+V(IN_SYS)
+V(OUT)
+Figure 8-8. Configuration for Applications Without 
+Input Reverse Polarity Protection and Reverse 
+Current Blocking Requirement
+IIN
+VIN_SYS
+VOUT
+Figure 8-9. Input Reverse Polarity Response at –60-V Input
+8.3.6 Reverse Current Protection
+The device monitors V(IN_SYS) and V(OUT) to provide true reverse current blocking when a reverse condition 
+or input power failure condition is detected. The reverse comparator turns OFF the external blocking FET Q1 
+quickly as soon as V(IN_SYS) – V(OUT) falls below –1 V. The total time taken to turn OFF the FET Q1 in this 
+condition is tRCB(fast_dly) + t(Driver). Use Equation 4 to calculate the delay due to the driver stage t(Driver).
+ 
+BG
+(Q
+ATE
+1)
+VGTH
+(Driver)
+(Q2)
+(Q1)
+V
+t
+RDSON
+xCiss
+xln(
+)
+(4)
+where
+•
+RDSON(Q2) is the on resistance of the fast pulldown switch Q2
+www.ti.com
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+Copyright © 2024 Texas Instruments Incorporated
+Submit Document Feedback
+21
+Product Folder Links: TPS2663
+
+•
+Ciss(Q1) is the input capacitance of the blocking FET Q1
+•
+VGTH(Q1) is the GATE threshold voltage of the blocking FET Q1
+•
+VBGATE = 10.2 V (typical)
+In a typical system design, t(Driver) is generally 10% to 20% of tRCB(fast_dly) of 120 ns (typical).
+Figure 8-10 and Figure 8-11 illustrate the behavior of the system during input hot short-circuit condition. The 
+blocking FET Q1 is turned ON within 1.6 ms (typical) after the differential forward voltage V(IN_SYS) – V(OUT) 
+exceeds 67 mV (typical).
+Figure 8-10. Input Hot-Short Functionality at 24-V 
+Supply
+Figure 8-11. Input Hot-Short: Fast-Trip Response 
+(Zoomed)
+The reverse comparator architecture has a supply line noise immunity resulting in a robust performance in 
+noisy environments. This event is achieved by controlling the turn-OFF time of the internal FET based on the 
+over-drive differential voltage V(IN_SYS) – V(OUT) over V(REVTH). The higher the over-drive, the faster the turn-OFF 
+time, tRCB(dly).
+8.3.7 Overload and Short-Circuit Protection
+The device monitors the load current by sensing the voltage across the internal sense resistor. The FET current 
+is monitored during start-up and normal operation.
+8.3.7.1 Overload Protection
+Use Equation 5 to set the current limit.
+
+
+ 
+OL
+ILIM
+18
+I
+R
+(5)
+where
+•
+I(OL) is the overload current limit in Ampere
+•
+R(ILIM) is the current limit resistor in kΩ
+8.3.7.1.1 Active Current Limiting at 1 × IOL (TPS26630 and TPS26632 Only)
+The TPS2663x devices feature accurate overload current limiting and fast short-circuit protection feature. With 
+TPS26630 and TPS26632, if the load current exceeds the programmed current limit, IOL, the device regulates 
+the current through it at IOL, eventually reducing the output voltage. The power dissipation across the device 
+during this operation is (VIN –VOUT) × IOL, and this can heat up the device and eventually enter into thermal 
+shutdown. The maximum duration for the overcurrent through the FET tCL_PLIM(dly), 162 ms (typical). If the 
+thermal shutdown occurs before this time, the internal FET turns OFF and the subsequent operation (auto-retry 
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+22
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+or latch-off) depends on the MODE pin configuration in Table 8-1. Figure 8-12 and Figure 8-13 illustrate overload 
+current limiting performance.
+FLT
+IIN
+VOUT
+VIN_SYS = 24 V
+MODE connected 
+to GND (Auto-
+Retry)
+RILIM = 9 kΩ
+Figure 8-12. Overload Performance With 
+TPS26630, TPS26632 During Load Step from 19 Ω 
+to 9 Ω
+FLT
+IIN
+VOUT
+VIN_SYS = 24 V
+MODE connected 
+to GND (Auto-
+Retry)
+RILIM = 9 kΩ
+Figure 8-13. Response During Coming Out of 
+Overload Fault
+8.3.7.1.2 Active Current Limiting With 2 × IOL Pulse Current Support (TPS26631, TPS26633, TPS26635, TPS26636, 
+and TPS26637 Only)
+TPS26631, TPS26633, TPS26635, and TPS26637 after the start-up and with PGOOD high, if the load current 
+exceeds IOL, then an internal fixed tCB(dly), 25.5 ms (typical) timer starts. During this time, the device passes 
+through the over current demanded by the load not more than 2 × IOL above which the device regulates at 2 × 
+IOL. After tCB(dly) time, the device regulates the current at IOL. The power dissipation across the device during this 
+operation is (VIN – VOUT) × IOL, and this can heat up the device and eventually enter into thermal shutdown. The 
+maximum duration for the internal FET in current regulation is tCL_PLIM(dly). The subsequent operation is based 
+on the MODE setting (either auto-retry or latch-off) in Table 8-1.
+The 2 × I(OL) pulse current support is activated only after PGOOD goes high. If PGOOD is in low state such as 
+during start-up operation or during auto-retry cycles, the 2 × I(OL) pulse current support is not activated and the 
+device limits the current at I(OL) level.
+Figure 8-14 and Figure 8-15 illustrate overload current limiting performance.
+www.ti.com
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+Copyright © 2024 Texas Instruments Incorporated
+Submit Document Feedback
+23
+Product Folder Links: TPS2663
+
+FLT
+IIN
+VOUT
+VIN_SYS = 24 V
+MODE connected 
+to GND (Auto-
+Retry)
+RILIM = 9 kΩ
+Figure 8-14. Overload Performance With 
+TPS26631, TPS26633, TPS26635, and TPS6637 
+During Load Step from 19 Ω to 9 Ω
+FLT
+IIN
+VOUT
+VIN_SYS = 24 V
+MODE connected 
+to GND (Auto-
+Retry)
+RILIM = 9 kΩ
+Figure 8-15. Response During Coming Out of 
+Overload Fault
+The TPS2663x devices feature ILIM pin short and open fault detection and protection. The internal FET is turned 
+OFF when ILIM pin is detected short or open to GND and it remains OFF till the ILIM pin fault is removed.
+Refer to Figure 7-2 for more information on tCB(dly) and tCL_PLIM(dly) parameter measurement information.
+8.3.7.2 Short-Circuit Protection
+During a transient output short-circuit event, the current through the device increases rapidly. As the current-limit 
+amplifier cannot respond quickly to this event due to its limited bandwidth, the device incorporates a fast-trip 
+comparator. The fast-trip comparator architecture is designed for fast turn-OFF tFASTTRIP(dly) = 1 µs (typical) 
+with I(SCP) = 45 A of the internal FET during an output short-circuit event. The fast-trip threshold is internally 
+set to I(FASTTRIP). The fast-trip circuit holds the internal FET off for only a few microseconds, after which the 
+device turns back on slowly, allowing the current-limit loop to regulate the output current to I(OL). Then the device 
+functions similar to the overload condition. Figure 8-14 illustrates output hot-short performance of the device.
+VIN_SYS = 24 V
+RILIM = 9.09 kΩ
+Figure 8-16. Output Hot-Short Response
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+24
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+The fast-trip comparator architecture has a supply line noise immunity resulting in a robust performance in 
+noisy environments. This event is achieved by controlling the turn-OFF time of the internal FET based on 
+the overcurrent level, I(FASTTRIP), through the device. The higher the overcurrent, the faster the turn-OFF time, 
+tFASTTRIP(dly). At overload current level in the range of IFASTTRIP < IOUT < ISCP, the fast-trip comparator response is 
+3.2 μs (typical).
+8.3.7.2.1 Start-Up With Short Circuit on Output
+When the device is started with short circuit on the output, the current begins to limit at I(OL). Due to high 
+power dissipation of VIN × I(OL) within the device the junction temperature increases. Subsequently, the thermal 
+regulation control loop limits the load current to regulate the junction temperature at T(J_REG), 145°C (typical) 
+for a duration of t(Treg_timeout), 2.5 seconds (typical). Subsequent operation of the device depends on the MODE 
+configuration (auto-retry or latch-off) setting as per the Table 8-1. FLT gets asserted after t(Treg_timeout) and 
+remains asserted till the output short circuit is removed. Figure 8-17 illustrates the behavior of the device in this 
+condition.
+VIN_SYS
+FLTb
+IIN
+VIN = 24 V
+RILIM = 3 kΩ
+Figure 8-17. Start-Up With Short on Output
+8.3.8 Output Power Limiting, PLIM (TPS26632, TPS26633, TPS26635, TPS26636, and TPS26637 Only)
+The TPS26630 and TPS26631 devices with a fixed overcurrent limit threshold the maximum output power 
+limit increases linearly with supply input. Electrical industrial process control equipment such as PLC CPU 
+must comply with standards like IEC61010-1 and UL1310 for fire safety, which require limited energy and 
+power circuits. Limiting the output power becomes a challenge in such high power applications where the 
+operating supply voltage range is wide. The TPS26632, TPS26633, TPS26635, and TPS26636 devices 
+integrate adjustable output power limiting functionality that simplifies the system design requiring compliance 
+in accordance to this standard.
+Connect a resistor from PLIM to GND as shown in Figure 8-18 to set the output power limiting value. If output 
+power limiting is not required then connect PLIM to GND directly. This action disables the PLIM functionality.
+During an over power load event, the TPS26632 limits the output power at the programmed value set by PLIM 
+resistor. This action indirectly results in the device operation in current limiting mode with steady state output 
+voltage and current set by the load characteristics and PLIM = VOUT × IOUT. Figure 6-12 shows the output power 
+limit and current limit characteristics of TPS26632 with 100-W power limit setting. The maximum duration for 
+the device in power limiting mode is 162 ms (typical), tCL_PLIM(dly). After this time, the device operates either in 
+auto-retry or latch-off mode based on MODE pin configuration in Table 8-1.
+www.ti.com
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+Copyright © 2024 Texas Instruments Incorporated
+Submit Document Feedback
+25
+Product Folder Links: TPS2663
+
+During an over power load event, the TPS26633, TPS26635, TPS26636 and TPS26637 allows the extra power 
+for a maximum duration of tCB(dly), 25.5 ms (typical). The maximum power during this time is limited to VOUT × 2 
+× IOL where IOL is the overload current limit set by the R(ILIM) resistor. After the tCB(dly) time, the output power gets 
+limited to the value programmed by the PLIM resistor. Use Equation 6 to set the power limit.
+P(PLIM) = 1 × R(PLIM)
+(6)
+Here, P(PLIM) is output power limit in watts, R(PLIM) is the power limit setting resistor in kΩ. Figure 8-19 and Figure 
+8-20 illustrate output power limiting performance of TPS26632 and TPS26633 devices respectively.
+Refer to Figure 7-2 for more information on tCB(dly) and tCL_PLIM(dly) parameter measurement information.
+R1
+R2
+R3
+TPS26632/33/35/36/37
+CdVdT
+RILIM
+RIMON
+R4
+R5
+Protected supply
+To Load
+Load Monitor
+ON/OFF Control
+IN
+B_GATE
+DRV
+IN_SYS
+UVLO
+PLIM
+MODE
+GND
+OUT
+PGTH
+PGOOD
+FLT
+SHDN
+IMON
+ILIM
+dVdT
+4.5 V - 60 V
+Optional components 
+for RCB and RPP
+31 mΩ  
+COUT
+Figure 8-18. TPS26632, TPS26633, TPS26635, TPS26636, and TPS26637 Typical Application Schematic
+RPLIM = 100 kΩ
+RILIM = 3 kΩ
+Figure 8-19. 100-W Class 2, Output Power Limiting 
+Response of TPS26632
+RPLIM = 100 kΩ
+RILIM = 3 kΩ
+Figure 8-20. 100-W Class 2, Output Power Limiting 
+Response of TPS26633
+8.3.9 Current Monitoring Output (IMON)
+The TPS2663x devices feature an accurate analog current monitoring output. A current source at IMON terminal 
+is internally configured to be proportional to the current flowing from IN to OUT. This current can be converted 
+into a voltage using a resistor R(IMON) from IMON terminal to GND terminal. The IMON voltage can be used as 
+a means of monitoring current flow through the system. The maximum voltage (V(IMONmax) for monitoring the 
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+26
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+current is limited to 4 V. This maximum voltage puts a limitation on maximum value of R(IMON) resistor and is 
+determined by Equation 7.
+
+
+
+
+
+
+>
+@
+
+
+IMON
+OUT
+IMON
+IMON
+V
+I
+GAIN
+R
+ 
+u
+u
+(7)
+Where,
+•
+GAIN(IMON) is the gain factor I(IMON):I(OUT) = 27.9 μA/A (Typical)
+•
+I(OUT) is the load current
+Refer to Figure 6-13 for IMON output versus load current plot. Figure 8-21 illustrates IMON performance.
+IMON
+VIN_SYS
+VOUT
+IIN
+Figure 8-21. IMON Response During a Load Step
+The IMON pin must not have a bypass capacitor to avoid delay in the current monitoring information.
+8.3.10 FAULT Response (FLT)
+The FLT open-drain output asserts (active low) under the faults events such as undervoltage, overvoltage, 
+overload, power limiting, reverse current, ILIM pin short and thermal shutdown conditions. The device is 
+designed to eliminate false reporting by using an internal "de-glitch" circuit for fault conditions without the need 
+for an external circuitry. FLT can be left open or connected to GND when not used.
+8.3.11 IN_SYS, IN, OUT, and GND Pins
+Connect a minimum of a 0.1-uF capacitor across IN_SYS and GND. For systems and applications where a 
+reverse polarity protection feature, reverse current blocking feature, or both is required
+•
+Connect a N-channel FET between IN_SYS and IN with source of the FET connected to IN_SYS, Drain at IN 
+and GATE to B_GATE.
+•
+Connect a N-channel signal FET with GATE to DRV, Drain to B_GATE, Source to IN_SYS
+If the external N-channel FET is not used then connect IN_SYS and IN together and leave B_GATE and DRV 
+pins floating as shown in Figure 8-7. Do not leave any of the IN and OUT pins un-connected.
+8.3.12 Thermal Shutdown
+The device has a built-in overtemperature shutdown circuitry designed to protect the internal FET, if the junction 
+temperature exceeds T(TSD), 165°C (typical). After the thermal shutdown event, depending upon the mode of 
+fault response configured as per the Table 8-1, the device either latches off or commences an auto-retry cycle of 
+648 ms (typical), t(TSD_retry) after TJ < [T(TSD) – 11°C]. During the thermal shutdown, the fault pin FLT pulls low to 
+indicate a fault condition.
+www.ti.com
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+Copyright © 2024 Texas Instruments Incorporated
+Submit Document Feedback
+27
+Product Folder Links: TPS2663
+
+8.3.13 Low Current Shutdown Control (SHDN)
+The internal, external FET and hence the load current can be switched off by pulling the SHDN pin below 0.8-V 
+threshold with a micro-controller GPIO pin or can be controlled remotely with an opto-isolator device. The device 
+quiescent current reduces to 21 μA (typical) in SHUTDOWN state. To assert SHDN low, the pulldown must 
+have sinking capability of at least 10 µA. To enable the device, SHDN must be pulled up to at least 2 V. After 
+the device is enabled, the internal FET turns on with dVdT mode. Figure 8-22 and Figure 8-15 illustrate the 
+performance of SHDN control.
+PGOOD
+IIN
+VOUT
+SHDN
+VIN = 24 V
+C(dVdT) = 22 nF
+RLOAD = 24 Ω
+Figure 8-22. Turn-on Control with SHDN 
+PGOOD
+IIN
+VOUT
+SHDN
+VIN = 24 V
+C(dVdT) = 22 nF
+RLOAD = 24 Ω
+Figure 8-23. Turn-off Control with SHDN 
+8.4 Device Functional Modes
+The TPS2663x devices respond differently to overload with MODE pin configurations. Table 8-1 explains the 
+operational differences.
+Table 8-1. Device Operational Differences Under Different MODE Configurations
+MODE PIN CONFIGURATION
+OVERLOAD PROTECTION OPERATION
+DEVICE
+Open
+Active current limiting at 1x for a maximum duration of tCL_PLIM(dly). 
+There after Latches OFF. Latch reset by toggling SHDN low to high 
+or UVLO low to high or power cycling IN_SYS.
+TPS26630, TPS26632, 
+TPS26636
+Active current limiting at 2x for tCB(dly) duration followed with 1x 
+current limiting for a maximum duration of tCL_PLIM(dly). There after 
+Latches OFF. Latch reset by toggling SHDN low to high or UVLO low 
+to high or power cycling IN_SYS.
+TPS26631, TPS26633, 
+TPS26635,TPS26637
+Shorted to GND
+Active current limiting at 1x for a maximum duration of tCL_PLIM(dly). 
+There after auto-retries after a delay of t(TSD_retry).
+TPS26630, TPS26632, 
+TPS26636
+Active current limiting at 2x for tCB(dly) duration followed with 1x 
+current limiting for a maximum duration of tCL_PLIM(dly). There after 
+auto-retries after a delay of t(TSD_retry).
+TPS26631, TPS26633, 
+TPS26635,TPS26637
+Refer to Figure 7-2 for more information on tCB(dly) and tCL_PLIM(dly) parameter measurement information.
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+28
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+9 Application and Implementation
+Note
+Information in the following applications sections is not part of the TI component specification, 
+and TI does not warrant its accuracy or completeness. TI’s customers are responsible for 
+determining suitability of components for their purposes, as well as validating and testing their design 
+implementation to confirm system functionality.
+9.1 Application Information
+The TPS2663x is an industrial eFuse, typically used for hot-swap and power rail protection applications. The 
+device operates from 4.5 V to 60 V with adjustable current limit, output power limit, overvoltage, undervoltage 
+and reverse polarity protections. The device aids in controlling inrush current and provides robust protection 
+against reverse current and filed miss-wiring conditions for systems such as PLCs, Industrial PCs, Control and 
+Automation and Sensors. The device also provides robust protection for multiple faults on the system rail
+The Detailed Design Procedure section can be used to select component values for the device. Additionally, a 
+spreadsheet design tool, TPS2663 Design Calculator, is available in the web product folder.
+9.2 Typical Application: Power Path Protection in a PLC System
+Figure 9-1. A Typical CPU (PLC Controller) System Block Diagram
+The PLC system is usually connected to an external 24-V DC power supply to provide power to the controller 
+unit, backplane, and I/O modules. Input protection circuits are required to protect the PLC from faults such as 
+overvoltage, undervoltage, and overload. Because input supply connectors are screw type, there can always 
+be a possibility of reverse supply connections. Protection circuits must block the reverse polarity to protect 
+www.ti.com
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+Copyright © 2024 Texas Instruments Incorporated
+Submit Document Feedback
+29
+Product Folder Links: TPS2663
+
+the PLC from possible negative voltages. At the same time, every PLC is tested for electrostatic discharge 
+(ESD) according to IEC 61000-4-2, burst pulses (EFT) according to IEC 61000- 4-4, energy single pulse 
+(surge) according to IEC 61000-4-5, voltage drops and interruptions. Figure 9-1 shows a system block diagram 
+of PLC controller unit along with the input protection socket. The TPS2663x devices offer a plug and play 
+input protection solution for such applications. For more information about this end equipment, refer to the TI 
+application site on Programmable Logic Controller (PLC), DCS & PAC: CPU (PLC Controller).
+CIN
+1 µF
+R1
+R2
+R3
+TPS26630/31
+CdVdT
+RILIM
+R4
+499 k
+R5
+56 k
+ON/OFF Control
+IN
+B_GATE
+DRV
+IN_SYS
+UVLO
+OVP
+MODE
+GND
+OUT
+PGTH
+PGOOD
+FLT
+SHDN
+IMON
+ILIM
+dVdT
+V(IN_SYS): 18 V ± 33 V
+RPGOOD
+24 k
+DC-DC
+Converter
+VIN
+EN
+Q1
+CSD19537Q3
+Q2
+BSS138
+D1
+SMCJ36CA
+887 k
+29.4 k
+34 k
+100 nF
+9.09 k
+COUT
+1 mF
+Figure 9-2. 24-V, 2-A eFuse Input Protection Circuit for Industrial PLC, CNC CPU
+9.2.1 Design Requirements
+Table 9-1 shows the design requirements for TPS2663x.
+Table 9-1. Design Requirements
+DESIGN PARAMETER
+EXAMPLE VALUE
+V(IN)
+Typical input voltage
+24 V
+V(UV)
+Undervoltage lockout set point
+18 V
+V(OV)
+Overvoltage cutoff set point
+33 V
+I(LIM)
+Overload current limit
+2 A
+I(INRUSH)
+Inrush current limit
+500 mA
+P(OUT)
+Output load
+15 W (DC-DC) with 15-V VINminDC-DC
+T(FAIL_TR)
+Power interruption time
+10 ms
+P(Surge)
+IEC61000-4-5 surge test level
+± 500-V, 2-Ω generator impedance
+9.2.2 Detailed Design Procedure
+9.2.2.1 Programming the Current-Limit Threshold—R(ILIM) Selection
+The R(ILIM) resistor at the ILIM pin sets the overload current limit. Use Equation 8 to set the overload current limit
+
+  
+ 
+:
+ILIM
+OL
+18
+R
+9k
+I
+(8)
+where
+•
+ILIM = 2 A
+Choose the closest standard 1% resistor value: R(ILIM) = 9.09 kΩ.
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+30
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+9.2.2.2 Undervoltage Lockout and Overvoltage Set Point
+The undervoltage lockout (UVLO) and overvoltage trip point are adjusted using an external voltage divider 
+network of R1, R2 and R3 connected between IN_SYS, UVLO, OVP and GND pins of the device. Use Equation 9 
+and Equation 10 to calculate the values required for setting the undervoltage and overvoltage.
+3
+(OVPR)
+(OV)
+1
+2
+3
+R
+V
+V
+R
+R
+R
+ 
+u
+
+
+(9)
+2
+3
+(UVLOR)
+(UV)
+1
+2
+3
+R
+R
+V
+V
+R
+R
+R
+
+ 
+u
+
+
+(10)
+For minimizing the input current drawn from the power supply {I(R123) = V(IN) / (R1 + R2 + R3)}, TI recommends to 
+use higher value resistance for R1, R2 and R3.
+However, the leakage current due to external active components connected at resistor string can add error to 
+these calculations. So, the resistor string current, I(R123) must be chosen to be 20x greater than the leakage 
+current of UVLO and OVP pins.
+From the device electrical specifications, V(OVPR) = 1.2 V and V(UVLOR) = 1.2 V. From the design requirements, 
+V(OV) is 33 V and V(UV) is 18 V. To solve the equation, first choose the value of R3 = 34 kΩ and use Equation 9 to 
+solve for (R1 + R2) = 916 kΩ. Use Equation 10 and value of (R1 + R2) to solve for R2 = 29.4 kΩ, and finally R1= 
+887 kΩ.
+Choose the closest standard 1% resistor values: R1 = 887 kΩ, R2 = 29.4 kΩ, and R3 = 34 kΩ.
+The UVLO and the OVP pins can also be connected to the GND pin to enable the internal default V(OV) = 34.2 V 
+and V(UV) = 15.6 V.
+9.2.2.3 Output Buffer Capacitor – COUT
+During the power interruption time TFAIL_TR the output capacitor COUT of the TPS26630 provides energy to the 
+15 W DC-DC converter load. Use Equation 11 to compute the required buffer capacitor COUT
+
+
+u
+u
+
+ 
+(DC DC)
+FAIL _ TR
+OUT
+2
+2
+(IN_ SYS)
+(UV _DC DC)
+2 P
+T
+C
+V
+V
+(11)
+where
+•
+P(DC-DC) = 15 W/η. Assuming efficiency of 95%, P(DC-DC) = 15.8 W
+•
+TFAIL_TR = 10 ms
+•
+V(IN_SYS) = 24 V
+•
+V(UV_DC-DC) = 15 V
+COUT = 0.9 mF. Choose a capacitor with ±10% tolerance, COUT = 1 mF/35 V electrolytic capacitor. Figure 9-4 and 
+Figure 9-5 illustrate the performance during the power interruption tests on TPS26630. Figure 9-8 illustrates the 
+performance on TPS26631.
+9.2.2.4 PGTH Set Point
+Set the VPGTHF threshold at the down-stream DC-DC converter UVLO falling threshold. VIN minimum operating 
+voltage of the DC-DC converter is at 15 V. Assuming UVLO to be at 20% lower level, VUVLO_DC-DC = 12 V. Use 
+Equation 12 to calculate R4 and R5.
+
+ 
+5
+(PGTHF)
+4
+5
+R
+V
+UVLO_DC-DC
+R
+R x V
+(12)
+www.ti.com
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+Copyright © 2024 Texas Instruments Incorporated
+Submit Document Feedback
+31
+Product Folder Links: TPS2663
+
+V(PGTHF) = 1.14 V. Assuming R5 = 56 kΩ, R4 comes out to be approximately 499 kΩ.
+9.2.2.5 Setting Output Voltage Ramp Time—(tdVdT)
+Use Equation 1 and Equation 2 to calculate required C(dVdT) for achieving an inrush current of 500 mA. C(dVdT) = 
+0.1 µF. Figure 9-3 illustrates the inrush current limiting performance during 24-V hot plug-in condition.
+9.2.2.5.1 Support Component Selections— RPGOOD and C(IN)
+The RPGOOD serves as pullup for the open-drain output. The current sink by this pin must not exceed 10 mA (see 
+the Absolute Maximum Ratings table). TI recommends typical resistance value in the range of 10 kΩ to 100 kΩ 
+for RPGOOD. Connect PGOOD directly to the EN pin of the DC-DC converter. Figure 9-6 and Figure 9-8 illustrate 
+the power-up and power-down performance of the system respectively. The CIN is a local bypass capacitor to 
+suppress noise at the input. TI recommends a minimum of 1 µF for C(IN) for limit the slew rates during the surge 
+test.
+9.2.2.6 Selecting Q1, Q2 and TVS Clamp for Surge Protection
+For ±500-V, 2-Ω surge, typically a SMC sized TVS like SMCJ36CA clamps the voltage around ±55 V. During the 
+negative surge strike, the input voltage VIN_SYS spikes to –55 V. This spike results in a voltage stress of –(55 V + 
+24 V) = –79 V across the external blocking FET Q1. Choose at least a 80-V rated N-channel FET. B_GATE drive 
+is in the range of 10 V to 14 V. Select a suitable FET with the target RDSON specified at this gate drive voltage. 
+The fast pulldown gate switch Q2 pulls down the GATE of the Q1 during the reverse current event appearing 
+during the surge test. Q2 must be at least 15-V VDS rated FET with a maximum VGS rating of 20-V , Ciss <= 50 
+pF and VGTH(min) ≤ 3 V. CSD19537Q3 and BSS138 are selected for Q1 and Q2 respectively. Figure 9-9 and 
+Figure 9-10 illustrate the performance of the system during the surge testing.
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+32
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+9.2.3 Application Curves
+VIN_SYS
+VOUT
+IIN
+PGOOD
+Figure 9-3. Hot Plug-In at 24-V Supply
+Figure 9-4. Voltage Interruption Response with 
+TPS26630
+Figure 9-5. Voltage Interruption Response with 
+TPS26630 (Zoomed)
+VIN_SYS
+VOUT
+IIN
+PGOOD
+Figure 9-6. Power Up Followed with Voltage 
+Interruption with TPS26630
+Figure 9-7. Voltage Interruption Performance with 
+TPS26631
+VIN_SYS
+VOUT
+VOUT_DC/DC
+PGOOD
+Figure 9-8. Power-Down Response
+www.ti.com
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+Copyright © 2024 Texas Instruments Incorporated
+Submit Document Feedback
+33
+Product Folder Links: TPS2663
+
+VIN_SYS
+VOUT
+ISURGE
+PGOOD
+Figure 9-9. 500-V, 2-Ω Surge Response
+VIN_SYS
+VOUT
+ISURGE
+PGOOD
+Figure 9-10. –500-V, 2-Ω Surge Response
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+34
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+9.3 System Examples
+9.3.1 Simple 24-V Power Supply Path Protection
+With the TPS2663x devices, a simple 24-V power supply path protection can be realized using a minimum of five 
+external components as shown in the schematic diagram in Figure 9-11. The external components required are: 
+an N–Channel Power FET Q1, an N–Channel signal FET Q2, and an R(ILIM) resistor to program the current limit, 
+C(IN) and C(OUT) capacitors.
+CIN
+TPS26630
+RILIM
+ON/OFF Control
+IN
+B_GATE
+DRV
+IN_SYS
+UVLO
+OVP
+MODE
+GND
+OUT
+PGTH
+PGOOD
+FLT
+SHDN
+IMON
+ILIM
+dVdT
+V(IN_SYS): 18 V ± 33 V
+Q1
+Q2
+COUT
+Load Enable / 
+Disable Control
+Health Monitor
+Optional components 
+for RCB and RPP
+31 PŸ
+Figure 9-11. TPS26630 Configured for a Simple 24-V Supply Path Protection
+Protection features with this configuration include:
+•
+Load and device protection from reverse input polarity fault down to –60 V (with a 60-V rated Q1)
+•
+Overvoltage protection at 34 V
+•
+Inrush current control with 24-V/240-µs output voltage slew rate
+•
+Reverse current blocking
+•
+Accurate current limiting with auto-retry
+9.3.2 Priority Power MUX Operation
+Applications having two energy sources, such as portable battery powered equipment require preference of one 
+source to another. For example, mains power (wall-adapter) has the priority over the internal backup power or 
+auxiliary power. These applications demand for switch over from mains power to backup power only when main 
+input voltage falls below a user defined threshold. The TPS2663x devices provide a simple solution for priority 
+power multiplexing needs.
+Figure 9-12 shows a typical priority power multiplexing implementation using devices. When the MAIN power is 
+present, the device in VIN_MAIN path powers the OUT bus irrespective of whether auxiliary power VIN_AUX 
+is greater than or less than VIN_MAIN. After the voltage on the VIN_MAIN rail falls below the user-defined 
+threshold, the device VIN_MAIN issues a signal to switch over to auxiliary power VIN_AUX. The transition 
+happens seamlessly in tOVP(dly_fast), with minimal voltage droop on the output. The voltage droop during 
+transition is a function of load current and output capacitance. See Equation 13.
+
+
+ 
+(LOAD)
+(DROOP)
+(
+)
+OVP fas
+T
+t _ d
+U
+ly
+O
+t
+I
+x
+V
+C
+(13)
+where
+•
+V(DROOP) is in volts, I(LOAD) is load current in Ampere, C(OUT) is output capacitance in µF, tOVP(fast_dly) = 140 µs 
+(typical)
+www.ti.com
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+Copyright © 2024 Texas Instruments Incorporated
+Submit Document Feedback
+35
+Product Folder Links: TPS2663
+
+Figure 9-13, Figure 9-14, Figure 9-15 and figure 9-16 show typical switch-over waveforms of Priority Muxing 
+implementation using the TPS26630 or TPS26631 for 20-V primary and 24-V auxiliary bus.
+R1
+R2
+R3
+TPS26630
+CdVdT
+RILIM
+R4
+ON/OFF Control
+IN
+B_GATE
+DRV
+IN_SYS
+UVLO
+OVP
+MODE
+GND
+OUT
+PGTH
+PGOOD
+FLT
+SHDN
+IMON
+ILIM
+dVdT
+31 PŸ
+RIMON
+R5
+R6
+R7
+R8
+TPS26630
+CdVdT
+RILIM
+ON/OFF Control
+IN
+B_GATE
+DRV
+IN_SYS
+UVLO
+OVP
+MODE
+GND
+OUT
+PGTH
+PGOOD
+FLT
+SHDN
+IMON
+ILIM
+dVdT
+31 PŸ
+RILIM
+VIN_MAIN
+VIN_AUX
+PGTH
+COUT
+Aux
+ Load Monitor
+Q3
+Q5
+Q4
+VOUT
+Q2
+Q1
+PGTH
+Main Load 
+Monitor
+Figure 9-12. Priority Power Mux Implementation
+Figure 9-13. VIN_MAIN Power Recovery: Change 
+Over from Auxiliary VIN_AUX to Primary Power 
+VIN_MAIN
+Figure 9-14. VIN_MAIN Brownout Condition: 
+Change Over from Main VIN_MAIN to Auxiliary 
+Power VIN_AUX
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+36
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+Figure 9-15. VIN_AUX Brownout Condition
+Figure 9-16. VIN_AUX Power Recovery
+9.3.3 Input Protection for a Compact 24-V Auxiliary Power Supply for Servo Drives
+TPS2663x eFuse protects the system from common faults such as reverse polarity, reverse power flow, 
+overvoltage, undervoltage and overcurrents along with a robust EMC immunity performance. For further 
+information, refer to Compact, efficient, 24-V input auxiliary power supply reference design for servo drives 
+design guide.
+9.4 Dos and Do Nots
+•
+Use external FETs Q1 and Q2. in the applications where reverse polarity protection is required.
+•
+Connect at least a 300-kΩ resistor across UVLO and IN_SYS in the applications where reverse polarity 
+protection is required.
+9.5 Power Supply Recommendations
+The TPS2663x eFuse is designed for the supply voltage range of 4.5 V ≤ VIN ≤ 60 V. If the input supply is 
+located more than a few inches from the device, TI recommends an input ceramic bypass capacitor higher than 
+0.1 μF. Power supply must be rated higher than the current limit set to avoid voltage droops during overcurrent 
+and short-circuit conditions.
+9.5.1 Transient Protection
+In case of short-circuit and overload current limit, when the device interrupts current flow, input inductance 
+generates a positive voltage spike on the input and output inductance generates a negative voltage spike on the 
+output. The peak amplitude of voltage spikes (transients) depends on the value of inductance in series to the 
+input or output of the device. These transients can exceed the Absolute Maximum Ratings of the device if steps 
+are not taken to address the issue.
+Typical methods for addressing transients include:
+•
+Minimizing lead length and inductance into and out of the device
+•
+Using large PCB GND plane
+•
+Using a Schottky diode across the output and GND to absorb negative spikes
+•
+Using a low value ceramic capacitor (C(IN) to approximately 0.1 μF) to absorb the energy and dampen the 
+transients.
+The approximate value of input capacitance can be estimated with Equation 14
+(
+)
+( )
+(
+)
+( )
+( )
+IN
+spike Absolute
+IN
+Load
+IN
+L
+V
+V
+I
+C
+=
++
+´
+(14)
+www.ti.com
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+Copyright © 2024 Texas Instruments Incorporated
+Submit Document Feedback
+37
+Product Folder Links: TPS2663
+
+where
+•
+V(IN) is the nominal supply voltage
+•
+I(LOAD) is the load current
+•
+L(IN) equals the effective inductance seen looking into the source
+•
+C(IN) is the capacitance present at the input
+Some applications can require additional Transient Voltage Suppressor (TVS) to prevent transients from 
+exceeding the Absolute Maximum Ratings of the device. These transients can occur during positive and 
+negative surge tests on the supply lines. In such applications, TI recommends to place at least 1 µF of input 
+capacitor.
+Figure 10-1 shows the circuit implementation with optional protection components (a ceramic capacitor, TVS 
+and, Schottky diode).
+*
+R1
+R2
+R3
+TPS2663x
+CdVdT
+RILIM
+R4
+ON/OFF Control
+IN
+B_GATE
+DRV
+IN_SYS
+UVLO
+OVP
+MODE
+GND
+OUT
+PGTH
+PGOOD
+FLT
+SHDN
+IMON
+ILIM
+dVdT
+Input
+COUT
+*
+31 PŸ
+Output
+* Optional components needed for suppression of transients
+Figure 9-17. Circuit Implementation With Optional Protection Components for TPS2663x
+9.6 Layout
+9.6.1 Layout Guidelines
+•
+For all the applications, TI recommends a 0.1 µF or higher value ceramic decoupling capacitor between 
+IN_SYS terminal and GND.
+•
+The external FET Q1 must be placed with DRAIN close to the VIN pins of the IC and connected through 
+a plane. The fast pulldown switch Q2 DRAIN and SOURCE must be placed very close to the GATE and 
+SOURCE terminals of Q1 with very short loop. See Figure 9-18 and Figure 9-19 for a typical PCB layout 
+example.
+•
+The optimum placement of decoupling capacitor is closest to the IN_SYS and GND terminals of the device. 
+Care must be taken to minimize the loop area formed by the bypass-capacitor connection, the IN_SYS 
+terminal, and the GND terminal of the IC.
+•
+High-current carrying power path connections must be as short as possible and must be sized to carry at 
+least twice the full-load current.
+•
+Locate all the TPS2663x family support components R(ILIM), C(dVdT), R(IMON), UVLO, OVP and PGTH resistors 
+close to their connection pin. Connect the other end of the component to the GND with shortest trace length.
+•
+The trace routing for the RILIM component to the device must be as short as possible to reduce parasitic 
+effects on the current limit and current monitoring accuracy. These traces must not have any coupling to 
+switching signals on the board.
+•
+Protection devices such as TVS, snubbers, capacitors, or diodes must be placed physically close to the 
+device they are intended to protect, and routed with short traces to reduce inductance. For example, TI 
+recommends a protection Schottky diode to address negative transients due to switching of inductive loads, 
+and it must be physically close to the OUT and GND pins.
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+38
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+•
+Thermal Considerations: When properly mounted, the PowerPAD integrated circuit package provides 
+significantly greater cooling ability. To operate at rated power, the PowerPAD integrated circuit package must 
+be soldered directly to the board GND plane directly under the device. Other planes, such as the bottom side 
+of the circuit board, can be used to increase heat sinking in higher current applications.
+9.6.2 Layout Example
+High 
+Frequency
+Bypass cap
+VIN_SYS PLANE
+TOP Layer
+GND Plane
+BOTTOM Layer GND Plane
+BOTTOM Layer GND Plane
+Via to Bottom Layer
+Top Layer
+Top Layer GND Plane
+Bottom layer GND plane
+IN
+IN
+IN_SYS
+BGATE
+DRV
+UVLO
+OVP
+GND
+dVdT
+ILIM
+MODE
+OUT
+PGTH
+OUT
+PGOOD
+IMON
+SHDN
+FLT
+N.C
+N.C
+N.C
+N.C
+N.C
+N.C
+VOUT PLANE
+S
+S
+G
+S
+D
+D
+D
+D
+D
+G
+S
+Q1
+Q2
+D1
+D2
+Figure 9-18. Typical PCB Layout Example with QFN Package with a 2-Layer PCB
+www.ti.com
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+Copyright © 2024 Texas Instruments Incorporated
+Submit Document Feedback
+39
+Product Folder Links: TPS2663
+
+High 
+Frequency
+Bypass cap
+VIN_SYS PLANE
+TOP Layer
+GND Plane
+BOTTOM Layer GND Plane
+BOTTOM Layer GND Plane
+Via to Bottom Layer
+Top Layer
+Top Layer GND Plane
+Bottom layer GND plane
+VOUT PLANE
+S
+S
+G
+S
+D
+D
+D
+D
+D
+G
+S
+Q1
+Q2
+D1
+D2
+OVP
+BGATE
+IN
+IN_SYS
+IN
+SHDN
+OUT
+OUT
+GND
+PGTH
+ILIM
+dVdT
+PGOOD
+MODE
+IN
+DRV
+UVLO
+IMON
+FLT
+OUT
+Figure 9-19. Typical PCB Layout Example with HTSSOP Package with a 2-Layer PCB
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+40
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+10 Device and Documentation Support
+10.1 Documentation Support
+10.1.1 Related Documentation
+•
+Texas Instruments, TPS2663 Design Calculator
+•
+Texas Instruments, CPU (PLC Controller)
+•
+Texas Instruments, Compact, efficient, 24-V input auxiliary power supply reference design for servo drives 
+design guide
+10.2 Receiving Notification of Documentation Updates
+To receive notification of documentation updates, navigate to the device product folder on ti.com. Click on 
+Notifications to register and receive a weekly digest of any product information that has changed. For change 
+details, review the revision history included in any revised document.
+10.3 Support Resources
+TI E2E™ support forums are an engineer's go-to source for fast, verified answers and design help — straight 
+from the experts. Search existing answers or ask your own question to get the quick design help you need.
+Linked content is provided "AS IS" by the respective contributors. They do not constitute TI specifications and do 
+not necessarily reflect TI's views; see TI's Terms of Use.
+10.4 Trademarks
+PowerPAD™ and TI E2E™ are trademarks of Texas Instruments.
+All trademarks are the property of their respective owners.
+10.5 Electrostatic Discharge Caution
+This integrated circuit can be damaged by ESD. Texas Instruments recommends that all integrated circuits be handled 
+with appropriate precautions. Failure to observe proper handling and installation procedures can cause damage.
+ESD damage can range from subtle performance degradation to complete device failure. Precision integrated circuits may 
+be more susceptible to damage because very small parametric changes could cause the device not to meet its published 
+specifications.
+10.6 Glossary
+TI Glossary 
+This glossary lists and explains terms, acronyms, and definitions.
+11 Revision History
+NOTE: Page numbers for previous revisions may differ from page numbers in the current version.
+Changes from Revision F (June 2021) to Revision G (June 2024)
+Page
+•
+Added TPS26637 device to the document.........................................................................................................1
+•
+Added the TPS26637 device to the Device Comparison Table section............................................................. 2
+•
+Updated the overload fault response and OV clamp voltage for TPS26636 in the Device Comparison Table
+section................................................................................................................................................................ 2
+•
+Added the TPS26637 device to the Pin Configuration and Functions section................................................... 3
+•
+Added the TPS26637 device to the Overview section..................................................................................... 15
+•
+Added the TPS26637 device to the PGTH as VOUT Sensing Input section....................................................19
+•
+Added the TPS26637 device to Section 8.3.7.1.2 ...........................................................................................23
+•
+Deleted the TPS26636 device from Section 8.3.7.1.2 .....................................................................................23
+•
+Added the TPS26637 device to Section 8.3.8 .................................................................................................25
+•
+Updated the overload protection for the TPS26636 device in Section 8.3.8 ...................................................25
+•
+Added the TPS26637 device to the Device Functional Modes section............................................................28
+•
+Updated the overload protection for the TPS26636 device in the Device Functional Modes section.............. 28
+www.ti.com
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+Copyright © 2024 Texas Instruments Incorporated
+Submit Document Feedback
+41
+Product Folder Links: TPS2663
+
+Changes from Revision E (March 2020) to Revision F (June 2021)
+Page
+•
+Updated the numbering format for tables, figures and cross-references throughout the document ................. 1
+12 Mechanical, Packaging, and Orderable Information
+The following pages include mechanical, packaging, and orderable information. This information is the most 
+current data available for the designated devices. This data is subject to change without notice and revision of 
+this document. For browser-based versions of this data sheet, refer to the left-hand navigation.
+TPS2663
+SLVSE94G – SEPTEMBER 2018 – REVISED JUNE 2024
+www.ti.com
+42
+Submit Document Feedback
+Copyright © 2024 Texas Instruments Incorporated
+Product Folder Links: TPS2663
+
+PACKAGE OPTION ADDENDUM
+www.ti.com
+8-Nov-2025
+PACKAGING INFORMATION
+Orderable part number
+Status
+(1)
+Material type
+(2)
+Package | Pins
+Package qty | Carrier
+RoHS
+(3)
+Lead finish/
+Ball material
+(4)
+MSL rating/
+Peak reflow
+(5)
+Op temp (°C)
+Part marking
+(6)
+TPS26630RGER
+Active
+Production
+VQFN (RGE) | 24
+3000 | LARGE T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26630
+TPS26630RGER.A
+Active
+Production
+VQFN (RGE) | 24
+3000 | LARGE T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26630
+TPS26630RGERG4
+Active
+Production
+VQFN (RGE) | 24
+3000 | LARGE T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26630
+TPS26630RGERG4.A
+Active
+Production
+VQFN (RGE) | 24
+3000 | LARGE T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26630
+TPS26630RGET
+Active
+Production
+VQFN (RGE) | 24
+250 | SMALL T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26630
+TPS26630RGET.A
+Active
+Production
+VQFN (RGE) | 24
+250 | SMALL T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26630
+TPS26631PWPR
+Active
+Production
+HTSSOP (PWP) | 20
+2000 | LARGE T&R
+Yes
+NIPDAU
+Level-2-260C-1 YEAR
+-40 to 125
+TPS26631
+TPS26631PWPR.A
+Active
+Production
+HTSSOP (PWP) | 20
+2000 | LARGE T&R
+Yes
+NIPDAU
+Level-2-260C-1 YEAR
+-40 to 125
+TPS26631
+TPS26631PWPRG4
+Active
+Production
+HTSSOP (PWP) | 20
+2000 | LARGE T&R
+Yes
+NIPDAU
+Level-2-260C-1 YEAR
+-40 to 125
+TPS26631
+TPS26631PWPRG4.A
+Active
+Production
+HTSSOP (PWP) | 20
+2000 | LARGE T&R
+Yes
+NIPDAU
+Level-2-260C-1 YEAR
+-40 to 125
+TPS26631
+TPS26631PWPT
+Active
+Production
+HTSSOP (PWP) | 20
+250 | SMALL T&R
+Yes
+NIPDAU
+Level-2-260C-1 YEAR
+-40 to 125
+TPS26631
+TPS26631PWPT.A
+Active
+Production
+HTSSOP (PWP) | 20
+250 | SMALL T&R
+Yes
+NIPDAU
+Level-2-260C-1 YEAR
+-40 to 125
+TPS26631
+TPS26631RGER
+Active
+Production
+VQFN (RGE) | 24
+3000 | LARGE T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26631
+TPS26631RGER.A
+Active
+Production
+VQFN (RGE) | 24
+3000 | LARGE T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26631
+TPS26631RGERG4
+Active
+Production
+VQFN (RGE) | 24
+3000 | LARGE T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26631
+TPS26631RGERG4.A
+Active
+Production
+VQFN (RGE) | 24
+3000 | LARGE T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26631
+TPS26631RGET
+Active
+Production
+VQFN (RGE) | 24
+250 | SMALL T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26631
+TPS26631RGET.A
+Active
+Production
+VQFN (RGE) | 24
+250 | SMALL T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26631
+TPS26632RGER
+Active
+Production
+VQFN (RGE) | 24
+3000 | LARGE T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26632
+Addendum-Page 1
+
+PACKAGE OPTION ADDENDUM
+www.ti.com
+8-Nov-2025
+Orderable part number
+Status
+(1)
+Material type
+(2)
+Package | Pins
+Package qty | Carrier
+RoHS
+(3)
+Lead finish/
+Ball material
+(4)
+MSL rating/
+Peak reflow
+(5)
+Op temp (°C)
+Part marking
+(6)
+TPS26632RGER.A
+Active
+Production
+VQFN (RGE) | 24
+3000 | LARGE T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26632
+TPS26632RGET
+Active
+Production
+VQFN (RGE) | 24
+250 | SMALL T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26632
+TPS26632RGET.A
+Active
+Production
+VQFN (RGE) | 24
+250 | SMALL T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26632
+TPS26633PWPR
+Active
+Production
+HTSSOP (PWP) | 20
+2000 | LARGE T&R
+Yes
+NIPDAU
+Level-2-260C-1 YEAR
+-40 to 125
+TPS26633
+TPS26633PWPR.A
+Active
+Production
+HTSSOP (PWP) | 20
+2000 | LARGE T&R
+Yes
+NIPDAU
+Level-2-260C-1 YEAR
+-40 to 125
+TPS26633
+TPS26633PWPT
+Active
+Production
+HTSSOP (PWP) | 20
+250 | SMALL T&R
+Yes
+NIPDAU
+Level-2-260C-1 YEAR
+-40 to 125
+TPS26633
+TPS26633PWPT.A
+Active
+Production
+HTSSOP (PWP) | 20
+250 | SMALL T&R
+Yes
+NIPDAU
+Level-2-260C-1 YEAR
+-40 to 125
+TPS26633
+TPS26633PWPTG4
+Active
+Production
+HTSSOP (PWP) | 20
+250 | SMALL T&R
+Yes
+NIPDAU
+Level-2-260C-1 YEAR
+-40 to 125
+TPS26633
+TPS26633PWPTG4.A
+Active
+Production
+HTSSOP (PWP) | 20
+250 | SMALL T&R
+Yes
+NIPDAU
+Level-2-260C-1 YEAR
+-40 to 125
+TPS26633
+TPS26633RGER
+Active
+Production
+VQFN (RGE) | 24
+3000 | LARGE T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26633
+TPS26633RGER.A
+Active
+Production
+VQFN (RGE) | 24
+3000 | LARGE T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26633
+TPS26633RGERG4
+Active
+Production
+VQFN (RGE) | 24
+3000 | LARGE T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26633
+TPS26633RGERG4.A
+Active
+Production
+VQFN (RGE) | 24
+3000 | LARGE T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26633
+TPS26633RGET
+Active
+Production
+VQFN (RGE) | 24
+250 | SMALL T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26633
+TPS26633RGET.A
+Active
+Production
+VQFN (RGE) | 24
+250 | SMALL T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26633
+TPS26635RGER
+Active
+Production
+VQFN (RGE) | 24
+3000 | LARGE T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26635
+TPS26635RGER.A
+Active
+Production
+VQFN (RGE) | 24
+3000 | LARGE T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26635
+TPS26635RGET
+Active
+Production
+VQFN (RGE) | 24
+250 | SMALL T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26635
+TPS26635RGET.A
+Active
+Production
+VQFN (RGE) | 24
+250 | SMALL T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26635
+TPS26636PWPR
+Active
+Production
+HTSSOP (PWP) | 20
+2000 | LARGE T&R
+Yes
+NIPDAU
+Level-2-260C-1 YEAR
+-40 to 125
+TPS26636
+TPS26636PWPR.A
+Active
+Production
+HTSSOP (PWP) | 20
+2000 | LARGE T&R
+Yes
+NIPDAU
+Level-2-260C-1 YEAR
+-40 to 125
+TPS26636
+Addendum-Page 2
+
+PACKAGE OPTION ADDENDUM
+www.ti.com
+8-Nov-2025
+Orderable part number
+Status
+(1)
+Material type
+(2)
+Package | Pins
+Package qty | Carrier
+RoHS
+(3)
+Lead finish/
+Ball material
+(4)
+MSL rating/
+Peak reflow
+(5)
+Op temp (°C)
+Part marking
+(6)
+TPS26636PWPRG4
+Active
+Production
+HTSSOP (PWP) | 20
+2000 | LARGE T&R
+Yes
+NIPDAU
+Level-2-260C-1 YEAR
+-40 to 125
+TPS26636
+TPS26636PWPRG4.A
+Active
+Production
+HTSSOP (PWP) | 20
+2000 | LARGE T&R
+Yes
+NIPDAU
+Level-2-260C-1 YEAR
+-40 to 125
+TPS26636
+TPS26636PWPT
+Active
+Production
+HTSSOP (PWP) | 20
+250 | SMALL T&R
+Yes
+NIPDAU
+Level-2-250C-1 YEAR
+-40 to 125
+TPS26636
+TPS26636PWPT.A
+Active
+Production
+HTSSOP (PWP) | 20
+250 | SMALL T&R
+Yes
+NIPDAU
+Level-2-250C-1 YEAR
+-40 to 125
+TPS26636
+TPS26637PWPR
+Active
+Production
+HTSSOP (PWP) | 20
+2000 | LARGE T&R
+Yes
+NIPDAU
+Level-2-260C-1 YEAR
+-40 to 125
+TPS26637
+TPS26637PWPR.A
+Active
+Production
+HTSSOP (PWP) | 20
+2000 | LARGE T&R
+Yes
+NIPDAU
+Level-2-260C-1 YEAR
+-40 to 125
+TPS26637
+TPS26637RGER
+Active
+Production
+VQFN (RGE) | 24
+3000 | LARGE T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26637
+TPS26637RGER.A
+Active
+Production
+VQFN (RGE) | 24
+3000 | LARGE T&R
+Yes
+NIPDAU
+Level-1-260C-UNLIM
+-40 to 125
+TPS
+26637
+ 
+(1) Status:  For more details on status, see our product life cycle.
+ 
+(2) Material type:  When designated, preproduction parts are prototypes/experimental devices, and are not yet approved or released for full production. Testing and final process, including without limitation quality assurance,
+reliability performance testing, and/or process qualification, may not yet be complete, and this item is subject to further changes or possible discontinuation. If available for ordering, purchases will be subject to an additional
+waiver at checkout, and are intended for early internal evaluation purposes only. These items are sold without warranties of any kind.
+ 
+(3) RoHS values:  Yes, No, RoHS Exempt. See the TI RoHS Statement for additional information and value definition.
+ 
+(4) Lead finish/Ball material:  Parts may have multiple material finish options. Finish options are separated by a vertical ruled line. Lead finish/Ball material values may wrap to two lines if the finish value exceeds the maximum
+column width.
+ 
+(5) MSL rating/Peak reflow:  The moisture sensitivity level ratings and peak solder (reflow) temperatures. In the event that a part has multiple moisture sensitivity ratings, only the lowest level per JEDEC standards is shown.
+Refer to the shipping label for the actual reflow temperature that will be used to mount the part to the printed circuit board.
+ 
+(6) Part marking:  There may be an additional marking, which relates to the logo, the lot trace code information, or the environmental category of the part.
+ 
+Multiple part markings will be inside parentheses. Only one part marking contained in parentheses and separated by a "~" will appear on a part. If a line is indented then it is a continuation of the previous line and the two
+combined represent the entire part marking for that device.
+ 
+Important Information and Disclaimer:The information provided on this page represents TI's knowledge and belief as of the date that it is provided. TI bases its knowledge and belief on information provided by third parties, and
+makes no representation or warranty as to the accuracy of such information. Efforts are underway to better integrate information from third parties. TI has taken and continues to take reasonable steps to provide representative
+and accurate information but may not have conducted destructive testing or chemical analysis on incoming materials and chemicals. TI and TI suppliers consider certain information to be proprietary, and thus CAS numbers
+and other limited information may not be available for release.
+Addendum-Page 3
+
+PACKAGE OPTION ADDENDUM
+www.ti.com
+8-Nov-2025
+ 
+In no event shall TI's liability arising out of such information exceed the total purchase price of the TI part(s) at issue in this document sold by TI to Customer on an annual basis.
+ 
+Addendum-Page 4
+
+PACKAGE MATERIALS INFORMATION
+ 
+ 
+www.ti.com
+3-Sep-2026
+TAPE AND REEL INFORMATION
+Reel Width (W1)
+REEL DIMENSIONS
+A0
+B0
+K0
+W
+Dimension designed to accommodate the component length
+Dimension designed to accommodate the component thickness
+Overall width of the carrier tape
+Pitch between successive cavity centers
+Dimension designed to accommodate the component width
+TAPE DIMENSIONS
+K0
+ P1
+B0 W
+A0
+Cavity
+QUADRANT ASSIGNMENTS FOR PIN 1 ORIENTATION IN TAPE
+Pocket Quadrants
+Sprocket Holes
+Q1
+Q1
+Q2
+Q2
+Q3
+Q3
+Q4
+Q4
+User Direction of Feed
+P1
+Reel
+Diameter
+ 
+*All dimensions are nominal
+Device
+Package
+Type
+Package
+Drawing
+Pins
+SPQ
+Reel
+Diameter
+(mm)
+Reel
+Width
+W1 (mm)
+A0
+(mm)
+B0
+(mm)
+K0
+(mm)
+P1
+(mm)
+W
+(mm)
+Pin1
+Quadrant
+TPS26630RGER
+VQFN
+RGE
+24
+3000
+330.0
+12.4
+4.25
+4.25
+1.15
+8.0
+12.0
+Q2
+TPS26630RGERG4
+VQFN
+RGE
+24
+3000
+330.0
+12.4
+4.25
+4.25
+1.15
+8.0
+12.0
+Q2
+TPS26630RGET
+VQFN
+RGE
+24
+250
+180.0
+12.4
+4.25
+4.25
+1.15
+8.0
+12.0
+Q2
+TPS26631PWPR
+HTSSOP
+PWP
+20
+2000
+330.0
+16.4
+6.95
+7.0
+1.4
+8.0
+16.0
+Q1
+TPS26631PWPRG4
+HTSSOP
+PWP
+20
+2000
+330.0
+16.4
+6.95
+7.0
+1.4
+8.0
+16.0
+Q1
+TPS26631PWPT
+HTSSOP
+PWP
+20
+250
+180.0
+16.4
+6.95
+7.0
+1.4
+8.0
+16.0
+Q1
+TPS26631RGER
+VQFN
+RGE
+24
+3000
+330.0
+12.4
+4.25
+4.25
+1.15
+8.0
+12.0
+Q2
+TPS26631RGERG4
+VQFN
+RGE
+24
+3000
+330.0
+12.4
+4.25
+4.25
+1.15
+8.0
+12.0
+Q2
+TPS26631RGET
+VQFN
+RGE
+24
+250
+180.0
+12.4
+4.25
+4.25
+1.15
+8.0
+12.0
+Q2
+TPS26632RGER
+VQFN
+RGE
+24
+3000
+330.0
+12.4
+4.25
+4.25
+1.15
+8.0
+12.0
+Q2
+TPS26632RGET
+VQFN
+RGE
+24
+250
+180.0
+12.4
+4.25
+4.25
+1.15
+8.0
+12.0
+Q2
+TPS26633PWPR
+HTSSOP
+PWP
+20
+2000
+330.0
+16.4
+6.95
+7.0
+1.4
+8.0
+16.0
+Q1
+TPS26633PWPT
+HTSSOP
+PWP
+20
+250
+180.0
+16.4
+6.95
+7.0
+1.4
+8.0
+16.0
+Q1
+TPS26633PWPTG4
+HTSSOP
+PWP
+20
+250
+180.0
+16.4
+6.95
+7.0
+1.4
+8.0
+16.0
+Q1
+TPS26633RGER
+VQFN
+RGE
+24
+3000
+330.0
+12.4
+4.25
+4.25
+1.15
+8.0
+12.0
+Q2
+TPS26633RGERG4
+VQFN
+RGE
+24
+3000
+330.0
+12.4
+4.25
+4.25
+1.15
+8.0
+12.0
+Q2
+Pack Materials-Page 1
+
+PACKAGE MATERIALS INFORMATION
+ 
+ 
+www.ti.com
+3-Sep-2026
+Device
+Package
+Type
+Package
+Drawing
+Pins
+SPQ
+Reel
+Diameter
+(mm)
+Reel
+Width
+W1 (mm)
+A0
+(mm)
+B0
+(mm)
+K0
+(mm)
+P1
+(mm)
+W
+(mm)
+Pin1
+Quadrant
+TPS26633RGET
+VQFN
+RGE
+24
+250
+180.0
+12.4
+4.25
+4.25
+1.15
+8.0
+12.0
+Q2
+TPS26635RGER
+VQFN
+RGE
+24
+3000
+330.0
+12.4
+4.25
+4.25
+1.15
+8.0
+12.0
+Q2
+TPS26635RGET
+VQFN
+RGE
+24
+250
+180.0
+12.4
+4.25
+4.25
+1.15
+8.0
+12.0
+Q2
+TPS26636PWPR
+HTSSOP
+PWP
+20
+2000
+330.0
+16.4
+6.95
+7.0
+1.4
+8.0
+16.0
+Q1
+TPS26636PWPRG4
+HTSSOP
+PWP
+20
+2000
+330.0
+16.4
+6.95
+7.0
+1.4
+8.0
+16.0
+Q1
+TPS26636PWPT
+HTSSOP
+PWP
+20
+250
+180.0
+16.4
+6.95
+7.0
+1.4
+8.0
+16.0
+Q1
+TPS26637PWPR
+HTSSOP
+PWP
+20
+2000
+330.0
+16.4
+6.95
+7.0
+1.4
+8.0
+16.0
+Q1
+TPS26637RGER
+VQFN
+RGE
+24
+3000
+330.0
+12.4
+4.25
+4.25
+1.15
+8.0
+12.0
+Q2
+Pack Materials-Page 2
+
+PACKAGE MATERIALS INFORMATION
+ 
+ 
+www.ti.com
+3-Sep-2026
+TAPE AND REEL BOX DIMENSIONS
+Width (mm)
+W
+L
+H
+ 
+*All dimensions are nominal
+Device
+Package Type
+Package Drawing
+Pins
+SPQ
+Length (mm)
+Width (mm)
+Height (mm)
+TPS26630RGER
+VQFN
+RGE
+24
+3000
+360.0
+360.0
+36.0
+TPS26630RGERG4
+VQFN
+RGE
+24
+3000
+367.0
+367.0
+35.0
+TPS26630RGET
+VQFN
+RGE
+24
+250
+210.0
+185.0
+35.0
+TPS26631PWPR
+HTSSOP
+PWP
+20
+2000
+353.0
+353.0
+32.0
+TPS26631PWPRG4
+HTSSOP
+PWP
+20
+2000
+353.0
+353.0
+32.0
+TPS26631PWPT
+HTSSOP
+PWP
+20
+250
+213.0
+191.0
+35.0
+TPS26631RGER
+VQFN
+RGE
+24
+3000
+360.0
+360.0
+36.0
+TPS26631RGERG4
+VQFN
+RGE
+24
+3000
+367.0
+367.0
+35.0
+TPS26631RGET
+VQFN
+RGE
+24
+250
+210.0
+185.0
+35.0
+TPS26632RGER
+VQFN
+RGE
+24
+3000
+360.0
+360.0
+36.0
+TPS26632RGET
+VQFN
+RGE
+24
+250
+210.0
+185.0
+35.0
+TPS26633PWPR
+HTSSOP
+PWP
+20
+2000
+353.0
+353.0
+32.0
+TPS26633PWPT
+HTSSOP
+PWP
+20
+250
+213.0
+191.0
+35.0
+TPS26633PWPTG4
+HTSSOP
+PWP
+20
+250
+213.0
+191.0
+35.0
+TPS26633RGER
+VQFN
+RGE
+24
+3000
+360.0
+360.0
+36.0
+TPS26633RGERG4
+VQFN
+RGE
+24
+3000
+367.0
+367.0
+35.0
+TPS26633RGET
+VQFN
+RGE
+24
+250
+210.0
+185.0
+35.0
+TPS26635RGER
+VQFN
+RGE
+24
+3000
+360.0
+360.0
+36.0
+Pack Materials-Page 3
+
+PACKAGE MATERIALS INFORMATION
+ 
+ 
+www.ti.com
+3-Sep-2026
+Device
+Package Type
+Package Drawing
+Pins
+SPQ
+Length (mm)
+Width (mm)
+Height (mm)
+TPS26635RGET
+VQFN
+RGE
+24
+250
+210.0
+185.0
+35.0
+TPS26636PWPR
+HTSSOP
+PWP
+20
+2000
+353.0
+353.0
+32.0
+TPS26636PWPRG4
+HTSSOP
+PWP
+20
+2000
+353.0
+353.0
+32.0
+TPS26636PWPT
+HTSSOP
+PWP
+20
+250
+213.0
+191.0
+35.0
+TPS26637PWPR
+HTSSOP
+PWP
+20
+2000
+353.0
+353.0
+32.0
+TPS26637RGER
+VQFN
+RGE
+24
+3000
+360.0
+360.0
+36.0
+Pack Materials-Page 4
+
+GENERIC PACKAGE VIEW
+Images above are just a representation of the package family, actual package may vary.
+Refer to the product data sheet for package details.
+RGE 24
+VQFN - 1 mm max height
+PLASTIC QUAD FLATPACK - NO LEAD
+4204104/H
+
+NOTES:
+1.
+All linear dimensions are in millimeters. Any dimensions in parenthesis are for reference only. Dimensioning and tolerancing
+per ASME Y14.5M.
+2.
+This drawing is subject to change without notice.
+3.
+The package thermal pad must be soldered to the printed circuit board for thermal and mechanical performance.
+PACKAGE OUTLINE
+www.ti.com
+4219016 / A   08/2017
+VQFN - 1 mm max height
+PLASTIC QUAD FLATPACK- NO LEAD
+RGE0024H 
+A
+0.08 C
+0.1
+C A B
+0.05
+C
+B
+SYMM
+SYMM
+4.1
+3.9
+4.1
+3.9
+PIN 1 INDEX AREA
+1 MAX
+0.05
+0.00
+SEATING PLANE
+C
+2X 2.5
+
+2X
+2.5
+20X 0.5
+1
+6
+7
+12
+13
+18
+19
+24
+24X 0.30
+0.18
+24X 0.48
+0.28
+(0.2) TYP
+PIN 1 ID
+(OPTIONAL)
+25
+
+NOTES: (continued)
+4.
+This package is designed to be soldered to a thermal pad on the board. For more information, see Texas Instruments
+literature number SLUA271 (www.ti.com/lit/slua271).
+5.
+Solder mask tolerances between and around signal pads can vary based on board fabrication site.
+EXAMPLE BOARD LAYOUT
+4219016 / A   08/2017
+www.ti.com
+VQFN - 1 mm max height
+RGE0024H 
+PLASTIC QUAD FLATPACK- NO LEAD
+SYMM
+SYMM
+LAND PATTERN EXAMPLE
+SCALE: 20X
+2X
+(1.1)
+2X(1.1)
+(3.825)
+(3.825)
+(    2.7)
+1
+6
+7
+12
+13
+18
+19
+24
+25
+24X (0.58)
+24X (0.24)
+20X (0.5)
+(R0.05)
+9,$
+TYP
+SOLDER MASK DETAILS
+NON SOLDER MASK
+DEFINED
+(PREFERRED)
+SOLDER MASK
+DEFINED
+0.07 MAX
+ALL AROUND
+0.07 MIN
+ALL AROUND
+METAL
+SOLDER MASK
+OPENING
+SOLDER MASK
+OPENING
+METAL UNDER
+SOLDER MASK
+
+NOTES: (continued)
+6.
+Laser cutting apertures with trapezoidal walls and rounded corners may offer better paste release. IPC-7525 may have alternate
+design recommendations..
+EXAMPLE STENCIL DESIGN
+4219016 / A   08/2017
+www.ti.com
+VQFN - 1 mm max height
+RGE0024H 
+PLASTIC QUAD FLATPACK- NO LEAD
+SYMM
+SYMM
+SOLDER PASTE EXAMPLE
+BASED ON 0.125 mm THICK STENCIL
+EXPOSED PAD
+78% PRINTED COVERAGE BY AREA
+SCALE: 20X
+(3.825)
+(3.825)
+(0.694)
+TYP
+(0.694)
+TYP
+4X (   1.188)
+1
+6
+7
+12
+13
+18
+19
+24
+24X (0.24)
+24X (0.58)
+20X (0.5)
+(R0.05) TYP
+METAL
+TYP
+25
+
+www.ti.com
+GENERIC PACKAGE VIEW
+This image is a representation of the package family, actual package may vary.
+Refer to the product data sheet for package details.
+HTSSOP - 1.2 mm max height
+PWP 20
+SMALL OUTLINE PACKAGE
+6.5 x 4.4, 0.65 mm pitch
+4224669/A
+
+www.ti.com
+PACKAGE OUTLINE
+C
+18X 0.65
+2X
+5.85
+20X 0.30
+0.19
+6.6
+6.2 TYP
+SEATING
+PLANE
+0.15
+0.05
+0.25
+GAGE PLANE
+0 -8
+1.2 MAX
+2X 1.15 MAX
+NOTE 5
+2X 0.3 MAX
+NOTE 5
+2.96
+2.21
+2.96
+2.16
+B
+4.5
+4.3
+A
+6.6
+6.4
+NOTE 3
+0.75
+0.50
+(0.15) TYP
+PowerPAD   TSSOP - 1.2 mm max height
+PWP0020T
+SMALL OUTLINE PACKAGE
+4224598/A   10/2018
+1
+10
+11
+20
+0.1
+C A B
+PIN 1 INDEX
+AREA
+SEE DETAIL  A
+0.1 C
+NOTES: 
+ 
+1. All linear dimensions are in millimeters. Any dimensions in parenthesis are for reference only. Dimensioning and tolerancing
+    per ASME Y14.5M. 
+2. This drawing is subject to change without notice. 
+3. This dimension does not include mold flash, protrusions, or gate burrs. Mold flash, protrusions, or gate burrs shall not
+    exceed 0.15 mm per side. 
+4. Reference JEDEC registration MO-153.
+5. Features may differ or may not be present. 
+TM
+PowerPAD is a trademark of Texas Instruments.
+A  15
+DETAIL A
+TYPICAL
+SCALE  2.300
+THERMAL
+PAD
+1
+10
+11
+20
+21
+
+www.ti.com
+EXAMPLE BOARD LAYOUT
+0.05 MAX
+ALL AROUND
+0.05 MIN
+ALL AROUND
+20X (1.5)
+20X (0.45)
+18X (0.65)
+(5.8)
+(R0.05) TYP
+(3.4)
+NOTE 9
+(6.5)
+NOTE 9
+(1.3) TYP
+(1.3)
+TYP
+(
+0.2) TYP
+VIA
+(2.96)
+(2.96)
+PowerPAD   TSSOP - 1.2 mm max height
+PWP0020T
+SMALL OUTLINE PACKAGE
+4224598/A   10/2018
+NOTES: (continued)
+ 
+  6. Publication IPC-7351 may have alternate designs. 
+  7. Solder mask tolerances between and around signal pads can vary based on board fabrication site.
+  8. This package is designed to be soldered to a thermal pad on the board. For more information, see Texas Instruments literature
+      numbers SLMA002 (www.ti.com/lit/slma002) and SLMA004 (www.ti.com/lit/slma004).
+  9. Size of metal pad may vary due to creepage requirement.
+10. Vias are optional depending on application, refer to device data sheet. It is recommended that vias under paste be filled, plugged
+      or tented. 
+TM
+LAND PATTERN EXAMPLE
+EXPOSED METAL SHOWN
+SCALE: 10X
+SYMM
+SYMM
+1
+10
+11
+20
+METAL COVERED
+BY SOLDER MASK
+SOLDER MASK
+DEFINED PAD
+SEE DETAILS
+21
+15.000
+METAL
+SOLDER MASK
+OPENING
+METAL UNDER
+SOLDER MASK
+SOLDER MASK
+OPENING
+EXPOSED METAL
+EXPOSED METAL
+SOLDER MASK DETAILS
+NON-SOLDER MASK
+DEFINED
+(PREFERRED)
+SOLDER MASK
+DEFINED
+
+www.ti.com
+EXAMPLE STENCIL DESIGN
+20X (1.5)
+20X (0.45)
+18X (0.65)
+(5.8)
+(R0.05) TYP
+(2.96)
+BASED ON
+0.125 THICK
+STENCIL
+(2.96)
+BASED ON
+0.125 THICK
+STENCIL
+PowerPAD   TSSOP - 1.2 mm max height
+PWP0020T
+SMALL OUTLINE PACKAGE
+4224598/A   10/2018
+2.50 X 2.50
+0.175
+2.70 X 2.70
+0.15
+2.96 X 2.96 (SHOWN)
+0.125
+3.31 X 3.31
+0.1
+SOLDER STENCIL
+OPENING
+STENCIL
+THICKNESS
+NOTES: (continued)
+ 
+11. Laser cutting apertures with trapezoidal walls and rounded corners may offer better paste release. IPC-7525 may have alternate
+      design recommendations.   
+12. Board assembly site may have different recommendations for stencil design.
+ 
+TM
+SOLDER PASTE EXAMPLE
+BASED ON 0.125 mm THICK STENCIL
+SCALE: 10X
+SYMM
+SYMM
+1
+10
+11
+20
+METAL COVERED
+BY SOLDER MASK
+SEE TABLE FOR
+DIFFERENT OPENINGS
+FOR OTHER STENCIL
+THICKNESSES
+21
+
+IMPORTANT NOTICE AND DISCLAIMER
+TI PROVIDES TECHNICAL AND RELIABILITY DATA (INCLUDING DATASHEETS), DESIGN RESOURCES (INCLUDING REFERENCE 
+DESIGNS), APPLICATION OR OTHER DESIGN ADVICE, WEB TOOLS, SAFETY INFORMATION, AND OTHER RESOURCES “AS IS” 
+AND WITH ALL FAULTS, AND DISCLAIMS ALL WARRANTIES, EXPRESS AND IMPLIED, INCLUDING WITHOUT LIMITATION ANY 
+IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT OF THIRD 
+PARTY INTELLECTUAL PROPERTY RIGHTS.
+These resources are intended for skilled developers designing with TI products. You are solely responsible for (1) selecting the appropriate 
+TI products for your application, (2) designing, validating and testing your application, and (3) ensuring your application meets applicable 
+standards, and any other safety, security, regulatory or other requirements.
+These resources are subject to change without notice. TI grants you permission to use these resources only for development of an 
+application that uses the TI products described in the resource. Other reproduction and display of these resources is prohibited. No license 
+is granted to any other TI intellectual property right or to any third party intellectual property right. TI disclaims responsibility for, and you fully 
+indemnify TI and its representatives against any claims, damages, costs, losses, and liabilities arising out of your use of these resources.
+TI’s products are provided subject to TI’s Terms of Sale, TI’s General Quality Guidelines, or other applicable terms available either on 
+ti.com or provided in conjunction with such TI products. TI’s provision of these resources does not expand or otherwise alter TI’s applicable 
+warranties or warranty disclaimers for TI products. Unless TI explicitly designates a product as custom or customer-specified, TI products 
+are standard, catalog, general purpose devices.
+TI objects to and rejects any additional or different terms you may propose.
+IMPORTANT NOTICE
+Copyright © 2026, Texas Instruments Incorporated
+Last updated 10/2025

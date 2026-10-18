@@ -1,0 +1,133 @@
+<<p1>>
+ 
+ 
+ 
+ 
+ 
+Reliability Insights  
+Large Computational Load Risks Due to Voltage Sensitivity  
+September 2026  
+ 
+Assessing Grid Impacts from Computational Loads 
+The North American electric grid is projected to experience a sharp rise in the volume of electricity demand. 
+NERC’s 2025 Long-Term Reliability Assessment (LTRA) projects demand growth at levels higher than at any 
+point in the past two decades. Over the 10-year period covered by the LTRA, aggregated assessment of 
+summer peak demand is projected to rise more than 224 GW. The LTRA also tracks specific demand drivers, 
+and it has shown the significant impact caused by large loads, specifically large computational loads. 
+Computational loads, which include data centers and crypto-mining facilities, have and continue to seek 
+rapid interconnection to the bulk power system (BPS).  
+ 
+Computational loads support artificial intelligence, cloud computing, and related information technology 
+needs that are vital to North America’s technological leadership, economic growth, and people’s everyday 
+needs. However, the interconnection of large computational loads has implications for BPS reliability, as 
+these loads seek to interconnect very quickly (sometimes within one to two years), creating a risk that the 
+demand will grow faster than available energy. In addition to resource- and energy-adequacy risks, 
+computational loads also introduce challenges to grid operations during normal and event conditions. NERC 
+established the Large Loads Working Group (LLWG) to understand the totality of reliability impacts 
+associated with these large loads and determine any gaps in Reliability Standards and needed mitigations 
+necessary for maintaining the reliability and security of the grid.    
+ 
+Customer-Initiated Load-Reduction Events 
+One risk detailed by the LLWG and enumerated in two NERC incident reviews (1, 2) is the voltage sensitivity 
+of computational loads. There have been 
+several incidents involving computational 
+loads that have been shown to impact BPS 
+operations 
+when 
+the 
+loads 
+remove 
+themselves from the system during system 
+disturbances. 
+Several 
+voltage-sensitive 
+customer-initiated load reductions have 
+occurred in the Eastern Interconnection and 
+the Electric Reliability Council of Texas 
+(ERCOT) over the past two years.  
+ 
+Figure 1: Customer-Initiated Load Reduction Events 
+
+<<p2>>
+ 
+ 
+ 
+ 
+The incidents largely unfold in a familiar pattern:  
+• The grid experiences a normally cleared fault, and voltage dips occur as part of normal reclosing to 
+isolate the fault.  
+• After several reclosing attempts, computational load entities react to the voltage dips by 
+transferring their load to their backup power systems, removing themselves from the grid, with the 
+goal of protecting their equipment from outages and any potential damage resulting from prolonged 
+voltage dips. 
+• As a result, large amounts of demand suddenly disappear from the BPS, creating oscillations on the 
+systems as generation rebalances frequency and voltage to meet the remaining demand.  
+ 
+Historically, the electric grid has not experienced, nor planned or operated for, these significant amounts 
+of simultaneous load losses in response to a fault on the system. Rather, planners and operators have 
+traditionally focused on the risk of large generation losses (and generators must meet certain Reliability 
+Standards associated with “riding through” these types of faults). While these recent load reduction 
+incidents did not create any near- or long-term issues for the system, future incidents could result in severe 
+impacts given the expansion in the number and size of computational load sites, especially when their 
+deployment is geographically concentrated (such as in “Data Center Alley” in Virginia). Additionally, since 
+all computational loads on a circuit could see the same disturbance and take the same action, this creates 
+significant common-mode failure risk. 
+ 
+Corrective Actions Can Help Mitigate Impacts 
+Recently, large computational load entities have worked with grid operators to reduce the likelihood of 
+customer-initiated load reduction and improve ride-through performance. Based on discussions with these 
+operators, certain data centers adjusted the protection and control schemes that they use to determine 
+when their facilities transfer their load to a backup power supply. Specifically, they lengthened the time 
+duration required for measuring voltage dips to be “counted” and altered the number of depressions during 
+a specified period that would trigger disconnection from the grid. The transmission entity also included 
+these requirements for all newly connected facilities. 
+ 
+On April 18, 2026, a transmission system fault occurred in the same vicinity and with similar characteristics 
+to an event in July 2024 that had led to 1,500 MW of load loss. Yet, this April 2026 event saw only 500 MW 
+of sustained data center load loss. The improved performance may be attributable to the changes made by 
+the data centers, and it demonstrates how collaboration can help mitigate risks to BPS reliability. 
+ 
+While such actions have been important and demonstrate the technical feasibility of computational load 
+ride-through, computational loads still present challenges to grid reliability. Most recently, in July 2026, a 
+nearly 4 GW customer-initiated load reduction occurred in Virgina, demonstrating that the risk is increasing, 
+not abating. The specifics of this incident are still being analyzed as of September 2026. This ongoing risk 
+underscores the need for consistent and uniform best practices throughout North America to ensure the 
+reliability, resilience, and security of the BPS as more computational loads are interconnected. 
+ 
+
+<<p3>>
+ 
+ 
+ 
+ 
+NERC Actions to Address Computational Loads 
+NERC has taken action to understand the effects of computational large loads on the BPS and identify 
+effective, efficient, and reliable pathways for their integration. In addition to establishing the LLWG, NERC 
+developed a holistic Large Loads Action Plan, which involves efforts such as publishing technical resources 
+and alerts and conducting extensive engagement and outreach to computational load entities. NERC has 
+determined through these efforts that additional action is required to address large computational loads. 
+ 
+Key among these actions is to modernize NERC’s reliability approach and bring large computational loads 
+into the reliability framework. To that end, NERC is developing registry criteria, based on specific physical 
+and electrical criteria, that will define which entities will be required to register with NERC and to help 
+develop and comply with Reliability Standards. The Regional Entities, working in close coordination with 
+NERC, are ready to assist in the registration process once the registry criteria are final.  
+ 
+NERC is also developing Reliability Standards for existing and newly registered entities, starting with 
+foundational reliability activities, such as commissioning, communications, and modeling. The Federal 
+Energy Regulatory Commission has directed NERC to complete the registry criteria and foundational 
+Reliability Standards by the end of 2026. NERC will consider additional Reliability Standards moving forward 
+to address specific performance requirements such as ride-through, modeling requirements, and critical 
+cyber and physical security protections, including supply-chain risk management. 
+ 
+The North American BPS has reached a historic juncture defined by the rapid change in the nature and 
+volume of electricity demand. Recent customer-initiated load reduction events underscore the potential 
+significant risks that large computational loads may present to BPS reliability. Fortunately, mitigation 
+options are available, and computational load stakeholders have taken proactive steps to work with NERC, 
+the Regional Entities, and grid operators.  
+ 
+While much work remains, this collaborative approach is an example of how stakeholders can engage with 
+grid authorities to find mutually beneficial solutions. NERC and the Regional Entities seek to expand and 
+deepen collaboration with computational load stakeholders as this work continues to support the reliable 
+operation of the BPS. 
+ 

@@ -1,0 +1,880 @@
+Vertiv™ Liebert® STS2 
+Static Transfer Switch2
+The Cornerstone of High-Availability 
+Power Systems
+
+2
+Vertiv™ Liebert® STS2 Static Transfer Switch2
+Optimized Performance  
+and Reliability
+ 
+y
+Employing a Liebert STS2 static 
+switch adds another layer of security 
+for mission critical loads.
+ 
+y
+Optimized Transfer is a patented 
+industry leading transfer  
+control algorithm.
+ 
+y
+Ensures a truly redundant power 
+supply by enabling controlled 
+switching between two independent 
+AC Power supply sources
+ 
+y
+Switching is performed whenever  
+the line that supplies power to the 
+load goes out of tolerance.
+ 
+y
+Triple redundant control logic with 
+dual power feeds.
+ 
+y
+Fast, break-before-make switching 
+with 1/4 cycle maximum transfers.
+Designed for easy serviceability
+ 
+y
+True front access design for 
+installation, maintenance and  
+easy serviceability.
+ 
+y
+Top and bottom cable entry/access.
+Flexibility 
+ 
+y
+Compact single cabinet (100-1000A) 
+conserves valuable floor space 
+compared to nonpackaged solutions.
+ 
+y
+1200-1850A unit flexibility supporting 
+choice of switchgear options to  
+couple with. E+I switchgear or  
+third-party providers. 
+ 
+y
+Easily relocated when site  
+needs change.
+Higher Availability
+ 
+y
+Standard on-unit monitoring and 
+optional centralized monitoring 
+capability provide continuous  
+system visibility.
+Comprehensive Offering
+ 
+y
+Liebert STS2 covers a wide range of 
+models from 100A up to 1000A in 
+208V though 600V and 1200-1850A  
+in 380-600V.
+ 
+y
+Wide variety of units offered as  
+with controls and switchgear all in  
+100-1000A only along with a  
+stand-alone chassis offering  
+(1200-1850A) with flexibility to  
+couple with any switchgear.
+The Power to Protect Your Critical Operations
+Vertiv™ Liebert® is the market leader in dual-bus power systems, building the world’s most reliable UPS and Static Transfer Switch 
+products. For maximum availability applications, the Liebert® Static Transfer Switch2 (STS2) with its robust and innovative design 
+provides an automatic, seamless transfer between your critical load and the outputs of two independent UPS systems in a dual-bus 
+power configuration. If the primary UPS should fail, the switch will automatically transfer the loads to the alternate UPS. 
+Key Applications
+ 
+y
+Data Centers
+ 
+y
+IT/Telecom
+ 
+y
+Financial Institutions
+Flexibility for  
+Customized Solutions
+Liebert STS2 can be fully customized 
+according to customer’s load and 
+environment requirements.
+Low Total Cost of Ownership
+ 
+y
+When applied as primary side 
+switching, cost are lower due to 
+requiring only one power 
+distribution unit, a lower current 
+due to 480V vs. 208V, and lower 
+installation and wiring cost. 
+ 
+y
+Robust design with excellent 
+overload capacity.
+ 
+y
+UL listed.
+Comprehensive testing
+ 
+y
+Liebert STS2 offers the benefits 
+of a custom-tailored power 
+system, with the convenience 
+and cost savings of a pre-
+packaged, factory tested unit.
+ 
+y
+All units undergo thorough 
+factory testing as a complete 
+system to assure reliable,  
+consistent performance.
+Liebert® STS2 further extends our market leadership with design benefits 
+unmatchedby competitive products. Liebert STS2 is a family of system 
+static switches available in 100A-1850A capacities.
+
+3
+Figures 1 and 2
+Show results for the standard STS2 vs. 
+the optimized STS2 for the same 
+condition (alternate source lags 120 
+degrees) respectively. The optimized 
+transfer control algorithm minimizes 
+the transformer saturation current 
+resulting from an out of phase transfer.
+The Liebert® STS2 can be used in two different types of high-availability dual bus 
+configurations—as primary or secondary side switches. For primary side switching,  
+the unit is connected to the primary or input of a downstream transformer.  
+On secondary side switching the Liebert STS2 is connected to the secondary  
+or output of two transformers. 
+One of the main advantages of using primary side switching is lower cost.  
+These savings are the result of only one power distribution unit, a lower current due  
+to 480V vs. 208V, and lower installation and wiring cost thanks to use of smaller three 
+wire cable. 
+The one drawback of this configuration is the creation of transformer inrush saturation 
+current each time switching occurs. The downstream transformer can cause large peak 
+saturation current during automatic transfers. The transformer saturation is caused by 
+DC-flux built-up during transfer, especially when the sources are not in phase.
+Load  
+Voltages
+Transformer 
+Fluxes
+Primary 
+Currents
+Figure 1 Standard STS2 transfer.
+Optimized Transfer Option Enhances Cost-Efficient System 
+Operation and Reliability
+See also 
+White Paper: “Using an Optimized 
+Transfer Approach” (April 2014) at 
+VertivCo.com/en-US/pages/default.aspx
+Liebert offers a patented optimized transfer option for the  
+Vertiv™ Liebert® STS2 that greatly improves operation when  
+used in primary side switching applications.
+
+4
+Vertiv™ Liebert® STS2 Static Transfer Switch2
+Liebert’s transfer  
+control does more than 
+balance the flux.
+Due to our unique approach to the 
+optimized transfer algorithm, transfer  
+time should not be the only performance 
+measure for this new optimized switch. 
+Liebert’s method, whenever possible,  
+also seeks to minimize voltage 
+disturbances while maintaining 
+transformer flux balance. It takes both 
+voltage disturbance and volt-second 
+balance into consideration.
+Liebert has a unique flux balance 
+algorithm that doesn’t just “sit and 
+wait” for the balance point to occur. 
+Rather, we will “pulse fire” the SCRs  
+as soon as possible in order to 
+minimize the load discontinuity and 
+hence the voltage disruption.
+So how safe is this new optimized 
+Vertiv™ Liebert® STS2 for your  
+critical loads?
+The optimized Liebert® STS2 safely  
+meets both the CBEMA standard  
+(prior to 1996) and the latest ITIC 
+standard (1996) for critical loads.  
+Liebert’s optimized Liebert STS2 
+minimizes the risk of transformer 
+saturation problems during automatic 
+transfers, while its algorithm control 
+ensures minimum voltage disturbance 
+during transfers while still balancing  
+the flux.
+The Vertiv™ Liebert® algorithm is designed to optimize transfer timing such that the  
+volt-seconds applied to the downstream transformer primary is balanced, thus 
+minimizing peak saturation current. This balance is achieved by directly computing  
+the volt-second applied to the transformer during transfer events and determining  
+the optimum time to turn on the alternate source SCRs in order to balance the  
+volt-second within specified tolerance. 
+This results in a volt-second balancing algorithm that is independent of voltage 
+wave shape, voltage failure decay rate, etc., making it superior to other algorithms 
+based on voltage phase angle difference only.
+Figure 2 Optimized STS transfer.
+The patented Vertiv™ Liebert® static switch optimized transfer  
+control algorithm significantly reduces the downstream  
+transformer inrush saturation.
+
+5
+True Internal Redundancy
+The Liebert STS2 has triple-redundant logic. Each DSP controller is capable of working 
+independently, and each helps monitor the other two. If one malfunctions, the other two 
+lock it out. Each controller has power feeds from both power supplies. 
+The two power supplies feature true dual-bus power distribution. Both have dual inputs, 
+one from each AC input source. All power connections have diode protection, so that 
+internal or external faults cannot propagate. The result is a rugged, fault-resilient package 
+that is optimized for real-world applications.
+One-Line Diagram
+Source 1
+Source 2
+System Output
+CB1
+CB3
+CB4
+CB2
+CB5
+K1
+K2
+K2
+K3
+K1
+K3
+Designed for Easy Serviceability – True Front-Access Design
+All mechanical and electronic components of the Vertiv™ Liebert® STS2 are accessible 
+from the front of the unit for installation and service—no side or rear access required.
+This gives you several immediate benefits:
+ 
+y
+Greater freedom in system design. The Liebert® STS2 can be placed adjacent to or in 
+back of other equipment. It can also be placed against a wall or partition.
+ 
+y
+Simplified installation, with ample space for cable connections through top and 
+bottom access plates.
+ 
+y
+Less floor space required for maintenance access.
+ 
+y
+Designed for maintainability, with all key components visible and accessible from the 
+front of the unit, without shutting down the connected load.
+A separate compartment for 
+option modules provides  
+safe and convenient field access.
+For units up to 600 amps, the 
+entire power and control module 
+can be removed as an assembly.
+
+6
+Vertiv™ Liebert® STS2 Static Transfer Switch2
+Total Service Capability
+Vertiv provides a Basic, Essential, and 
+Preferred level of maintenance and service 
+that allows you to select the complement 
+of critical power system services that best 
+fits your requirements. These programs 
+include guaranteed four- hour response 
+time, emergency service and preventive 
+maintenance. With more than 300 Vertiv 
+employed Customer Engineers and a 
+network of over 900 factory authorized 
+service personnel, our technical 
+capabilities, geographical coverage and 
+ability to respond are second to none. 
+These factory-trained service 
+professionals have direct access to the 
+most comprehensive factory authorized 
+parts network in the industry. We also 
+provide them with immediate online 
+access to detailed schematics and your 
+equipment’s complete service record from 
+the time it was started up.
+Remote Monitoring 
+Always There, Always Alert
+The key to providing proper service for 
+your critical power systems is being aware 
+of that equipment’s operating status at any 
+given time. For customers who need to 
+have these vital protection systems 
+continuously monitored, but don’t want to 
+do it themselves, Vertiv Service offers 
+Remote Monitoring Service. This seamless, 
+rapid-response system is designed to 
+maximize the capabilities of your Liebert 
+equipment by maximizing the 
+effectiveness of its monitoring capabilities.
+Continuous 24-hour remote monitoring of 
+UPS/power conditioning equipment, 
+environmental products and other critical 
+space support systems is available.. When 
+a problem is detected, the monitoring 
+system immediately alerts the Customer 
+Response Center where each alarm is 
+evaluated and processed. Vertiv will 
+coordinate all service vendors, track the 
+response and solution time for service 
+calls and provide comprehensive reports 
+on alarms and corrective actions.
+Critical Support from  
+Vertiv Services
+Higher Availability – Color Touch-Screen Interface
+The color touch-screen LCD interface allows you to  
+quickly check the status of the unit and identify problems. 
+The controls of the Liebert STS2 are intuitive and simple.  
+The color LCD monitor is divided into three segments. In addition to a system mimic 
+diagram, there is a Status/Alarm panel and a section dedicated to operator instructions 
+and menus. The screen allows you to configure the unit, including the control of the 
+preferred source, auto/manual retransfer selection, alarm notification and other system 
+setpoints. You benefit from improved operator effectiveness, reduced training time, and 
+less chance of operator error.
+
+7
+Comprehensive Offering
+Vertiv™ Liebert® STS2 is available in 100 – 1850 A capacity systems, the Liebert STS2 
+offers flexible expansion capabilities to fit growing sites. 
++
++
+Liebert STS2 Static Transfer Switch (STS) 100-1000A
+ 
+y
+Ratings: 100, 250, 400, 600, 800, and 1000 Amp 3-pole designs.
+ 
+y
+Voltages: 208, 220, 240, 380, 400, 415, 480, 600 Volts, 50 or 60Hz.
+ 
+y
+Housed in a single, self-contained cabinet, it combines dual-source switching, 
+isolation, and as well as power monitoring, to provide the protection your vital 
+computer or communications equipment demands.
+ 
+y
+Ideal for minimal floor spaces with front-access only, top or bottom cable entry/exit.
+ 
+y
+Integral maintenance bypass to both sources.
+ 
+y
+Triple-redundant control logic with optional Liebert Optimized Transfer.
+Liebert STS2 Static Transfer 
+Switch (STS) 1200-1850A
+ 
+y
+Ratings: 1200, 1250, 1400, 1600, 1800, 
+1850 Amp 3-pole designs.
+ 
+y
+Voltages: 380, 400, 415, 480, 575, 600 
+Volts, 50 or 60 Hz.
+ 
+y
+Same features and benefits of  
+100-1000A STS2.
+ 
+y
+Maximizing power and flexibility.
+ 
+y
+For applications above 1000A, the 
+Liebert STS2 Chassis provides the 
+advantages and performance of the 
+Liebert STS2 in a compact cabinet 
+that can be easily integrated with 
+switchgear as required by the  
+project site.
+ 
+y
+Close-couples to switchgear  
+offered by E+I division, as well as  
+third-party providers.
+Unique Optimized Transfer Capability. Most Reliable with 22 million hours of demonstrated MTBF.
+250A
+400A
+600A
+800A
+1000A
+1200-1850A 
+Chassis
+E+I / Other 
+Switchgear
+100A
+
+8
+Vertiv™ Liebert® STS2 Static Transfer Switch2
+E+I Switchgear
+Vertiv™ E+I offers UL891-rated switchboards for the North American market. 
+Designed originally to meet the stringent European International Electrotechnical 
+Commission  (IEC) 60349-1 standard, Form 4b, these Vertiv™ E+I switchboards exceed 
+North American UL891 safety requirements, offering buyers added value in the form of 
+greater safety features. In addition, our solutions provide compliance and have been 
+shake-table tested to determine their operating resilience.
+Switchgear Adaptability
+The Chassis connects through its  
+side to desired switchgear. This can  
+be either supplied by Vertiv or a  
+third-party switchgear manufacturer. 
+The Vertiv-supplied switchgear utilizes 
+E+| Engineering expertise to provide a 
+UL891 solution that close-couples to 
+the Chassis. E+| switchgear offers 
+Form 4B separation of energized 
+components, and its modular design 
+allows for compact variations of cable 
+entry and exit, switch configuration 
+and output distribution to meet your 
+project's needs.
+Chassis
+E+I UL891 Offering
+STS2 Chassis
+ 
+y
+Controls, HMI and SCR’s
+ 
+y
+UL1008S
+ 
+y
+3P Optimized Transfer
+ 
+y
+Side access connections to a 
+switch cabinet
+Switch Cabinet
+ 
+y
+Molded Case Switches
+ 
+y
+I/O Connections
+ 
+y
+UL891
+ 
+y
+Provided through E+I
+E+I UL891 Switchgear
+1.	
+Cableway Compartment: Designated for customer connection hookups
+2.	 MCCB Compartment: Housing unit for the MCCB
+3.	 MCCB: fixed-mount circuit breaker Equipment designed to break an electrical circuit  
+if tripped. The housing of a MCCB is made of and supported by an insulating material
+4.	 ACB: draw-out circuit breaker Equipment meant to provide protection to an electrical  
+circuit from overcurrent and short circuits using air
+5.	 Main Busbar: 100% current rated
+6.	 Panel Flange Connection: The connection point for our busway trunking system from  
+the panel to the busway route in the facility
+7.	
+Ground Busbar: The grounding busbar network with connections for individual pieces  
+of equipment
+8.	 Instrument Compartment: designated as the metering and control section
+1
+1
+2
+8
+6
+3
+4
+9
+7
+
+9
+Operating Specifications
+ 
+y
+Voltage: 208, 220, 240, 380,  
+400, 415, 480, 575 or 600 VAC  
+(field selectable), +/- 10%  
+1200-1850A chassis is 380, 400,  
+415, 480, 575 or 600 VAC +/-10%
+ 
+y
+Frequency: 50 or 60Hz (field 
+selectable), +/-10%
+ 
+y
+Overload Capacity: 125% for 10 
+minutes, 150% for 2 mins
+ 
+y
+Operating Temperature: 0 to 40°C
+ 
+y
+Ultra fast switching under one-fourth 
+of a cycle
+Note: ¹Shipping dimensions and weight include the pallet and packing material. Actual weights will vary depending on installed options.
+Technical Specifications (3-Pole STS2)
+Amp Ratings
+100
+250
+400
+600
+800
+1000
+1200-1850
+Heat Output
+(KW)
+0,8
+1,37
+2,04
+3,08
+4,03
+5,09
+6,3
+Uncrated Dimensions (WxDxH)
+(Inches)
+30x32x77
+30x32x77
+38x32x77
+38x32x77
+84x32x77
+84x32x77
+26x36x88
+(mm)
+762x813x1956
+762x813x1956
+965x813x1956
+965x813x1956
+2134x813x1956
+2134x813x1956
+661x915x2236
+Uncrated Weight
+(lbs)
+780
+780
+1200
+1200
+2500
+2500
+1430
+(kg)
+354
+354
+544
+544
+1134
+1134
+650
+Shipping Dimensions (WxDxH)
+(Inches)
+48x44x82
+48x44x82
+48x44x82
+48x44x82
+92x53x82
+92x53x82
+49x50x90
+(mm)
+1016x1194x2082
+1016x1194x2082
+1016x1194x2082
+1016x1194x2082
+2337x1346x2082
+2337x1346x2082
+1245x1270x2286
+Shipping Weight
+(lbs)
+880
+880
+1300
+1300
+2600
+2600
+1542
+(kg)
+399
+399
+590
+590
+1179
+1179
+700
+Standard Features
+ 
+y
+Front accessible for easy installation 
+and serviceability
+ 
+y
+Color touch-screen LCD interface 
+eliminates mechanical pushbuttons
+ 
+y
+Intuitive user interface with drop-down 
+menus and dialog boxes
+ 
+y
+Triple redundant digital logic
+ 
+y
+Dual-redundant power supplies
+ 
+y
+100% rated, fuseless design
+ 
+y
+Hot-swappable circuit breakers
+ 
+y
+Flash memory enables firmware 
+updates while supporting critical load
+ 
+y
+CANBUS internal control wiring
+ 
+y
+Rack-out control/power assembly on 
+units up to 600A, to allow 
+maintenance, service or full 
+replacement without disrupting the 
+critical load
+ 
+y
+Top and bottom cable entry
+ 
+y
+Dual-lug installation bus
+ 
+y
+UL Listed
+Optional Features
+ 
+y
+Vertiv™ Liebert® STS2 has a full range 
+of monitoring and communications 
+options via Vertiv Liebert Intellislot 
+485 Webcard ADPT
+ 
+y
+Programmable output relays for 
+custom customer alarms and 
+connections
+ 
+y
+Customizable input relays allow alarms 
+from other devices to be displayed on 
+Vertiv™ Liebert® STS2 display
+ 
+y
+TVSS
+ 
+y
+Key lockout Switch
+ 
+y
+Remote Source Selection
+ 
+y
+Subfeed breakers
+ 
+y
+On 1200-1850A, can close couple with 
+to switchgear offered by E+I division, 
+as well as third-party providers
+
+10
+Vertiv™ Liebert® STS2 Static Transfer Switch2
+The cabinet contains one vertically 
+mounted I-line panelboard for load 
+distribution. The panelboard is totally 
+enclosed with an accent cover that 
+provides access without exposing other 
+portions of the unit. The panelboard 
+provides space for 100A through 250A 
+three-pole branch circuit breakers. It also 
+includes a separate isolated neutral bus 
+bar and safety-ground bus bar for the 
+neutral and safety-ground connections.
+Redundant Output Breaker: An output 
+plug-in, non-automatic circuit breaker 
+provides redundancy in the output power 
+path. The breaker is connected in parallel 
+with the output plug-in non-automatic 
+circuit breaker.
+Input Junction Boxes and Cable (Up to 
+600A): The input junction box option is 
+available to simplify input connections to 
+the STS2. Two input junction boxes and 
+the associated flexible 10-foot long input 
+cables are provided with this option. 
+Available with bottom cable entrance only, 
+typically when the unit is located on a 
+raised floor.
+Remote Source Selection: An optional 
+Remote Source Selection board may be 
+installed in your STS2. This option allows 
+you choose the preferred input source 
+from a remote location. Terminal 
+connections enable you to remotely 
+select a preferred source in the  
+same process as the local source  
+transfer selection. 
+Key Lockout Switch: The key lockout 
+switch activates a software lockout of the 
+touch-screen display to prevent manual 
+transfers and configuration changes. 
+When locked out, the touch-screen 
+becomes a read only display. A key is 
+needed to perform manual transfers or 
+change settings.
+Liebert® STS2 Communication and Product Options
+Liebert STS2 has a wide choice of 
+monitoring and communications options 
+to keep you connected to your critical 
+power protection system.
+RS-232 Terminal Port: Standard on all 
+units, this port is primarily used as an 
+alternate user interface to configure, 
+control, and diagnose the system.  
+Input Contact Isolator (ICI) Board: 
+Customizable input relays allow alarms 
+from other devices to be displayed on 
+Liebert STS2 display. Provides an 
+interface for up to eight user inputs. 
+External messages and alarms can be 
+routed to the unit, via the ICI.  
+Programmable Relay Board (PRB): 
+Programmable output relays for custom 
+customer alarms and connections. Up  
+to two PRBs can be installed in the  
+Liebert STS2 to route system events  
+to external devices.
+Comms Board (100-1000A): This board 
+provides a direct connection to a Vertiv™ 
+Liebert® SiteScan™ Web system, via an 
+RS-422. Vertiv™ Liebert® SiteLink-12 or 
+Vertiv™ Liebert® SiteLink-4 is required for 
+Liebert SiteScan to communicate with the 
+Liebert STS2.
+Options and Accessories
+Seismic Anchors: To ensure stability for 
+the unit in the event of seismic activity, 
+anchors are available for securing the unit 
+to a concrete floor to meet seismic  
+Zone 4 requirements.
+Seismic Floor Stand (100-1000A): 
+Designed to level the unit and provide 
+bottom cabling access without relying 
+upon a raised floor for support. Available 
+in 18, 24, 30, 36 inch heights. 
+Distribution Cabinet (Up to 600A):  
+An output distribution cabinet mounts on 
+the side of the STS2. It is a full height 
+section with hinged doors to allow for 
+easy access. 
+Vertiv™ Liebert® IntelliSlot™ 
+485 Web Card ADPT
+ 
+y
+Allows systems to be viewed 
+from the network using a  
+web browser. 
+ 
+y
+Delivers SNMP, Telnet and  
+web management. 
+ 
+y
+Provides security using HTTPS 
+message encryption. 
+ 
+y
+Supports 10 and 100 MBit 
+Ethernet for legacy and  
+modern networks.
+ 
+y
+Provides compatibility with 
+Vertiv™ Liebert® MultiLink 
+shutdown software, to prevent 
+data loss and ensure  
+data availability. 
+ 
+y
+Supports Liebert SiteScan 
+WEB enterprise monitoring 
+software, to provide trending  
+for proactive analysis and 
+maintenance to ensure  
+facility uptime. 
+ 
+y
+Interfaces to Vertiv™ Liebert® 
+Nform alarm notification 
+software, to facilitate quick 
+corrective action. 
+Liebert IntelliSlot 485 Web Card ADPT 
+provides connectivity to any TCP/
+IP-based Ethernet network to allow 
+the device to communicate with 
+network management systems (NMS) 
+via SNMP. Events can be transmitted 
+to the NMS to provide remote status 
+monitoring, plus fault and alarm 
+detection. The card includes an  
+RJ-45 port for an Ethernet connection, 
+via Category 5 cable. The card can 
+also integrate the system with an 
+existing Building Management System 
+(BMS) or out-of-band monitoring, 
+using Modbus.
+
+11
+Test results certify the input and output,  
+AC and DC characteristics of the system. 
+Performance comparisons against 
+specifications include, but are not  
+limited to:
+ 
+y
+Voltage and waveform
+ 
+y
+Voltage regulation
+ 
+y
+Voltage and current harmonics
+ 
+y
+Frequency
+ 
+y
+Current and Waveform
+ 
+y
+I/O power factor
+ 
+y
+Efficiency based on kW in and out
+ 
+y
+System switching, control and  
+monitoring functionality
+Customers may request special tests  
+in addition to the above.
+Power-Packed Testing Center Proves Business-Critical Reliability
+The Vertiv™ Power Test Center for large power systems is a state-of-the-art test facility designed to provide customers with 
+pre-installation testing of the performance, interoperability, and efficiency of Vertiv power modules and systems under a variety of 
+conditions. Located in Delaware, Ohio, the 41,000 square-foot facility, including a 2,600 square-foot customer observation suite, is the 
+largest and most comprehensive in the industry.
+Testing includes individual UPS modules as well as the complete power system—
+including large UPS units and associated switchgear and ancillary products—and is 
+essential to the smooth, rapid installation and commissioning of large power systems.
+Customers leave the Power Test Center with documented test results and confidence 
+that their complex power system will operate seamlessly and in accordance with 
+business-critical availability requirements.
+
+Vertiv.com   |	 Vertiv Headquarters, 505 N Cleveland Ave, Westerville, OH 43082, USA
+© 2023 Vertiv Group Corp. All rights reserved. Vertiv™ and the Vertiv logo are trademarks or registered trademarks of Vertiv Group Corp. All other names and logos referred to are trade names, trademarks or registered trademarks of their respective owners. While every 
+precaution has been taken to ensure accuracy and completeness here, Vertiv Group Corp. assumes no responsibility, and disclaims all liability, for damages resulting from use of this information or for any errors or omissions. Specifications, rebates and other promotional 
+offers are subject to change at Vertiv’s sole discretion upon notice.
+SL-20600  (R07/23)
